@@ -1,0 +1,1606 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{225F6B74-C848-30D0-938F-33CA12CE312A}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>cocosTest</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Users\tsuba\cocosTest\proj.win32\bin\cocosTest\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cocosTest.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cocosTest</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Users\tsuba\cocosTest\proj.win32\bin\cocosTest\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cocosTest.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cocosTest</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\Users\tsuba\cocosTest\proj.win32\bin\cocosTest\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">cocosTest.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">cocosTest</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\Users\tsuba\cocosTest\proj.win32\bin\cocosTest\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">cocosTest.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">cocosTest</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;COCOS2D_DEBUG=1;_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CC_STATIC;LWS_WITH_LIBUV;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;COCOS2D_DEBUG=1;_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CC_STATIC;LWS_WITH_LIBUV;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+      <Command>setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/openssl/prebuilt/win32/libssl-1_1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/libssl-1_1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/openssl/prebuilt/win32/libcrypto-1_1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/libcrypto-1_1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/uv/prebuilt/win32/uv.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/uv.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/websockets/prebuilt/win32/websockets.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/websockets.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/curl/prebuilt/win32/libcurl.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/libcurl.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/gles/prebuilt/glew32.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/glew32.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/icon/prebuilt/iconv.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/iconv.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/MP3Decoder/prebuilt/libmpg123.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/libmpg123.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libogg.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/libogg.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libvorbis.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/libvorbis.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libvorbisfile.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/libvorbisfile.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OpenalSoft/prebuilt/OpenAL32.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/OpenAL32.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/zlib/../win32-specific/zlib/prebuilt/zlib1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/zlib1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>lib\Debug\cocos2d.lib;lib\Debug\external.lib;..\cocos2d\external\Box2D\prebuilt\win32\debug\libbox2d.lib;..\cocos2d\external\chipmunk\prebuilt\win32\debug-lib\libchipmunk.lib;..\cocos2d\external\freetype2\prebuilt\win32\freetype.lib;lib\Debug\ext_recast.lib;..\cocos2d\external\bullet\prebuilt\win32\debug\libbullet.lib;..\cocos2d\external\jpeg\prebuilt\win32\libjpeg.lib;..\cocos2d\external\webp\prebuilt\win32\libwebp.lib;..\cocos2d\external\websockets\prebuilt\win32\websockets.lib;..\cocos2d\external\openssl\prebuilt\win32\libssl.lib;..\cocos2d\external\openssl\prebuilt\win32\libcrypto.lib;..\cocos2d\external\uv\prebuilt\win32\uv_a.lib;lib\Debug\ext_tinyxml2.lib;lib\Debug\ext_xxhash.lib;lib\Debug\ext_xxtea.lib;lib\Debug\ext_clipper.lib;lib\Debug\ext_edtaa3func.lib;lib\Debug\ext_convertUTF.lib;lib\Debug\ext_poly2tri.lib;lib\Debug\ext_md5.lib;..\cocos2d\external\curl\prebuilt\win32\libcurl.lib;..\cocos2d\external\png\prebuilt\win32\libpng.lib;..\cocos2d\external\win32-specific\gles\prebuilt\glew32.lib;..\cocos2d\external\win32-specific\icon\prebuilt\libiconv.lib;..\cocos2d\external\win32-specific\MP3Decoder\prebuilt\libmpg123.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libogg.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libvorbis.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libvorbisfile.lib;..\cocos2d\external\win32-specific\OpenalSoft\prebuilt\OpenAL32.lib;..\cocos2d\external\glfw3\prebuilt\win32\glfw3.lib;..\cocos2d\external\zlib\..\win32-specific\zlib\prebuilt\libzlib.lib;lib\Debug\ext_unzip.lib;ws2_32.lib;userenv.lib;psapi.lib;winmm.lib;Version.lib;Iphlpapi.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/Users/tsuba/cocosTest/proj.win32/Debug/cocosTest.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Debug/cocosTest.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CC_STATIC;LWS_WITH_LIBUV;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CC_STATIC;LWS_WITH_LIBUV;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+      <Command>setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/openssl/prebuilt/win32/libssl-1_1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/libssl-1_1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/openssl/prebuilt/win32/libcrypto-1_1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/libcrypto-1_1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/uv/prebuilt/win32/uv.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/uv.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/websockets/prebuilt/win32/websockets.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/websockets.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/curl/prebuilt/win32/libcurl.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/libcurl.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/gles/prebuilt/glew32.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/glew32.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/icon/prebuilt/iconv.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/iconv.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/MP3Decoder/prebuilt/libmpg123.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/libmpg123.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libogg.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/libogg.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libvorbis.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/libvorbis.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libvorbisfile.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/libvorbisfile.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OpenalSoft/prebuilt/OpenAL32.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/OpenAL32.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/zlib/../win32-specific/zlib/prebuilt/zlib1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/zlib1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>lib\Release\cocos2d.lib;lib\Release\external.lib;..\cocos2d\external\Box2D\prebuilt\win32\release\libbox2d.lib;..\cocos2d\external\chipmunk\prebuilt\win32\release-lib\libchipmunk.lib;..\cocos2d\external\freetype2\prebuilt\win32\freetype.lib;lib\Release\ext_recast.lib;..\cocos2d\external\bullet\prebuilt\win32\release\libbullet.lib;..\cocos2d\external\jpeg\prebuilt\win32\libjpeg.lib;..\cocos2d\external\webp\prebuilt\win32\libwebp.lib;..\cocos2d\external\websockets\prebuilt\win32\websockets.lib;..\cocos2d\external\openssl\prebuilt\win32\libssl.lib;..\cocos2d\external\openssl\prebuilt\win32\libcrypto.lib;..\cocos2d\external\uv\prebuilt\win32\uv_a.lib;lib\Release\ext_tinyxml2.lib;lib\Release\ext_xxhash.lib;lib\Release\ext_xxtea.lib;lib\Release\ext_clipper.lib;lib\Release\ext_edtaa3func.lib;lib\Release\ext_convertUTF.lib;lib\Release\ext_poly2tri.lib;lib\Release\ext_md5.lib;..\cocos2d\external\curl\prebuilt\win32\libcurl.lib;..\cocos2d\external\png\prebuilt\win32\libpng.lib;..\cocos2d\external\win32-specific\gles\prebuilt\glew32.lib;..\cocos2d\external\win32-specific\icon\prebuilt\libiconv.lib;..\cocos2d\external\win32-specific\MP3Decoder\prebuilt\libmpg123.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libogg.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libvorbis.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libvorbisfile.lib;..\cocos2d\external\win32-specific\OpenalSoft\prebuilt\OpenAL32.lib;..\cocos2d\external\glfw3\prebuilt\win32\glfw3.lib;..\cocos2d\external\zlib\..\win32-specific\zlib\prebuilt\libzlib.lib;lib\Release\ext_unzip.lib;ws2_32.lib;userenv.lib;psapi.lib;winmm.lib;Version.lib;Iphlpapi.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/Users/tsuba/cocosTest/proj.win32/Release/cocosTest.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/Release/cocosTest.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CC_STATIC;LWS_WITH_LIBUV;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CC_STATIC;LWS_WITH_LIBUV;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+      <Command>setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/openssl/prebuilt/win32/libssl-1_1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/libssl-1_1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/openssl/prebuilt/win32/libcrypto-1_1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/libcrypto-1_1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/uv/prebuilt/win32/uv.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/uv.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/websockets/prebuilt/win32/websockets.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/websockets.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/curl/prebuilt/win32/libcurl.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/libcurl.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/gles/prebuilt/glew32.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/glew32.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/icon/prebuilt/iconv.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/iconv.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/MP3Decoder/prebuilt/libmpg123.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/libmpg123.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libogg.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/libogg.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libvorbis.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/libvorbis.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libvorbisfile.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/libvorbisfile.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OpenalSoft/prebuilt/OpenAL32.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/OpenAL32.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/zlib/../win32-specific/zlib/prebuilt/zlib1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/zlib1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>lib\MinSizeRel\cocos2d.lib;lib\MinSizeRel\external.lib;..\cocos2d\external\Box2D\prebuilt\win32\release\libbox2d.lib;..\cocos2d\external\chipmunk\prebuilt\win32\release-lib\libchipmunk.lib;..\cocos2d\external\freetype2\prebuilt\win32\freetype.lib;lib\MinSizeRel\ext_recast.lib;..\cocos2d\external\bullet\prebuilt\win32\release\libbullet.lib;..\cocos2d\external\jpeg\prebuilt\win32\libjpeg.lib;..\cocos2d\external\webp\prebuilt\win32\libwebp.lib;..\cocos2d\external\websockets\prebuilt\win32\websockets.lib;..\cocos2d\external\openssl\prebuilt\win32\libssl.lib;..\cocos2d\external\openssl\prebuilt\win32\libcrypto.lib;..\cocos2d\external\uv\prebuilt\win32\uv_a.lib;lib\MinSizeRel\ext_tinyxml2.lib;lib\MinSizeRel\ext_xxhash.lib;lib\MinSizeRel\ext_xxtea.lib;lib\MinSizeRel\ext_clipper.lib;lib\MinSizeRel\ext_edtaa3func.lib;lib\MinSizeRel\ext_convertUTF.lib;lib\MinSizeRel\ext_poly2tri.lib;lib\MinSizeRel\ext_md5.lib;..\cocos2d\external\curl\prebuilt\win32\libcurl.lib;..\cocos2d\external\png\prebuilt\win32\libpng.lib;..\cocos2d\external\win32-specific\gles\prebuilt\glew32.lib;..\cocos2d\external\win32-specific\icon\prebuilt\libiconv.lib;..\cocos2d\external\win32-specific\MP3Decoder\prebuilt\libmpg123.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libogg.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libvorbis.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libvorbisfile.lib;..\cocos2d\external\win32-specific\OpenalSoft\prebuilt\OpenAL32.lib;..\cocos2d\external\glfw3\prebuilt\win32\glfw3.lib;..\cocos2d\external\zlib\..\win32-specific\zlib\prebuilt\libzlib.lib;lib\MinSizeRel\ext_unzip.lib;ws2_32.lib;userenv.lib;psapi.lib;winmm.lib;Version.lib;Iphlpapi.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/Users/tsuba/cocosTest/proj.win32/MinSizeRel/cocosTest.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/MinSizeRel/cocosTest.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CC_STATIC;LWS_WITH_LIBUV;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CC_STATIC;LWS_WITH_LIBUV;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Users\tsuba\cocosTest\Classes;D:\Users\tsuba\cocosTest\cocos2d\cocos\audio\include;D:\Users\tsuba\cocosTest\cocos2d;D:\Users\tsuba\cocosTest\cocos2d\cocos;D:\Users\tsuba\cocosTest\cocos2d\extensions;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform;D:\Users\tsuba\cocosTest\cocos2d\cocos\editor-support;D:\Users\tsuba\cocosTest\cocos2d\cocos\base;D:\Users\tsuba\cocosTest\cocos2d\cocos\platform\win32;D:\Users\tsuba\cocosTest\cocos2d\external\recast\..;D:\Users\tsuba\cocosTest\cocos2d\external\tinyxml2\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxhash\.;D:\Users\tsuba\cocosTest\cocos2d\external\xxtea\.;D:\Users\tsuba\cocosTest\cocos2d\external\clipper\.;D:\Users\tsuba\cocosTest\cocos2d\external\edtaa3func\.;D:\Users\tsuba\cocosTest\cocos2d\external\ConvertUTF\.;D:\Users\tsuba\cocosTest\cocos2d\external\poly2tri\..;D:\Users\tsuba\cocosTest\cocos2d\external\md5\..;D:\Users\tsuba\cocosTest\cocos2d\external\unzip\.;D:\Users\tsuba\cocosTest\cocos2d\external\Box2D\include;D:\Users\tsuba\cocosTest\cocos2d\external\chipmunk\include;D:\Users\tsuba\cocosTest\cocos2d\external\freetype2\include\win32\freetype2;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include;D:\Users\tsuba\cocosTest\cocos2d\external\bullet\include\bullet;D:\Users\tsuba\cocosTest\cocos2d\external\jpeg\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\openssl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\uv\include;D:\Users\tsuba\cocosTest\cocos2d\external\webp\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\websockets\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\curl\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\png\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\gles\include\OGLES;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\icon\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\MP3Decoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OggDecoder\include;D:\Users\tsuba\cocosTest\cocos2d\external\win32-specific\OpenalSoft\include;D:\Users\tsuba\cocosTest\cocos2d\external\glfw3\include\win32;D:\Users\tsuba\cocosTest\cocos2d\external\zlib\..\win32-specific\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+      <Command>setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/openssl/prebuilt/win32/libssl-1_1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/libssl-1_1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/openssl/prebuilt/win32/libcrypto-1_1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/libcrypto-1_1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/uv/prebuilt/win32/uv.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/uv.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/websockets/prebuilt/win32/websockets.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/websockets.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/curl/prebuilt/win32/libcurl.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/libcurl.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/gles/prebuilt/glew32.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/glew32.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/icon/prebuilt/iconv.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/iconv.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/MP3Decoder/prebuilt/libmpg123.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/libmpg123.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libogg.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/libogg.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libvorbis.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/libvorbis.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OggDecoder/prebuilt/libvorbisfile.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/libvorbisfile.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/win32-specific/OpenalSoft/prebuilt/OpenAL32.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/OpenAL32.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -E copy_if_different D:/Users/tsuba/cocosTest/cocos2d/external/zlib/../win32-specific/zlib/prebuilt/zlib1.dll D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/zlib1.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>lib\RelWithDebInfo\cocos2d.lib;lib\RelWithDebInfo\external.lib;..\cocos2d\external\Box2D\prebuilt\win32\release\libbox2d.lib;..\cocos2d\external\chipmunk\prebuilt\win32\release-lib\libchipmunk.lib;..\cocos2d\external\freetype2\prebuilt\win32\freetype.lib;lib\RelWithDebInfo\ext_recast.lib;..\cocos2d\external\bullet\prebuilt\win32\release\libbullet.lib;..\cocos2d\external\jpeg\prebuilt\win32\libjpeg.lib;..\cocos2d\external\webp\prebuilt\win32\libwebp.lib;..\cocos2d\external\websockets\prebuilt\win32\websockets.lib;..\cocos2d\external\openssl\prebuilt\win32\libssl.lib;..\cocos2d\external\openssl\prebuilt\win32\libcrypto.lib;..\cocos2d\external\uv\prebuilt\win32\uv_a.lib;lib\RelWithDebInfo\ext_tinyxml2.lib;lib\RelWithDebInfo\ext_xxhash.lib;lib\RelWithDebInfo\ext_xxtea.lib;lib\RelWithDebInfo\ext_clipper.lib;lib\RelWithDebInfo\ext_edtaa3func.lib;lib\RelWithDebInfo\ext_convertUTF.lib;lib\RelWithDebInfo\ext_poly2tri.lib;lib\RelWithDebInfo\ext_md5.lib;..\cocos2d\external\curl\prebuilt\win32\libcurl.lib;..\cocos2d\external\png\prebuilt\win32\libpng.lib;..\cocos2d\external\win32-specific\gles\prebuilt\glew32.lib;..\cocos2d\external\win32-specific\icon\prebuilt\libiconv.lib;..\cocos2d\external\win32-specific\MP3Decoder\prebuilt\libmpg123.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libogg.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libvorbis.lib;..\cocos2d\external\win32-specific\OggDecoder\prebuilt\libvorbisfile.lib;..\cocos2d\external\win32-specific\OpenalSoft\prebuilt\OpenAL32.lib;..\cocos2d\external\glfw3\prebuilt\win32\glfw3.lib;..\cocos2d\external\zlib\..\win32-specific\zlib\prebuilt\libzlib.lib;lib\RelWithDebInfo\ext_unzip.lib;ws2_32.lib;userenv.lib;psapi.lib;winmm.lib;Version.lib;Iphlpapi.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/Users/tsuba/cocosTest/proj.win32/RelWithDebInfo/cocosTest.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Users/tsuba/cocosTest/proj.win32/bin/cocosTest/RelWithDebInfo/cocosTest.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Users\tsuba\cocosTest\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule D:/Users/tsuba/cocosTest/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -SD:/Users/tsuba/cocosTest -BD:/Users/tsuba/cocosTest/proj.win32 --check-stamp-file D:/Users/tsuba/cocosTest/proj.win32/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCXXInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCommonLanguageInclude.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeGenericSystem.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeInitializeConfigs.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeLanguageInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeParseArguments.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeRCInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeSystemSpecificInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeSystemSpecificInitialize.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\MSVC-C.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\MSVC-CXX.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC-C.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\WindowsPaths.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosBuildHelpers.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosBuildSet.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosConfigDefine.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosConfigDepend.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeCCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeCXXCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeRCCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule D:/Users/tsuba/cocosTest/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -SD:/Users/tsuba/cocosTest -BD:/Users/tsuba/cocosTest/proj.win32 --check-stamp-file D:/Users/tsuba/cocosTest/proj.win32/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCXXInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCommonLanguageInclude.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeGenericSystem.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeInitializeConfigs.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeLanguageInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeParseArguments.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeRCInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeSystemSpecificInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeSystemSpecificInitialize.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\MSVC-C.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\MSVC-CXX.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC-C.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\WindowsPaths.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosBuildHelpers.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosBuildSet.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosConfigDefine.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosConfigDepend.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeCCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeCXXCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeRCCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule D:/Users/tsuba/cocosTest/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -SD:/Users/tsuba/cocosTest -BD:/Users/tsuba/cocosTest/proj.win32 --check-stamp-file D:/Users/tsuba/cocosTest/proj.win32/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCXXInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCommonLanguageInclude.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeGenericSystem.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeInitializeConfigs.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeLanguageInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeParseArguments.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeRCInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeSystemSpecificInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeSystemSpecificInitialize.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\MSVC-C.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\MSVC-CXX.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC-C.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\WindowsPaths.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosBuildHelpers.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosBuildSet.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosConfigDefine.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosConfigDepend.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeCCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeCXXCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeRCCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule D:/Users/tsuba/cocosTest/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+D:\Users\tsuba\cmake\bin\cmake.exe -SD:/Users/tsuba/cocosTest -BD:/Users/tsuba/cocosTest/proj.win32 --check-stamp-file D:/Users/tsuba/cocosTest/proj.win32/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCXXInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeCommonLanguageInclude.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeGenericSystem.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeInitializeConfigs.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeLanguageInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeParseArguments.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeRCInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeSystemSpecificInformation.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\CMakeSystemSpecificInitialize.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\MSVC-C.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Compiler\MSVC-CXX.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC-C.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows-MSVC.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\Windows.cmake;D:\Users\tsuba\cmake\share\cmake-3.18\Modules\Platform\WindowsPaths.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosBuildHelpers.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosBuildSet.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosConfigDefine.cmake;D:\Users\tsuba\cocosTest\cocos2d\cmake\Modules\CocosConfigDepend.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeCCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeCXXCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeRCCompiler.cmake;D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\3.18.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\Users\tsuba\cocosTest\proj.win32\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Classes\_Debug\_DebugConOut.h" />
+    <ClInclude Include="..\Classes\_Debug\_DebugDispOutCC.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\AppDelegate.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\GameScene.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\anim\ActionCtl.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\anim\AnimMng.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\Check\CheckKeyList.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\Check\CheckList.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\Check\CheckObjHit.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\Check\Flip.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\input\DIR_ID.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\input\OPRT_key.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\input\OPRT_state.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\input\OPRT_touch.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\move\FallFalling.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\move\JumpJumping.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\move\MOVE_LR.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\obj\Player.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Classes\module\ActModule.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\proj.win32\main.h" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\proj.win32\resource.h" />
+    <ClCompile Include="..\Classes\_Debug\_DebugConOut.cpp" />
+    <ClCompile Include="..\Classes\_Debug\_DebugDispOutCC.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\AppDelegate.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\GameScene.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\anim\ActionCtl.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\anim\AnimMng.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\Check\CheckKeyList.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\Check\CheckList.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\Check\CheckObjHit.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\Check\Flip.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\input\DIR_ID.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\input\OPRT_key.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\input\OPRT_state.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\input\OPRT_touch.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\move\FallFalling.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\move\JumpJumping.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\move\MOVE_LR.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\Classes\obj\Player.cpp" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\proj.win32\main.cpp" />
+    <ResourceCompile Include="D:\Users\tsuba\cocosTest\proj.win32\game.rc" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\BGM\BGM_piano.mp3" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\BGM\burning_heart.cks" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\BGM\burning_heart.wav" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\BGM\pianoSound.cks" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\BGM\pianoSound.wav" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\CloseNormal.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\CloseSelected.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\HelloWorld.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\SE\se.ckb" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\SE\se.ckbx" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\SE\se.mp3" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\SE\se.wav" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\Sample\hellocricket.ckb" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\Sample\hellocricket.ckbx" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\Sample\hellocricket.wav" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Homing_Laser01.efk" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Laser01.efk" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Simple_Distortion.efk" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Burst01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Cloud01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Flame01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\LaserMain01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\LaserMain02.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle02.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle03.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle04_bokashi_hard.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle04_bokashi_soft.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle04_bokashistrong_hard.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle04_bokashistrong_soft.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle04_clear_hard.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Particle04_clear_soft.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Splash01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\SwordLine01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Thunder01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\Wind01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\effect\Texture\wind02.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\fonts\Marker Felt.ttf" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\fonts\arial.ttf" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\gate-01-size300.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\gate-01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\gate-02-size300.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\gate-02.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\gate-03-size300.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\gate-03.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\plant-big-size300.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\plant-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\plant-small-size300.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\plant-small.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\stalactite-size300.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\stalactite.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\stone-head-size300.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\stone-head.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\stone-size300.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\Props\stone.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\background-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\background.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\middleground-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\middleground-no-fungus.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\middleground.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\test.tmx" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\test2.tmx" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\test3.tmx" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\test4.tmx" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\tileset-sliced.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\tilesets-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\tilesets-big.tsx" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\tilesets.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\untitled.tmx" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\walls-tileset-sliced.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Environment\walls-tileset.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\FX_Light.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\FX_Light.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\FX_LighttoDark.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\FX_LighttoDark.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Attack1.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Attack1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Attack2.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Attack2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Attack3.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Attack3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Dash.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Dash.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Fall.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Fall.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Jump.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Jump.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Look_Back.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Look_Back.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Look_Blink.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Look_Blink.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Look_Intro.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Look_Intro.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Roll.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Roll.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Run.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Run.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Transform.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Transform.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Turn.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Turn.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Wall_Grab.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Wall_Grab.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Wall_Slide.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_Wall_Slide.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_idle_Blink.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAnimetionAsset\Light\Light_idle_Blink.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Bonus\face1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Bonus\face2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Bonus\sword.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Bonus\sword_dark.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark20.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark21.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark22.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark23.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark24.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark25.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark26.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark27.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark28.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark29.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark30.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark31.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark32.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark33.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark34.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark35.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_dark\FX_dark9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight20.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight21.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight22.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight23.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight24.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight25.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight26.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight27.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight28.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight29.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight30.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight31.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight32.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight33.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight34.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight35.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\FX_darktolight\FX_darktolight9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack1\attack1_9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack2\attack2_9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\attack3\attack3_9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\dash\dash0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\dash\dash1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\dash\dash2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\dash\dash3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\fall\fall0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\fall\fall1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\fall\fall2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\fall\fall3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\idle.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\idle_blink\idle_blink0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\idle_blink\idle_blink1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\idle_blink\idle_blink2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\jump\jump0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\jump\jump1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\jump\jump2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\jump\jump3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_back\look_back0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_back\look_back1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_back\look_back2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_back\look_back3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_back\look_back4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_blink\look_blink0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_blink\look_blink1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_blink\look_blink2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_intro\look_intro0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_intro\look_intro1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_intro\look_intro2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_intro\look_intro3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_intro\look_intro4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\look_intro\look_intro5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\roll\roll9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\run\run9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform20.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform21.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform22.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform23.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform24.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform25.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform26.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform27.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform28.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform29.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform30.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform31.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform32.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform33.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform34.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform35.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform36.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform37.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\transform\transform9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\turn\turn9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_grab\wall_grab9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_slide\wall_slide0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_slide\wall_slide1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_slide\wall_slide2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Dark\wall_slide\wall_slide3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Environment\Background.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Environment\Background_Arches.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Environment\Background_Fog.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Environment\Background_Pillars.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Environment\Background_Wall.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Environment\Fog.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Environment\Fog_Top.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Environment\Walls.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\GIFs\animations.gif" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\GIFs\mockup.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\GIFs\test.gif" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light20.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light21.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light22.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light23.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light24.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light25.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light26.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light27.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light28.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light29.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light30.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light31.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light32.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light33.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light34.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light35.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_light\FX_light9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark20.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark21.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark22.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark23.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark24.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark25.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark26.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark27.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark28.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark29.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark30.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark31.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark32.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark33.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark34.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark35.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\FX_lighttodark\FX_lighttodark9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack1\attack1_9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack2\attack2_9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_00.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_01.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_02.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_03.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_04.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_05.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_06.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_07.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_08.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_09.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\attack3\attack3_10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\dash\dash0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\dash\dash1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\dash\dash2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\dash\dash3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\fall\fall0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\fall\fall1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\fall\fall2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\fall\fall3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\idle.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\idle_blink\idle_blink0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\idle_blink\idle_blink1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\idle_blink\idle_blink2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\jump\jump0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\jump\jump1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\jump\jump2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\jump\jump3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_back\look_back0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_back\look_back1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_back\look_back2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_back\look_back3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_back\look_back4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_blink\look_blink0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_blink\look_blink1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_blink\look_blink2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_intro\look_intro0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_intro\look_intro1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_intro\look_intro2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_intro\look_intro3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_intro\look_intro4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_intro\look_intro5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\look_intro\look_intro6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\roll\roll9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\run\run9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform20.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform21.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform22.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform23.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform24.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform25.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform26.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform27.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform28.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform29.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform30.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform31.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform32.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform33.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform34.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform35.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform36.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform37.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\transform\transform9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn13.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn14.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn15.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn16.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn17.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn18.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn19.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\turn\turn9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab11.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab12.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_grab\wall_grab9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_slide\wall_slide0.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_slide\wall_slide1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_slide\wall_slide2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\Light\wall_slide\wall_slide3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\PSDs\Dark.psd" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\PSDs\Enviro.psd" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\PSDs\Light.psd" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\PlayerAsset\ReadMe.txt" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\enemy-death\enemy-death-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\enemy-death\enemy-death-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\enemy-death\enemy-death-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\enemy-death\enemy-death-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\enemy-death\enemy-death-5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\impact\impact-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\impact\impact-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\impact\impact-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\impact\impact-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\power-up\power-up-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\power-up\power-up-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\power-up\power-up-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\power-up\power-up-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\power-up\power-up-5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\power-up\power-up-6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\power-up\power-up-7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\shot\shot-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\Fx\shot\shot-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\crab-idle\crab-idle-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\crab-idle\crab-idle-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\crab-idle\crab-idle-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\crab-idle\crab-idle-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\crab-walk\crab-walk-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\crab-walk\crab-walk-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\crab-walk\crab-walk-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\crab-walk\crab-walk-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\jumper-idle\jumper-idle-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\jumper-idle\jumper-idle-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\jumper-idle\jumper-idle-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\jumper-idle\jumper-idle-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\jumper-jump\jumper-jump.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\octopus\octopus-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\octopus\octopus-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\octopus\octopus-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\enemies\octopus\octopus-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-cling\player-cling.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-duck\duck-big.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-duck\duck-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-duck\player-duck-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-duck\player-duck.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-hurt\player-hurt-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-hurt\player-hurt-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-idle\idle-big.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-idle\idle-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-idle\player-idle-1-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-idle\player-idle-2-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-idle\player-idle-3-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-idle\player-idle-4-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\jump-big.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\jump-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-1-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-2-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-3-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-4-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-5-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-6-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-jump\player-jump-6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-10.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-4.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-5.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-6.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-7.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-8.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run-shot\player-run-shot-9.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-1-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-10-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-2-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-3-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-4-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-5-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-6-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-7-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-8-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\player-run-9-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\run-big.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-run\run-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-shoot-up\player-shoot-up-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-shoot-up\player-shoot-up.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-shoot-up\shoot-up-big.plist" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-shoot-up\shoot-up-big.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-stand\player-stand-1.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-stand\player-stand-2.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\image\Sprites\player\player-stand\player-stand-3.png" />
+    <ClInclude Include="D:\Users\tsuba\cocosTest\Resources\res\.gitkeep" />
+    <ClCompile Include="D:\Users\tsuba\cocosTest\cocos2d\cocos\precheader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\ZERO_CHECK.vcxproj">
+      <Project>{145578A0-8F3A-372D-B60B-57660C590B52}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\SYNC_RESOURCE-cocosTest.vcxproj">
+      <Project>{846B0C29-8682-359D-B0DA-54150479E6C1}</Project>
+      <Name>SYNC_RESOURCE-cocosTest</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\cocos\core\cocos2d.vcxproj">
+      <Project>{22FD23BD-067A-3851-8D9B-A05793338D55}</Project>
+      <Name>cocos2d</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\clipper\ext_clipper.vcxproj">
+      <Project>{5D17DCE5-1977-3E5C-9ED7-4E727CBEC430}</Project>
+      <Name>ext_clipper</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\ConvertUTF\ext_convertUTF.vcxproj">
+      <Project>{6F86C28C-9BDF-32A7-8BB7-E8E16A81C0E0}</Project>
+      <Name>ext_convertUTF</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\edtaa3func\ext_edtaa3func.vcxproj">
+      <Project>{E64A846D-1FB8-3E3F-B9B9-CB6AEE556FD5}</Project>
+      <Name>ext_edtaa3func</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\md5\ext_md5.vcxproj">
+      <Project>{D059210D-1B6C-328C-9307-E8E0B3B15248}</Project>
+      <Name>ext_md5</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\poly2tri\ext_poly2tri.vcxproj">
+      <Project>{E0B14FFC-F339-37A1-9B3F-186B3B4153F7}</Project>
+      <Name>ext_poly2tri</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\recast\ext_recast.vcxproj">
+      <Project>{88E3DA12-98CE-35A8-8414-411412DF97DE}</Project>
+      <Name>ext_recast</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\tinyxml2\ext_tinyxml2.vcxproj">
+      <Project>{7266810D-7DF6-3106-904E-959B0E5B1473}</Project>
+      <Name>ext_tinyxml2</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\unzip\ext_unzip.vcxproj">
+      <Project>{A900E0F3-8594-3A1F-B137-097404E9AAF4}</Project>
+      <Name>ext_unzip</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\xxhash\ext_xxhash.vcxproj">
+      <Project>{2AC3374A-7AA3-3426-B754-B4D09654AEE5}</Project>
+      <Name>ext_xxhash</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\xxtea\ext_xxtea.vcxproj">
+      <Project>{AF31C227-14EF-39F2-BD78-4FF37F81AFBC}</Project>
+      <Name>ext_xxtea</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Users\tsuba\cocosTest\proj.win32\engine\external\external.vcxproj">
+      <Project>{3702EB52-1EDB-3ADE-95C9-3D10C5A6233E}</Project>
+      <Name>external</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
