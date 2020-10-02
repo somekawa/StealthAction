@@ -18,6 +18,7 @@ enum class ACTION {
 	RUN,
 	FALL,
 	FALLING,
+	ATTACK,
 	MAX
 };
 

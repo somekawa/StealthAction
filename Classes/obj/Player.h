@@ -27,7 +27,7 @@ private:
 	// アニメーション関係
 	void Anim_Registration(cocos2d::Sprite* delta);				// アニメーションの登録
 	void AnimCheck(cocos2d::Sprite* delta);						// アニメーション切り替え指定
-	const char* _animTable[static_cast<int>(ACTION::MAX)] = { "idle","idle","jump","jump","duck","run","duck","duck" }; // AnimCheckで使う
+	const char* _animTable[static_cast<int>(ACTION::MAX)] = { "idle","idle","jump","jump","duck","run","duck","duck","attack" }; // AnimCheckで使う
 
 	ACTION _action_Now;											// 現在のアクション状態
 	ACTION _action_Old;											// 1フレーム前のアクション状態
@@ -62,4 +62,6 @@ private:
 	cocos2d::TMXLayer* _CollisionData;							// コリジョンマップのデータ
 	const int _tileChip = 48;									// 1タイル当たりの大きさ
 	cocos2d::Size _ColLayerSize;								// コリジョンマップの大きさ
+
+	float cntTest = 0.0f;
 };

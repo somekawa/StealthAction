@@ -21,6 +21,7 @@ enum class BUTTON {
 	DOWN,
 	RIGHT,
 	LEFT,
+	ATTACK,
 	MAX
 };
 

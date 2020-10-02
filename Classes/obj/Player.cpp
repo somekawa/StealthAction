@@ -66,7 +66,32 @@ void Player::update(float sp)
 	_actCtl.update(sp,*this);
 
 	// 実行する入力先(keyかtouch)のupdateへ移動
-	_oprtState->update();		  
+	_oprtState->update();	
+
+	// Aキーで攻撃モーション--------------------
+	auto nowdata = _oprtState->GetNowData();
+	auto olddata = _oprtState->GetOldData();
+
+	if (nowdata[4] && !olddata[4])
+	{
+		sp = 0;
+		_action_Now = ACTION::ATTACK;
+	}
+
+	if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
+	{
+		cntTest += sp;
+		if (cntTest <= 0.5f)
+		{
+			_action_Now = ACTION::ATTACK;
+		}
+		else
+		{
+			_action_Now = ACTION::IDLE;
+			cntTest = 0.0f;
+		}
+	}
+	//------------------------------------------
 
 	// 範囲外check
 	OutOfMapCheck();	
@@ -81,6 +106,12 @@ void Player::update(float sp)
 // アニメーション切り替え指定
 void Player::AnimCheck(cocos2d::Sprite * delta)
 {
+	if (_action_Now == ACTION::ATTACK)
+	{
+		AnimMng::ChangeAnim(delta, "attack");
+		return;
+	}
+
 	// 現在のアクション状態と比べて、一致しているものに切り替える
 	for (ACTION _act = begin(ACTION()); _act <= end(ACTION()); ++_act)
 	{
@@ -119,6 +150,9 @@ void Player::Anim_Registration(Sprite* delta)
 
 	// jump
 	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Jump.plist"        , "jump%d.png" , "jump"    , 0, 3,  false, (float)0.05);
+
+	// attack
+	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Attack1.plist", "attack1_%d.png", "attack", 0, 9, false, (float)0.05);
 
 	AnimMng::anim_action(delta);
 }
