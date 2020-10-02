@@ -1,0 +1,4 @@
+<?xml vertion="1.0" encoding="utf-8" ?>
+<bank name="se">
+    <sound name="se" source="se.wav"/>
+</bank>

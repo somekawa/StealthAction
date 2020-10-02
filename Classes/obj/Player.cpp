@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "anim/ActionCtl.h"
 #include "input/DIR_ID.h"
+#include "_Debug/_DebugConOut.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
@@ -69,14 +70,15 @@ void Player::update(float sp)
 	_oprtState->update();	
 
 	// Aキーで攻撃モーション--------------------
-	auto nowdata = _oprtState->GetNowData();
-	auto olddata = _oprtState->GetOldData();
 
-	if (nowdata[4] && !olddata[4])
-	{
-		sp = 0;
-		_action_Now = ACTION::ATTACK;
-	}
+	// ActModuleに設定すれば、ここのキー設定は不要になる
+	//auto nowdata = _oprtState->GetNowData();
+	//auto olddata = _oprtState->GetOldData();
+	//if (nowdata[4] && !olddata[4])
+	//{
+	//	sp = 0;
+	//	_action_Now = ACTION::ATTACK;
+	//}
 
 	if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
 	{
@@ -101,16 +103,17 @@ void Player::update(float sp)
 		AnimCheck(this);
 	}
 	_action_Old = _action_Now;
+
 }
 
 // アニメーション切り替え指定
 void Player::AnimCheck(cocos2d::Sprite * delta)
 {
-	if (_action_Now == ACTION::ATTACK)
-	{
-		AnimMng::ChangeAnim(delta, "attack");
-		return;
-	}
+	//if (_action_Now == ACTION::ATTACK)
+	//{
+	//	AnimMng::ChangeAnim(delta, "attack");
+	//	return;
+	//}
 
 	// 現在のアクション状態と比べて、一致しているものに切り替える
 	for (ACTION _act = begin(ACTION()); _act <= end(ACTION()); ++_act)
@@ -231,7 +234,10 @@ void Player::actModuleRegistration(void)
 		act.checkPoint1 = Vec2{ 30, 40 };		// 右上
 		act.checkPoint2 = Vec2{ 30,  -10 };		// 右下
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
-		//act.blackList.emplace_back(ACTION::FALL);	// 落下中に右移動してほしくないときの追加の仕方
+		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
+
+		act.whiteList.emplace_back(ACTION::JUMPING);
+		//act.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("右移動", act);
 	}
 
@@ -248,6 +254,9 @@ void Player::actModuleRegistration(void)
 		act.checkPoint2 = Vec2{ -30,  -10 };		// 左下
 		act.touch = TOUCH_TIMMING::TOUCHING;    // 押しっぱなし
 		//act.blackList.emplace_back(ACTION::FALL);
+
+		act.whiteList.emplace_back(ACTION::JUMPING);
+		//act.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("左移動", act);
 	}
 
@@ -260,6 +269,8 @@ void Player::actModuleRegistration(void)
 		flipAct.button = BUTTON::RIGHT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 		//flipAct.blackList.emplace_back(ACTION::FALL);
+
+		//flipAct.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("右向き", flipAct);
 	}
 
@@ -272,6 +283,8 @@ void Player::actModuleRegistration(void)
 		flipAct.button = BUTTON::LEFT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 		//flipAct.blackList.emplace_back(ACTION::FALL);
+
+		//flipAct.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("左向き", flipAct);
 	}
 
@@ -302,6 +315,23 @@ void Player::actModuleRegistration(void)
 		act.jumpVel = Vec2{ 0.0f,20.0f };
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押した瞬間
 		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
+
+		//act.blackList.emplace_back(ACTION::ATTACK);
+
+		//act.whiteList.emplace_back(ACTION::RUN);
+
 		_actCtl.ActCtl("ジャンプ", act);
+	}
+
+	// 攻撃
+	{
+		ActModule act;
+		act.state = _oprtState;
+		act.button = BUTTON::ATTACK;
+		act.action = ACTION::ATTACK;
+		//act.checkPoint1 = Vec2{ 0, 0 };		
+		//act.checkPoint2 = Vec2{ 0, 0 };
+		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
+		_actCtl.ActCtl("攻撃", act);
 	}
 }

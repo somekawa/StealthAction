@@ -146,7 +146,8 @@ bool Game::init()
 	// キャラの登録(charLayerはGameSceneに直接ぶら下がり、plSpriteはcharLayerにぶら下がる)
 	auto charLayer = Layer::create();
 	charLayer->setName("CHAR_LAYER");
-	auto plSprite = Player::createPlayer();
+	//auto plSprite = Player::createPlayer();
+	plSprite = Player::createPlayer();
 	charLayer->addChild((Node*)plSprite, (int)zOlder::CHAR);
 	plSprite->setName("player");
 
@@ -165,12 +166,47 @@ bool Game::init()
 	//Sprite* sp;
 	//sp->setName("aa");
 	//_DebugDispOutCC::GetInstance().DrawRect("aa", Vec2(0, 0), Vec2(100, 100), Vec2(200, 200), Color4F::BLUE);
+	auto _notesLayer = map->getLayer("Layer1");
+	int chipSize = 48;
+	auto mapSize = _notesLayer->getLayerSize();
+	for (int y = 0; y < mapSize.height; y++)
+	{
+		for (int x = 0; x < mapSize.width; x++)
+		{
+			auto notesCheckPoint = Vec2{ (float)x,(float)y };
+			auto notesGid = _notesLayer->getTileGIDAt(notesCheckPoint);
+			if (notesGid == 95)
+			{
+				// 生成
+				enemySprite = Sprite::create("image/Sprites/enemies/crab-idle/crab-idle-1.png");
+				// 座標
+				Vec2 notesPos = Vec2(notesCheckPoint.x * chipSize + 30, (mapSize.height - notesCheckPoint.y) * chipSize - 20);
+				// 座標をセットする
+				enemySprite->setPosition(Vec2(notesPos.x, notesPos.y - (enemySprite->getContentSize().height / 2)));
+				// 名前をつける
+				enemySprite->setName("enemyTest");
+				// objLayerにぶら下げる
+				charLayer->addChild((Node*)enemySprite, static_cast<int>(zOlder::BG));
+			}
+		}
+	}
 
 
 	plSprite->scheduleUpdate();
 
 	this->scheduleUpdate();
 	return true;
+}
+
+void Game::update(float sp)
+{
+	// 当たり判定練習中
+	auto plpos = plSprite->getPosition();
+	auto plsize = plSprite->getContentSize();
+	if (plpos.x + plsize.width >  enemySprite->getPosition().x)
+	{
+		int a = 0;
+	}
 }
 
 void Game::menuCloseCallback(Ref* pSender)
