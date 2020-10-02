@@ -6,6 +6,7 @@
 #include "anim/ActionCtl.h"
 #include "input/OPRT_state.h"
 #include "module/ActModule.h"
+#include "obj/Player.h"
 
 class Player : public cocos2d::Sprite
 {

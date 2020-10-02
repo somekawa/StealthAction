@@ -43,6 +43,10 @@ public:
     static cocos2d::Scene* createScene();
 
     virtual bool init();
+    void update(float sp);
+
+    Player* plSprite;
+    cocos2d::Sprite* enemySprite;
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);

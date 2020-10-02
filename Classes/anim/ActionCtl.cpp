@@ -3,11 +3,13 @@
 #include "move/MOVE_LR.h"
 #include "move/FallFalling.h"
 #include "move/JumpJumping.h"
+#include "move/Attack.h"
 #include "Check/CheckKeyList.h"
 #include "Check/CheckObjHit.h"
 #include "Check/CheckList.h"
 #include "Check/Flip.h"
 #include "ActionCtl.h"
+#include "_Debug/_DebugConOut.h"
 
 USING_NS_CC;
 
@@ -62,6 +64,15 @@ void ActionCtl::ActCtl(std::string actName,ActModule & module)
 		_mapModule[actName].runAction = JumpJumping();
 	}
 
+	if (actName == "攻撃")
+	{
+		_mapModule.emplace(actName, std::move(module));
+		_mapModule[actName].act.emplace_back(CheckKeyList());
+		_mapModule[actName].act.emplace_back(CheckObjHit());
+		_mapModule[actName].act.emplace_back(CheckList());
+		_mapModule[actName].runAction = Attack();
+	}
+
 	// jumpingのときは自然と落ちるときとcollisionで当たった時に落下に切り替える
 	// collisionは関数オブジェクトで呼び出す必要がある
 	//  →当たっていたら切り替える
@@ -103,15 +114,62 @@ void ActionCtl::update(float sp,Sprite& sprite)
 	{
 		if (actCheck(data.first))
 		{
+			//switch (data.second.action)
+			//{
+			//case ACTION::NON:
+			//	TRACE("NON\n");
+
+			//	break;
+			//case ACTION::IDLE:
+			//	TRACE("IDLE\n");
+
+			//	break;
+			//case ACTION::UP:
+			//	TRACE("UP\n");
+
+			//	break;
+			//case ACTION::JUMPING:
+			//	TRACE("JUMPING\n");
+
+			//	break;
+			//case ACTION::DUCK:
+			//	TRACE("DUCK\n");
+
+			//	break;
+			//case ACTION::RUN:
+			//	TRACE("RUN\n");
+
+			//	break;
+			//case ACTION::FALL:
+			//	TRACE("RUN\n");
+
+			//	break;
+			//case ACTION::FALLING:
+			//	TRACE("FALLING\n");
+
+			//	break;
+			//case ACTION::ATTACK:
+			//	TRACE("ATTACK\n");
+
+			//	break;
+			//case ACTION::MAX:
+			//	TRACE("MAX\n");
+
+			//	break;
+			//default:
+			//	TRACE("error\n");
+			//	break;
+			//}
+
 			// フレーム値の更新
 			data.second.flame = _mapFlame[data.first];
 
 			// (左右移動とかの)処理が走るところ
 			data.second.runAction(sprite, data.second);
 
-			// 現在のステータスが落下(FALLING)以外のときは、ステータスを書き換えないようにする
+			// 現在のステータスが落下(FALLING)のときは、ステータスを書き換えないようにする
 			// また、NON(向きだけ変える)ときは、IDOLにならないようにする
-			if (((Player&)sprite).GetAction() != ACTION::FALLING && data.second.action != ACTION::NON /*&& ((Player&)sprite).GetAction() != ACTION::JUMPING*/)
+			if (((Player&)sprite).GetAction() == ACTION::FALLING || data.second.action != ACTION::NON || ((Player&)sprite).GetAction() == ACTION::JUMPING)
 			{
 				((Player&)sprite).SetAction(data.second.action);
 			}
@@ -131,6 +189,16 @@ void ActionCtl::update(float sp,Sprite& sprite)
 					return;
 				}
 				((Player&)sprite).SetAction(ACTION::FALLING);
+
+				// あああああああああああああ
+				//if (_mapFlame[data.first] < 3.0f)
+				//{
+				//	//actFlg = true;
+				//	//return;
+				//	continue;
+				//}
+				////((Player&)sprite).SetAction(ACTION::FALLING);
+
 			}
 
 			actFlg = true;

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>frames</key>
+        <dict>
+            <key>player-shoot-up-big.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{240,240}</string>
+                <key>spriteSourceSize</key>
+                <string>{240,240}</string>
+                <key>textureRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+        </dict>
+        <key>metadata</key>
+        <dict>
+            <key>format</key>
+            <integer>3</integer>
+            <key>pixelFormat</key>
+            <string>RGBA8888</string>
+            <key>premultiplyAlpha</key>
+            <false/>
+            <key>realTextureFileName</key>
+            <string>shoot-up-big.png</string>
+            <key>size</key>
+            <string>{240,240}</string>
+            <key>smartupdate</key>
+            <string>$TexturePacker:SmartUpdate:88a11815e3009c230d6a1e095b6bc89c:33e470751347681da485ae6020b4613b:3239af12d64d71b9fab43434813e948e$</string>
+            <key>textureFileName</key>
+            <string>shoot-up-big.png</string>
+        </dict>
+    </dict>
+</plist>
