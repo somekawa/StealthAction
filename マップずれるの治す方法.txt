@@ -1,0 +1,26 @@
+1: プロジェクトを開いてソリューションエクスプローラーで CCTMXXMLParser.cppを探して開く
+2: 732行目のプログラムを変える
+変更前
+	while(getline(filestr, sRow, '\n')) {
+            string sGID;
+            istringstream rowstr(sRow);
+            while (getline(rowstr, sGID, ',')) {
+                gidTokens.push_back(sGID);
+            }
+       	}
+変更後
+	while(getline(filestr, sRow, '\n')) {
+            if (sRow == "\r")
+            {
+                continue;
+            }
+            string sGID;
+            istringstream rowstr(sRow);
+            while (getline(rowstr, sGID, ',')) {
+                if (sGID == "\r")
+                {
+                    continue;
+                }
+                gidTokens.push_back(sGID);
+            }
+         }
