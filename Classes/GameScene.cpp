@@ -103,7 +103,7 @@ bool Game::init()
 	// add a label shows "Hello World"
 	// create and initialize a label
 
-	auto label = Label::createWithTTF("1816044_Somekawa", "fonts/Marker Felt.ttf", 24);
+	auto label = Label::createWithTTF("Action", "fonts/Marker Felt.ttf", 24);
 	if (label == nullptr)
 	{
 		problemLoading("'fonts/Marker Felt.ttf'");
@@ -166,15 +166,15 @@ bool Game::init()
 	//Sprite* sp;
 	//sp->setName("aa");
 	//_DebugDispOutCC::GetInstance().DrawRect("aa", Vec2(0, 0), Vec2(100, 100), Vec2(200, 200), Color4F::BLUE);
-	auto _notesLayer = map->getLayer("Layer1");
+	auto enemy = map->getLayer("Collision");
 	int chipSize = 48;
-	auto mapSize = _notesLayer->getLayerSize();
+	auto mapSize = enemy->getLayerSize();
 	for (int y = 0; y < mapSize.height; y++)
 	{
 		for (int x = 0; x < mapSize.width; x++)
 		{
 			auto notesCheckPoint = Vec2{ (float)x,(float)y };
-			auto notesGid = _notesLayer->getTileGIDAt(notesCheckPoint);
+			auto notesGid = enemy->getTileGIDAt(notesCheckPoint);
 			if (notesGid == 95)
 			{
 				// ¶¬
@@ -201,12 +201,12 @@ bool Game::init()
 void Game::update(float sp)
 {
 	// “–‚½‚è”»’è—ûK’†
-	auto plpos = plSprite->getPosition();
-	auto plsize = plSprite->getContentSize();
-	if (plpos.x + plsize.width >  enemySprite->getPosition().x)
-	{
-		int a = 0;
-	}
+	//auto plpos = plSprite->getPosition();
+	//auto plsize = plSprite->getContentSize();
+	//if (plpos.x + plsize.width >  enemySprite->getPosition().x)
+	//{
+	//	int a = 0;
+	//}
 }
 
 void Game::menuCloseCallback(Ref* pSender)

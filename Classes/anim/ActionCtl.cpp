@@ -2,6 +2,7 @@
 #include "input/OPRT_state.h"
 #include "move/MOVE_LR.h"
 #include "move/FallFalling.h"
+#include "move/Jump.h"
 #include "move/JumpJumping.h"
 #include "move/Attack.h"
 #include "Check/CheckKeyList.h"
@@ -55,9 +56,20 @@ void ActionCtl::ActCtl(std::string actName,ActModule & module)
 		_mapModule[actName].runAction = FallFalling();
 	}
 
+	//if (actName == "ジャンプ")
+	//{
+	//	_mapModule.emplace(actName,std::move(module));
+	//	_mapModule[actName].act.emplace_back(CheckKeyList());
+	//	_mapModule[actName].act.emplace_back(CheckObjHit());
+	//	// ここをコメントアウトすると、blackListとか機能しないから空中で何回もジャンプできる
+	//	_mapModule[actName].act.emplace_back(CheckList());
+	//	_mapModule[actName].runAction = Jump();
+	//}
+
 	if (actName == "ジャンプ")
 	{
-		_mapModule.emplace(actName,std::move(module));
+		_mapModule.emplace(actName, std::move(module));
+		// 長押しにするならコメントアウトはずす
 		_mapModule[actName].act.emplace_back(CheckKeyList());
 		_mapModule[actName].act.emplace_back(CheckObjHit());
 		_mapModule[actName].act.emplace_back(CheckList());
@@ -114,64 +126,43 @@ void ActionCtl::update(float sp,Sprite& sprite)
 	{
 		if (actCheck(data.first))
 		{
-			//switch (data.second.action)
-			//{
-			//case ACTION::NON:
-			//	TRACE("NON\n");
-
-			//	break;
-			//case ACTION::IDLE:
-			//	TRACE("IDLE\n");
-
-			//	break;
-			//case ACTION::UP:
-			//	TRACE("UP\n");
-
-			//	break;
-			//case ACTION::JUMPING:
-			//	TRACE("JUMPING\n");
-
-			//	break;
-			//case ACTION::DUCK:
-			//	TRACE("DUCK\n");
-
-			//	break;
-			//case ACTION::RUN:
-			//	TRACE("RUN\n");
-
-			//	break;
-			//case ACTION::FALL:
-			//	TRACE("RUN\n");
-
-			//	break;
-			//case ACTION::FALLING:
-			//	TRACE("FALLING\n");
-
-			//	break;
-			//case ACTION::ATTACK:
-			//	TRACE("ATTACK\n");
-
-			//	break;
-			//case ACTION::MAX:
-			//	TRACE("MAX\n");
-
-			//	break;
-			//default:
-			//	TRACE("error\n");
-			//	break;
-			//}
-
 			// フレーム値の更新
 			data.second.flame = _mapFlame[data.first];
 
 			// (左右移動とかの)処理が走るところ
 			data.second.runAction(sprite, data.second);
 
-			// 現在のステータスが落下(FALLING)のときは、ステータスを書き換えないようにする
-			// また、NON(向きだけ変える)ときは、IDOLにならないようにする
-			if (((Player&)sprite).GetAction() == ACTION::FALLING || data.second.action != ACTION::NON || ((Player&)sprite).GetAction() == ACTION::JUMPING)
+			// ジャンプ中に左右キーを押すと落下になる
+			// →左右処理になった後に足場がないから落下??
+			//if (((Player&)sprite).GetAction() == ACTION::FALLING || data.second.action != ACTION::NON || ((Player&)sprite).GetAction() == ACTION::JUMPING)
+			//{
+			//	((Player&)sprite).SetAction(data.second.action);
+			//}
+
+			// data.second.action = for文で回してるアクション
+			// GetActionは実際に今行われているアクション
+			if (((Player&)sprite).GetAction() == ACTION::FALLING || data.second.action != ACTION::NON || ((Player&)sprite).GetAction() == ACTION::JUMPING/* || ((Player&)sprite).GetAction() == ACTION::JUMP*/)
 			{
-				((Player&)sprite).SetAction(data.second.action);
+				if (_mapFlame["ジャンプ"] >= 0.1f && _mapFlame["ジャンプ"] < 3.0f)
+				{
+					((Player&)sprite).SetAction(ACTION::JUMPING);
+				}
+				else
+				{
+					((Player&)sprite).SetAction(data.second.action);
+				}
+
+				//if (_mapFlame["ジャンプ"] >= 0.1f)
+				//{
+				//	if (_mapFlame["ジャンピング"] >= 0.1f && _mapFlame["ジャンピング"] < 3.0f)
+				//	{
+				//		((Player&)sprite).SetAction(ACTION::JUMPING);
+				//	}
+				//}
+				//else
+				//{
+				//	((Player&)sprite).SetAction(data.second.action);
+				//}
 			}
 			
 			// フレームの加算(落下とジャンプで使用している)
@@ -181,23 +172,53 @@ void ActionCtl::update(float sp,Sprite& sprite)
 				_mapFlame[data.first] = 10.0f;
 			}
 
+			// ここはジャンプの最高点に到達したときとかに関係する処理
 			if (((Player&)sprite).GetAction() == ACTION::JUMPING)
 			{
-				if (_mapFlame[data.first] < 3.0f)
-				{
-					//actFlg = true;
-					return;
-				}
-				((Player&)sprite).SetAction(ACTION::FALLING);
-
-				// あああああああああああああ
 				//if (_mapFlame[data.first] < 3.0f)
 				//{
 				//	//actFlg = true;
-				//	//return;
-				//	continue;
+				//	return;
 				//}
-				////((Player&)sprite).SetAction(ACTION::FALLING);
+				//((Player&)sprite).SetAction(ACTION::FALLING);
+
+				actFlg = true;
+				((Player&)sprite).SetAction(ACTION::JUMPING);
+
+				// _mapFlame[data.first]にしてしまうと、現在のアクションがジャンプでも
+				// 左右移動とかの加算された値が3.0fを超えていたら落下に切り替わる原因になってた
+				if (_mapFlame["ジャンプ"] < 3.0f)
+				{
+					((Player&)sprite).SetAction(ACTION::JUMPING);
+					continue;
+				}
+				else
+				{
+					// 最高点に到達したら落下に切り替える
+					//_mapFlame[data.first] = 0.0f;
+					((Player&)sprite).SetAction(ACTION::FALLING);
+				}
+
+				//if (_mapFlame["ジャンプ"] >= 0.1f)
+				//{
+				//	if (_mapFlame["ジャンピング"] < 3.0f)
+				//	{
+				//		((Player&)sprite).SetAction(ACTION::JUMPING);
+				//		continue;
+				//	}
+				//	//else
+				//	//{
+				//	//	// 最高点に到達したら落下に切り替える
+				//	//	//_mapFlame[data.first] = 0.0f;
+				//	//	((Player&)sprite).SetAction(ACTION::FALLING);
+				//	//}
+				//}
+				//else if (_mapFlame["ジャンプ"] <= 0.0f && _mapFlame["ジャンピング"] >= 3.0f)
+				//{
+				//	// 最高点に到達したら落下に切り替える
+				//	//_mapFlame[data.first] = 0.0f;
+				//	((Player&)sprite).SetAction(ACTION::FALLING);
+				//}
 
 			}
 
@@ -220,5 +241,3 @@ void ActionCtl::update(float sp,Sprite& sprite)
 		((Player&)sprite).SetAction(ACTION::IDLE);
 	}
 }
-
-

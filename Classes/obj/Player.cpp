@@ -95,6 +95,23 @@ void Player::update(float sp)
 	}
 	//------------------------------------------
 
+	//if (_action_Now == ACTION::JUMPING)
+	//{
+	//	cntTest ++;
+	//	if (cntTest < 20.0f)
+	//	{
+	//		_action_Now = ACTION::JUMPING;
+	//		//actFlg = true;
+	//		//return;
+	//	}
+	//	else
+	//	{
+	//		_action_Now = ACTION::FALLING;
+	//		cntTest = 0.0f;
+	//	}
+	//	//((Player&)sprite).SetAction(ACTION::FALLING);
+	//}
+
 	// 範囲外check
 	OutOfMapCheck();	
 
@@ -131,25 +148,16 @@ void Player::Anim_Registration(Sprite* delta)
 {
 	// アニメーションをキャッシュに登録
 	// idle
-	//AnimMng::addAnimationCache("image/Sprites/player/player-idle/idle-big.plist","player-idle-%d-big.png" , "idle", 1, 4,  false, (float)0.1);
-	// run
-	//AnimMng::addAnimationCache("image/Sprites/player/player-run/run-big.plist", "player-run-%d-big.png", "run", 1, 10, false, (float)0.08);
-	// jump
-	//AnimMng::addAnimationCache("image/Sprites/player/player-jump/jump-big.plist", "player-jump-%d-big.png", "jump", 1, 6, false, (float)0.05);
-	// duck
-	//AnimMng::addAnimationCache("image/Sprites/player/player-duck/duck-big.plist", "player-duck-big.png", "duck", 0, 0, false, (float)1.0);
-
-	// idle
 	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Look_Intro.plist", "look_intro%d.png", "idle", 0, 6, false, (float)0.3);
 
 	// run
 	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Run.plist"      , "run%d.png"  , "run" , 0, 9, false, (float)0.08);
 
-	// duck
-	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Fall.plist"        , "fall%d.png"    , "duck"    , 0, 3,  false, (float)1.0);
+	// fall
+	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Fall.plist"        , "fall%d.png"    , "fall"    , 0, 3,  false, (float)1.0);
 
 	// shoot-up
-	AnimMng::addAnimationCache("image/Sprites/player/player-shoot-up/shoot-up-big.plist", "player-shoot-up-big.png", "shoot-up", 0, 0,  false, (float)1.0);
+	//AnimMng::addAnimationCache("image/Sprites/player/player-shoot-up/shoot-up-big.plist", "player-shoot-up-big.png", "shoot-up", 0, 0,  false, (float)1.0);
 
 	// jump
 	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Jump.plist"        , "jump%d.png" , "jump"    , 0, 3,  false, (float)0.05);
@@ -182,9 +190,9 @@ void Player::OutOfMapCheck(void)
 	_ColLayerSize = _CollisionData->getLayerSize();
 
 	// 上
-	if (_plPos.y > _ColLayerSize.height * _tileChip - 50)
+	if (_plPos.y > _ColLayerSize.height * _tileChip - (_tileChip * 2))
 	{
-		setPosition(getPosition().x , _ColLayerSize.height * _tileChip - 50);
+		setPosition(getPosition().x , _ColLayerSize.height * _tileChip - (_tileChip * 2));
 	}
 
 	// 下
@@ -234,9 +242,10 @@ void Player::actModuleRegistration(void)
 		act.checkPoint1 = Vec2{ 30, 40 };		// 右上
 		act.checkPoint2 = Vec2{ 30,  -10 };		// 右下
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
+		act.jumpFlg = false;
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
 
-		act.whiteList.emplace_back(ACTION::JUMPING);
+		//act.whiteList.emplace_back(ACTION::JUMPING);
 		//act.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("右移動", act);
 	}
@@ -253,9 +262,11 @@ void Player::actModuleRegistration(void)
 		act.checkPoint1 = Vec2{ -30, 40 };			// 左上
 		act.checkPoint2 = Vec2{ -30,  -10 };		// 左下
 		act.touch = TOUCH_TIMMING::TOUCHING;    // 押しっぱなし
-		//act.blackList.emplace_back(ACTION::FALL);
+		act.jumpFlg = false;
 
-		act.whiteList.emplace_back(ACTION::JUMPING);
+		//act.blackList.emplace_back(ACTION::FALLING);
+
+		//act.whiteList.emplace_back(ACTION::JUMPING);
 		//act.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("左移動", act);
 	}
@@ -268,7 +279,9 @@ void Player::actModuleRegistration(void)
 		flipAct.action = ACTION::NON;
 		flipAct.button = BUTTON::RIGHT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
-		//flipAct.blackList.emplace_back(ACTION::FALL);
+		flipAct.jumpFlg = false;
+
+		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
 		//flipAct.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("右向き", flipAct);
@@ -282,7 +295,9 @@ void Player::actModuleRegistration(void)
 		flipAct.action = ACTION::NON;
 		flipAct.button = BUTTON::LEFT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
-		//flipAct.blackList.emplace_back(ACTION::FALL);
+		flipAct.jumpFlg = false;
+
+		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
 		//flipAct.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("左向き", flipAct);
@@ -290,19 +305,48 @@ void Player::actModuleRegistration(void)
 
 	// 落下
 	{
+		// checkkeylistに離している間の設定もしたけど特に効果なし
 		ActModule act;
 		act.action = ACTION::FALLING;
+		act.state = _oprtState;
+		act.button = BUTTON::DOWN;
 		//act.checkPoint1 = Vec2{ 0,-70 };		// 左下
 		//act.checkPoint2 = Vec2{ 0,-70 };		// 右下
 		act.checkPoint1 = Vec2{ 0,-30 };		// 左下
 		act.checkPoint2 = Vec2{ 0,-30 };		// 右下
 		act.gravity = Vec2{ 0.0f,-5.0f };
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
+		act.jumpFlg = false;
 		act.blackList.emplace_back(ACTION::JUMPING);	// ジャンプ中に落下してほしくない
 		_actCtl.ActCtl("落下", act);
 	}
 
 	// ジャンプ
+	//{
+	//	ActModule act;
+	//	act.state = _oprtState;
+	//	act.button = BUTTON::UP;
+	//	act.action = ACTION::JUMP;
+	//	//act.checkPoint1 = Vec2{ 0, 10 };		// 左上
+	//	//act.checkPoint2 = Vec2{ 0, 10 };		// 右上
+	//	act.checkPoint1 = Vec2{ -10, 30 };		// 左上
+	//	act.checkPoint2 = Vec2{ +10, 30 };		// 右上
+	//	act.jumpVel = Vec2{ 0.0f,20.0f };
+	//	act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
+
+	//	// これをコメントアウトしていると、左右押しながらのジャンプができる
+	//	// でも連続でジャンプして上昇し続けるようになる
+	//	// しかもFALLとJUMPが混ざって高さが出ない
+	//	act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
+	//	act.jumpFlg = true;
+	//	//act.blackList.emplace_back(ACTION::ATTACK);
+
+	//	//act.whiteList.emplace_back(ACTION::RUN);
+
+	//	_actCtl.ActCtl("ジャンプ", act);
+	//}
+
+	// ジャンピング
 	{
 		ActModule act;
 		act.state = _oprtState;
@@ -313,14 +357,17 @@ void Player::actModuleRegistration(void)
 		act.checkPoint1 = Vec2{ -10, 30 };		// 左上
 		act.checkPoint2 = Vec2{ +10, 30 };		// 右上
 		act.jumpVel = Vec2{ 0.0f,20.0f };
-		act.touch = TOUCH_TIMMING::TOUCHING;	// 押した瞬間
-		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
+		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
+		act.jumpFlg = true;
 
+		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
+		//act.blackList.emplace_back(ACTION::IDLE);
 		//act.blackList.emplace_back(ACTION::ATTACK);
 
-		//act.whiteList.emplace_back(ACTION::RUN);
+		//act.whiteList.emplace_back(ACTION::JUMP);
 
 		_actCtl.ActCtl("ジャンプ", act);
+		//_actCtl.ActCtl("ジャンピング", act);
 	}
 
 	// 攻撃

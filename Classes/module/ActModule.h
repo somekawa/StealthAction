@@ -33,4 +33,6 @@ struct ActModule {
 	std::list<funcActModule>act;
 
 	float flame;												// 落下とジャンプにつかうフレーム数
+
+	bool jumpFlg;
 };

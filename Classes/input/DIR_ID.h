@@ -12,11 +12,9 @@ enum class DIR {
 enum class ACTION {
 	NON,
 	IDLE,
-	UP,
+	JUMP,
 	JUMPING,
-	DUCK,
 	RUN,
-	FALL,
 	FALLING,
 	ATTACK,
 	MAX

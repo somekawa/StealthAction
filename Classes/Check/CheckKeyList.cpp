@@ -23,5 +23,23 @@ bool CheckKeyList::operator()(cocos2d::Sprite & sprite, ActModule & module)
 		}
 	}
 
+	// ó£ÇµÇ¡ÇœÇ»Çµ
+	if (module.touch == TOUCH_TIMMING::RELEASED)
+	{
+		if (!oldKey[static_cast<int>(module.button)] && !nowKey[static_cast<int>(module.button)])
+		{
+			return true;
+		}
+	}
+
+	// ó£ÇµÇΩèuä‘
+	if (module.touch == TOUCH_TIMMING::ON_RELEASE)
+	{
+		if (oldKey[static_cast<int>(module.button)] && !nowKey[static_cast<int>(module.button)])
+		{
+			return true;
+		}
+	}
+
 	return false;
 }

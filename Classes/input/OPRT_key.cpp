@@ -92,6 +92,7 @@ void OPRT_key::keyflg(Sprite* sprite)
 
 const std::array<bool, static_cast<int>(BUTTON::MAX)> &OPRT_key::GetNowData(void)
 {
+	//‚±‚±‚ªinput‚Ì‰Â”\«??
 	return _keyData._data;
 }
 
