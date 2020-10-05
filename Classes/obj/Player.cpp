@@ -322,29 +322,29 @@ void Player::actModuleRegistration(void)
 	}
 
 	// ジャンプ
-	//{
-	//	ActModule act;
-	//	act.state = _oprtState;
-	//	act.button = BUTTON::UP;
-	//	act.action = ACTION::JUMP;
-	//	//act.checkPoint1 = Vec2{ 0, 10 };		// 左上
-	//	//act.checkPoint2 = Vec2{ 0, 10 };		// 右上
-	//	act.checkPoint1 = Vec2{ -10, 30 };		// 左上
-	//	act.checkPoint2 = Vec2{ +10, 30 };		// 右上
-	//	act.jumpVel = Vec2{ 0.0f,20.0f };
-	//	act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
+	{
+		ActModule act;
+		act.state = _oprtState;
+		act.button = BUTTON::UP;
+		act.action = ACTION::JUMP;
+		//act.checkPoint1 = Vec2{ 0, 10 };		// 左上
+		//act.checkPoint2 = Vec2{ 0, 10 };		// 右上
+		act.checkPoint1 = Vec2{ -10, 30 };		// 左上
+		act.checkPoint2 = Vec2{ +10, 30 };		// 右上
+		act.jumpVel = Vec2{ 0.0f,20.0f };
+		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 
-	//	// これをコメントアウトしていると、左右押しながらのジャンプができる
-	//	// でも連続でジャンプして上昇し続けるようになる
-	//	// しかもFALLとJUMPが混ざって高さが出ない
-	//	act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
-	//	act.jumpFlg = true;
-	//	//act.blackList.emplace_back(ACTION::ATTACK);
+		// これをコメントアウトしていると、左右押しながらのジャンプができる
+		// でも連続でジャンプして上昇し続けるようになる
+		// しかもFALLとJUMPが混ざって高さが出ない
+		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
+		act.jumpFlg = true;
+		//act.blackList.emplace_back(ACTION::ATTACK);
 
-	//	//act.whiteList.emplace_back(ACTION::RUN);
+		//act.whiteList.emplace_back(ACTION::RUN);
 
-	//	_actCtl.ActCtl("ジャンプ", act);
-	//}
+		_actCtl.ActCtl("ジャンプ", act);
+	}
 
 	// ジャンピング
 	{
@@ -361,13 +361,14 @@ void Player::actModuleRegistration(void)
 		act.jumpFlg = true;
 
 		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
-		//act.blackList.emplace_back(ACTION::IDLE);
+		act.blackList.emplace_back(ACTION::IDLE);
+		act.blackList.emplace_back(ACTION::RUN);
 		//act.blackList.emplace_back(ACTION::ATTACK);
 
-		//act.whiteList.emplace_back(ACTION::JUMP);
+		act.whiteList.emplace_back(ACTION::JUMP);
 
-		_actCtl.ActCtl("ジャンプ", act);
-		//_actCtl.ActCtl("ジャンピング", act);
+		_actCtl.ActCtl("ジャンピング", act);
+		//_actCtl.ActCtl("ジャンプ", act);
 	}
 
 	// 攻撃

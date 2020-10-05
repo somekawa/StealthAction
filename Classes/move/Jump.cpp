@@ -3,6 +3,7 @@
 
 bool Jump::operator()(cocos2d::Sprite& sprite, ActModule& module)
 {
+	TRACE("JUMP\n");
 	if (!module.jumpFlg)
 	{
 		module.jumpFlg = true;
