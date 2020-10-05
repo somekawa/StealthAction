@@ -24,6 +24,7 @@
 
 #include "GameScene.h"
 #include "_Debug/_DebugDispOutCC.h"
+#include "_Debug/_DebugConOut.h"
 
 USING_NS_CC;
 
@@ -114,6 +115,8 @@ bool Game::init()
 		this->addChild(label, 1);
 	}
 
+	this->setName("GameScene");
+
 	// Scene - Layer - Sprite
 	// bgLayer‚ÍGameScene‚É’¼Ú‚Ô‚ç‰º‚ª‚é
 	auto bgLayer = Layer::create();
@@ -166,7 +169,7 @@ bool Game::init()
 	//Sprite* sp;
 	//sp->setName("aa");
 	//_DebugDispOutCC::GetInstance().DrawRect("aa", Vec2(0, 0), Vec2(100, 100), Vec2(200, 200), Color4F::BLUE);
-	auto enemy = map->getLayer("Collision");
+	auto enemy = map->getLayer("Layer1");
 	int chipSize = 48;
 	auto mapSize = enemy->getLayerSize();
 	for (int y = 0; y < mapSize.height; y++)
@@ -200,13 +203,28 @@ bool Game::init()
 
 void Game::update(float sp)
 {
-	// “–‚½‚è”»’è—ûK’†
+	//// “–‚½‚è”»’è—ûK’†
+	//int chipsize = 48;
+	//int scale = 3.0f;
 	//auto plpos = plSprite->getPosition();
 	//auto plsize = plSprite->getContentSize();
-	//if (plpos.x + plsize.width >  enemySprite->getPosition().x)
+	//auto enepos = enemySprite->getPosition();
+	//if (plpos.x + (plsize.width * scale)/2   >=  enemySprite->getPosition().x - chipsize / 2 &&
+	//	plpos.x - (plsize.width * scale)/ 2  < enemySprite->getPosition().x + chipsize / 2   &&
+	//	plpos.y + (plsize.height * scale)/2  >= enemySprite->getPosition().y + chipsize / 2  &&
+	//	plpos.y - (plsize.height * scale) / 2 < enemySprite->getPosition().y + chipsize / 2)
 	//{
 	//	int a = 0;
 	//}
+
+	////auto pposx = plpos.x + plsize.width * scale;
+	////auto eposx = enemySprite->getPosition().x - chipsize;
+	////auto pposy = plpos.y + plsize.height * scale;
+	////auto eposy = enemySprite->getPosition().y;
+
+	//TRACE("%f\n", plpos.y);		// 168
+	////TRACE("%f\n", enepos.y);	// 156 + 24
+
 }
 
 void Game::menuCloseCallback(Ref* pSender)

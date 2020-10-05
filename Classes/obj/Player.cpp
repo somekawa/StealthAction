@@ -1,3 +1,4 @@
+#include "GameScene.h"
 #include "Player.h"
 #include "anim/ActionCtl.h"
 #include "input/DIR_ID.h"
@@ -64,6 +65,12 @@ Player::~Player()
 // 毎フレーム更新
 void Player::update(float sp)
 {
+	// getnameがgamesceneでない場合、何もしないreturn処理
+	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
+	{
+		return;
+	}
+
 	_actCtl.update(sp,*this);
 
 	// 実行する入力先(keyかtouch)のupdateへ移動
@@ -111,6 +118,37 @@ void Player::update(float sp)
 	//	}
 	//	//((Player&)sprite).SetAction(ACTION::FALLING);
 	//}
+
+
+	//// 当たり判定練習中
+	//int chipsize = 48;
+	//int scale = 3.0f;
+	//auto plpos = this->getPosition();
+	//auto plsize = this->getContentSize();
+	//auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
+
+	//if (plpos.x + (plsize.width * scale) / 2 >= enepos.x - chipsize / 2 &&
+	//	plpos.x - (plsize.width * scale) / 2 < enepos.x + chipsize / 2 &&
+	//	plpos.y + (plsize.height * scale) / 2 >= enepos.y + chipsize / 2 &&
+	//	plpos.y - (plsize.height * scale) / 2 < enepos.y + chipsize / 2)
+	//{
+	//	// 攻撃した瞬間に当たり判定を入れる
+	//	if (_action_Now == ACTION::ATTACK)
+	//	{
+	//		// 敵の消滅が必要?
+	//		int a = 0;
+	//		((Game*)Director::getInstance()->getRunningScene())->enemySprite->removeFromParentAndCleanup(true);
+	//	}
+	//	//int a = 0;
+	//}
+
+	//auto pposx = plpos.x + plsize.width * scale;
+	//auto eposx = enemySprite->getPosition().x - chipsize;
+	//auto pposy = plpos.y + plsize.height * scale;
+	//auto eposy = enemySprite->getPosition().y;
+	//TRACE("%f\n", plpos.y);	// 地面で168
+	//TRACE("%f\n", enepos.y);	// 180(156 + 24)
+
 
 	// 範囲外check
 	OutOfMapCheck();	
@@ -246,7 +284,7 @@ void Player::actModuleRegistration(void)
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
-		//act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("右移動", act);
 	}
 
@@ -267,7 +305,7 @@ void Player::actModuleRegistration(void)
 		//act.blackList.emplace_back(ACTION::FALLING);
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
-		//act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("左移動", act);
 	}
 
@@ -283,7 +321,7 @@ void Player::actModuleRegistration(void)
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
-		//flipAct.blackList.emplace_back(ACTION::ATTACK);
+		flipAct.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("右向き", flipAct);
 	}
 
@@ -299,7 +337,7 @@ void Player::actModuleRegistration(void)
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
-		//flipAct.blackList.emplace_back(ACTION::ATTACK);
+		flipAct.blackList.emplace_back(ACTION::ATTACK);
 		_actCtl.ActCtl("左向き", flipAct);
 	}
 
@@ -339,7 +377,7 @@ void Player::actModuleRegistration(void)
 		// しかもFALLとJUMPが混ざって高さが出ない
 		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
 		act.jumpFlg = true;
-		//act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back(ACTION::ATTACK);
 
 		//act.whiteList.emplace_back(ACTION::RUN);
 
@@ -363,7 +401,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
 		act.blackList.emplace_back(ACTION::IDLE);
 		act.blackList.emplace_back(ACTION::RUN);
-		//act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back(ACTION::ATTACK);
 
 		act.whiteList.emplace_back(ACTION::JUMP);
 
