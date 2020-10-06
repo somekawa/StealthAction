@@ -205,26 +205,6 @@ bool Game::init()
 
 void Game::update(float sp)
 {
-	//// “–‚½‚è”»’è—ûK’†
-	//int chipsize = 48;
-	//int scale = 3.0f;
-	//auto plpos = plSprite->getPosition();
-	//auto plsize = plSprite->getContentSize();
-	//auto enepos = enemySprite->getPosition();
-	//if (plpos.x + (plsize.width * scale)/2   >=  enemySprite->getPosition().x - chipsize / 2 &&
-	//	plpos.x - (plsize.width * scale)/ 2  < enemySprite->getPosition().x + chipsize / 2   &&
-	//	plpos.y + (plsize.height * scale)/2  >= enemySprite->getPosition().y + chipsize / 2  &&
-	//	plpos.y - (plsize.height * scale) / 2 < enemySprite->getPosition().y + chipsize / 2)
-	//{
-	//	int a = 0;
-	//}
-	////auto pposx = plpos.x + plsize.width * scale;
-	////auto eposx = enemySprite->getPosition().x - chipsize;
-	////auto pposy = plpos.y + plsize.height * scale;
-	////auto eposy = enemySprite->getPosition().y;
-	//TRACE("%f\n", plpos.y);		// 168
-	////TRACE("%f\n", enepos.y);	// 156 + 24
-
 	//if (++frame == 180){
 	//	auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
 	//	map->removeFromParent();

@@ -120,7 +120,7 @@ void Player::update(float sp)
 	//}
 
 
-	//// 当たり判定練習中
+	// 当たり判定練習中
 	if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
 	{
 		int chipsize = 48;
@@ -131,8 +131,8 @@ void Player::update(float sp)
 
 		if (plpos.x + (plsize.width * scale) / 2 >= enepos.x - chipsize / 2 &&
 			plpos.x - (plsize.width * scale) / 2 < enepos.x + chipsize / 2 &&
-			plpos.y + (plsize.height * scale) / 2 >= enepos.y + chipsize / 2 &&
-			plpos.y - (plsize.height * scale) / 2 < enepos.y + chipsize / 2)
+			plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
+			plpos.y < enepos.y + chipsize / 2)
 		{
 			// 攻撃した瞬間に当たり判定を入れる
 			if (_action_Now == ACTION::ATTACK)
@@ -142,6 +142,7 @@ void Player::update(float sp)
 				((Game*)Director::getInstance()->getRunningScene())->enemySprite->setVisible(false);
 			}
 		}
+
 	}
 
 	//auto pposx = plpos.x + plsize.width * scale;
@@ -278,10 +279,8 @@ void Player::actModuleRegistration(void)
 		act.vel = Vec2{ 5,0 };
 		act.action = ACTION::RUN;
 		act.button = BUTTON::RIGHT;
-		//act.checkPoint1 = Vec2{ charSize.x/2, charSize.y };		// 右上
-		//act.checkPoint2 = Vec2{ charSize.x/2, 0 };				// 右下
-		act.checkPoint1 = Vec2{ 30, 40 };			// 右上
-		act.checkPoint2 = Vec2{ 30,  -10 };		// 右下
+		act.checkPoint1 = Vec2{ charSize.x/2, charSize.y/2 };	// 右上
+		act.checkPoint2 = Vec2{ charSize.x/2,  15 };			// 右下
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
 		act.jumpFlg = false;
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
@@ -298,10 +297,8 @@ void Player::actModuleRegistration(void)
 		act.vel = Vec2{ -5,0 };
 		act.action = ACTION::RUN;
 		act.button = BUTTON::LEFT;
-		//act.checkPoint1 = Vec2{ -charSize.x / 2, charSize.y };		// 左上
-		//act.checkPoint2 = Vec2{ -charSize.x / 2, 0 };				// 左下
-		act.checkPoint1 = Vec2{ -30, 40 };			// 左上
-		act.checkPoint2 = Vec2{ -30,  -10 };			// 左下
+		act.checkPoint1 = Vec2{ -charSize.x/2, charSize.y/2 };	// 左上
+		act.checkPoint2 = Vec2{ -charSize.x/2,  15 };			// 左下
 		act.touch = TOUCH_TIMMING::TOUCHING;    // 押しっぱなし
 		act.jumpFlg = false;
 
@@ -355,8 +352,8 @@ void Player::actModuleRegistration(void)
 		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
 		// ここのアンカーポイント設定時に2回ジャンプの原因?
 		// 左右移動が埋まらない高さだとジャンプ正常??
-		act.checkPoint1 = Vec2{ 0,-30 };		// 左下
-		act.checkPoint2 = Vec2{ 0,-30 };		// 右下
+		act.checkPoint1 = Vec2{ 0,0 };		// 左下
+		act.checkPoint2 = Vec2{ 0,0 };		// 右下
 		act.gravity = Vec2{ 0.0f,-5.0f };
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
 		act.jumpFlg = false;
@@ -370,10 +367,10 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::UP;
 		act.action = ACTION::JUMP;
-		//act.checkPoint1 = Vec2{ 0, charSize.y };		// 左上
-		//act.checkPoint2 = Vec2{ 0, charSize.y };		// 右上
-		act.checkPoint1 = Vec2{ -10, 30 };			// 左上
-		act.checkPoint2 = Vec2{ +10, 30 };			// 右上
+		act.checkPoint1 = Vec2{ -charSize.x/3, charSize.y };		// 左上
+		act.checkPoint2 = Vec2{ charSize.x/3, charSize.y };			// 右上
+		//act.checkPoint1 = Vec2{ -10, 30 };			// 左上
+		//act.checkPoint2 = Vec2{ +10, 30 };			// 右上
 		act.jumpVel = Vec2{ 0.0f,20.0f };
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 
@@ -395,10 +392,10 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::UP;
 		act.action = ACTION::JUMPING;
-		//act.checkPoint1 = Vec2{ 0, charSize.y };		// 左上
-		//act.checkPoint2 = Vec2{ 0, charSize.y };		// 右上
-		act.checkPoint1 = Vec2{ -10, 30 };			// 左上
-		act.checkPoint2 = Vec2{ +10, 30 };			// 右上
+		act.checkPoint1 = Vec2{ -charSize.x/3, charSize.y };		// 左上
+		act.checkPoint2 = Vec2{ charSize.x/3, charSize.y };		// 右上
+		//act.checkPoint1 = Vec2{ -10, 30 };			// 左上
+		//act.checkPoint2 = Vec2{ +10, 30 };			// 右上
 		act.jumpVel = Vec2{ 0.0f,20.0f };
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
 		act.jumpFlg = true;

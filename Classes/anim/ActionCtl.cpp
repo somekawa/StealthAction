@@ -79,8 +79,8 @@ void ActionCtl::ActCtl(std::string actName,ActModule & module)
 	{
 		_mapModule.emplace(actName, std::move(module));
 		_mapModule[actName].act.emplace_back(CheckKeyList());
-		_mapModule[actName].act.emplace_back(CheckObjHit());
-		_mapModule[actName].act.emplace_back(CheckList());
+		//_mapModule[actName].act.emplace_back(CheckObjHit());
+		//_mapModule[actName].act.emplace_back(CheckList());
 		_mapModule[actName].runAction = Attack();
 	}
 
