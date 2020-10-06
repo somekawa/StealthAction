@@ -157,7 +157,7 @@ void ActionCtl::update(float sp,Sprite& sprite)
 			if (((Player&)sprite).GetAction() == ACTION::JUMPING)
 			{
 				actFlg = true;
-				((Player&)sprite).SetAction(ACTION::JUMPING);
+				//((Player&)sprite).SetAction(ACTION::JUMPING);
 
 				// _mapFlame[data.first]にしてしまうと、現在のアクションがジャンプでも
 				// 左右移動とかの加算された値が3.0fを超えていたら落下に切り替わる原因になってた
@@ -169,7 +169,6 @@ void ActionCtl::update(float sp,Sprite& sprite)
 				else
 				{
 					// 最高点に到達したら落下に切り替える
-					//_mapFlame[data.first] = 0.0f;
 					((Player&)sprite).SetAction(ACTION::FALLING);
 				}
 			}

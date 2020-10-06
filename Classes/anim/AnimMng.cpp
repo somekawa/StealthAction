@@ -48,7 +48,7 @@ void AnimMng::addAnimationCache( std::string plist, const char* plist_in_png, st
 
 void AnimMng::anim_action(Sprite * delta)
 {
-	// 通常の顔のアニメーションを取得
+	// アニメーションを取得
 	AnimationCache *animationCache = AnimationCache::getInstance();
 	Animation *animation = animationCache->getAnimation("idle");
 

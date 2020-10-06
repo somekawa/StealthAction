@@ -156,6 +156,8 @@ bool Game::init()
 
 	// キャラサイズ3倍
 	plSprite->setScale(3.0f);
+	// アンカーポイント下中央
+	plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
 
 	this->addChild(charLayer, (int)zOlder::CHAR);
 
@@ -216,52 +218,51 @@ void Game::update(float sp)
 	//{
 	//	int a = 0;
 	//}
-
 	////auto pposx = plpos.x + plsize.width * scale;
 	////auto eposx = enemySprite->getPosition().x - chipsize;
 	////auto pposy = plpos.y + plsize.height * scale;
 	////auto eposy = enemySprite->getPosition().y;
-
 	//TRACE("%f\n", plpos.y);		// 168
 	////TRACE("%f\n", enepos.y);	// 156 + 24
-	if (++frame == 180){
-		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
-		map->removeFromParent();
-		auto newMap = TMXTiledMap::create("image/Environment/uratest.tmx");
-		newMap->setName("MapData");
-		colLayerRemain = newMap->getLayer("Collision");
-		colLayerRemain->setName("col");
-		colLayerRemain->retain();
 
-		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
-	}
-	if(frame == 300)
-	{
-		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
-		map->removeFromParent();
-		auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
-		newMap->setName("MapData");
-		auto col = newMap->getLayer("Collision");
-		col->setName("col");
-		col->removeFromParent();
-		newMap->addChild(colLayerRemain);
-		colLayerRemain->release();
+	//if (++frame == 180){
+	//	auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+	//	map->removeFromParent();
+	//	auto newMap = TMXTiledMap::create("image/Environment/uratest.tmx");
+	//	newMap->setName("MapData");
+	//	colLayerRemain = newMap->getLayer("Collision");
+	//	colLayerRemain->setName("col");
+	//	colLayerRemain->retain();
 
-		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
-	}
-	if (frame == 420)
-	{
-		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
-		map->removeFromParent();
-		auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
-		newMap->setName("MapData");
+	//	this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+	//}
+	//if(frame == 300)
+	//{
+	//	auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+	//	map->removeFromParent();
+	//	auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
+	//	newMap->setName("MapData");
+	//	auto col = newMap->getLayer("Collision");
+	//	col->setName("col");
+	//	col->removeFromParent();
+	//	newMap->addChild(colLayerRemain);
+	//	colLayerRemain->release();
 
-		auto col = newMap->getLayer("Collision");
-		col->setName("col");
+	//	this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+	//}
+	//if (frame == 420)
+	//{
+	//	auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+	//	map->removeFromParent();
+	//	auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
+	//	newMap->setName("MapData");
 
-		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
-		frame = 0;
-	}
+	//	auto col = newMap->getLayer("Collision");
+	//	col->setName("col");
+
+	//	this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+	//	frame = 0;
+	//}
 }
 
 void Game::menuCloseCallback(Ref* pSender)
