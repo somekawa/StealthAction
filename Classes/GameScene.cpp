@@ -224,6 +224,19 @@ void Game::update(float sp)
 
 	//TRACE("%f\n", plpos.y);		// 168
 	////TRACE("%f\n", enepos.y);	// 156 + 24
+	if (++frame == 180){
+		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+		map->removeFromParent();
+		auto newMap = TMXTiledMap::create("image/Environment/uratest.tmx");
+		newMap->setName("MapData");
+		colLayerRemain = newMap->getLayer("Collision");
+		colLayerRemain->setName("col");
+		colLayerRemain->retain();
+
+		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+	}
+	if(frame == 300)
+	{
 		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
 		map->removeFromParent();
 		auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
