@@ -224,7 +224,31 @@ void Game::update(float sp)
 
 	//TRACE("%f\n", plpos.y);		// 168
 	////TRACE("%f\n", enepos.y);	// 156 + 24
+		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+		map->removeFromParent();
+		auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
+		newMap->setName("MapData");
+		auto col = newMap->getLayer("Collision");
+		col->setName("col");
+		col->removeFromParent();
+		newMap->addChild(colLayerRemain);
+		colLayerRemain->release();
 
+		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+	}
+	if (frame == 420)
+	{
+		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+		map->removeFromParent();
+		auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
+		newMap->setName("MapData");
+
+		auto col = newMap->getLayer("Collision");
+		col->setName("col");
+
+		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+		frame = 0;
+	}
 }
 
 void Game::menuCloseCallback(Ref* pSender)

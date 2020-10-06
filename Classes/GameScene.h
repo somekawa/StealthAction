@@ -47,7 +47,11 @@ public:
 
     Player* plSprite;
     cocos2d::Sprite* enemySprite;
-    
+
+    cocos2d::TMXLayer* colLayerRemain;
+
+    int frame = 0;
+
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
     

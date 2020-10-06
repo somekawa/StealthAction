@@ -151,7 +151,7 @@ void Player::update(float sp)
 
 
 	// �͈͊Ocheck
-	OutOfMapCheck();	
+	//OutOfMapCheck();	
 
 	if (_action_Now != _action_Old)
 	{
