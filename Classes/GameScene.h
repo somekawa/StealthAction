@@ -26,7 +26,6 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
-#include "obj/Player.h"
 #include "anim/AnimMng.h"
 
  // zOlder(âúçsÇ´)
@@ -36,7 +35,8 @@ enum class zOlder {
     FRONT,
     MAX
 };
-
+class CameraManager;
+class Player;
 class Game : public cocos2d::Scene
 {
 public:
@@ -49,8 +49,10 @@ public:
     cocos2d::Sprite* enemySprite;
 
     cocos2d::TMXLayer* colLayerRemain;
+    std::shared_ptr<CameraManager> cameraManager_;
 
     int frame = 0;
+    float zoom = 1;
 
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);

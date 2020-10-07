@@ -25,6 +25,8 @@
 #include "GameScene.h"
 #include "_Debug/_DebugDispOutCC.h"
 #include "_Debug/_DebugConOut.h"
+#include "CameraManager.h"
+#include "obj/Player.h"
 
 USING_NS_CC;
 
@@ -195,6 +197,14 @@ bool Game::init()
 			}
 		}
 	}
+	
+	// ƒJƒƒ‰ì¬
+	cameraManager_ = std::make_shared<CameraManager>();
+	auto size = Director::getInstance()->getWinSize();
+	cameraManager_->AddCamera(*this, size,CameraType::PLAYER1, CameraFlag::USER1);
+
+	charLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	bgLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
 
 	plSprite->scheduleUpdate();
 
@@ -212,7 +222,7 @@ void Game::update(float sp)
 		colLayerRemain = newMap->getLayer("Collision");
 		colLayerRemain->setName("col");
 		colLayerRemain->retain();
-
+		newMap->setCameraMask(static_cast<int>(CameraFlag::USER1));
 		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
 	}
 	if(frame == 300)
@@ -226,7 +236,7 @@ void Game::update(float sp)
 		col->removeFromParent();
 		newMap->addChild(colLayerRemain);
 		colLayerRemain->release();
-
+		newMap->setCameraMask(static_cast<int>(CameraFlag::USER1));
 		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
 	}
 	if (frame == 420)
@@ -238,11 +248,11 @@ void Game::update(float sp)
 
 		auto col = newMap->getLayer("Collision");
 		col->setName("col");
-
+		newMap->setCameraMask(static_cast<int>(CameraFlag::USER1));
 		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
 		frame = 0;
 	}
-
+	cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
 	//// “–‚½‚è”»’è—p‚Ì˜g‚ğo‚µ‚Ä‚İ‚é
 	//auto ppos = plSprite->getPosition();
 	//auto psize = plSprite->getContentSize();
