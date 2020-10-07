@@ -184,6 +184,16 @@ void ActionCtl::update(float sp,Sprite& sprite)
 				((Player&)sprite).SetAction(ACTION::IDLE);
 			}
 		}
+
+		// プレイヤー向き変更(アンカーポイントの変更に必要)
+		if (actCheck("左向き"))
+		{
+			((Player&)sprite).SetDir(DIR::LEFT);
+		}
+		else if (actCheck("右向き"))
+		{
+			((Player&)sprite).SetDir(DIR::RIGHT);
+		}
 	}
 
 	// 何もアクションが行われていなければIDOLを設定する

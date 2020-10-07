@@ -14,7 +14,8 @@ enum class ACTION {
 	IDLE,
 	JUMP,
 	JUMPING,
-	RUN,
+	RUN_L,
+	RUN_R,
 	FALLING,
 	ATTACK,
 	MAX

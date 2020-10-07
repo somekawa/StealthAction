@@ -52,6 +52,10 @@ Player::Player()
 
 	_action_Now = ACTION::IDLE;
 	_action_Old = ACTION::IDLE;
+	_dir_Now = DIR::RIGHT;
+
+	_attackCheckL = Vec2(0, 0);
+	_attackCheckR = Vec2(0, 0);
 
 	Anim_Registration((Sprite*)this);			// アニメーションの登録
 }
@@ -92,6 +96,16 @@ void Player::update(float sp)
 		cntTest += sp;
 		if (cntTest <= 0.5f)
 		{
+			if (_dir_Now == DIR::LEFT)
+			{
+				// アンカーポイント右端
+				this->setAnchorPoint(Vec2(1.0f, 0.0f));
+			}
+			else if (_dir_Now == DIR::RIGHT)
+			{
+				// アンカーポイント左端
+				this->setAnchorPoint(Vec2(0.0f, 0.0f));
+			}
 			_action_Now = ACTION::ATTACK;
 		}
 		else
@@ -118,40 +132,75 @@ void Player::update(float sp)
 	//	}
 	//	//((Player&)sprite).SetAction(ACTION::FALLING);
 	//}
-
-
 	// 当たり判定練習中
-	if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
-	{
-		int chipsize = 48;
-		int scale = 3.0f;
-		auto plpos = this->getPosition();
-		auto plsize = this->getContentSize();
-		auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
+	//if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
+	//{
+	//	int chipsize = 48;
+	//	int scale = 3.0f;
+	//	auto plpos = this->getPosition();
+	//	auto plsize = this->getContentSize();
+	//	auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
+	//	if (plpos.x + (plsize.width * scale) / 2 >= enepos.x - chipsize / 2 &&
+	//		plpos.x - (plsize.width * scale) / 2 < enepos.x + chipsize / 2 &&
+	//		plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
+	//		plpos.y < enepos.y + chipsize / 2)
+	//	{
+	//		// 攻撃した瞬間に当たり判定を入れる
+	//		if (_action_Now == ACTION::ATTACK)
+	//		{
+	//			// 敵のvisibleをfalseにして見えなくする
+	//			int a = 0;
+	//			((Game*)Director::getInstance()->getRunningScene())->enemySprite->setVisible(false);
+	//		}
+	//	}
+	//}
 
-		if (plpos.x + (plsize.width * scale) / 2 >= enepos.x - chipsize / 2 &&
-			plpos.x - (plsize.width * scale) / 2 < enepos.x + chipsize / 2 &&
-			plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
-			plpos.y < enepos.y + chipsize / 2)
+	if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
+	{
+		if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
 		{
-			// 攻撃した瞬間に当たり判定を入れる
-			if (_action_Now == ACTION::ATTACK)
+			int chipsize = 48;
+			int scale = 3.0f;
+			auto plpos = this->getPosition();
+			auto plsize = this->getContentSize();
+			auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
+
+			// 右の時はoffset+  左はoffset-
+			auto offset = Vec2(plsize.width * 3.0f, 0.0f);
+
+			if (_dir_Now == DIR::LEFT)
 			{
-				// 敵のvisibleをfalseにして見えなくする
-				int a = 0;
-				((Game*)Director::getInstance()->getRunningScene())->enemySprite->setVisible(false);
+				_attackCheckL = Vec2(plpos.x + plsize.width / 2, plpos.y) - offset;
+				_attackCheckR = Vec2(plpos.x + plsize.width + plsize.width / 2, plpos.y + plsize.width) - offset;
+			}
+			else if (_dir_Now == DIR::RIGHT)
+			{
+				_attackCheckL = Vec2(plpos.x - (plsize.width * scale + plsize.width * scale / 2), plpos.y + plsize.width * scale) + offset;
+				_attackCheckR = Vec2(plpos.x - plsize.width * scale / 2, plpos.y) + offset;
+			}
+
+			auto e = enepos.x - chipsize / 2;
+			auto ee = enepos.x + chipsize / 2;
+
+			//TRACE("%f\n", _attackCheckL.x + offset.x);
+
+			if (_attackCheckR.x >= enepos.x - chipsize / 2 &&
+				_attackCheckL.x < enepos.x + chipsize / 2 /*&&
+				plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
+				plpos.y < enepos.y + chipsize / 2*/)
+			{
+				// 攻撃した瞬間に当たり判定を入れる
+				if (_action_Now == ACTION::ATTACK)
+				{
+					// 敵のvisibleをfalseにして見えなくする
+					((Game*)Director::getInstance()->getRunningScene())->enemySprite->setVisible(false);
+				}
 			}
 		}
-
 	}
 
-	//auto pposx = plpos.x + plsize.width * scale;
-	//auto eposx = enemySprite->getPosition().x - chipsize;
-	//auto pposy = plpos.y + plsize.height * scale;
-	//auto eposy = enemySprite->getPosition().y;
-	//TRACE("%f\n", plpos.y);	// 地面で168
-	//TRACE("%f\n", enepos.y);	// 180(156 + 24)
-
+	auto plpos = this->getPosition();
+	TRACE("%f\n", plpos.x);
 
 	// 範囲外check
 	OutOfMapCheck();	
@@ -178,7 +227,7 @@ void Player::AnimCheck(cocos2d::Sprite * delta)
 	{
 		if (GetAction() == _act)
 		{
-			AnimMng::ChangeAnim(delta, _animTable[static_cast<int>(_act)]);
+			lpAnimMng.ChangeAnim(delta, _animTable[static_cast<int>(_act)]);
 			return;							// 一致したときにそれ以上for文を回す必要がないからreturnする
 		}
 	}
@@ -189,24 +238,24 @@ void Player::Anim_Registration(Sprite* delta)
 {
 	// アニメーションをキャッシュに登録
 	// idle
-	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Look_Intro.plist", "look_intro%d.png", "idle", 0, 6, false, (float)0.3);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Look_Intro.plist", "look_intro%d.png", "idle", 0, 6, false, (float)0.3);
 
 	// run
-	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Run.plist"      , "run%d.png"  , "run" , 0, 9, false, (float)0.08);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Run.plist"      , "run%d.png"  , "run" , 0, 9, false, (float)0.08);
 
 	// fall
-	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Fall.plist"        , "fall%d.png"    , "fall"    , 0, 3,  false, (float)1.0);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Fall.plist"        , "fall%d.png"    , "fall"    , 0, 3,  false, (float)1.0);
 
 	// shoot-up
-	//AnimMng::addAnimationCache("image/Sprites/player/player-shoot-up/shoot-up-big.plist", "player-shoot-up-big.png", "shoot-up", 0, 0,  false, (float)1.0);
+	//lpAnimMng.addAnimationCache("image/Sprites/player/player-shoot-up/shoot-up-big.plist", "player-shoot-up-big.png", "shoot-up", 0, 0,  false, (float)1.0);
 
 	// jump
-	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Jump.plist"        , "jump%d.png" , "jump"    , 0, 3,  false, (float)0.05);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Jump.plist"        , "jump%d.png" , "jump"    , 0, 3,  false, (float)0.05);
 
 	// attack
-	AnimMng::addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Attack1.plist", "attack1_%d.png", "attack", 0, 9, false, (float)0.05);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Attack1.plist", "attack1_%d.png", "attack", 0, 9, false, (float)0.05);
 
-	AnimMng::anim_action(delta);
+	lpAnimMng.anim_action(delta);
 }
 
 // 現在のアクション情報を取得する
@@ -219,6 +268,11 @@ ACTION Player::GetAction(void)
 void Player::SetAction(ACTION action)
 {
 	_action_Now = action;
+}
+
+void Player::SetDir(DIR dir)
+{
+	_dir_Now = dir;
 }
 
 // playerがmapの範囲外に出ていないかの確認
@@ -277,7 +331,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = _oprtState;
 		act.vel = Vec2{ 5,0 };
-		act.action = ACTION::RUN;
+		act.action = ACTION::RUN_R;
 		act.button = BUTTON::RIGHT;
 		act.checkPoint1 = Vec2{ charSize.x/2, charSize.y/2 };	// 右上
 		act.checkPoint2 = Vec2{ charSize.x/2,  15 };			// 右下
@@ -295,7 +349,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = _oprtState;
 		act.vel = Vec2{ -5,0 };
-		act.action = ACTION::RUN;
+		act.action = ACTION::RUN_L;
 		act.button = BUTTON::LEFT;
 		act.checkPoint1 = Vec2{ -charSize.x/2, charSize.y/2 };	// 左上
 		act.checkPoint2 = Vec2{ -charSize.x/2,  15 };			// 左下
@@ -350,10 +404,8 @@ void Player::actModuleRegistration(void)
 		act.button = BUTTON::DOWN;
 		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
 		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
-		// ここのアンカーポイント設定時に2回ジャンプの原因?
-		// 左右移動が埋まらない高さだとジャンプ正常??
-		act.checkPoint1 = Vec2{ 0,0 };		// 左下
-		act.checkPoint2 = Vec2{ 0,0 };		// 右下
+		act.checkPoint1 = Vec2{ 0,0 };				// 左下
+		act.checkPoint2 = Vec2{ 0,0 };				// 右下
 		act.gravity = Vec2{ 0.0f,-5.0f };
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
 		act.jumpFlg = false;
@@ -369,8 +421,8 @@ void Player::actModuleRegistration(void)
 		act.action = ACTION::JUMP;
 		act.checkPoint1 = Vec2{ -charSize.x/3, charSize.y };		// 左上
 		act.checkPoint2 = Vec2{ charSize.x/3, charSize.y };			// 右上
-		//act.checkPoint1 = Vec2{ -10, 30 };			// 左上
-		//act.checkPoint2 = Vec2{ +10, 30 };			// 右上
+		//act.checkPoint1 = Vec2{ -10, 30 };						// 左上
+		//act.checkPoint2 = Vec2{ +10, 30 };						// 右上
 		act.jumpVel = Vec2{ 0.0f,20.0f };
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 
@@ -392,17 +444,18 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::UP;
 		act.action = ACTION::JUMPING;
-		act.checkPoint1 = Vec2{ -charSize.x/3, charSize.y };		// 左上
+		act.checkPoint1 = Vec2{ -charSize.x/3, charSize.y };	// 左上
 		act.checkPoint2 = Vec2{ charSize.x/3, charSize.y };		// 右上
-		//act.checkPoint1 = Vec2{ -10, 30 };			// 左上
-		//act.checkPoint2 = Vec2{ +10, 30 };			// 右上
+		//act.checkPoint1 = Vec2{ -10, 30 };					// 左上
+		//act.checkPoint2 = Vec2{ +10, 30 };					// 右上
 		act.jumpVel = Vec2{ 0.0f,20.0f };
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
 		act.jumpFlg = true;
 
 		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
 		act.blackList.emplace_back(ACTION::IDLE);
-		act.blackList.emplace_back(ACTION::RUN);
+		act.blackList.emplace_back(ACTION::RUN_L);
+		act.blackList.emplace_back(ACTION::RUN_R);
 		act.blackList.emplace_back(ACTION::ATTACK);
 
 		act.whiteList.emplace_back(ACTION::JUMP);

@@ -21,17 +21,18 @@ public:
 
 	ACTION GetAction(void);										// 現在のアクション情報を取得する
 	void SetAction(ACTION action);								// 現在のアクション状態をセットする
-
+	void SetDir(DIR dir);										// 現在の方向をセットする
 private:
 	CREATE_FUNC(Player);
 
 	// アニメーション関係
 	void Anim_Registration(cocos2d::Sprite* delta);				// アニメーションの登録
 	void AnimCheck(cocos2d::Sprite* delta);						// アニメーション切り替え指定
-	const char* _animTable[static_cast<int>(ACTION::MAX)] = { "idle","idle","jump","jump","run","fall","attack" }; // AnimCheckで使う
+	const char* _animTable[static_cast<int>(ACTION::MAX)] = { "idle","idle","jump","jump","run","run","fall","attack" }; // AnimCheckで使う
 
 	ACTION _action_Now;											// 現在のアクション状態
 	ACTION _action_Old;											// 1フレーム前のアクション状態
+	DIR _dir_Now;
 
 	cocos2d::FlipX* _flip;									    // 画像反転処理
 	bool _flipFlag = false;										// 反転するかのフラグ
@@ -65,4 +66,6 @@ private:
 	cocos2d::Size _ColLayerSize;								// コリジョンマップの大きさ
 
 	float cntTest = 0.0f;
+	cocos2d::Vec2 _attackCheckL;
+	cocos2d::Vec2 _attackCheckR;
 };

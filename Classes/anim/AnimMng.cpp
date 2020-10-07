@@ -2,10 +2,7 @@
 
 USING_NS_CC;
 
-cocos2d::Sprite * AnimMng::createAnim()
-{
-	return AnimMng::create();
-}
+std::unique_ptr<AnimMng>AnimMng::s_instance(new AnimMng);
 
 AnimMng::AnimMng()
 {
@@ -44,10 +41,19 @@ void AnimMng::addAnimationCache( std::string plist, const char* plist_in_png, st
 
 	// 出来たアニメーションをキャッシュに登録
 	animationCache->addAnimation(animation, cacheName);
+	
+	CacheRegistration(animationCache, cacheName, 0);
+	//CacheRegistration(, std::string animName,ActorType type);
+
+	// CacheRegistration
+	{
+		
+	}
 }
 
 void AnimMng::anim_action(Sprite * delta)
 {
+	// キャラ専用のきゃっしゅがほしい
 	// アニメーションを取得
 	AnimationCache *animationCache = AnimationCache::getInstance();
 	Animation *animation = animationCache->getAnimation("idle");
@@ -66,12 +72,19 @@ void AnimMng::ChangeAnim(cocos2d::Sprite * delta, const char * name)
 	delta->stopAllActions();
 
 	// キャッシュから "ng"という名前で登録されているアニメーションキャッシュ名を取得
-	AnimationCache *animationCache = AnimationCache::getInstance();
-	Animation *animation = animationCache->getAnimation(name);
+	//AnimationCache *animationCache = AnimationCache::getInstance();
+	//Animation *animation = animationCache->getAnimation(name);
+
 
 	// フレームアニメーションは繰り返し
-	RepeatForever *action = RepeatForever::create(Animate::create(animation));
+	RepeatForever *action = RepeatForever::create(Animate::create(cache_[0][name]));
 
 	//アニメーションを実行
 	delta->runAction(action);
+}
+
+void AnimMng::CacheRegistration(cocos2d::AnimationCache* cache, std::string animName,int type)
+{
+	//cache_[type].push_back(cache->getAnimation(animName));
+	cache_[type].emplace(animName, cache->getAnimation(animName));
 }

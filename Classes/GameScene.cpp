@@ -196,7 +196,6 @@ bool Game::init()
 		}
 	}
 
-
 	plSprite->scheduleUpdate();
 
 	this->scheduleUpdate();
@@ -205,44 +204,66 @@ bool Game::init()
 
 void Game::update(float sp)
 {
-	//if (++frame == 180){
-	//	auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
-	//	map->removeFromParent();
-	//	auto newMap = TMXTiledMap::create("image/Environment/uratest.tmx");
-	//	newMap->setName("MapData");
-	//	colLayerRemain = newMap->getLayer("Collision");
-	//	colLayerRemain->setName("col");
-	//	colLayerRemain->retain();
+	if (++frame == 180){
+		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+		map->removeFromParent();
+		auto newMap = TMXTiledMap::create("image/Environment/uratest.tmx");
+		newMap->setName("MapData");
+		colLayerRemain = newMap->getLayer("Collision");
+		colLayerRemain->setName("col");
+		colLayerRemain->retain();
 
-	//	this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
-	//}
-	//if(frame == 300)
-	//{
-	//	auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
-	//	map->removeFromParent();
-	//	auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
-	//	newMap->setName("MapData");
-	//	auto col = newMap->getLayer("Collision");
-	//	col->setName("col");
-	//	col->removeFromParent();
-	//	newMap->addChild(colLayerRemain);
-	//	colLayerRemain->release();
+		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+	}
+	if(frame == 300)
+	{
+		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+		map->removeFromParent();
+		auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
+		newMap->setName("MapData");
+		auto col = newMap->getLayer("Collision");
+		col->setName("col");
+		col->removeFromParent();
+		newMap->addChild(colLayerRemain);
+		colLayerRemain->release();
 
-	//	this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
-	//}
-	//if (frame == 420)
-	//{
-	//	auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
-	//	map->removeFromParent();
-	//	auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
-	//	newMap->setName("MapData");
+		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+	}
+	if (frame == 420)
+	{
+		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
+		map->removeFromParent();
+		auto newMap = TMXTiledMap::create("image/Environment/test.tmx");
+		newMap->setName("MapData");
 
-	//	auto col = newMap->getLayer("Collision");
-	//	col->setName("col");
+		auto col = newMap->getLayer("Collision");
+		col->setName("col");
 
-	//	this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
-	//	frame = 0;
-	//}
+		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
+		frame = 0;
+	}
+
+	//// 当たり判定用の枠を出してみる
+	//auto ppos = plSprite->getPosition();
+	//auto psize = plSprite->getContentSize();
+	// //右の時はoffset+  左はoffset-
+	// //右向きの時
+	//auto offset = Vec2(psize.width * 3.0f, 0.0f);
+	//auto leftPoint = Vec2(ppos.x - (psize.width + psize.width / 2), ppos.y + psize.width) + offset;
+	//auto rightPoint = Vec2(ppos.x - psize.width / 2, ppos.y) + offset;
+	// //左向きの時
+	////auto rightPoint = Vec2(ppos.x + psize.width + psize.width / 2, ppos.y + psize.width);
+	////auto leftPoint = Vec2(ppos.x + psize.width / 2, ppos.y);
+
+	////TRACE("%f\n", leftPoint.x + offset.x);
+
+	//auto rect = DrawNode::create();
+	// //四角消す
+	//this->removeChildByName("box");
+	//rect->setName("box");
+	// //drawRect(開始点の座標、終了点の座標, 枠線の色)
+	//rect->drawRect(leftPoint /*+ offset*/, rightPoint /*+ offset*/, Color4F::BLUE);
+	//this->addChild(rect);
 }
 
 void Game::menuCloseCallback(Ref* pSender)

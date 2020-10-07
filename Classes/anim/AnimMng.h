@@ -1,22 +1,34 @@
 #pragma once
 
 #include "cocos2d.h"
+#include <map>
+#include <array>
+#include <memory>
 
-class AnimMng : cocos2d::Sprite
+#define lpAnimMng AnimMng::GetInstance()
+
+class AnimMng
 {
 public:
-	static cocos2d::Sprite* createAnim();
-
-	AnimMng();
+	static AnimMng& GetInstance()
+	{
+		return *s_instance;
+	}
+	
 	~AnimMng();
 
 	// アニメーションの登録
-	static void addAnimationCache(std::string plist, const char* plist_in_png, std::string cacheName, int startNum, int endNum, bool isReverse, float duration);
+	void addAnimationCache(std::string plist, const char* plist_in_png, std::string cacheName, int startNum, int endNum, bool isReverse, float duration);
 	// アニメーションの実行
-	static void anim_action(cocos2d::Sprite* delta);
+	void anim_action(cocos2d::Sprite* delta);
 	// アニメーション切り替え
-	static void ChangeAnim(cocos2d::Sprite* delta, const char* name);	
+	void ChangeAnim(cocos2d::Sprite* delta, const char* name);	
 private:
-	CREATE_FUNC(AnimMng);
+	AnimMng();
+
+	void CacheRegistration(cocos2d::AnimationCache* cache, std::string animName, int type = 0);
+
+	std::array<std::map <std::string,cocos2d::Animation*>,1> cache_;
+	static std::unique_ptr<AnimMng> s_instance;
 };
 
