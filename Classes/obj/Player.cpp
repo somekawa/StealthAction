@@ -170,7 +170,7 @@ void Player::update(float sp)
 		if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
 		{
 			int chipsize = 48;
-			int scale = 3.0f;
+			int scale = 3.0;
 			auto plpos = this->getPosition();
 			auto plsize = this->getContentSize();
 			auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
@@ -404,7 +404,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = false;
 		flipAct.action = ACTION::NON;
 		flipAct.button = BUTTON::RIGHT;
-		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // ‰Ÿ‚µ‚Á‚Ï‚È‚µ
+		flipAct.touch = TOUCH_TIMMING::TOUCHING; // ‰Ÿ‚µ‚Á‚Ï‚È‚µ
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -420,7 +420,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = true;
 		flipAct.action = ACTION::NON;
 		flipAct.button = BUTTON::LEFT;
-		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // ‰Ÿ‚µ‚Á‚Ï‚È‚µ
+		flipAct.touch = TOUCH_TIMMING::TOUCHING; // ‰Ÿ‚µ‚Á‚Ï‚È‚µ
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -492,6 +492,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back(ACTION::RUN_L);
 		act.blackList.emplace_back(ACTION::RUN_R);
 		act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back(ACTION::NON);
 
 		act.whiteList.emplace_back(ACTION::JUMP);
 
