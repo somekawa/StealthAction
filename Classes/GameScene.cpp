@@ -119,8 +119,7 @@ bool Game::init()
 
 	this->setName("GameScene");
 
-	// Scene - Layer - Sprite
-	// bgLayer‚ÍGameScene‚É’¼Ú‚Ô‚ç‰º‚ª‚é
+	// Scene - Layer - Sprite	// bgLayer‚ÍGameScene‚É’¼Ú‚Ô‚ç‰º‚ª‚é
 	auto bgLayer = Layer::create();
 	bgLayer->setName("BG_BACK");
 	this->addChild(bgLayer, (int)zOlder::BG);

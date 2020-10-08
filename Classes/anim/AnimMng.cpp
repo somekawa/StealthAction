@@ -12,7 +12,7 @@ AnimMng::~AnimMng()
 {
 }
 
-void AnimMng::addAnimationCache( std::string plist, const char* plist_in_png, std::string cacheName, int startNum, int endNum, bool isReverse, float duration)
+void AnimMng::addAnimationCache(std::string actorName, std::string animName, int frame, float duration, AnimationType animTag, ActorType type)
 {
 	// アニメーションキャッシュはシングルトン
 	AnimationCache *animationCache = AnimationCache::getInstance();
@@ -21,16 +21,18 @@ void AnimMng::addAnimationCache( std::string plist, const char* plist_in_png, st
 	auto cache = SpriteFrameCache::getInstance();
 
 	// パス指定
-	cache->addSpriteFramesWithFile(plist);
+	auto pListStr = actorName + "_" + animName;
+	cache->addSpriteFramesWithFile(pListStr + ".plist");
 
 	// アニメーション画像追加
 	Animation* animation = Animation::create();
 
-	for (int i = startNum; i <= endNum; i++)
+	for (int i = 0; i < frame; i++)
 	{
-		auto string = StringUtils::format(plist_in_png, i);	// plistの中だからパスじゃない
-		auto idle = cache->getSpriteFrameByName(string);
-		animation->addSpriteFrame(idle);
+		auto string = animName + "%d.png";		// plistの中だからパスじゃない
+		auto str = StringUtils::format(string.c_str(), i);
+		SpriteFrame* sprite = cache->getSpriteFrameByName(str);
+		animation->addSpriteFrame(sprite);
 	}
 
 	// アニメーションの間隔
@@ -40,51 +42,61 @@ void AnimMng::addAnimationCache( std::string plist, const char* plist_in_png, st
 	animation->setRestoreOriginalFrame(true);
 
 	// 出来たアニメーションをキャッシュに登録
-	animationCache->addAnimation(animation, cacheName);
-	
-	CacheRegistration(animationCache, cacheName, 0);
-	//CacheRegistration(, std::string animName,ActorType type);
+	animationCache->addAnimation(animation, animName);
 
-	// CacheRegistration
+	// 1アニメーションのキャッシュデータを格納する処理
+	CacheRegistration(animationCache, type, animName);
+}
+
+void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type)
+{
+	Animation* animation = caches_[static_cast<int>(type)]["run"];
+
+	RepeatForever* action = RepeatForever::create(Animate::create(animation));
+
+	sprite.runAction(action);
+}
+
+void AnimMng::ChangeAnimation(cocos2d::Sprite& sprite, std::string name, bool loop, ActorType type)
+{
+	// 今の動きを止める
+	sprite.stopAllActions();
+
+	// キーによるアニメーションの取り出し
+	Animation* animation = caches_[static_cast<int>(type)][name];
+
+	// フレームアニメーションは繰り返し
+	if (loop)
 	{
-		
+		RepeatForever* action = RepeatForever::create(Animate::create(animation));
+
+		//アニメーションを実行
+		sprite.runAction(action);
+	}
+	else
+	{
+		auto action_ = Repeat::create(Animate::create(animation), 1);
+		//アニメーションを実行
+		sprite.runAction(action_);
 	}
 }
 
-void AnimMng::anim_action(Sprite * delta)
+void AnimMng::CacheRegistration(cocos2d::AnimationCache* animCache, const ActorType& type, std::string animName)
 {
-	// キャラ専用のきゃっしゅがほしい
-	// アニメーションを取得
-	AnimationCache *animationCache = AnimationCache::getInstance();
-	Animation *animation = animationCache->getAnimation("idle");
-
-	// フレームアニメーションを繰り返す
-	RepeatForever *action = RepeatForever::create(Animate::create(animation));
-
-	// アニメーションを実行
-	delta->runAction(action);
+	// キャラのタイプ別のアニメーションキャッシュに1アニメーションデータを格納
+	caches_[static_cast<int>(type)].emplace(animName, animCache->getAnimation(animName));
+	// ｱﾆﾒｰｼｮﾝの文字列格納
+	animations_[static_cast<int>(type)].emplace_back(animName);
+	// 1アニメーションにかかる時間の格納
+	animMaxFrame_[static_cast<int>(type)].emplace(animName, caches_[static_cast<int>(type)][animName]->getDelayPerUnit()*
+		caches_[static_cast<int>(type)][animName]->getFrames().size());
 }
 
-// アニメーション切り替え
-void AnimMng::ChangeAnim(cocos2d::Sprite * delta, const char * name)
+bool AnimMng::IsAnimEnd(const float& delta, ActorType type, std::string animName)
 {
-	// 今の動きを止める
-	delta->stopAllActions();
-
-	// キャッシュから "ng"という名前で登録されているアニメーションキャッシュ名を取得
-	//AnimationCache *animationCache = AnimationCache::getInstance();
-	//Animation *animation = animationCache->getAnimation(name);
-
-
-	// フレームアニメーションは繰り返し
-	RepeatForever *action = RepeatForever::create(Animate::create(cache_[0][name]));
-
-	//アニメーションを実行
-	delta->runAction(action);
-}
-
-void AnimMng::CacheRegistration(cocos2d::AnimationCache* cache, std::string animName,int type)
-{
-	//cache_[type].push_back(cache->getAnimation(animName));
-	cache_[type].emplace(animName, cache->getAnimation(animName));
+	if (delta >= animMaxFrame_[static_cast<int>(type)][animName] - 0.2f)
+	{
+		return true;
+	}
+	return false;
 }

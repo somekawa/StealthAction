@@ -1,20 +1,26 @@
 #pragma once
 
 #include <array>
+#include <memory>
 #include "cocos2d.h"
 #include "anim/AnimMng.h"
 #include "anim/ActionCtl.h"
 #include "input/OPRT_state.h"
 #include "module/ActModule.h"
+#include "CollisionTest.h"
+#include "obj/Actor.h"
 #include "obj/Player.h"
 
-class Player : public cocos2d::Sprite
+class Player : public Actor
 {
 public:
 	static Player* createPlayer();
 
 	Player();
 	~Player();
+
+	void Action(void);
+	void ChangeDirection(void);
 
 	void update(float sp);
 	//static Player* createPL();								// マクロの直書き
@@ -28,7 +34,7 @@ private:
 	// アニメーション関係
 	void Anim_Registration(cocos2d::Sprite* delta);				// アニメーションの登録
 	void AnimCheck(cocos2d::Sprite* delta);						// アニメーション切り替え指定
-	const char* _animTable[static_cast<int>(ACTION::MAX)] = { "idle","idle","jump","jump","run","run","fall","attack" }; // AnimCheckで使う
+	const char* _animTable[static_cast<int>(ACTION::MAX)] = { "look_intro","look_intro","jump","jump","run","run","fall","attackA" }; // AnimCheckで使う
 
 	ACTION _action_Now;											// 現在のアクション状態
 	ACTION _action_Old;											// 1フレーム前のアクション状態
@@ -68,4 +74,9 @@ private:
 	float cntTest = 0.0f;
 	cocos2d::Vec2 _attackCheckL;
 	cocos2d::Vec2 _attackCheckR;
+
+	std::shared_ptr<CollisionTest*> colTest;
+
+	static int no_;
+	int myNo_;
 };

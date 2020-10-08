@@ -16,8 +16,9 @@
 //#include "input/OPRT_touch.h"
 //#endif
 
-
 USING_NS_CC;
+
+int Player::no_ = 0;
 
 Player* Player::createPlayer()
 {
@@ -58,6 +59,14 @@ Player::Player()
 	_attackCheckR = Vec2(0, 0);
 
 	Anim_Registration((Sprite*)this);			// アニメーションの登録
+
+	//colTest = std::make_shared<CollisionTest*>();
+	auto colTest = CollisionTest::createScene(this->getPosition(), this->getContentSize());
+	colTest->isHit();
+
+	myNo_ = no_;
+	no_++;
+	type_ = ActorType::Player;
 }
 
 Player::~Player()
@@ -69,6 +78,7 @@ Player::~Player()
 // 毎フレーム更新
 void Player::update(float sp)
 {
+	Action();
 	// getnameがgamesceneでない場合、何もしないreturn処理
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
@@ -164,6 +174,7 @@ void Player::update(float sp)
 			auto plpos = this->getPosition();
 			auto plsize = this->getContentSize();
 			auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
+			//auto enesize = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getContentSize();
 
 			// 右の時はoffset+  左はoffset-
 			auto offset = Vec2(plsize.width * 3.0f, 0.0f);
@@ -185,9 +196,9 @@ void Player::update(float sp)
 			//TRACE("%f\n", _attackCheckL.x + offset.x);
 
 			if (_attackCheckR.x >= enepos.x - chipsize / 2 &&
-				_attackCheckL.x < enepos.x + chipsize / 2 /*&&
+				_attackCheckL.x < enepos.x + chipsize / 2 &&
 				plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
-				plpos.y < enepos.y + chipsize / 2*/)
+				plpos.y < enepos.y + chipsize / 2)
 			{
 				// 攻撃した瞬間に当たり判定を入れる
 				if (_action_Now == ACTION::ATTACK)
@@ -213,6 +224,16 @@ void Player::update(float sp)
 
 }
 
+void Player::Action(void)
+{
+	int a = 0;
+}
+
+void Player::ChangeDirection(void)
+{
+	int a = 0;
+}
+
 // アニメーション切り替え指定
 void Player::AnimCheck(cocos2d::Sprite * delta)
 {
@@ -225,9 +246,9 @@ void Player::AnimCheck(cocos2d::Sprite * delta)
 	// 現在のアクション状態と比べて、一致しているものに切り替える
 	for (ACTION _act = begin(ACTION()); _act <= end(ACTION()); ++_act)
 	{
-		if (GetAction() == _act)
+		if (_action_Now == _act)
 		{
-			lpAnimMng.ChangeAnim(delta, _animTable[static_cast<int>(_act)]);
+			lpAnimMng.ChangeAnimation(*delta, _animTable[static_cast<int>(_act)],true,ActorType::Player);
 			return;							// 一致したときにそれ以上for文を回す必要がないからreturnする
 		}
 	}
@@ -236,26 +257,39 @@ void Player::AnimCheck(cocos2d::Sprite * delta)
 // ("plistの名前","plistにあるpngの名前","つけたい名前",開始番号, 終了番号,反転するか,描画速度)
 void Player::Anim_Registration(Sprite* delta)
 {
+	//// アニメーションをキャッシュに登録
+	//// idle
+	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Look_Intro.plist", "look_intro%d.png", "idle", 0, 6, false, (float)0.3);
+	//// run
+	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Run.plist"      , "run%d.png"  , "run" , 0, 9, false, (float)0.08);
+	//// fall
+	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Fall.plist"        , "fall%d.png"    , "fall"    , 0, 3,  false, (float)1.0);
+	//// shoot-up
+	////lpAnimMng.addAnimationCache("image/Sprites/player/player-shoot-up/shoot-up-big.plist", "player-shoot-up-big.png", "shoot-up", 0, 0,  false, (float)1.0);
+	//// jump
+	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Jump.plist"        , "jump%d.png" , "jump"    , 0, 3,  false, (float)0.05);
+	//// attack
+	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Attack1.plist", "attack1_%d.png", "attack", 0, 9, false, (float)0.05);
+	//lpAnimMng.anim_action(delta);
+
 	// アニメーションをキャッシュに登録
 	// idle
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Look_Intro.plist", "look_intro%d.png", "idle", 0, 6, false, (float)0.3);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "look_intro", 6, (float)0.3, AnimationType::Idle, ActorType::Player);
 
 	// run
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Run.plist"      , "run%d.png"  , "run" , 0, 9, false, (float)0.08);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "run",9, (float)0.08, AnimationType::Run, ActorType::Player);
 
 	// fall
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Fall.plist"        , "fall%d.png"    , "fall"    , 0, 3,  false, (float)1.0);
-
-	// shoot-up
-	//lpAnimMng.addAnimationCache("image/Sprites/player/player-shoot-up/shoot-up-big.plist", "player-shoot-up-big.png", "shoot-up", 0, 0,  false, (float)1.0);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "fall", 3, (float)1.0, AnimationType::Fall, ActorType::Player);
 
 	// jump
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Jump.plist"        , "jump%d.png" , "jump"    , 0, 3,  false, (float)0.05);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "jump", 3, (float)0.05, AnimationType::Jump, ActorType::Player);
 
 	// attack
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Attack1.plist", "attack1_%d.png", "attack", 0, 9, false, (float)0.05);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "attackA", 9, (float)0.05, AnimationType::Attack, ActorType::Player);
 
-	lpAnimMng.anim_action(delta);
+	lpAnimMng.InitAnimation(*delta, ActorType::Player);
+
 }
 
 // 現在のアクション情報を取得する
