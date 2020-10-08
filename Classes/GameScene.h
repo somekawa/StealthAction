@@ -35,6 +35,7 @@ enum class zOlder {
     FRONT,
     MAX
 };
+class GameMap;
 class CameraManager;
 class Player;
 class Game : public cocos2d::Scene
@@ -50,6 +51,7 @@ public:
 
     cocos2d::TMXLayer* colLayerRemain;
     std::shared_ptr<CameraManager> cameraManager_;
+    std::shared_ptr<GameMap> gameMap_;
 
     int frame = 0;
     float zoom = 1;

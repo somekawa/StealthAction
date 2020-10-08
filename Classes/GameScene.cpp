@@ -27,6 +27,7 @@
 #include "_Debug/_DebugConOut.h"
 #include "CameraManager.h"
 #include "obj/Player.h"
+#include "GameMap.h"
 
 USING_NS_CC;
 
@@ -139,7 +140,8 @@ bool Game::init()
 
 	// map“Ç‚İ‚İ
 	// collisionLayer‚Ìæ“¾
-
+	gameMap_ = std::make_shared<GameMap>();
+	gameMap_->CreateMap(*bgLayer, "image/Environment/test.tmx", "image/Environment/uratest.tmx");
 
 	// ƒLƒƒƒ‰‚Ì“o˜^(charLayer‚ÍGameScene‚É’¼Ú‚Ô‚ç‰º‚ª‚èAplSprite‚ÍcharLayer‚É‚Ô‚ç‰º‚ª‚é)
 	auto charLayer = Layer::create();
