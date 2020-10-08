@@ -37,6 +37,7 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 
 	if (plCheckPoint1Gid != 0 || plCheckPoint2Gid != 0)
 	{
+		//sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (module.flame));
 		return false;
 	}
 

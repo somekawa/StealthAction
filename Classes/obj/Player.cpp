@@ -210,8 +210,8 @@ void Player::update(float sp)
 		}
 	}
 
-	auto plpos = this->getPosition();
-	TRACE("%f\n", plpos.x);
+	//auto plpos = this->getPosition();
+	//TRACE("%f\n", plpos.x);
 
 	// 範囲外check
 	//OutOfMapCheck();	
@@ -404,7 +404,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = false;
 		flipAct.action = ACTION::NON;
 		flipAct.button = BUTTON::RIGHT;
-		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
+		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -420,7 +420,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = true;
 		flipAct.action = ACTION::NON;
 		flipAct.button = BUTTON::LEFT;
-		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
+		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -444,6 +444,7 @@ void Player::actModuleRegistration(void)
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
 		act.jumpFlg = false;
 		act.blackList.emplace_back(ACTION::JUMPING);	// ジャンプ中に落下してほしくない
+		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
 		_actCtl.ActCtl("落下", act);
 	}
 

@@ -15,5 +15,6 @@ public:
 private:
 	std::map<std::string, float> _mapFlame;		// フレーム数
 	std::map<std::string, ActModule> _mapModule;// モジュール
+	bool jumpFlg = false;
 };
 

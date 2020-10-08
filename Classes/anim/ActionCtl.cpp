@@ -136,7 +136,7 @@ void ActionCtl::update(float sp,Sprite& sprite)
 			if (((Player&)sprite).GetAction() == ACTION::FALLING || data.second.action != ACTION::NON || ((Player&)sprite).GetAction() == ACTION::JUMPING || ((Player&)sprite).GetAction() == ACTION::JUMP)
 			{
 				// 現在のアクションがジャンプになっているときもJUMPINGを設定するようにしておく
-				if ((_mapFlame["ジャンピング"] >= 0.1f && _mapFlame["ジャンピング"] < 3.0f) || ((Player&)sprite).GetAction() == ACTION::JUMP)
+				if (/*(_mapFlame["ジャンピング"] >= 0.1f && _mapFlame["ジャンピング"] < 3.0f)*/ ((Player&)sprite).GetAction() == ACTION::JUMPING || ((Player&)sprite).GetAction() == ACTION::JUMP)
 				{
 					((Player&)sprite).SetAction(ACTION::JUMPING);
 				}
@@ -152,6 +152,8 @@ void ActionCtl::update(float sp,Sprite& sprite)
 			{
 				_mapFlame[data.first] = 10.0f;
 			}
+
+			TRACE("%f\n", _mapFlame["ジャンプ"]);
 
 			// ここはジャンプの最高点に到達したときとかに関係する処理
 			if (((Player&)sprite).GetAction() == ACTION::JUMPING)

@@ -1,12 +1,6 @@
 #pragma once
 #include "cocos2d.h"
 
-enum class MapType
-{
-	OMOTE,
-	URA,
-	MAX
-};
 struct MapState
 {
 	std::vector<std::string> path;
@@ -19,15 +13,11 @@ public:
 	void CreateMap(cocos2d::Layer& layer, std::string omotePath, std::string uraPath = "");
 	
 	void ReplaceMap();
-
-	cocos2d::TMXTiledMap* GetMap();
-	void SetMapInfo(MapType mapType);
 private:
 	// パスからマップ読み込みを行う
 	void createMapFromPath(std::string& path, cocos2d::Layer& layer);
-	std::vector<cocos2d::TMXTiledMap*> maps_;	// マップ
+	std::vector<cocos2d::TMXTiledMap> maps_;	// マップ
 	cocos2d::Layer* mapLayer_;	// マップがあるシーンのレイヤー
 	cocos2d::TMXLayer* colisionLayer_;	// マップの当たり判定があるレイヤー
-	MapType mapType_;
 };
 
