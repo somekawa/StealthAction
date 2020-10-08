@@ -214,7 +214,7 @@ void Player::update(float sp)
 	TRACE("%f\n", plpos.x);
 
 	// �͈͊Ocheck
-	OutOfMapCheck();	
+	//OutOfMapCheck();	
 
 	if (_action_Now != _action_Old)
 	{
