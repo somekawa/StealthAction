@@ -27,6 +27,7 @@
 #include "_Debug/_DebugConOut.h"
 #include "CameraManager.h"
 #include "obj/Player.h"
+#include "GameMap.h"
 
 USING_NS_CC;
 
@@ -138,14 +139,16 @@ bool Game::init()
 	bgLayer->addChild(bgMiddle, (int)zOlder::BG);
 
 	// map読み込み
-	auto map = TMXTiledMap::create("image/Environment/test.tmx");
-	map->setName("MapData");
-
+	gameMap_ = std::make_shared<GameMap>();
+	gameMap_->CreateMap(*bgLayer,"image/Environment/test.tmx","image/Environment/uratest.tmx" );
+	//auto map = TMXTiledMap::create("image/Environment/test.tmx");
+	//map->setName("MapData");
+	
 	// collisionLayerの取得
-	auto colLayer = map->getLayer("Collision");
+	//auto colLayer = map->getLayer("Collision");
 
-	colLayer->setName("col");
-	bgLayer->addChild(map, (int)zOlder::BG);
+	//colLayer->setName("col");
+	//bgLayer->addChild(map, (int)zOlder::BG);
 
 	// キャラの登録(charLayerはGameSceneに直接ぶら下がり、plSpriteはcharLayerにぶら下がる)
 	auto charLayer = Layer::create();
@@ -172,30 +175,30 @@ bool Game::init()
 	//Sprite* sp;
 	//sp->setName("aa");
 	//_DebugDispOutCC::GetInstance().DrawRect("aa", Vec2(0, 0), Vec2(100, 100), Vec2(200, 200), Color4F::BLUE);
-	auto enemy = map->getLayer("Layer1");
-	int chipSize = 48;
-	auto mapSize = enemy->getLayerSize();
-	for (int y = 0; y < mapSize.height; y++)
-	{
-		for (int x = 0; x < mapSize.width; x++)
-		{
-			auto notesCheckPoint = Vec2{ (float)x,(float)y };
-			auto notesGid = enemy->getTileGIDAt(notesCheckPoint);
-			if (notesGid == 95)
-			{
-				// 生成
-				enemySprite = Sprite::create("image/Sprites/enemies/crab-idle/crab-idle-1.png");
-				// 座標
-				Vec2 notesPos = Vec2(notesCheckPoint.x * chipSize + 30, (mapSize.height - notesCheckPoint.y) * chipSize - 20);
-				// 座標をセットする
-				enemySprite->setPosition(Vec2(notesPos.x, notesPos.y - (enemySprite->getContentSize().height / 2)));
-				// 名前をつける
-				enemySprite->setName("enemyTest");
-				// objLayerにぶら下げる
-				charLayer->addChild((Node*)enemySprite, static_cast<int>(zOlder::BG));
-			}
-		}
-	}
+	//auto enemy = map->getLayer("Layer1");
+	//int chipSize = 48;
+	//auto mapSize = enemy->getLayerSize();
+	//for (int y = 0; y < mapSize.height; y++)
+	//{
+	//	for (int x = 0; x < mapSize.width; x++)
+	//	{
+	//		auto notesCheckPoint = Vec2{ (float)x,(float)y };
+	//		auto notesGid = enemy->getTileGIDAt(notesCheckPoint);
+	//		if (notesGid == 95)
+	//		{
+	//			// 生成
+	//			enemySprite = Sprite::create("image/Sprites/enemies/crab-idle/crab-idle-1.png");
+	//			// 座標
+	//			Vec2 notesPos = Vec2(notesCheckPoint.x * chipSize + 30, (mapSize.height - notesCheckPoint.y) * chipSize - 20);
+	//			// 座標をセットする
+	//			enemySprite->setPosition(Vec2(notesPos.x, notesPos.y - (enemySprite->getContentSize().height / 2)));
+	//			// 名前をつける
+	//			enemySprite->setName("enemyTest");
+	//			// objLayerにぶら下げる
+	//			charLayer->addChild((Node*)enemySprite, static_cast<int>(zOlder::BG));
+	//		}
+	//	}
+	//}
 	
 	// カメラ作成
 	cameraManager_ = std::make_shared<CameraManager>();
@@ -213,7 +216,7 @@ bool Game::init()
 
 void Game::update(float sp)
 {
-	if (++frame == 180){
+	/*if (++frame == 180){
 		auto map = (TMXTiledMap*)this->getChildByName("BG_BACK")->getChildByName("MapData");
 		map->removeFromParent();
 		auto newMap = TMXTiledMap::create("image/Environment/uratest.tmx");
@@ -250,7 +253,17 @@ void Game::update(float sp)
 		newMap->setCameraMask(static_cast<int>(CameraFlag::USER1));
 		this->getChildByName("BG_BACK")->addChild(newMap, (int)zOlder::BG);
 		frame = 0;
+	}*/
+
+	/*if (++frame  == 60)
+	{
+		gameMap_->SetMapInfo(MapType::URA);
 	}
+	if (frame == 120)
+	{
+		gameMap_->SetMapInfo(MapType::OMOTE);
+		frame = 0;
+	}*/
 	cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
 	//// 当たり判定用の枠を出してみる
 	//auto ppos = plSprite->getPosition();
