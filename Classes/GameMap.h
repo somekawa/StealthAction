@@ -17,9 +17,9 @@ class GameMap
 public:
 	// マップ生成をする (表と裏の二つを読む )
 	void CreateMap(cocos2d::Layer& layer, std::string omotePath, std::string uraPath = "");
-	cocos2d::TMXTiledMap* GameMap::GetMap();
+	cocos2d::TMXTiledMap* GetMap();
 	void ReplaceMap();
-	void GameMap::SetMapInfo(MapType mapType);
+	void SetMapInfo(MapType mapType);
 private:
 	// パスからマップ読み込みを行う
 	void createMapFromPath(std::string& path, cocos2d::Layer& layer);
