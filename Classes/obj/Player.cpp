@@ -60,10 +60,6 @@ Player::Player()
 
 	Anim_Registration((Sprite*)this);			// アニメーションの登録
 
-	//colTest = std::make_shared<CollisionTest*>();
-	auto colTest = CollisionTest::createScene(this->getPosition(), this->getContentSize());
-	colTest->isHit();
-
 	myNo_ = no_;
 	no_++;
 	type_ = ActorType::Player;
@@ -78,12 +74,13 @@ Player::~Player()
 // 毎フレーム更新
 void Player::update(float sp)
 {
-	Action();
 	// getnameがgamesceneでない場合、何もしないreturn処理
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		return;
 	}
+	
+	Action();
 
 	_actCtl.update(sp,*this);
 
@@ -165,50 +162,52 @@ void Player::update(float sp)
 	//	}
 	//}
 
-	if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
-	{
-		if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
-		{
-			int chipsize = 48;
-			int scale = 3.0f;
-			auto plpos = this->getPosition();
-			auto plsize = this->getContentSize();
-			auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
-			//auto enesize = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getContentSize();
 
-			// 右の時はoffset+  左はoffset-
-			auto offset = Vec2(plsize.width * 3.0f, 0.0f);
+	// 敵との当たり判定テスト
+	//if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
+	//{
+	//	if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
+	//	{
+	//		int chipsize = 48;
+	//		int scale = 3.0;
+	//		auto plpos = this->getPosition();
+	//		auto plsize = this->getContentSize();
+	//		auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
+	//		//auto enesize = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getContentSize();
 
-			if (_dir_Now == DIR::LEFT)
-			{
-				_attackCheckL = Vec2(plpos.x + plsize.width / 2, plpos.y) - offset;
-				_attackCheckR = Vec2(plpos.x + plsize.width + plsize.width / 2, plpos.y + plsize.width) - offset;
-			}
-			else if (_dir_Now == DIR::RIGHT)
-			{
-				_attackCheckL = Vec2(plpos.x - (plsize.width * scale + plsize.width * scale / 2), plpos.y + plsize.width * scale) + offset;
-				_attackCheckR = Vec2(plpos.x - plsize.width * scale / 2, plpos.y) + offset;
-			}
+	//		// 右の時はoffset+  左はoffset-
+	//		auto offset = Vec2(plsize.width * 3.0f, 0.0f);
 
-			auto e = enepos.x - chipsize / 2;
-			auto ee = enepos.x + chipsize / 2;
+	//		if (_dir_Now == DIR::LEFT)
+	//		{
+	//			_attackCheckL = Vec2(plpos.x + plsize.width / 2, plpos.y) - offset;
+	//			_attackCheckR = Vec2(plpos.x + plsize.width + plsize.width / 2, plpos.y + plsize.width) - offset;
+	//		}
+	//		else if (_dir_Now == DIR::RIGHT)
+	//		{
+	//			_attackCheckL = Vec2(plpos.x - (plsize.width * scale + plsize.width * scale / 2), plpos.y + plsize.width * scale) + offset;
+	//			_attackCheckR = Vec2(plpos.x - plsize.width * scale / 2, plpos.y) + offset;
+	//		}
 
-			//TRACE("%f\n", _attackCheckL.x + offset.x);
+	//		auto e = enepos.x - chipsize / 2;
+	//		auto ee = enepos.x + chipsize / 2;
 
-			if (_attackCheckR.x >= enepos.x - chipsize / 2 &&
-				_attackCheckL.x < enepos.x + chipsize / 2 &&
-				plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
-				plpos.y < enepos.y + chipsize / 2)
-			{
-				// 攻撃した瞬間に当たり判定を入れる
-				if (_action_Now == ACTION::ATTACK)
-				{
-					// 敵のvisibleをfalseにして見えなくする
-					((Game*)Director::getInstance()->getRunningScene())->enemySprite->setVisible(false);
-				}
-			}
-		}
-	}
+	//		//TRACE("%f\n", _attackCheckL.x + offset.x);
+
+	//		if (_attackCheckR.x >= enepos.x - chipsize / 2 &&
+	//			_attackCheckL.x < enepos.x + chipsize / 2 &&
+	//			plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
+	//			plpos.y < enepos.y + chipsize / 2)
+	//		{
+	//			// 攻撃した瞬間に当たり判定を入れる
+	//			if (_action_Now == ACTION::ATTACK)
+	//			{
+	//				// 敵のvisibleをfalseにして見えなくする
+	//				((Game*)Director::getInstance()->getRunningScene())->enemySprite->setVisible(false);
+	//			}
+	//		}
+	//	}
+	//}
 
 	//auto plpos = this->getPosition();
 	//TRACE("%f\n", plpos.x);
@@ -274,19 +273,19 @@ void Player::Anim_Registration(Sprite* delta)
 
 	// アニメーションをキャッシュに登録
 	// idle
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "look_intro", 6, (float)0.3, AnimationType::Idle, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Look_Intro", 6, (float)0.3, AnimationType::Idle, ActorType::Player);
 
 	// run
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "run",9, (float)0.08, AnimationType::Run, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Run",9, (float)0.08, AnimationType::Run, ActorType::Player);
 
 	// fall
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "fall", 3, (float)1.0, AnimationType::Fall, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Fall", 3, (float)1.0, AnimationType::Fall, ActorType::Player);
 
 	// jump
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "jump", 3, (float)0.05, AnimationType::Jump, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jump", 3, (float)0.05, AnimationType::Jump, ActorType::Player);
 
 	// attack
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "attackA", 9, (float)0.05, AnimationType::Attack, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackA", 9, (float)0.05, AnimationType::Attack, ActorType::Player);
 
 	lpAnimMng.InitAnimation(*delta, ActorType::Player);
 
@@ -404,7 +403,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = false;
 		flipAct.action = ACTION::NON;
 		flipAct.button = BUTTON::RIGHT;
-		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
+		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -420,7 +419,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = true;
 		flipAct.action = ACTION::NON;
 		flipAct.button = BUTTON::LEFT;
-		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
+		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -492,6 +491,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back(ACTION::RUN_L);
 		act.blackList.emplace_back(ACTION::RUN_R);
 		act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back(ACTION::NON);
 
 		act.whiteList.emplace_back(ACTION::JUMP);
 
@@ -503,7 +503,8 @@ void Player::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = _oprtState;
-		act.button = BUTTON::ATTACK;
+		//act.button = BUTTON::ATTACK;
+		act.button = BUTTON::DOWN;
 		act.action = ACTION::ATTACK;
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };

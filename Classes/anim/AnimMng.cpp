@@ -14,43 +14,47 @@ AnimMng::~AnimMng()
 
 void AnimMng::addAnimationCache(std::string actorName, std::string animName, int frame, float duration, AnimationType animTag, ActorType type)
 {
-	// ƒAƒjƒ[ƒVƒ‡ƒ“ƒLƒƒƒbƒVƒ…‚ÍƒVƒ“ƒOƒ‹ƒgƒ“
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã¯ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³
 	AnimationCache *animationCache = AnimationCache::getInstance();
 
-	//ƒXƒvƒ‰ƒCƒgƒV[ƒg‚Ì€”õ
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚·ãƒ¼ãƒˆã®æº–å‚™
 	auto cache = SpriteFrameCache::getInstance();
 
-	// ƒpƒXw’è
+	// ãƒ‘ã‚¹æŒ‡å®š
 	auto pListStr = actorName + "_" + animName;
 	cache->addSpriteFramesWithFile(pListStr + ".plist");
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“‰æ‘œ’Ç‰Á
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”»åƒè¿½åŠ 
 	Animation* animation = Animation::create();
 
 	for (int i = 0; i < frame; i++)
 	{
-		auto string = animName + "%d.png";		// plist‚Ì’†‚¾‚©‚çƒpƒX‚¶‚á‚È‚¢
+		auto string = animName + "%d.png";		// plistã®ä¸­ã ã‹ã‚‰ãƒ‘ã‚¹ã˜ã‚ƒãªã„
 		auto str = StringUtils::format(string.c_str(), i);
 		SpriteFrame* sprite = cache->getSpriteFrameByName(str);
+		if (sprite == nullptr)
+		{
+			int a = 0;
+		}
 		animation->addSpriteFrame(sprite);
 	}
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌŠÔŠu
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é–“éš”
 	animation->setDelayPerUnit(duration);
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“I—¹Œã‚ÉÅ‰‚É–ß‚·‚©‚Ç‚¤‚©
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†å¾Œã«æœ€åˆã«æˆ»ã™ã‹ã©ã†ã‹
 	animation->setRestoreOriginalFrame(true);
 
-	// o—ˆ‚½ƒAƒjƒ[ƒVƒ‡ƒ“‚ğƒLƒƒƒbƒVƒ…‚É“o˜^
+	// å‡ºæ¥ãŸã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«ç™»éŒ²
 	animationCache->addAnimation(animation, animName);
 
-	// 1ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒLƒƒƒbƒVƒ…ƒf[ƒ^‚ğŠi”[‚·‚éˆ—
+	// 1ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´ã™ã‚‹å‡¦ç†
 	CacheRegistration(animationCache, type, animName);
 }
 
 void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type)
 {
-	Animation* animation = caches_[static_cast<int>(type)]["run"];
+	Animation* animation = caches_[static_cast<int>(type)]["Run"];
 
 	RepeatForever* action = RepeatForever::create(Animate::create(animation));
 
@@ -59,35 +63,35 @@ void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type)
 
 void AnimMng::ChangeAnimation(cocos2d::Sprite& sprite, std::string name, bool loop, ActorType type)
 {
-	// ¡‚Ì“®‚«‚ğ~‚ß‚é
+	// ä»Šã®å‹•ãã‚’æ­¢ã‚ã‚‹
 	sprite.stopAllActions();
 
-	// ƒL[‚É‚æ‚éƒAƒjƒ[ƒVƒ‡ƒ“‚Ìæ‚èo‚µ
+	// ã‚­ãƒ¼ã«ã‚ˆã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å–ã‚Šå‡ºã—
 	Animation* animation = caches_[static_cast<int>(type)][name];
 
-	// ƒtƒŒ[ƒ€ƒAƒjƒ[ƒVƒ‡ƒ“‚ÍŒJ‚è•Ô‚µ
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã¯ç¹°ã‚Šè¿”ã—
 	if (loop)
 	{
 		RepeatForever* action = RepeatForever::create(Animate::create(animation));
 
-		//ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÀs
+		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œ
 		sprite.runAction(action);
 	}
 	else
 	{
 		auto action_ = Repeat::create(Animate::create(animation), 1);
-		//ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÀs
+		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œ
 		sprite.runAction(action_);
 	}
 }
 
 void AnimMng::CacheRegistration(cocos2d::AnimationCache* animCache, const ActorType& type, std::string animName)
 {
-	// ƒLƒƒƒ‰‚Ìƒ^ƒCƒv•Ê‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ƒLƒƒƒbƒVƒ…‚É1ƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^‚ğŠi”[
+	// ã‚­ãƒ£ãƒ©ã®ã‚¿ã‚¤ãƒ—åˆ¥ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«1ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´
 	caches_[static_cast<int>(type)].emplace(animName, animCache->getAnimation(animName));
-	// ±ÆÒ°¼®İ‚Ì•¶š—ñŠi”[
+	// ï½±ï¾†ï¾’ï½°ï½¼ï½®ï¾ã®æ–‡å­—åˆ—æ ¼ç´
 	animations_[static_cast<int>(type)].emplace_back(animName);
-	// 1ƒAƒjƒ[ƒVƒ‡ƒ“‚É‚©‚©‚éŠÔ‚ÌŠi”[
+	// 1ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã«ã‹ã‹ã‚‹æ™‚é–“ã®æ ¼ç´
 	animMaxFrame_[static_cast<int>(type)].emplace(animName, caches_[static_cast<int>(type)][animName]->getDelayPerUnit()*
 		caches_[static_cast<int>(type)][animName]->getFrames().size());
 }
