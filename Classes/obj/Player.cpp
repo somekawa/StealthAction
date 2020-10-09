@@ -503,7 +503,8 @@ void Player::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = _oprtState;
-		act.button = BUTTON::ATTACK;
+		//act.button = BUTTON::ATTACK;
+		act.button = BUTTON::DOWN;
 		act.action = ACTION::ATTACK;
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };
