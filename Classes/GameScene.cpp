@@ -187,7 +187,7 @@ void Game::update(float sp)
 {
 
 
-	if (++frame  == 60)
+	/*if (++frame  == 60)
 	{
 		gameMap_->SetMapInfo(MapType::URA);
 	}
@@ -195,7 +195,7 @@ void Game::update(float sp)
 	{
 		gameMap_->SetMapInfo(MapType::OMOTE);
 		frame = 0;
-	}
+	}*/
 	cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
 	//// “–‚½‚è”»’è—p‚Ì˜g‚ðo‚µ‚Ä‚Ý‚é
 	//auto ppos = plSprite->getPosition();

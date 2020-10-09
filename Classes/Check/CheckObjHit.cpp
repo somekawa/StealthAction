@@ -5,7 +5,8 @@ USING_NS_CC;
 bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 {
 	auto director = Director::getInstance();
-	if ((TMXLayer*)director->getRunningScene()->getChildByName("BG_BACK")->getChildByName("MapData") == nullptr)
+	auto a = director->getRunningScene()->getChildByName("BG_BACK")->getChildByName("MapData");
+	if ((TMXLayer*)director->getRunningScene()->getChildByName("BG_BACK")->getChildByName("MapData")->getChildByName("col") == nullptr)
 	{
 		return false;
 	}

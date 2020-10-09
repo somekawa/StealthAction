@@ -9,7 +9,7 @@ void GameMap::CreateMap(cocos2d::Layer& layer, std::string omotePath, std::strin
 	{
 		createMapFromPath(uraPath, layer);
 	} 
-	//maps_[0]->setPositionZ(-50);
+	maps_[0]->setName("MapData");
 	maps_[1]->setVisible(false);
 	mapLayer_ = &layer;	
 	
@@ -27,7 +27,9 @@ cocos2d::TMXTiledMap* GameMap::GetMap()
 void GameMap::SetMapInfo(MapType mapType)
 {
 	maps_[static_cast<int>(mapType)]->setVisible(true);
+	maps_[static_cast<int>(mapType)]->setName("MapData");
 	maps_[(static_cast<int>(mapType) ^! 0)]->setVisible(false);
+	maps_[(static_cast<int>(mapType) ^ !0)]->setName("");
 	mapType_ = mapType;
 }
 
@@ -36,7 +38,6 @@ void GameMap::createMapFromPath(std::string& path, cocos2d::Layer& layer)
 {
 	
 	TMXTiledMap* map = TMXTiledMap::create(path);
-	map->setName("MapData");
 	auto colLayer = map->getLayer("Collision");
 	colLayer->setName("col");
 	layer.addChild(map);
