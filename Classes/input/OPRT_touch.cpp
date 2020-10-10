@@ -1,4 +1,5 @@
 ﻿#include "OPRT_touch.h"
+#include "_Debug/_DebugConOut.h"
 
 USING_NS_CC;
 
@@ -26,6 +27,8 @@ void OPRT_touch::update()
 {
 	_keyData._oldData = _keyData._data;
 	_keyData._data = _keyData._input;
+	// 攻撃テスト用
+	//_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
 }
 
 void OPRT_touch::touchStart(cocos2d::Touch * touch)
@@ -84,6 +87,26 @@ void OPRT_touch::touchEnd(cocos2d::Touch * touch)
 
 void OPRT_touch::touchflg(cocos2d::Sprite * delta)
 {
+	// 攻撃テスト用
+	//auto listener = EventListenerTouchOneByOne::create();
+	//listener->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event)->bool {
+	//	Point p = touch->getLocation();
+	//	auto label1 = Sprite::create("CloseNormal.png");
+	//	auto visibleSize = Director::getInstance()->getVisibleSize();
+	//	float x = visibleSize.width - label1->getContentSize().width / 2;
+	//	float y = label1->getContentSize().height / 2;
+	//	label1->setPosition(Vec2(x, y));
+	//	auto a = x;
+	//	auto b = y;
+	//	auto r = label1->getBoundingBox();
+	//	if (r.containsPoint(p)) {
+	//		// label1がクリック/タッチされた場合の処理
+	//		_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+	//	}
+	//	return true;
+	//};
+	//delta->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, delta);
+
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)->bool {
 		touchStart(touch);

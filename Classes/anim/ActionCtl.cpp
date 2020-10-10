@@ -148,27 +148,35 @@ void ActionCtl::update(float sp,Sprite& sprite)
 			
 			// フレームの加算(落下とジャンプで使用している)
 			_mapFlame[data.first]+= 0.1f;
-			if (_mapFlame[data.first] >= 10.0f)
+			if (_mapFlame[data.first] >= 3.0f)
 			{
-				_mapFlame[data.first] = 10.0f;
+				_mapFlame[data.first] = 3.0f;
 			}
 
-			TRACE("%f\n", _mapFlame["ジャンプ"]);
+			//TRACE("%f\n", _mapFlame["ジャンプ"]);
+			TRACE("%f\n", _mapFlame["ジャンピング"]);
+
 
 			// ここはジャンプの最高点に到達したときとかに関係する処理
-			if (((Player&)sprite).GetAction() == ACTION::JUMPING)
+			if (((Player&)sprite).GetAction() == ACTION::JUMPING || ((Player&)sprite).GetAction() == ACTION::JUMP)
 			{
-				actFlg = true;
+				//actFlg = true;
 				//((Player&)sprite).SetAction(ACTION::JUMPING);
 
 				// _mapFlame[data.first]にしてしまうと、現在のアクションがジャンプでも
 				// 左右移動とかの加算された値が3.0fを超えていたら落下に切り替わる原因になってた
-				if (_mapFlame["ジャンピング"] < 3.0f)
+				// else ifの部分を付け加えて、ジャンピングを0.1fからにすることで角でジャンプし続けるバグ解消
+				if (_mapFlame["ジャンピング"] >= 0.1f && _mapFlame["ジャンピング"] < 3.0f)
 				{
 					((Player&)sprite).SetAction(ACTION::JUMPING);
-					continue;
+					//continue;
 				}
-				else
+				else if (_mapFlame["ジャンプ"] >= 0.1f)
+				{
+					// ジャンプし始めに必要
+					((Player&)sprite).SetAction(ACTION::JUMPING);
+				}
+				else 
 				{
 					// 最高点に到達したら落下に切り替える
 					((Player&)sprite).SetAction(ACTION::FALLING);

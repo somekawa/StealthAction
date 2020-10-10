@@ -211,7 +211,7 @@ void Player::update(float sp)
 
 	//auto plpos = this->getPosition();
 	//TRACE("%f\n", plpos.x);
-
+	TRACE("%d\n", _action_Now);
 	// �͈͊Ocheck
 	//OutOfMapCheck();	
 
