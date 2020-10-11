@@ -66,7 +66,7 @@ void OPRT_touch::touchMove(cocos2d::Touch * touch)
 		_keyData._input[static_cast<int>(BUTTON::UP)] = true;
 	}
 	if (swipeRotate == SWIPE_DOWN) {
-		_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+		//_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
 	}
 	if (swipeRotate == SWIPE_LEFT) {
 		_keyData._input[static_cast<int>(BUTTON::LEFT)] = true;
@@ -88,30 +88,37 @@ void OPRT_touch::touchEnd(cocos2d::Touch * touch)
 void OPRT_touch::touchflg(cocos2d::Sprite * delta)
 {
 	// 攻撃テスト用
-	//auto listener = EventListenerTouchOneByOne::create();
-	//listener->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event)->bool {
-	//	Point p = touch->getLocation();
-	//	auto label1 = Sprite::create("CloseNormal.png");
-	//	auto visibleSize = Director::getInstance()->getVisibleSize();
-	//	float x = visibleSize.width - label1->getContentSize().width / 2;
-	//	float y = label1->getContentSize().height / 2;
-	//	label1->setPosition(Vec2(x, y));
-	//	auto a = x;
-	//	auto b = y;
-	//	auto r = label1->getBoundingBox();
-	//	if (r.containsPoint(p)) {
-	//		// label1がクリック/タッチされた場合の処理
-	//		_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
-	//	}
-	//	return true;
-	//};
-	//delta->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, delta);
-
 	auto listener = EventListenerTouchOneByOne::create();
-	listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)->bool {
-		touchStart(touch);
+	listener->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event)->bool {
+		Point p = touch->getLocation();
+		auto director = Director::getInstance();
+		auto label1 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("test");
+		//auto label1 = director->getRunningScene()->getChildByName("test") -> getChildByName("item");
+		//auto visibleSize = director->getVisibleSize();
+		//float x = visibleSize.width - label1->getContentSize().width / 2;
+		//float y = label1->getContentSize().height / 2;
+		//label1->setPosition(Vec2(x, y));
+		//auto a = x;
+		//auto b = y;
+		auto r = label1->getBoundingBox();
+		if (r.containsPoint(p)) {
+			// label1がクリック/タッチされた場合の処理
+			_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+		}
+		else
+		{
+			touchStart(touch);
+			return true;
+		}
 		return true;
 	};
+	//delta->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, delta);
+
+	//auto listener = EventListenerTouchOneByOne::create();
+	//listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)->bool {
+	//	touchStart(touch);
+	//	return true;
+	//};
 	listener->onTouchMoved = [this](cocos2d::Touch* touch, cocos2d::Event* event)->bool {
 		touchMove(touch);
 		return true;

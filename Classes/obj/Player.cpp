@@ -5,7 +5,7 @@
 #include "_Debug/_DebugConOut.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "input/OPRT_key.h"
+#include "input/OPRT_touch.h"
 #else
 #include "input/OPRT_touch.h"
 #endif
@@ -37,7 +37,7 @@ Player::Player()
 	// キー入力かタッチ操作か判断
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// thisの意味
-	_oprtState = new OPRT_key(this);
+	_oprtState = new OPRT_touch(this);
 #else
 	_oprtState = new OPRT_touch(this);
 #endif

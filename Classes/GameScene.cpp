@@ -78,28 +78,28 @@ bool Game::init()
 	//    you may modify it.
 
 	// add a "close" icon to exit the progress. it's an autorelease object
-	auto closeItem = MenuItemImage::create(
-		"CloseNormal.png",
-		"CloseSelected.png",
-		CC_CALLBACK_1(Game::menuCloseCallback, this));
+	//auto closeItem = MenuItemImage::create(
+	//	"CloseNormal.png",
+	//	"CloseSelected.png",
+	//	CC_CALLBACK_1(Game::menuCloseCallback, this));
 
-	if (closeItem == nullptr ||
-		closeItem->getContentSize().width <= 0 ||
-		closeItem->getContentSize().height <= 0)
-	{
-		problemLoading("'CloseNormal.png' and 'CloseSelected.png'");
-	}
-	else
-	{
-		float x = origin.x + visibleSize.width - closeItem->getContentSize().width / 2;
-		float y = origin.y + closeItem->getContentSize().height / 2;
-		closeItem->setPosition(Vec2(x, y));
-	}
+	//if (closeItem == nullptr ||
+	//	closeItem->getContentSize().width <= 0 ||
+	//	closeItem->getContentSize().height <= 0)
+	//{
+	//	problemLoading("'CloseNormal.png' and 'CloseSelected.png'");
+	//}
+	//else
+	//{
+	//	float x = origin.x + visibleSize.width - closeItem->getContentSize().width / 2;
+	//	float y = origin.y + closeItem->getContentSize().height / 2;
+	//	closeItem->setPosition(Vec2(x, y));
+	//}
 
-	// create menu, it's an autorelease object
-	auto menu = Menu::create(closeItem, NULL);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 1);
+	//// create menu, it's an autorelease object
+	//auto menu = Menu::create(closeItem, NULL);
+	//menu->setPosition(Vec2::ZERO);
+	//this->addChild(menu, 1);
 
 	/////////////////////////////
 	// 3. add your codes below...
@@ -138,6 +138,18 @@ bool Game::init()
 	bgMiddle->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	bgLayer->addChild(bgMiddle, (int)zOlder::BG);
 
+	// 攻撃ボタンテスト用
+	auto uiLayer = Layer::create();
+	uiLayer->setName("UI_LAYER");
+	this->addChild(uiLayer, (int)zOlder::FRONT);
+	auto ssp = Sprite::create("CloseNormal.png");
+	ssp->setName("test");
+	ssp->setAnchorPoint(Vec2(0.5f, 0.0f));
+	float x = origin.x + visibleSize.width - ssp->getContentSize().width / 2;
+	float y = origin.y + ssp->getContentSize().height / 2;
+	ssp->setPosition(Vec2(x, y));
+	uiLayer->addChild(ssp, (int)zOlder::FRONT);
+
 	// map読み込み
 	// collisionLayerの取得
 	gameMap_ = std::make_shared<GameMap>();
@@ -173,9 +185,11 @@ bool Game::init()
 	cameraManager_ = std::make_shared<CameraManager>();
 	auto size = Director::getInstance()->getWinSize();
 	cameraManager_->AddCamera(*this, size,CameraType::PLAYER1, CameraFlag::USER1);
+	cameraManager_->AddCamera(*this, size, CameraType::UI, CameraFlag::USER2);
 
 	charLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	bgLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	uiLayer->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
 	plSprite->scheduleUpdate();
 
@@ -224,7 +238,8 @@ void Game::menuCloseCallback(Ref* pSender)
 {
 	//Close the cocos2d-x game scene and quit the application
 
-	Director::getInstance()->end();
+	//Director::getInstance()->end();
+	int a = 0;
 
 	/*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() as given above,instead trigger a custom event created in RootViewController.mm as below*/
 
