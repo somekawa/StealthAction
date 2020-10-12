@@ -150,6 +150,12 @@ bool Game::init()
 	ssp->setPosition(Vec2(x, y));
 	uiLayer->addChild(ssp, (int)zOlder::FRONT);
 
+	// 移動バーチャルパッド用
+	auto startSp = Sprite::create("CloseNormal.png");
+	startSp->setName("startSp");
+	startSp->setPosition(Vec2(150.0f,150.0f ));
+	uiLayer->addChild(startSp);
+
 	// map読み込み
 	// collisionLayerの取得
 	gameMap_ = std::make_shared<GameMap>();

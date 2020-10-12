@@ -11,7 +11,8 @@ OPRT_touch::OPRT_touch(Sprite* delta)
 		_keyData._data[key] = false;
 		_keyData._oldData[key] = false;
 	}
-	touchflg(delta);
+	touchesflg(delta);
+	//touchflg(delta);
 }
 
 OPRT_touch::~OPRT_touch()
@@ -125,6 +126,144 @@ void OPRT_touch::touchflg(cocos2d::Sprite * delta)
 	};
 	listener->onTouchEnded = [this](cocos2d::Touch* touch, cocos2d::Event* event)->bool {
 		touchEnd(touch);
+		return true;
+	};
+	delta->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, delta);
+}
+
+void OPRT_touch::touchesStart(cocos2d::Touch* touch)
+{
+	touchStartPoint = Point(touchVectors[touch->getID()].pos.x, touchVectors[touch->getID()].pos.y);
+	touchEndPoint = Point(touchVectors[touch->getID()].pos.x, touchVectors[touch->getID()].pos.y);
+	swipeRotate = SWIPE_CENTER;	
+}
+
+void OPRT_touch::touchesMove(cocos2d::Touch* touch)
+{
+	if (!touchVectors[touch->getID()].isMoveTouch)
+	{
+		return;
+	}
+	auto startPosOffset = 20;
+	auto loc = touch->getLocation();
+	auto start = touchVectors[touch->getID()].pos;
+	if (loc.x < start.x - startPosOffset) {
+		swipeRotate = SWIPE_LEFT;		// left
+	}
+	else {
+		if (loc.x > start.x + startPosOffset) {
+			swipeRotate = SWIPE_RIGHT;  // right
+		}
+	}
+	if (swipeRotate == SWIPE_CENTER || (swipeRotate != SWIPE_CENTER && std::abs(loc.x - start.x) < std::abs(loc.y - start.y))) {
+		if (loc.y < start.y - startPosOffset) {
+			swipeRotate = SWIPE_DOWN;	// down
+		}
+		if (loc.y > start.y + startPosOffset) {
+			swipeRotate = SWIPE_UP;		// up
+		}
+	}
+
+	if (swipeRotate == SWIPE_UP) {
+		_keyData._input[static_cast<int>(BUTTON::UP)] = true;
+	}
+	if (swipeRotate == SWIPE_DOWN) {
+		//_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+		_keyData._input[static_cast<int>(BUTTON::UP)] = false;
+	}
+	if (swipeRotate == SWIPE_LEFT) {
+		_keyData._input[static_cast<int>(BUTTON::LEFT)] = true;
+		_keyData._input[static_cast<int>(BUTTON::RIGHT)] = false;
+	}
+	if (swipeRotate == SWIPE_RIGHT) {
+		_keyData._input[static_cast<int>(BUTTON::RIGHT)] = true;
+		_keyData._input[static_cast<int>(BUTTON::LEFT)] = false;
+	}
+}
+
+void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
+{
+	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+	{
+		if (touchVectors[touch->getID()].isMoveTouch)
+		{
+			if (key != static_cast<int>(BUTTON::DOWN))
+			{
+				_keyData._input[key] = false;
+			}
+		}
+		else
+		{
+			_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
+		}
+	}
+}
+
+void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
+{
+	Touches touches = Touches();
+	touchVectors.clear();
+	// とりあえず5本
+	for (int i = 0; i < 5; i++)
+	{
+		touchVectors.emplace_back(touches);
+	}
+	moveFlag = false;
+	auto listener = EventListenerTouchAllAtOnce::create();
+	listener->onTouchesBegan = [&](std::vector<Touch*> touches, Event* event)
+	{
+		for (auto touch : touches)
+		{
+			touchVectors[touch->getID()].pos = touch->getLocation();
+			auto director = Director::getInstance();
+			auto label1 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("test");
+			auto r = label1->getBoundingBox();
+			if (r.containsPoint(touchVectors[touch->getID()].pos)) {
+				// label1がクリック/タッチされた場合の処理
+				_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+			}
+			else
+			{
+				touchesStart(touch);
+				if (!moveFlag)
+				{			
+					auto startSp = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("startSp");
+					startSp->setPosition(touchVectors[touch->getID()].pos);
+					moveFlag = true;
+					touchVectors[touch->getID()].isMoveTouch = true;
+				}
+			}
+		}
+		return true;
+	};
+	listener->onTouchesMoved = [&](std::vector<Touch*> touches, Event* event)
+	{
+		auto gameScene = cocos2d::Director::getInstance()->getRunningScene();
+		if (gameScene->getName() != "GameScene")
+		{
+			return false;
+		}
+
+		for (auto touch : touches) {
+			touchesMove(touch);
+		}
+		return true;
+	};
+	listener->onTouchesEnded = [this](std::vector<Touch*> touches, Event* event)
+	{
+		for (auto touch : touches)
+		{
+			touchesEnd(touch);
+			if (touchVectors[touch->getID()].isMoveTouch)
+			{
+				touchVectors[touch->getID()].isMoveTouch = false;
+				moveFlag = false;
+				auto startSp = Director::getInstance()->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("startSp");
+				startSp->setPosition(150, 150);
+			}
+		}
+
+
 		return true;
 	};
 	delta->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, delta);

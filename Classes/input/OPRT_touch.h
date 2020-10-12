@@ -16,6 +16,14 @@ struct KeyData {
 	std::array<bool, static_cast<int>(BUTTON::MAX)> _input;
 };
 
+struct Touches
+{
+	cocos2d::Vec2 pos;
+	bool isMoveTouch;
+	bool isAttackTouch;
+	Touches() : pos(cocos2d::Vec2::ZERO), isMoveTouch(false), isAttackTouch(false) {};
+};
+
 struct OPRT_touch : OPRT_state
 {
 	OPRT_touch(cocos2d::Sprite* delta);
@@ -35,6 +43,14 @@ struct OPRT_touch : OPRT_state
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetNowData(void);	// 今の情報を返す
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetOldData(void);	// 1フレーム前の情報を返す
 
+	// マルチタップテスト(バーチャルパッド含む)
+	void touchesStart(cocos2d::Touch* touch);	// タッチが始まった時
+	void touchesMove(cocos2d::Touch* touch);	// スワイプの移動が行われた時
+	void touchesEnd(cocos2d::Touch* touch);	// タッチ(スワイプ)が終わった時
+
+	void touchesflg(cocos2d::Sprite* delta);
+	std::vector<Touches> touchVectors;
+	bool moveFlag;
 private:
 	KeyData _keyData;
 };
