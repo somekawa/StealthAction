@@ -27,6 +27,7 @@
 #include "_Debug/_DebugConOut.h"
 #include "CameraManager.h"
 #include "obj/Player.h"
+#include "PL_HPgauge.h"
 #include "GameMap.h"
 
 USING_NS_CC;
@@ -150,6 +151,12 @@ bool Game::init()
 	ssp->setPosition(Vec2(x, y));
 	uiLayer->addChild(ssp, (int)zOlder::FRONT);
 
+	// HPゲージ描画用
+	auto PL_HPgaugeSp = PL_HPgauge::createPL_HPgauge();
+	uiLayer->addChild(PL_HPgaugeSp, (int)(zOlder::FRONT));
+	PL_HPgaugeSp->setName("PL_HPgauge");
+	PL_HPgaugeSp->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);
+
 	// 移動バーチャルパッド用
 	auto startSp = Sprite::create("CloseNormal.png");
 	startSp->setName("startSp");
@@ -198,6 +205,7 @@ bool Game::init()
 	uiLayer->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
 	plSprite->scheduleUpdate();
+	PL_HPgaugeSp->scheduleUpdate();
 
 	this->scheduleUpdate();
 	return true;

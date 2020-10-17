@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "PL_HPgauge.h"
 #include "Player.h"
 #include "anim/ActionCtl.h"
 #include "input/DIR_ID.h"
@@ -100,6 +101,12 @@ void Player::update(float sp)
 
 	if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
 	{
+		// フレーム数の取得テスト
+		//auto a = cntTest * 100;
+		//auto b = 0.05 * 100;
+		//auto c = (int)a / (int)b;
+		//TRACE("%d\n", c);
+
 		cntTest += sp;
 		if (cntTest <= 0.5f)
 		{
@@ -119,6 +126,12 @@ void Player::update(float sp)
 		{
 			_action_Now = ACTION::IDLE;
 			cntTest = 0.0f;
+
+			// HP減少のテストコード
+			// 攻撃するたびにHPが10減るようにしている
+			auto a = ((Game*)Director::getInstance()->getRunningScene());
+			auto b = (PL_HPgauge*)a->getChildByName("UI_LAYER")->getChildByName("PL_HPgauge");
+			b->SetHP(b->GetHP()-10);
 		}
 	}
 	//------------------------------------------
@@ -211,7 +224,7 @@ void Player::update(float sp)
 
 	//auto plpos = this->getPosition();
 	//TRACE("%f\n", plpos.x);
-	TRACE("%d\n", _action_Now);
+	//TRACE("%d\n", _action_Now);
 	// 範囲外check
 	//OutOfMapCheck();	
 
