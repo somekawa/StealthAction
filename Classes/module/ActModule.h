@@ -23,6 +23,8 @@ struct ActModule {
 
 	cocos2d::Vec2 checkPoint1;									// プレイヤーの四隅のどこか(1つ目)
 	cocos2d::Vec2 checkPoint2;									// プレイヤーの四隅のどこか(2つ目)
+	cocos2d::Vec2 checkPoint3;									// 落下で使うテスト
+	cocos2d::Vec2 checkPoint4;									// 落下で使うテスト
 
 	TOUCH_TIMMING touch;
 

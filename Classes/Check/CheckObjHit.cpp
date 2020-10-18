@@ -16,7 +16,6 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	auto ColSize = CollisionData->getLayerSize();
 	auto plCheckPoint1 = plPos + module.checkPoint1;
 	auto plCheckPoint2 = plPos + module.checkPoint2;
-
 	
 
 	auto plCheckPoint1Chip = Vec2{ plCheckPoint1 } / chipSize;
@@ -35,6 +34,52 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 
 	auto plCheckPoint1Gid = CollisionData->getTileGIDAt(plCheckPoint1Pos);
 	auto plCheckPoint2Gid = CollisionData->getTileGIDAt(plCheckPoint2Pos);
+
+	// ’i·—Ž‰ºŽž‚Ì•â³ˆ—
+	if (module.action == ACTION::FALLING)
+	{
+		auto lambda = [&](Vec2 point) {
+			auto plCheckPointChip = Vec2{ point } / chipSize;
+			auto plCheckPointPos = Vec2(plCheckPointChip.x, ColSize.height - plCheckPointChip.y);
+			auto plCheckPointGid = CollisionData->getTileGIDAt(plCheckPointPos);
+			if (plCheckPointGid != 0)
+			{
+				// •â³‚ª•K—v‚È‚Æ‚«‚Étrue
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			return false;
+		};
+
+		if (lambda(plPos + module.checkPoint3))
+		{
+			sprite.setPosition(sprite.getPosition().x - 1.0f, sprite.getPosition().y);
+		}
+		else if (lambda(plPos + module.checkPoint4))
+		{
+			sprite.setPosition(sprite.getPosition().x + 1.0f, sprite.getPosition().y);
+		}
+
+		//auto plCheckPoint3 = plPos + module.checkPoint3;
+		//auto plCheckPoint3Chip = Vec2{ plCheckPoint3 } / chipSize;
+		//auto plCheckPoint3Pos = Vec2(plCheckPoint3Chip.x, ColSize.height - plCheckPoint3Chip.y);
+		//auto plCheckPoint3Gid = CollisionData->getTileGIDAt(plCheckPoint3Pos);
+		//auto plCheckPoint4 = plPos + module.checkPoint4;
+		//auto plCheckPoint4Chip = Vec2{ plCheckPoint4 } / chipSize;
+		//auto plCheckPoint4Pos = Vec2(plCheckPoint4Chip.x, ColSize.height - plCheckPoint4Chip.y);
+		//auto plCheckPoint4Gid = CollisionData->getTileGIDAt(plCheckPoint4Pos);
+		//if (plCheckPoint3Gid != 0)
+		//{
+		//	sprite.setPosition(sprite.getPosition().x - 1.0f, sprite.getPosition().y);
+		//}
+		//else if (plCheckPoint4Gid != 0)
+		//{
+		//	sprite.setPosition(sprite.getPosition().x + 1.0f, sprite.getPosition().y);
+		//}
+	}
 
 	if (plCheckPoint1Gid != 0 || plCheckPoint2Gid != 0)
 	{

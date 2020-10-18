@@ -6,7 +6,7 @@
 #include "_Debug/_DebugConOut.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "input/OPRT_touch.h"
+#include "input/OPRT_key.h"
 #else
 #include "input/OPRT_touch.h"
 #endif
@@ -38,7 +38,7 @@ Player::Player()
 	// キー入力かタッチ操作か判断
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// thisの意味
-	_oprtState = new OPRT_touch(this);
+	_oprtState = new OPRT_key(this);
 #else
 	_oprtState = new OPRT_touch(this);
 #endif
@@ -223,7 +223,7 @@ void Player::update(float sp)
 	//}
 
 	//auto plpos = this->getPosition();
-	//TRACE("%f\n", plpos.x);
+	//TRACE("%f\n", plpos.y);
 	//TRACE("%d\n", _action_Now);
 	// 範囲外check
 	//OutOfMapCheck();	
@@ -452,6 +452,10 @@ void Player::actModuleRegistration(void)
 		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
 		act.checkPoint1 = Vec2{ 0,0 };				// 左下
 		act.checkPoint2 = Vec2{ 0,0 };				// 右下
+
+		act.checkPoint3 = Vec2{ charSize.x / 2, charSize.y / 2 };  // 右上
+		act.checkPoint4 = Vec2{ -charSize.x / 2, charSize.y / 2 }; // 左上
+
 		act.gravity = Vec2{ 0.0f,-5.0f };
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
 		act.jumpFlg = false;
@@ -466,8 +470,8 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::UP;
 		act.action = ACTION::JUMP;
-		act.checkPoint1 = Vec2{ -charSize.x/3, charSize.y };		// 左上
-		act.checkPoint2 = Vec2{ charSize.x/3, charSize.y };			// 右上
+		act.checkPoint1 = Vec2{ -charSize.x/3 + 5, charSize.y };		// 左上
+		act.checkPoint2 = Vec2{ charSize.x/3 - 5, charSize.y };			// 右上
 		//act.checkPoint1 = Vec2{ -10, 30 };						// 左上
 		//act.checkPoint2 = Vec2{ +10, 30 };						// 右上
 		act.jumpVel = Vec2{ 0.0f,20.0f };
@@ -491,8 +495,8 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::UP;
 		act.action = ACTION::JUMPING;
-		act.checkPoint1 = Vec2{ -charSize.x/3, charSize.y };	// 左上
-		act.checkPoint2 = Vec2{ charSize.x/3, charSize.y };		// 右上
+		act.checkPoint1 = Vec2{ -charSize.x/3 + 5, charSize.y };	// 左上
+		act.checkPoint2 = Vec2{ charSize.x/3 - 5, charSize.y };		// 右上
 		//act.checkPoint1 = Vec2{ -10, 30 };					// 左上
 		//act.checkPoint2 = Vec2{ +10, 30 };					// 右上
 		act.jumpVel = Vec2{ 0.0f,20.0f };
