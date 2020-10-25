@@ -124,7 +124,7 @@ bool Game::init()
 
 	// playerList_にplayer追加
 	// 引数に接続しているプレイヤー数を記述
-	//AddPlayer(1);
+	AddPlayer(1);
 	// enemyList_に敵追加
 	//AddEnemy(ActorType::Imp);
 	// 敵を生成した回数(多分いらない)
@@ -204,16 +204,16 @@ bool Game::init()
 	auto charLayer = Layer::create();
 	charLayer->setName("CHAR_LAYER");
 	//auto plSprite = Player::createPlayer();
-	plSprite = Player::createPlayer();
-	charLayer->addChild((Node*)plSprite, (int)zOlder::CHAR_PL);
-	plSprite->setName("player");
-	// キャラサイズ3倍
-	plSprite->setScale(3.0f);
-	// アンカーポイント下中央
-	plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
+	//plSprite = Player::createPlayer();
+	//charLayer->addChild((Node*)plSprite, (int)zOlder::CHAR_PL);
+	//plSprite->setName("player");
+	//// キャラサイズ3倍
+	//plSprite->setScale(3.0f);
+	//// アンカーポイント下中央
+	//plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
 
-	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setScale(3.0f);
-	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setAnchorPoint(Vec2(0.5f, 0.0f));
+	layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setScale(3.0f);
+	layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setAnchorPoint(Vec2(0.5f, 0.0f));
 
 	this->addChild(charLayer, (int)zOlder::CHAR_PL);
 
@@ -238,9 +238,9 @@ bool Game::init()
 	bgLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	uiLayer->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
-	plSprite->scheduleUpdate();
+	//plSprite->scheduleUpdate();
 	// プレイヤーの更新
-	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->scheduleUpdate();
+	layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->scheduleUpdate();
 
 	PL_HPgaugeSp->scheduleUpdate();
 
@@ -262,7 +262,8 @@ void Game::update(float sp)
 		frame = 0;
 	}*/
 	
-	cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
+	// プレイヤーのカメラがうまくいかない
+	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
 	//cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 
 

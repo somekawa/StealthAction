@@ -57,7 +57,7 @@ public:
     virtual bool init();
     void update(float sp);
 
-    Player* plSprite;
+   // Player* plSprite;
     cocos2d::Sprite* enemySprite;
 
     cocos2d::TMXLayer* colLayerRemain;

@@ -17,7 +17,7 @@ class Actor :
 {
 public:
 	// デフォルトコンストラクタ追加中
-	Actor();
+	//Actor();
 	Actor(std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
 	~Actor();
@@ -41,7 +41,7 @@ public:
 		return deleteFlag_;
 	}
 
-	virtual const Vector2F& GetPos(void) const
+	virtual const Vector2I& GetPos(void) const
 	{
 		return pos_;
 	}
@@ -50,7 +50,7 @@ private:
 
 protected:
 	// ポジション
-	Vector2F pos_;
+	Vector2I pos_;
 	// 自身のサイズ
 	Vector2I size_;
 	// スピード

@@ -22,59 +22,19 @@ USING_NS_CC;
 
 int Player::no_ = 0;
 
-Player* Player::createPlayer()
-{
-	return Player::create();
-}
+//Player* Player::createPlayer()
+//{
+//	return Player::create();
+//}
 
-Player::Player()
-{
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-	// this->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	// 上のやつを短くしたversion↓
-	setPosition( Vec2{ Vec2(visibleSize) / 2 + origin - Vec2(0,-200)} );
-
-	// キー入力かタッチ操作か判断
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-	// thisの意味
-	_oprtState = new OPRT_key(this);
-#else
-	_oprtState = new OPRT_touch(this);
-#endif
-
-//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-//// thisの意味
-//	_oprtState = new OPRT_touch(this);
-//#else
-//	_oprtState = new OPRT_touch(this);
-//#endif
-	
-	actModuleRegistration();
-
-	_action_Now = ACTION::IDLE;
-	_action_Old = ACTION::IDLE;
-	_dir_Now = DIR::RIGHT;
-
-	_attackCheckL = Vec2(0, 0);
-	_attackCheckR = Vec2(0, 0);
-
-	Anim_Registration((Sprite*)this);			// アニメーションの登録
-
-	myNo_ = no_;
-	no_++;
-	type_ = ActorType::Player;
-}
-
-Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shared_ptr<ActionRect>>>>& collider):
-	Actor(collider)
-{
+//Player::Player()
+//{
 //	auto visibleSize = Director::getInstance()->getVisibleSize();
 //	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+//
 //	// this->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 //	// 上のやつを短くしたversion↓
-//	//setPosition(Vec2{ Vec2(visibleSize) / 2 + origin - Vec2(0,-200) });
+//	setPosition( Vec2{ Vec2(visibleSize) / 2 + origin - Vec2(0,-200)} );
 //
 //	// キー入力かタッチ操作か判断
 //#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
@@ -84,13 +44,13 @@ Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shar
 //	_oprtState = new OPRT_touch(this);
 //#endif
 //
-//	//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-//	//// thisの意味
-//	//	_oprtState = new OPRT_touch(this);
-//	//#else
-//	//	_oprtState = new OPRT_touch(this);
-//	//#endif
-//
+////#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+////// thisの意味
+////	_oprtState = new OPRT_touch(this);
+////#else
+////	_oprtState = new OPRT_touch(this);
+////#endif
+//	
 //	actModuleRegistration();
 //
 //	_action_Now = ACTION::IDLE;
@@ -102,27 +62,67 @@ Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shar
 //
 //	Anim_Registration((Sprite*)this);			// アニメーションの登録
 //
-//	pos_ = { visibleSize.width / 2 + origin.x - 0,visibleSize.height / 2 + origin.y + 200 };
-//	setPosition(Vec2(pos_.x, pos_.y));
 //	myNo_ = no_;
 //	no_++;
 //	type_ = ActorType::Player;
-//
-//	//for (auto anim : lpAnimMng.GetAnimations(type_))
-//	//{
-//	//	auto a = lpAnimMng.GetFrameNum(type_, anim);
-//	//	for (int i = 0; i < lpAnimMng.GetFrameNum(type_, anim); i++)
-//	//	{
-//	//		for (auto c : collider[anim][i])
-//	//		{
-//	//			auto col = c->CreateCollider();
-//	//			col->drawRect(Vec2(0, 0), Vec2(c->GetSize().x, c->GetSize().y), c->GetColor());
-//	//			col->setName(anim);
-//	//			this->addChild(col);
-//	//		}
-//	//	}
-//	//}
-//
+//}
+
+Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shared_ptr<ActionRect>>>>& collider):
+	Actor(collider)
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	// this->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	// 上のやつを短くしたversion↓
+	//setPosition(Vec2{ Vec2(visibleSize) / 2 + origin - Vec2(0,-200) });
+
+	// キー入力かタッチ操作か判断
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+	// thisの意味
+	_oprtState = new OPRT_key(this);
+#else
+	_oprtState = new OPRT_touch(this);
+#endif
+
+	//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+	//// thisの意味
+	//	_oprtState = new OPRT_touch(this);
+	//#else
+	//	_oprtState = new OPRT_touch(this);
+	//#endif
+
+	actModuleRegistration();
+
+	_action_Now = ACTION::IDLE;
+	_action_Old = ACTION::IDLE;
+	_dir_Now = DIR::RIGHT;
+
+	_attackCheckL = Vec2(0, 0);
+	_attackCheckR = Vec2(0, 0);
+
+	Anim_Registration((Sprite*)this);			// アニメーションの登録
+
+	pos_ = { (int)visibleSize.width / 2 + (int)origin.x - 0,(int)visibleSize.height / 2 + (int)origin.y + 200 };
+	setPosition(Vec2(pos_.x, pos_.y));
+	myNo_ = no_;
+	no_++;
+	type_ = ActorType::Player;
+
+	//for (auto anim : lpAnimMng.GetAnimations(type_))
+	//{
+	//	auto a = lpAnimMng.GetFrameNum(type_, anim);
+	//	for (int i = 0; i < lpAnimMng.GetFrameNum(type_, anim); i++)
+	//	{
+	//		for (auto c : collider[anim][i])
+	//		{
+	//			auto col = c->CreateCollider();
+	//			col->drawRect(Vec2(0, 0), Vec2(c->GetSize().x, c->GetSize().y), c->GetColor());
+	//			col->setName(anim);
+	//			this->addChild(col);
+	//		}
+	//	}
+	//}
+
 }
 
 Player::~Player()
