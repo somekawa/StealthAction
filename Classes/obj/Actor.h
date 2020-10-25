@@ -3,35 +3,30 @@
 #include <cocos2d.h> 
 #include <memory>
 #include <list>
-
+#include <unordered_map>
+#include "Geometory.h"
 #include "Direction/Direction.h"
-
-enum class ActorType
-{
-	Player,
-	Imp,
-	Max
-};
+#include "ActorType.h"
 
 class Input;
 class Collider;
+class ActionRect;
 
 class Actor :
 	public cocos2d::Sprite
 {
 public:
+	// デフォルトコンストラクタ追加中
 	Actor();
+	Actor(std::unordered_map<std::string,
+		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
 	~Actor();
 	// 各Actorの行動処理
 	virtual void Action(void) = 0;
 	// 更新処理
 	virtual void Update(void);
+	virtual void update(float delta) = 0;
 
-	// 自身のspriteを返す
-	virtual const cocos2d::Sprite* GetSprite(void) const
-	{
-		return sprite_;
-	}
 	// 方向変更
 	virtual void ChangeDirection(void) = 0;
 
@@ -46,23 +41,20 @@ public:
 		return deleteFlag_;
 	}
 
-	const cocos2d::Vec2& GetPos(void) const
+	virtual const Vector2F& GetPos(void) const
 	{
 		return pos_;
 	}
 
 private:
-	// オブジェクトを消すフラグ
-	bool deleteFlag_;
+
 protected:
 	// ポジション
-	cocos2d::Vec2 pos_;
+	Vector2F pos_;
 	// 自身のサイズ
-	cocos2d::Vec2 size_;
+	Vector2I size_;
 	// スピード
-	cocos2d::Vec2 speed_;
-	// スプライト
-	cocos2d::Sprite* sprite_;
+	Vector2I speed_;
 	// キャラクターのタイプ
 	ActorType type_;
 	// 現在のｱﾆﾒｰｼｮﾝ
@@ -75,6 +67,12 @@ protected:
 	// 向いている方向
 	Direction direction_;
 
-	//std::list<std::unique_ptr<Collider>> collider_;
-	Collider* collider_;
+	// オブジェクトを消すフラグ
+	bool deleteFlag_;
+	//std::unordered_map<std::string,
+	//	std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider_;
+
+	std::unordered_map<std::string,
+		std::vector<std::vector<std::shared_ptr<ActionRect>>>>collider_;
+
 };

@@ -3,12 +3,15 @@
 class Imp :public Enemy
 {
 public:
-	Imp(std::vector<std::shared_ptr<Player>>& player);
+	Imp(cocos2d::Vector<cocos2d::Node*>& player, std::unordered_map<std::string,
+		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
 	~Imp();
 
-	static Imp* CreateImp(std::vector<std::shared_ptr<Player>>& player);
+	static Imp* CreateImp(cocos2d::Vector<cocos2d::Node*>& player, std::unordered_map<std::string,
+		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
 
-	void Action(void);
+	void Action(void)override;
+	void update(float delta)override;
 
 	//CREATE_FUNC(Imp);
 

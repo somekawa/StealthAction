@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "anim/ActionCtl.h"
 #include "input/DIR_ID.h"
+#include "ActionRect.h"
 #include "_Debug/_DebugConOut.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
@@ -64,6 +65,64 @@ Player::Player()
 	myNo_ = no_;
 	no_++;
 	type_ = ActorType::Player;
+}
+
+Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shared_ptr<ActionRect>>>>& collider):
+	Actor(collider)
+{
+//	auto visibleSize = Director::getInstance()->getVisibleSize();
+//	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+//	// this->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+//	// 上のやつを短くしたversion↓
+//	//setPosition(Vec2{ Vec2(visibleSize) / 2 + origin - Vec2(0,-200) });
+//
+//	// キー入力かタッチ操作か判断
+//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+//	// thisの意味
+//	_oprtState = new OPRT_key(this);
+//#else
+//	_oprtState = new OPRT_touch(this);
+//#endif
+//
+//	//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+//	//// thisの意味
+//	//	_oprtState = new OPRT_touch(this);
+//	//#else
+//	//	_oprtState = new OPRT_touch(this);
+//	//#endif
+//
+//	actModuleRegistration();
+//
+//	_action_Now = ACTION::IDLE;
+//	_action_Old = ACTION::IDLE;
+//	_dir_Now = DIR::RIGHT;
+//
+//	_attackCheckL = Vec2(0, 0);
+//	_attackCheckR = Vec2(0, 0);
+//
+//	Anim_Registration((Sprite*)this);			// アニメーションの登録
+//
+//	pos_ = { visibleSize.width / 2 + origin.x - 0,visibleSize.height / 2 + origin.y + 200 };
+//	setPosition(Vec2(pos_.x, pos_.y));
+//	myNo_ = no_;
+//	no_++;
+//	type_ = ActorType::Player;
+//
+//	//for (auto anim : lpAnimMng.GetAnimations(type_))
+//	//{
+//	//	auto a = lpAnimMng.GetFrameNum(type_, anim);
+//	//	for (int i = 0; i < lpAnimMng.GetFrameNum(type_, anim); i++)
+//	//	{
+//	//		for (auto c : collider[anim][i])
+//	//		{
+//	//			auto col = c->CreateCollider();
+//	//			col->drawRect(Vec2(0, 0), Vec2(c->GetSize().x, c->GetSize().y), c->GetColor());
+//	//			col->setName(anim);
+//	//			this->addChild(col);
+//	//		}
+//	//	}
+//	//}
+//
 }
 
 Player::~Player()
@@ -269,36 +328,21 @@ void Player::AnimCheck(cocos2d::Sprite * delta)
 // ("plistの名前","plistにあるpngの名前","つけたい名前",開始番号, 終了番号,反転するか,描画速度)
 void Player::Anim_Registration(Sprite* delta)
 {
-	//// アニメーションをキャッシュに登録
-	//// idle
-	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Look_Intro.plist", "look_intro%d.png", "idle", 0, 6, false, (float)0.3);
-	//// run
-	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Run.plist"      , "run%d.png"  , "run" , 0, 9, false, (float)0.08);
-	//// fall
-	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Fall.plist"        , "fall%d.png"    , "fall"    , 0, 3,  false, (float)1.0);
-	//// shoot-up
-	////lpAnimMng.addAnimationCache("image/Sprites/player/player-shoot-up/shoot-up-big.plist", "player-shoot-up-big.png", "shoot-up", 0, 0,  false, (float)1.0);
-	//// jump
-	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Jump.plist"        , "jump%d.png" , "jump"    , 0, 3,  false, (float)0.05);
-	//// attack
-	//lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light_Attack1.plist", "attack1_%d.png", "attack", 0, 9, false, (float)0.05);
-	//lpAnimMng.anim_action(delta);
-
 	// アニメーションをキャッシュに登録
 	// idle
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Look_Intro", 6, (float)0.3, AnimationType::Idle, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Look_Intro", 6, (float)0.3, ActorType::Player);
 
 	// run
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Run",9, (float)0.08, AnimationType::Run, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Run",9, (float)0.08, ActorType::Player);
 
 	// fall
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Fall", 3, (float)1.0, AnimationType::Fall, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Fall", 3, (float)1.0, ActorType::Player);
 
 	// jump
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jump", 3, (float)0.05, AnimationType::Jump, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jump", 3, (float)0.05, ActorType::Player);
 
 	// attack
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackA", 9, (float)0.05, AnimationType::Attack, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackA", 9, (float)0.05, ActorType::Player);
 
 	lpAnimMng.InitAnimation(*delta, ActorType::Player);
 
@@ -319,6 +363,22 @@ void Player::SetAction(ACTION action)
 void Player::SetDir(DIR dir)
 {
 	_dir_Now = dir;
+}
+
+Player* Player::CreatePlayer(std::unordered_map<std::string, std::vector<std::vector<std::shared_ptr<ActionRect>>>>& collider)
+{
+	Player* pRet = new(std::nothrow) Player(collider);
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+		return pRet;
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+		return nullptr;
+	}
 }
 
 // playerがmapの範囲外に出ていないかの確認

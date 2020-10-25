@@ -1,5 +1,4 @@
 #include "Imp.h"
-#include "Collision/Collider.h"
 #include "anim/AnimMng.h"
 
 USING_NS_CC;
@@ -8,26 +7,20 @@ USING_NS_CC;
 constexpr int Sight = 150;
 constexpr int AttackRange = 45;
 
-Imp::Imp(std::vector<std::shared_ptr<Player>>& player):
-	Enemy(player)
+Imp::Imp(Vector<Node*>& player, std::unordered_map<std::string,
+	std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider):
+	Enemy(player,collider)
 {
-	pos_ = Vec2(980, 0);
-	auto rect = Rect(0, 0, 20, 10);
-	sprite_ = Sprite::create(/*"imp_walk.png"*/);
+	pos_ = { 980,100 };
+	this->setPosition(Vec2(pos_.x, pos_.y));
+	this->setScale(2.0f);
 	//sprite_->setTextureRect(rect);
-	sprite_->setPosition(pos_);
-	sprite_->setAnchorPoint(Vec2(0.5, 0.0f));
-	sprite_->setScale(2.0f);
-	sprite_->setName("Imp");
 	flipFlag_ = FlipX::create(true);
 	type_ = ActorType::Imp;
-	// ŽŽ‚µ‚É‘‚¢‚Ä‚Ý‚½
-	
-	//auto drawRect = DrawNode::create();
-	//drawRect->drawRect(collider_->GetPos(),collider_->GetPos() + collider_->GetSize(),Color4F::RED);
-	//sprite_->addChild(drawRect);
-	lpAnimMng.InitAnimation(*sprite_,type_);
-	collider_->Create(*sprite_);
+
+	lpAnimMng.InitAnimation(*this, type_);
+	//lpAnimMng.InitAnimation(*this,type_,"walk");
+
 	direction_ = Direction::Left;
 
 	updater_ = &Imp::Walk;
@@ -37,23 +30,40 @@ Imp::~Imp()
 {
 }
 
-Imp* Imp::CreateImp(std::vector<std::shared_ptr<Player>>& player)
+Imp* Imp::CreateImp(Vector<Node*>& player, std::unordered_map<std::string,
+	std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider)
 {
-	//return Imp::create();
-
-	Imp* pRet = new(std::nothrow) Imp(player);
-		if (pRet && pRet->init())
-		{
-			pRet->autorelease();
-			return pRet;
-		}
-		else
-		{
-			delete pRet;
-			pRet = nullptr;
-			return nullptr;
-		}
+	Imp* pRet = new(std::nothrow) Imp(player,collider);
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+		return pRet;
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+		return nullptr;
+	}
 }
+
+//Imp* Imp::CreateImp(std::vector<std::shared_ptr<Player>>& player)
+//{
+//	//return Imp::create();
+//
+//	Imp* pRet = new(std::nothrow) Imp(player);
+//		if (pRet && pRet->init())
+//		{
+//			pRet->autorelease();
+//			return pRet;
+//		}
+//		else
+//		{
+//			delete pRet;
+//			pRet = nullptr;
+//			return nullptr;
+//		}
+//}
 
 void Imp::Action(void)
 {
@@ -61,6 +71,11 @@ void Imp::Action(void)
 
 	//AnimationManager::ChangeAnimation(sprite_, "run");
 	(this->*updater_)();
+}
+
+void Imp::update(float delta)
+{
+	Action();
 }
 
 void Imp::Walk(void)
@@ -86,20 +101,20 @@ void Imp::Walk(void)
 	}
 
 	pos_.x += speed_.x;
-	sprite_->setPosition(pos_);
-	sprite_->runAction(flipFlag_);
+	this->setPosition(Vec2(pos_.x, pos_.y));
+	this->runAction(flipFlag_);
 
 	if (DistanceCalcurator() <= Sight)
 	{
 		currentAnimation_ = "run";
-		lpAnimMng.ChangeAnimation(*sprite_, "run", true,type_);
+		lpAnimMng.ChangeAnimation(*this, "run", true,type_);
 		updater_ = &Imp::Run;
 	}
 
 	if (pos_.x <= 0)
 	{
 		currentAnimation_ = "death";
-		lpAnimMng.ChangeAnimation(*sprite_, "death", false,type_);
+		lpAnimMng.ChangeAnimation(*this, "death", false,type_);
 		updater_ = &Imp::Death;
 	}
 }
@@ -126,20 +141,20 @@ void Imp::Run(void)
 		break;
 	}
 	pos_.x += speed_.x;
-	sprite_->setPosition(pos_);
-	sprite_->runAction(flipFlag_);
+	this->setPosition(Vec2(pos_.x, pos_.y));
+	this->runAction(flipFlag_);
 
 	if (DistanceCalcurator() <= AttackRange)
 	{
 		currentAnimation_ = "attack1";
-		lpAnimMng.ChangeAnimation(*sprite_, "attack1", true,type_);
+		lpAnimMng.ChangeAnimation(*this, "attack1", true,type_);
 		updater_ = &Imp::Attack;
 	}
 
 	if (DistanceCalcurator() >= Sight)
 	{
 		currentAnimation_ = "walk";
-		lpAnimMng.ChangeAnimation(*sprite_, "walk", true,type_);
+		lpAnimMng.ChangeAnimation(*this, "walk", true,type_);
 		updater_ = &Imp::Walk;
 	}
 }
@@ -151,18 +166,18 @@ void Imp::Attack(void)
 	{
 		animationFrame_ = 0.0f;
 		currentAnimation_ = "walk";
-		lpAnimMng.ChangeAnimation(*sprite_, "walk", true, type_);
+		lpAnimMng.ChangeAnimation(*this, "walk", true, type_);
 		updater_ = &Imp::Walk;
 	}
 }
 
 void Imp::Death(void)
 {
-	animationFrame_ += 0.01f;
+	animationFrame_ += 0.02f;
 	if (lpAnimMng.IsAnimEnd(animationFrame_,type_,currentAnimation_))
 	{
-		sprite_->setName("death");
-		animationFrame_ = 0.0f;
+		this->setName("death");
+		animationFrame_ = lpAnimMng.GetAnimationMaxFrame(type_,currentAnimation_);
 		Delete();
 	}
 }

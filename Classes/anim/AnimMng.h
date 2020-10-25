@@ -4,7 +4,6 @@
 #include <map>
 #include <array>
 #include <memory>
-#include "AnimationEnum/AnimationType.h"
 #include "obj/Actor.h"
 
 #define lpAnimMng AnimMng::GetInstance()
@@ -24,7 +23,7 @@ public:
 	// param@: cacheName:: 登録するアニメーション名
 	// param@: frame    :: アニメーションの総フレーム
 	// param@: duration :: アニメーションを再生する間隔
-	void addAnimationCache(std::string actorName, std::string animName, int frame, float duration, AnimationType animTag, ActorType type);
+	void addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type);
 	// アニメーションの初期化と実行
 	void InitAnimation(cocos2d::Sprite& sprite, ActorType type);
 	// アニメーションの実行
@@ -41,6 +40,17 @@ public:
 	{
 		return animMaxFrame_[static_cast<int>(type)][animName];
 	}
+	// アニメーション集の取得
+	const std::vector<std::string>& GetAnimations(const ActorType& type) const
+	{
+		return animations_[static_cast<int>(type)];
+	}
+
+	// アニメーションフレーム数の取得
+	const int& GetFrameNum(const ActorType& type, const std::string& animName)
+	{
+		return frameNum_[static_cast<int>(type)][animName];
+	}
 private:
 	AnimMng();
 
@@ -56,6 +66,10 @@ private:
 
 	// ｷｬﾗのｱﾆﾒｰｼｮﾝ集
 	std::array<std::vector<std::string>, static_cast<int>(ActorType::Max)> animations_;
+	// ｷｬﾗのActor毎の名前
+	std::array<std::string, static_cast<int>(ActorType::Max)> actorNames_;
+	// アニメーションフレーム数
+	std::array<std::map<std::string, int>, static_cast<int>(ActorType::Max)> frameNum_;
 
 	static std::unique_ptr<AnimMng> s_instance;
 };

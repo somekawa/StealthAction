@@ -13,7 +13,8 @@
 class Player : public Actor
 {
 public:
-	static Player* createPlayer();
+	Player(std::unordered_map<std::string,
+		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
 
 	Player();
 	~Player();
@@ -22,11 +23,14 @@ public:
 	void ChangeDirection(void);
 
 	void update(float sp);
-	//static Player* createPL();								// マクロの直書き
 
 	ACTION GetAction(void);										// 現在のアクション情報を取得する
 	void SetAction(ACTION action);								// 現在のアクション状態をセットする
 	void SetDir(DIR dir);										// 現在の方向をセットする
+
+	static Player* CreatePlayer(std::unordered_map<std::string,
+		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
+	static Player* createPlayer();
 private:
 	CREATE_FUNC(Player);
 

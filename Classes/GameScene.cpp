@@ -27,7 +27,9 @@
 #include "_Debug/_DebugConOut.h"
 #include "CameraManager.h"
 #include "obj/Player.h"
+#include "obj/Enemy/Imp.h"
 #include "PL_HPgauge.h"
+#include "Loader/CollisionLoader.h"
 #include "GameMap.h"
 
 USING_NS_CC;
@@ -77,13 +79,11 @@ bool Game::init()
 	/////////////////////////////
 	// 2. add a menu item with "X" image, which is clicked to quit the program
 	//    you may modify it.
-
 	// add a "close" icon to exit the progress. it's an autorelease object
 	//auto closeItem = MenuItemImage::create(
 	//	"CloseNormal.png",
 	//	"CloseSelected.png",
 	//	CC_CALLBACK_1(Game::menuCloseCallback, this));
-
 	//if (closeItem == nullptr ||
 	//	closeItem->getContentSize().width <= 0 ||
 	//	closeItem->getContentSize().height <= 0)
@@ -96,17 +96,42 @@ bool Game::init()
 	//	float y = origin.y + closeItem->getContentSize().height / 2;
 	//	closeItem->setPosition(Vec2(x, y));
 	//}
-
 	//// create menu, it's an autorelease object
 	//auto menu = Menu::create(closeItem, NULL);
 	//menu->setPosition(Vec2::ZERO);
 	//this->addChild(menu, 1);
-
 	/////////////////////////////
 	// 3. add your codes below...
-
 	// add a label shows "Hello World"
 	// create and initialize a label
+
+	for (auto& layer : layer_)
+	{
+		layer = Layer::create();
+		this->addChild(layer);
+	}
+	// player用レイヤー
+	layer_[(int)zOlder::CHAR_PL]->setTag((int)zOlder::CHAR_PL);
+	// enemy用レイヤー
+	layer_[(int)zOlder::CHAR_ENEMY]->setTag((int)zOlder::CHAR_ENEMY);
+
+	// colliderBoxのロード(一括で全てのcolliderをロードしておいた方がいいのでここに書く)
+	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Look_Intro", "player");
+	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Run", "player");
+	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Fall", "player");
+	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Jump", "player");
+	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "AttackA", "player");
+
+	// playerList_にplayer追加
+	// 引数に接続しているプレイヤー数を記述
+	//AddPlayer(1);
+	// enemyList_に敵追加
+	//AddEnemy(ActorType::Imp);
+	// 敵を生成した回数(多分いらない)
+	// 敵のsetNameするために用意したもの
+	generateEnemyNum_ = 0;
+	// 敵が死んだらとりあえずリスポーンするフラグ
+	respawnFlag_ = false;
 
 	auto label = Label::createWithTTF("Action", "fonts/Marker Felt.ttf", 24);
 	if (label == nullptr)
@@ -180,15 +205,17 @@ bool Game::init()
 	charLayer->setName("CHAR_LAYER");
 	//auto plSprite = Player::createPlayer();
 	plSprite = Player::createPlayer();
-	charLayer->addChild((Node*)plSprite, (int)zOlder::CHAR);
+	charLayer->addChild((Node*)plSprite, (int)zOlder::CHAR_PL);
 	plSprite->setName("player");
-
 	// キャラサイズ3倍
 	plSprite->setScale(3.0f);
 	// アンカーポイント下中央
 	plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
 
-	this->addChild(charLayer, (int)zOlder::CHAR);
+	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setScale(3.0f);
+	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setAnchorPoint(Vec2(0.5f, 0.0f));
+
+	this->addChild(charLayer, (int)zOlder::CHAR_PL);
 
 	/*前面に出したいレイヤーの登録*/
 	//auto frLayer = Layer::create();
@@ -212,6 +239,9 @@ bool Game::init()
 	uiLayer->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
 	plSprite->scheduleUpdate();
+	// プレイヤーの更新
+	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->scheduleUpdate();
+
 	PL_HPgaugeSp->scheduleUpdate();
 
 	this->scheduleUpdate();
@@ -231,7 +261,11 @@ void Game::update(float sp)
 		gameMap_->SetMapInfo(MapType::OMOTE);
 		frame = 0;
 	}*/
+	
 	cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
+	//cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
+
+
 	//// 当たり判定用の枠を出してみる
 	//auto ppos = plSprite->getPosition();
 	//auto psize = plSprite->getContentSize();
@@ -266,4 +300,44 @@ void Game::menuCloseCallback(Ref* pSender)
 
 	//EventCustom customEndEvent("game_scene_close_event");
 	//_eventDispatcher->dispatchEvent(&customEndEvent);
+}
+
+void Game::AddPlayer(int playerNum)
+{
+	// player数resize
+	for (int p = 0; p < playerNum; p++)
+	{
+		auto plSprite = Player::CreatePlayer(colliderBox_[static_cast<int>(ActorType::Player)]);
+		plSprite->setName("player" + std::to_string(p + 1));
+		// プレイヤーをキャラクター用のレイヤーの子供にする
+		layer_[static_cast<int>(zOlder::CHAR_PL)]
+			->addChild(plSprite, (int)zOlder::CHAR_PL);
+	}
+}
+
+void Game::AddEnemy(const ActorType& type)
+{
+	//enSprites_.emplace_front(std::make_shared<Enemy>(plSprites_));
+	Enemy* sprite = nullptr;
+	switch (type)
+	{
+		// Impを生成する場合
+	case ActorType::Imp:
+		// 敵の生成
+		sprite = Imp::CreateImp(layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren(),
+			colliderBox_[static_cast<int>(ActorType::Imp)]);
+		break;
+	default:
+		break;
+	}
+
+	// 敵に名前を付ける
+	// 死んだら"death"となる
+	sprite->setName("enemy");
+
+	// 敵をActor用レイヤーの子供にする
+	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]
+		->addChild(sprite, (int)zOlder::CHAR_ENEMY);
+	generateEnemyNum_++;
+	sprite->scheduleUpdate();
 }

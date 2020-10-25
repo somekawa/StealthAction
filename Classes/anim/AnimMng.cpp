@@ -12,8 +12,10 @@ AnimMng::~AnimMng()
 {
 }
 
-void AnimMng::addAnimationCache(std::string actorName, std::string animName, int frame, float duration, AnimationType animTag, ActorType type)
+void AnimMng::addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type)
 {
+	actorNames_[static_cast<int>(type)] = actorName;
+
 	// アニメーションキャッシュはシングルトン
 	AnimationCache *animationCache = AnimationCache::getInstance();
 
@@ -32,10 +34,6 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 		auto string = animName + "%d.png";		// plistの中だからパスじゃない
 		auto str = StringUtils::format(string.c_str(), i);
 		SpriteFrame* sprite = cache->getSpriteFrameByName(str);
-		if (sprite == nullptr)
-		{
-			int a = 0;
-		}
 		animation->addSpriteFrame(sprite);
 	}
 
@@ -47,9 +45,13 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 
 	// 出来たアニメーションをキャッシュに登録
 	animationCache->addAnimation(animation, animName);
+	//animationCache_->addAnimation(animation, actorName + "_" + animName);
+
 
 	// 1アニメーションのキャッシュデータを格納する処理
 	CacheRegistration(animationCache, type, animName);
+
+	frameNum_[static_cast<int>(type)].try_emplace(animName, frame);
 }
 
 void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type)
