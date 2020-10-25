@@ -28,8 +28,6 @@ void OPRT_touch::update()
 {
 	_keyData._oldData = _keyData._data;
 	_keyData._data = _keyData._input;
-	// 攻撃テスト用
-	//_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
 }
 
 void OPRT_touch::touchStart(cocos2d::Touch * touch)
@@ -64,7 +62,7 @@ void OPRT_touch::touchMove(cocos2d::Touch * touch)
 	}
 
 	if (swipeRotate == SWIPE_UP) {
-		_keyData._input[static_cast<int>(BUTTON::UP)] = true;
+		//_keyData._input[static_cast<int>(BUTTON::UP)] = true;
 	}
 	if (swipeRotate == SWIPE_DOWN) {
 		//_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
@@ -93,7 +91,7 @@ void OPRT_touch::touchflg(cocos2d::Sprite * delta)
 	listener->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event)->bool {
 		Point p = touch->getLocation();
 		auto director = Director::getInstance();
-		auto label1 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("test");
+		auto label1 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("attackBtn");
 		//auto label1 = director->getRunningScene()->getChildByName("test") -> getChildByName("item");
 		//auto visibleSize = director->getVisibleSize();
 		//float x = visibleSize.width - label1->getContentSize().width / 2;
@@ -104,7 +102,8 @@ void OPRT_touch::touchflg(cocos2d::Sprite * delta)
 		auto r = label1->getBoundingBox();
 		if (r.containsPoint(p)) {
 			// label1がクリック/タッチされた場合の処理
-			_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+			//_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+			_keyData._input[static_cast<int>(BUTTON::UP)] = true;
 		}
 		else
 		{
@@ -165,7 +164,7 @@ void OPRT_touch::touchesMove(cocos2d::Touch* touch)
 	}
 
 	if (swipeRotate == SWIPE_UP) {
-		_keyData._input[static_cast<int>(BUTTON::UP)] = true;
+		//_keyData._input[static_cast<int>(BUTTON::UP)] = true;
 	}
 	if (swipeRotate == SWIPE_DOWN) {
 		//_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
@@ -187,7 +186,7 @@ void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 	{
 		if (touchVectors[touch->getID()].isMoveTouch)
 		{
-			if (key != static_cast<int>(BUTTON::DOWN))
+			if (key != static_cast<int>(BUTTON::DOWN) && key != static_cast<int>(BUTTON::UP))
 			{
 				_keyData._input[key] = false;
 			}
@@ -195,6 +194,7 @@ void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 		else
 		{
 			_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
+			_keyData._input[static_cast<int>(BUTTON::UP)] = false;
 		}
 	}
 }
@@ -216,11 +216,19 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 		{
 			touchVectors[touch->getID()].pos = touch->getLocation();
 			auto director = Director::getInstance();
-			auto label1 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("test");
+			auto label1 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("attackBtn");
 			auto r = label1->getBoundingBox();
+
+			auto label2 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("jumpBtn");
+			auto r2 = label2->getBoundingBox();
 			if (r.containsPoint(touchVectors[touch->getID()].pos)) {
 				// label1がクリック/タッチされた場合の処理
 				_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+			}
+			else if (r2.containsPoint(touchVectors[touch->getID()].pos))
+			{
+				// label1がクリック/タッチされた場合の処理
+				_keyData._input[static_cast<int>(BUTTON::UP)] = true;
 			}
 			else
 			{

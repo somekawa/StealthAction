@@ -139,17 +139,24 @@ bool Game::init()
 	bgMiddle->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	bgLayer->addChild(bgMiddle, (int)zOlder::BG);
 
-	// 攻撃ボタンテスト用
+	// ボタンテスト用
 	auto uiLayer = Layer::create();
 	uiLayer->setName("UI_LAYER");
 	this->addChild(uiLayer, (int)zOlder::FRONT);
-	auto ssp = Sprite::create("CloseNormal.png");
-	ssp->setName("test");
-	ssp->setAnchorPoint(Vec2(0.5f, 0.0f));
-	float x = origin.x + visibleSize.width - ssp->getContentSize().width / 2;
-	float y = origin.y + ssp->getContentSize().height / 2;
-	ssp->setPosition(Vec2(x, y));
-	uiLayer->addChild(ssp, (int)zOlder::FRONT);
+	// 攻撃ボタン
+	auto attackBtnSp = Sprite::create("image/button1.png");
+	attackBtnSp->setName("attackBtn");
+	attackBtnSp->setAnchorPoint(Vec2(0.5f, 0.0f));
+	float x = origin.x + visibleSize.width - attackBtnSp->getContentSize().width / 2;
+	float y = origin.y + attackBtnSp->getContentSize().height / 2;
+	attackBtnSp->setPosition(Vec2(x, y));
+	uiLayer->addChild(attackBtnSp, (int)zOlder::FRONT);
+	// ジャンプボタン
+	auto jumpBtnSp = Sprite::create("image/button2.png");
+	jumpBtnSp->setName("jumpBtn");
+	jumpBtnSp->setAnchorPoint(Vec2(0.5f, 0.0f));
+	jumpBtnSp->setPosition(Vec2(x - jumpBtnSp->getContentSize().width * 2, y));
+	uiLayer->addChild(jumpBtnSp, (int)zOlder::FRONT);
 
 	// HPゲージ描画用
 	auto PL_HPgaugeSp = PL_HPgauge::createPL_HPgauge();
