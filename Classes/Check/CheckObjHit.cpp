@@ -1,18 +1,19 @@
 #include "CheckObjHit.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
 bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 {
 	auto director = Director::getInstance();
-	auto a = director->getRunningScene()->getChildByName("BG_BACK")->getChildByName("MapData");
-	if ((TMXLayer*)director->getRunningScene()->getChildByName("BG_BACK")->getChildByName("MapData")->getChildByName("col") == nullptr)
+	auto a = director->getRunningScene()->getChildByTag((int)zOlder::BG);
+	if ((TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col") == nullptr)
 	{
 		return false;
 	}
 	const int chipSize = 48;
 	auto plPos = sprite.getPosition();
-	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByName("BG_BACK")->getChildByName("MapData")->getChildByName("col");
+	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
 	auto ColSize = CollisionData->getLayerSize();
 	auto plCheckPoint1 = plPos + module.checkPoint1;
 	auto plCheckPoint2 = plPos + module.checkPoint2;

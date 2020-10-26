@@ -1,4 +1,5 @@
 #include "CameraManager.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -6,7 +7,7 @@ void CameraManager::AddCamera(cocos2d::Scene& scene, cocos2d::Size zoomSize, Cam
 {
 	auto defaultcamera = scene.getDefaultCamera();
 	auto camera = Camera::createOrthographic(zoomSize.width, zoomSize.height, defaultcamera->getNearPlane() - 768, defaultcamera->getFarPlane());
-	camera->setTag(static_cast<int>(cameraType));
+	camera->setName(StringUtils::toString(static_cast<int>(cameraType)));
 	camera->setCameraFlag(cameraFlag);
 	scene.addChild(camera);
 	cameras_[static_cast<int>(cameraType)] = camera;
@@ -16,7 +17,7 @@ void CameraManager::AddCamera(cocos2d::Scene& scene, cocos2d::Size zoomSize, Cam
 void CameraManager::NotOutRangeSetPos(cocos2d::Vec2& pos,CameraType cameraType, float scale)
 {
 	auto director = Director::getInstance();
-	auto map = (TMXTiledMap*)director->getRunningScene()->getChildByName("BG_BACK")->getChildByName("MapData");
+	auto map = (TMXTiledMap*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData");
 	auto size = director->getWinSize();
 	float mapMoveX = cameras_[static_cast<int>(cameraType)]->getPositionX();
 	float mapMoveY = cameras_[static_cast<int>(cameraType)]->getPositionY();

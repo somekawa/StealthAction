@@ -112,8 +112,17 @@ bool Game::init()
 	}
 	// player用レイヤー
 	layer_[(int)zOlder::CHAR_PL]->setTag((int)zOlder::CHAR_PL);
+	layer_[(int)zOlder::CHAR_PL]->setGlobalZOrder((int)zOlder::CHAR_PL);
 	// enemy用レイヤー
 	layer_[(int)zOlder::CHAR_ENEMY]->setTag((int)zOlder::CHAR_ENEMY);
+	layer_[(int)zOlder::CHAR_ENEMY]->setGlobalZOrder((int)zOlder::CHAR_ENEMY);
+	// ui用レイヤー
+	layer_[(int)zOlder::FRONT]->setTag((int)zOlder::FRONT);
+	layer_[(int)zOlder::FRONT]->setGlobalZOrder((int)zOlder::FRONT);
+	// bg用レイヤー
+	layer_[(int)zOlder::BG]->setTag((int)zOlder::BG);
+	layer_[(int)zOlder::BG]->setGlobalZOrder((int)zOlder::BG);
+
 
 	// colliderBoxのロード(一括で全てのcolliderをロードしておいた方がいいのでここに書く)
 	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Look_Intro", "player");
@@ -147,27 +156,22 @@ bool Game::init()
 	this->setName("GameScene");
 
 	// Scene - Layer - Sprite	// bgLayerはGameSceneに直接ぶら下がる
-	auto bgLayer = Layer::create();
-	bgLayer->setName("BG_BACK");
-	this->addChild(bgLayer, (int)zOlder::BG);
+	//this->addChild(bgLayer, (int)zOlder::BG);
 
 	// 背景の登録(bgLayerにぶら下がるbgSprite)
 	auto bgSprite1 = Sprite::create("image/Environment/background-big.png");
 	bgSprite1->setPosition(Vec2(0, visibleSize.height / 2));
-	bgLayer->addChild(bgSprite1, (int)zOlder::BG);
+	layer_[(int)zOlder::BG]->addChild(bgSprite1, -2);
 
 	auto bgSprite2 = Sprite::create("image/Environment/background-big.png");
 	bgSprite2->setPosition(Vec2(720, visibleSize.height / 2));
-	bgLayer->addChild(bgSprite2, (int)zOlder::BG);
+	layer_[(int)zOlder::BG]->addChild(bgSprite2, -1);
 
 	auto bgMiddle = Sprite::create("image/Environment/middleground-big.png");
 	bgMiddle->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	bgLayer->addChild(bgMiddle, (int)zOlder::BG);
+	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);
 
 	// ボタンテスト用
-	auto uiLayer = Layer::create();
-	uiLayer->setName("UI_LAYER");
-	this->addChild(uiLayer, (int)zOlder::FRONT);
 	// 攻撃ボタン
 	auto attackBtnSp = Sprite::create("image/button1.png");
 	attackBtnSp->setName("attackBtn");
@@ -175,17 +179,17 @@ bool Game::init()
 	float x = origin.x + visibleSize.width - attackBtnSp->getContentSize().width / 2;
 	float y = origin.y + attackBtnSp->getContentSize().height / 2;
 	attackBtnSp->setPosition(Vec2(x, y));
-	uiLayer->addChild(attackBtnSp, (int)zOlder::FRONT);
+	layer_[(int)zOlder::FRONT]->addChild(attackBtnSp, 0);
 	// ジャンプボタン
 	auto jumpBtnSp = Sprite::create("image/button2.png");
 	jumpBtnSp->setName("jumpBtn");
 	jumpBtnSp->setAnchorPoint(Vec2(0.5f, 0.0f));
 	jumpBtnSp->setPosition(Vec2(x - jumpBtnSp->getContentSize().width * 2, y));
-	uiLayer->addChild(jumpBtnSp, (int)zOlder::FRONT);
+	layer_[(int)zOlder::FRONT]->addChild(jumpBtnSp, 0);
 
 	// HPゲージ描画用
 	auto PL_HPgaugeSp = PL_HPgauge::createPL_HPgauge();
-	uiLayer->addChild(PL_HPgaugeSp, (int)(zOlder::FRONT));
+	layer_[(int)zOlder::FRONT]->addChild(PL_HPgaugeSp, 0);
 	PL_HPgaugeSp->setName("PL_HPgauge");
 	PL_HPgaugeSp->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);
 
@@ -193,16 +197,15 @@ bool Game::init()
 	auto startSp = Sprite::create("CloseNormal.png");
 	startSp->setName("startSp");
 	startSp->setPosition(Vec2(150.0f,150.0f ));
-	uiLayer->addChild(startSp);
+	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
 
 	// map読み込み
 	// collisionLayerの取得
 	gameMap_ = std::make_shared<GameMap>();
-	gameMap_->CreateMap(*bgLayer, "image/Environment/test.tmx", "image/Environment/uratest.tmx");
+	gameMap_->CreateMap(*layer_[(int)zOlder::BG], "image/Environment/test.tmx", "image/Environment/uratest.tmx");
 
 	// キャラの登録(charLayerはGameSceneに直接ぶら下がり、plSpriteはcharLayerにぶら下がる)
-	auto charLayer = Layer::create();
-	charLayer->setName("CHAR_LAYER");
+
 	//auto plSprite = Player::createPlayer();
 	//plSprite = Player::createPlayer();
 	//charLayer->addChild((Node*)plSprite, (int)zOlder::CHAR_PL);
@@ -212,11 +215,8 @@ bool Game::init()
 	//// アンカーポイント下中央
 	//plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
 
-	layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setScale(3.0f);
-	layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setAnchorPoint(Vec2(0.5f, 0.0f));
-
-	this->addChild(charLayer, (int)zOlder::CHAR_PL);
-
+	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setScale(3.0f);
+	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setAnchorPoint(Vec2(0.5f, 0.0f));
 	/*前面に出したいレイヤーの登録*/
 	//auto frLayer = Layer::create();
 	// auto frSprite = Sprite::create(" ");
@@ -234,9 +234,10 @@ bool Game::init()
 	cameraManager_->AddCamera(*this, size,CameraType::PLAYER1, CameraFlag::USER1);
 	cameraManager_->AddCamera(*this, size, CameraType::UI, CameraFlag::USER2);
 
-	charLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
-	bgLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
-	uiLayer->setCameraMask(static_cast<int>(CameraFlag::USER2));
+	layer_[static_cast<int>(zOlder::CHAR_PL)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	//charLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
 	//plSprite->scheduleUpdate();
 	// プレイヤーの更新
@@ -264,7 +265,7 @@ void Game::update(float sp)
 	
 	// プレイヤーのカメラがうまくいかない
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
-	//cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
+	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 
 
 	//// 当たり判定用の枠を出してみる
@@ -310,9 +311,11 @@ void Game::AddPlayer(int playerNum)
 	{
 		auto plSprite = Player::CreatePlayer(colliderBox_[static_cast<int>(ActorType::Player)]);
 		plSprite->setName("player" + std::to_string(p + 1));
+		plSprite->setScale(3.0f);
+		plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
 		// プレイヤーをキャラクター用のレイヤーの子供にする
 		layer_[static_cast<int>(zOlder::CHAR_PL)]
-			->addChild(plSprite, (int)zOlder::CHAR_PL);
+			->addChild(plSprite, playerNum);
 	}
 }
 

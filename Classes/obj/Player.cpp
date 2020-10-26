@@ -84,12 +84,9 @@ Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shar
 	_oprtState = new OPRT_touch(this);
 #endif
 
-	//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-	//// thisの意味
-	//	_oprtState = new OPRT_touch(this);
-	//#else
-	//	_oprtState = new OPRT_touch(this);
-	//#endif
+	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setScale(3.0f);
+	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setAnchorPoint(Vec2(0.5f, 0.0f));
+
 
 	actModuleRegistration();
 
@@ -189,7 +186,7 @@ void Player::update(float sp)
 			// HP減少のテストコード
 			// 攻撃するたびにHPが10減るようにしている
 			auto a = ((Game*)Director::getInstance()->getRunningScene());
-			auto b = (PL_HPgauge*)a->getChildByName("UI_LAYER")->getChildByName("PL_HPgauge");
+			auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
 			b->SetHP(b->GetHP()-10);
 		}
 	}

@@ -39,7 +39,7 @@ using SharedRect = std::vector<std::shared_ptr<ActionRect>>;
  // zOlder(‰œs‚«)
 enum class zOlder {
     BG,
-    CHAR_PL,
+    CHAR_PL, 
 	CHAR_ENEMY,
     FRONT,
     MAX
