@@ -15,8 +15,11 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	auto plPos = sprite.getPosition();
 	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
 	auto ColSize = CollisionData->getLayerSize();
-	auto plCheckPoint1 = plPos + module.checkPoint1;
-	auto plCheckPoint2 = plPos + module.checkPoint2;
+
+	// 当たり判定の位置に+module.velをすることで、次回移動値を加算したpointで当たり判定をするようにした
+	// →カメラのブレをなくすため
+	auto plCheckPoint1 = plPos + module.checkPoint1 + module.vel;
+	auto plCheckPoint2 = plPos + module.checkPoint2 + module.vel;
 	
 
 	auto plCheckPoint1Chip = Vec2{ plCheckPoint1 } / chipSize;
