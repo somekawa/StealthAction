@@ -31,7 +31,7 @@
 #include "PL_HPgauge.h"
 #include "Loader/CollisionLoader.h"
 #include "GameMap.h"
-
+#include "Gate.h"
 USING_NS_CC;
 
 Scene* Game::createScene()
@@ -199,6 +199,9 @@ bool Game::init()
 	startSp->setPosition(Vec2(150.0f,150.0f ));
 	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
 
+	auto gate = Gate::CreateGate({ 1200, 150 });
+	layer_[(int)zOlder::BG]->addChild(gate, 10000);
+
 	// map読み込み
 	// collisionLayerの取得
 	gameMap_ = std::make_shared<GameMap>();
@@ -253,7 +256,7 @@ void Game::update(float sp)
 {
 
 
-	/*if (++frame  == 60)
+	if (++frame  == 60)
 	{
 		gameMap_->SetMapInfo(MapType::URA);
 	}
@@ -261,7 +264,7 @@ void Game::update(float sp)
 	{
 		gameMap_->SetMapInfo(MapType::OMOTE);
 		frame = 0;
-	}*/
+	}
 	
 	// プレイヤーのカメラがうまくいかない
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
