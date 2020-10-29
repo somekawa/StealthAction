@@ -136,7 +136,7 @@ void Player::update(float sp)
 	{
 		return;
 	}
-	TRACE("%f,%f\n",getPosition().x, getPosition().y);
+	//TRACE("%f,%f\n",getPosition().x, getPosition().y);
 	Action();
 
 	_actCtl.update(sp,*this);

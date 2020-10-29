@@ -20,6 +20,7 @@ public:
 	cocos2d::TMXTiledMap* GetMap();
 	void ReplaceMap();
 	void SetMapInfo(MapType mapType);
+	void update(cocos2d::Vec2 pos);
 private:
 	// パスからマップ読み込みを行う
 	void createMapFromPath(std::string& path, cocos2d::Layer& layer);
