@@ -2,6 +2,7 @@
 #include <array>
 #include <list>
 #include <map>
+#include <string>
 #include "input/OPRT_state.h"
 
 struct ActModule;
@@ -18,7 +19,7 @@ struct ActModule {
 	cocos2d::Vec2 addGravity;									// 重力に加えていく
 	cocos2d::Vec2 jumpVel;										// ジャンプ速度
 	cocos2d::Vec2 subtraction;									// ジャンプ値を引いていく
-	ACTION action;												// プレイヤーのアクション状態(書き込みたい情報)
+	std::string actName;										// プレイヤーのアクション状態(書き込みたい情報)
 	BUTTON button;												// キー押下状態
 
 	cocos2d::Vec2 checkPoint1;									// プレイヤーの四隅のどこか(1つ目)
@@ -28,8 +29,8 @@ struct ActModule {
 
 	TOUCH_TIMMING touch;
 
-	std::list<ACTION>blackList;									// ブラックリスト(動いてはいけないやつ)
-	std::list<ACTION>whiteList;									// ホワイトリスト(動いていいやつ)
+	std::list<std::string>blackList;									// ブラックリスト(動いてはいけないやつ)
+	std::list<std::string>whiteList;									// ホワイトリスト(動いていいやつ)
 
 	funcActModule runAction;
 	std::list<funcActModule>act;
