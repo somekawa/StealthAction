@@ -22,51 +22,6 @@ USING_NS_CC;
 
 int Player::no_ = 0;
 
-//Player* Player::createPlayer()
-//{
-//	return Player::create();
-//}
-
-//Player::Player()
-//{
-//	auto visibleSize = Director::getInstance()->getVisibleSize();
-//	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-//
-//	// this->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-//	// 上のやつを短くしたversion↓
-//	setPosition( Vec2{ Vec2(visibleSize) / 2 + origin - Vec2(0,-200)} );
-//
-//	// キー入力かタッチ操作か判断
-//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-//	// thisの意味
-//	_oprtState = new OPRT_key(this);
-//#else
-//	_oprtState = new OPRT_touch(this);
-//#endif
-//
-////#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-////// thisの意味
-////	_oprtState = new OPRT_touch(this);
-////#else
-////	_oprtState = new OPRT_touch(this);
-////#endif
-//	
-//	actModuleRegistration();
-//
-//	_action_Now = ACTION::IDLE;
-//	_action_Old = ACTION::IDLE;
-//	_dir_Now = DIR::RIGHT;
-//
-//	_attackCheckL = Vec2(0, 0);
-//	_attackCheckR = Vec2(0, 0);
-//
-//	Anim_Registration((Sprite*)this);			// アニメーションの登録
-//
-//	myNo_ = no_;
-//	no_++;
-//	type_ = ActorType::Player;
-//}
-
 Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shared_ptr<ActionRect>>>>& collider):
 	Actor(collider)
 {
@@ -143,53 +98,7 @@ void Player::update(float sp)
 	// 実行する入力先(keyかtouch)のupdateへ移動
 	_oprtState->update();	
 
-	// Aキーで攻撃モーション--------------------
-
-	// ActModuleに設定すれば、ここのキー設定は不要になる
-	//auto nowdata = _oprtState->GetNowData();
-	//auto olddata = _oprtState->GetOldData();
-	//if (nowdata[4] && !olddata[4])
-	//{
-	//	sp = 0;
-	//	_action_Now = ACTION::ATTACK;
-	//}
-
-	if (actionNow_ == "AttackA" || actionOld_ == "AttackA")
-	{
-		// フレーム数の取得テスト
-		//auto a = cntTest * 100;
-		//auto b = 0.05 * 100;
-		//auto c = (int)a / (int)b;
-		//TRACE("%d\n", c);
-
-		cntTest += sp;
-		if (cntTest <= 0.5f)
-		{
-			if (_dir_Now == DIR::LEFT)
-			{
-				// アンカーポイント右端
-				this->setAnchorPoint(Vec2(1.0f, 0.0f));
-			}
-			else if (_dir_Now == DIR::RIGHT)
-			{
-				// アンカーポイント左端
-				this->setAnchorPoint(Vec2(0.0f, 0.0f));
-			}
-			actionNow_ = "AttackA";
-		}
-		else
-		{
-			actionNow_ = "Look_Intro";
-			cntTest = 0.0f;
-
-			// HP減少のテストコード
-			// 攻撃するたびにHPが10減るようにしている
-			auto a = ((Game*)Director::getInstance()->getRunningScene());
-			auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-			b->SetHP(b->GetHP()-10);
-		}
-	}
-	//------------------------------------------
+	attackMotion(sp);
 
 	//if (_action_Now == ACTION::JUMPING)
 	//{
@@ -296,6 +205,98 @@ void Player::ChangeDirection(void)
 	int a = 0;
 }
 
+void Player::attackMotion(float sp)
+{
+	// flagがtrueの時は強制的にAttackBへ切替
+	if (attackflg)
+	{
+		actionNow_ = "AttackB";
+	}
+
+	if (actionNow_ == "AttackA" || actionOld_ == "AttackA")
+	{
+		// フレーム数の取得テスト
+		//auto a = cntTest * 100;
+		//auto b = 0.05 * 100;
+		//auto c = (int)a / (int)b;
+		//TRACE("%d\n", c);
+
+		// 攻撃中にもう一度攻撃ボタンが押されたらAttackAが終了後、AttackBへ移行するようにする
+		auto keyN = _oprtState->GetNowData();
+		auto keyO = _oprtState->GetOldData();
+		if (keyN[1] && !keyO[1])
+		{
+			attackflg = true;
+		}
+
+		cntTest += sp;
+		if (cntTest <= 0.5f)
+		{
+			if (_dir_Now == DIR::LEFT)
+			{
+				// アンカーポイント右端
+				this->setAnchorPoint(Vec2(1.0f, 0.0f));
+			}
+			else if (_dir_Now == DIR::RIGHT)
+			{
+				// アンカーポイント左端
+				this->setAnchorPoint(Vec2(0.0f, 0.0f));
+			}
+			actionNow_ = "AttackA";
+		}
+		else
+		{
+			if (!attackflg)
+			{
+				actionNow_ = "Look_Intro";
+			}
+			else
+			{
+				actionNow_ = "AttackB";
+				oldPos_ = this->getPosition().x;
+			}
+			cntTest = 0.0f;
+
+			// HP減少のテストコード
+			// 攻撃するたびにHPが10減るようにしている
+			auto a = ((Game*)Director::getInstance()->getRunningScene());
+			auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+			b->SetHP(b->GetHP() - 10);
+		}
+	}
+
+	if ((actionNow_ == "AttackB" && attackflg))
+	{
+		cntTest += sp;
+		if (attackflg && cntTest <= 0.8f)
+		{
+			if (_dir_Now == DIR::LEFT)
+			{
+				// アンカーポイント右端
+				this->setAnchorPoint(Vec2(1.0f, 0.0f));
+				// 踏み込み移動
+				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - 30, this->getPosition().y)));
+				this->setPosition(Vec2(oldPos_ - 30, this->getPosition().y));
+			}
+			else if (_dir_Now == DIR::RIGHT)
+			{
+				// アンカーポイント左端
+				this->setAnchorPoint(Vec2(0.0f, 0.0f));
+				// 踏み込み移動
+				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + 30, this->getPosition().y)));
+				this->setPosition(Vec2(oldPos_ + 30, this->getPosition().y));
+			}
+			actionNow_ = "AttackB";
+		}
+		else
+		{
+			attackflg = false;
+			actionNow_ = "Look_Intro";
+			cntTest = 0.0f;
+		}
+	}
+}
+
 // ("plistの名前","plistにあるpngの名前","つけたい名前",開始番号, 終了番号,反転するか,描画速度)
 void Player::Anim_Registration(Sprite* delta)
 {
@@ -317,8 +318,11 @@ void Player::Anim_Registration(Sprite* delta)
 
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jumping", 3, (float)0.05, ActorType::Player);
 
-	// attack
+	// attackA
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackA", 9, (float)0.05, ActorType::Player);
+
+	// attackB
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackB", 9, (float)0.08, ActorType::Player);
 
 	lpAnimMng.InitAnimation(*delta, ActorType::Player);
 
@@ -423,7 +427,7 @@ void Player::actModuleRegistration(void)
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
 		act.blackList.emplace_back("AttackA");
-
+		act.blackList.emplace_back("AttackB");
 		_actCtl.ActCtl("右移動", act);
 	}
 
@@ -443,7 +447,7 @@ void Player::actModuleRegistration(void)
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
 		act.blackList.emplace_back("AttackA");
-
+		act.blackList.emplace_back("AttackB");
 		_actCtl.ActCtl("左移動", act);
 	}
 
@@ -460,7 +464,7 @@ void Player::actModuleRegistration(void)
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
 		flipAct.blackList.emplace_back("AttackA");
-
+		flipAct.blackList.emplace_back("AttackB");
 		_actCtl.ActCtl("右向き", flipAct);
 	}
 
@@ -477,7 +481,7 @@ void Player::actModuleRegistration(void)
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
 		flipAct.blackList.emplace_back("AttackA");
-
+		flipAct.blackList.emplace_back("AttackB");
 		_actCtl.ActCtl("左向き", flipAct);
 	}
 
@@ -524,6 +528,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
 		act.jumpFlg = true;
 		act.blackList.emplace_back("AttackA");
+		act.blackList.emplace_back("AttackB");
 
 		//act.whiteList.emplace_back(ACTION::RUN);
 
@@ -548,6 +553,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("Look_Intro");
 		act.blackList.emplace_back("Run");
 		act.blackList.emplace_back("AttackA");
+		act.blackList.emplace_back("AttackB");
 		act.blackList.emplace_back("NON");
 
 		act.whiteList.emplace_back("Jump");
@@ -562,6 +568,19 @@ void Player::actModuleRegistration(void)
 		//act.button = BUTTON::ATTACK;
 		act.button = BUTTON::DOWN;
 		act.actName = "AttackA";
+		//act.checkPoint1 = Vec2{ 0, 0 };		
+		//act.checkPoint2 = Vec2{ 0, 0 };
+		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
+		_actCtl.ActCtl("攻撃", act);
+	}
+
+	// 攻撃2
+	{
+		ActModule act;
+		act.state = _oprtState;
+		//act.button = BUTTON::ATTACK;
+		act.button = BUTTON::DOWN;
+		act.actName = "AttackB";
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間

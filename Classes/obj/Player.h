@@ -15,7 +15,6 @@ public:
 	Player(std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
 
-	//Player();
 	~Player();
 
 	void Action(void);
@@ -29,9 +28,10 @@ public:
 
 	static Player* CreatePlayer(std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
-	//static Player* createPlayer();
 private:
 	//CREATE_FUNC(Player);
+
+	void attackMotion(float sp);
 
 	// アニメーション関係
 	void Anim_Registration(cocos2d::Sprite* delta);				// アニメーションの登録
@@ -76,4 +76,7 @@ private:
 
 	static int no_;
 	int myNo_;
+
+	bool attackflg = false;
+	float oldPos_;
 };
