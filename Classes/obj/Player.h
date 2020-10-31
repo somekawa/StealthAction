@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
 #include <array>
 #include <memory>
 #include "cocos2d.h"
@@ -24,8 +23,8 @@ public:
 
 	void update(float sp);
 
-	std::string GetAction(void);										// 現在のアクション情報を取得する
-	void SetAction(std::string action);								// 現在のアクション状態をセットする
+	std::string GetAction(void);								// 現在のアクション情報を取得する
+	void SetAction(std::string action);							// 現在のアクション状態をセットする
 	void SetDir(DIR dir);										// 現在の方向をセットする
 
 	static Player* CreatePlayer(std::unordered_map<std::string,
@@ -36,13 +35,8 @@ private:
 
 	// アニメーション関係
 	void Anim_Registration(cocos2d::Sprite* delta);				// アニメーションの登録
-	void AnimCheck(cocos2d::Sprite* delta);						// アニメーション切り替え指定
-	std::map<std::string, cocos2d::Sprite*> animMap_;			// ACTIONのenum使わないでアクションを切り替えたい
 	std::string actionNow_;
 	std::string actionOld_;
-
-	//ACTION _action_Now;											// 現在のアクション状態
-	//ACTION _action_Old;											// 1フレーム前のアクション状態
 	DIR _dir_Now;
 
 	cocos2d::FlipX* _flip;									    // 画像反転処理

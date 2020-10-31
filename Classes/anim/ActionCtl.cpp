@@ -133,7 +133,7 @@ void ActionCtl::update(float sp,Sprite& sprite)
 
 			// data.second.action = for文で回してるアクション
 			// GetActionは実際に今行われているアクション
-			if (((Player&)sprite).GetAction() == "Fall" || data.second.actName != ""|| ((Player&)sprite).GetAction() == "Jump" || ((Player&)sprite).GetAction() == "Jumping")
+			if (((Player&)sprite).GetAction() == "Fall" || data.second.actName != "NON"|| ((Player&)sprite).GetAction() == "Jump" || ((Player&)sprite).GetAction() == "Jumping")
 			{
 				// 現在のアクションがジャンプになっているときもJUMPINGを設定するようにしておく
 				if (((Player&)sprite).GetAction() == "Jumping" || ((Player&)sprite).GetAction() == "Jump")

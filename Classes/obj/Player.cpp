@@ -119,14 +119,6 @@ Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shar
 	//		}
 	//	}
 	//}
-
-	animMap_["Look_Intro"] = this;
-	animMap_["Run"] = this;
-	animMap_["Fall"] = this;
-	animMap_["Jump"] = this;
-	animMap_["Jumping"] = this;
-	animMap_["AttackA"] = this;
-
 }
 
 Player::~Player()
@@ -288,7 +280,7 @@ void Player::update(float sp)
 
 	if (actionNow_ != actionOld_)
 	{
-		AnimCheck(this);
+		lpAnimMng.ChangeAnimation(*this, actionNow_, true, ActorType::Player);
 	}
 	actionOld_ = actionNow_;
 
@@ -304,38 +296,13 @@ void Player::ChangeDirection(void)
 	int a = 0;
 }
 
-// アニメーション切り替え指定
-void Player::AnimCheck(cocos2d::Sprite * delta)
-{
-	//if (_action_Now == ACTION::ATTACK)
-	//{
-	//	AnimMng::ChangeAnim(delta, "attack");
-	//	return;
-	//}
-
-	// 現在のアクション状態と比べて、一致しているものに切り替える
-	//for (ACTION _act = begin(ACTION()); _act <= end(ACTION()); ++_act)
-	//{
-	//	if (_action_Now == _act)
-	//	{
-	//		lpAnimMng.ChangeAnimation(*delta, _animTable[static_cast<int>(_act)],true,ActorType::Player);
-	//		return;							// 一致したときにそれ以上for文を回す必要がないからreturnする
-	//	}
-	//}
-
-	for (auto map : animMap_)
-	{
-		if (actionNow_ == map.first)
-		{
-			lpAnimMng.ChangeAnimation(*delta, map.first, true, ActorType::Player);
-		}
-	}
-}
-
 // ("plistの名前","plistにあるpngの名前","つけたい名前",開始番号, 終了番号,反転するか,描画速度)
 void Player::Anim_Registration(Sprite* delta)
 {
 	// アニメーションをキャッシュに登録
+	// non
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "NON", 6, (float)0.3, ActorType::Player);
+
 	// idle
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Look_Intro", 6, (float)0.3, ActorType::Player);
 
@@ -485,7 +452,7 @@ void Player::actModuleRegistration(void)
 		ActModule flipAct;
 		flipAct.state = _oprtState;
 		flipAct.flipFlg = false;
-		//flipAct.actName = "Look_Intro";
+		flipAct.actName = "NON";
 		flipAct.button = BUTTON::RIGHT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 		flipAct.jumpFlg = false;
@@ -502,7 +469,7 @@ void Player::actModuleRegistration(void)
 		ActModule flipAct;
 		flipAct.state = _oprtState;
 		flipAct.flipFlg = true;
-		//flipAct.actName = "Look_Intro";
+		flipAct.actName = "NON";
 		flipAct.button = BUTTON::LEFT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 		flipAct.jumpFlg = false;
@@ -581,7 +548,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("Look_Intro");
 		act.blackList.emplace_back("Run");
 		act.blackList.emplace_back("AttackA");
-		//act.blackList.emplace_back(ACTION::NON);
+		act.blackList.emplace_back("NON");
 
 		act.whiteList.emplace_back("Jump");
 		_actCtl.ActCtl("ジャンピング", act);
