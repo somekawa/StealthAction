@@ -1,5 +1,4 @@
 #pragma once
-
 #include <array>
 #include <memory>
 #include "cocos2d.h"
@@ -16,7 +15,6 @@ public:
 	Player(std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
 
-	//Player();
 	~Player();
 
 	void Action(void);
@@ -24,23 +22,21 @@ public:
 
 	void update(float sp);
 
-	ACTION GetAction(void);										// 現在のアクション情報を取得する
-	void SetAction(ACTION action);								// 現在のアクション状態をセットする
+	std::string GetAction(void);								// 現在のアクション情報を取得する
+	void SetAction(std::string action);							// 現在のアクション状態をセットする
 	void SetDir(DIR dir);										// 現在の方向をセットする
 
 	static Player* CreatePlayer(std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
-	//static Player* createPlayer();
 private:
 	//CREATE_FUNC(Player);
 
+	void attackMotion(float sp);
+
 	// アニメーション関係
 	void Anim_Registration(cocos2d::Sprite* delta);				// アニメーションの登録
-	void AnimCheck(cocos2d::Sprite* delta);						// アニメーション切り替え指定
-	const char* _animTable[static_cast<int>(ACTION::MAX)] = { "Look_Intro","Look_Intro","Jump","Jump","Run","Run","Fall","AttackA" }; // AnimCheckで使う
-
-	ACTION _action_Now;											// 現在のアクション状態
-	ACTION _action_Old;											// 1フレーム前のアクション状態
+	std::string actionNow_;
+	std::string actionOld_;
 	DIR _dir_Now;
 
 	cocos2d::FlipX* _flip;									    // 画像反転処理
@@ -80,4 +76,7 @@ private:
 
 	static int no_;
 	int myNo_;
+
+	bool attackflg = false;
+	float oldPos_;
 };

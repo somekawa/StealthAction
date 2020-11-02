@@ -80,6 +80,8 @@ list(APPEND GAME_SOURCE
 	Classes/obj/Enemy/Imp.cpp
 	Classes/obj/Actor.cpp
         Classes/obj/Player.cpp
+        Classes/PL_HPgauge.cpp
+        Classes/Gate.cpp
         )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
@@ -109,6 +111,8 @@ list(APPEND GAME_HEADER
 	Classes/obj/Actor.h
         Classes/obj/Player.h
         Classes/module/ActModule.h
+        Classes/PL_HPgauge.h
+        Classes/Gate.h
         )
 
 if(ANDROID)

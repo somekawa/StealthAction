@@ -254,9 +254,12 @@ bool Game::init()
 
 void Game::update(float sp)
 {
+	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
+	{
+		return;
+	}
 
-
-	if (++frame  == 60)
+	/*if (++frame  == 60)
 	{
 		gameMap_->SetMapInfo(MapType::URA);
 	}
@@ -264,7 +267,9 @@ void Game::update(float sp)
 	{
 		gameMap_->SetMapInfo(MapType::OMOTE);
 		frame = 0;
-	}
+	}*/
+
+	gameMap_->update(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition());
 	
 	// プレイヤーのカメラがうまくいかない
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);

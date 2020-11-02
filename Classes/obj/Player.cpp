@@ -1,4 +1,4 @@
-#include "GameScene.h"
+#include "Scene/GameScene.h"
 #include "PL_HPgauge.h"
 #include "Player.h"
 #include "anim/ActionCtl.h"
@@ -21,51 +21,6 @@
 USING_NS_CC;
 
 int Player::no_ = 0;
-
-//Player* Player::createPlayer()
-//{
-//	return Player::create();
-//}
-
-//Player::Player()
-//{
-//	auto visibleSize = Director::getInstance()->getVisibleSize();
-//	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-//
-//	// this->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-//	// 上のやつを短くしたversion↓
-//	setPosition( Vec2{ Vec2(visibleSize) / 2 + origin - Vec2(0,-200)} );
-//
-//	// キー入力かタッチ操作か判断
-//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-//	// thisの意味
-//	_oprtState = new OPRT_key(this);
-//#else
-//	_oprtState = new OPRT_touch(this);
-//#endif
-//
-////#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-////// thisの意味
-////	_oprtState = new OPRT_touch(this);
-////#else
-////	_oprtState = new OPRT_touch(this);
-////#endif
-//	
-//	actModuleRegistration();
-//
-//	_action_Now = ACTION::IDLE;
-//	_action_Old = ACTION::IDLE;
-//	_dir_Now = DIR::RIGHT;
-//
-//	_attackCheckL = Vec2(0, 0);
-//	_attackCheckR = Vec2(0, 0);
-//
-//	Anim_Registration((Sprite*)this);			// アニメーションの登録
-//
-//	myNo_ = no_;
-//	no_++;
-//	type_ = ActorType::Player;
-//}
 
 Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shared_ptr<ActionRect>>>>& collider):
 	Actor(collider)
@@ -90,8 +45,8 @@ Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shar
 
 	actModuleRegistration();
 
-	_action_Now = ACTION::IDLE;
-	_action_Old = ACTION::IDLE;
+	actionNow_ = "Look_Intro";
+	actionOld_ = "Run";
 	_dir_Now = DIR::RIGHT;
 
 	_attackCheckL = Vec2(0, 0);
@@ -119,7 +74,6 @@ Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shar
 	//		}
 	//	}
 	//}
-
 }
 
 Player::~Player()
@@ -136,7 +90,7 @@ void Player::update(float sp)
 	{
 		return;
 	}
-	TRACE("%f,%f\n",getPosition().x, getPosition().y);
+	//TRACE("%f,%f\n",getPosition().x, getPosition().y);
 	Action();
 
 	_actCtl.update(sp,*this);
@@ -144,53 +98,7 @@ void Player::update(float sp)
 	// 実行する入力先(keyかtouch)のupdateへ移動
 	_oprtState->update();	
 
-	// Aキーで攻撃モーション--------------------
-
-	// ActModuleに設定すれば、ここのキー設定は不要になる
-	//auto nowdata = _oprtState->GetNowData();
-	//auto olddata = _oprtState->GetOldData();
-	//if (nowdata[4] && !olddata[4])
-	//{
-	//	sp = 0;
-	//	_action_Now = ACTION::ATTACK;
-	//}
-
-	if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
-	{
-		// フレーム数の取得テスト
-		//auto a = cntTest * 100;
-		//auto b = 0.05 * 100;
-		//auto c = (int)a / (int)b;
-		//TRACE("%d\n", c);
-
-		cntTest += sp;
-		if (cntTest <= 0.5f)
-		{
-			if (_dir_Now == DIR::LEFT)
-			{
-				// アンカーポイント右端
-				this->setAnchorPoint(Vec2(1.0f, 0.0f));
-			}
-			else if (_dir_Now == DIR::RIGHT)
-			{
-				// アンカーポイント左端
-				this->setAnchorPoint(Vec2(0.0f, 0.0f));
-			}
-			_action_Now = ACTION::ATTACK;
-		}
-		else
-		{
-			_action_Now = ACTION::IDLE;
-			cntTest = 0.0f;
-
-			// HP減少のテストコード
-			// 攻撃するたびにHPが10減るようにしている
-			auto a = ((Game*)Director::getInstance()->getRunningScene());
-			auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-			b->SetHP(b->GetHP()-10);
-		}
-	}
-	//------------------------------------------
+	attackMotion(sp);
 
 	//if (_action_Now == ACTION::JUMPING)
 	//{
@@ -243,10 +151,8 @@ void Player::update(float sp)
 	//		auto plsize = this->getContentSize();
 	//		auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
 	//		//auto enesize = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getContentSize();
-
 	//		// 右の時はoffset+  左はoffset-
 	//		auto offset = Vec2(plsize.width * 3.0f, 0.0f);
-
 	//		if (_dir_Now == DIR::LEFT)
 	//		{
 	//			_attackCheckL = Vec2(plpos.x + plsize.width / 2, plpos.y) - offset;
@@ -257,12 +163,9 @@ void Player::update(float sp)
 	//			_attackCheckL = Vec2(plpos.x - (plsize.width * scale + plsize.width * scale / 2), plpos.y + plsize.width * scale) + offset;
 	//			_attackCheckR = Vec2(plpos.x - plsize.width * scale / 2, plpos.y) + offset;
 	//		}
-
 	//		auto e = enepos.x - chipsize / 2;
 	//		auto ee = enepos.x + chipsize / 2;
-
 	//		//TRACE("%f\n", _attackCheckL.x + offset.x);
-
 	//		if (_attackCheckR.x >= enepos.x - chipsize / 2 &&
 	//			_attackCheckL.x < enepos.x + chipsize / 2 &&
 	//			plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
@@ -284,11 +187,11 @@ void Player::update(float sp)
 	// 範囲外check
 	//OutOfMapCheck();	
 
-	if (_action_Now != _action_Old)
+	if (actionNow_ != actionOld_)
 	{
-		AnimCheck(this);
+		lpAnimMng.ChangeAnimation(*this, actionNow_, true, ActorType::Player);
 	}
-	_action_Old = _action_Now;
+	actionOld_ = actionNow_;
 
 }
 
@@ -302,22 +205,94 @@ void Player::ChangeDirection(void)
 	int a = 0;
 }
 
-// アニメーション切り替え指定
-void Player::AnimCheck(cocos2d::Sprite * delta)
+void Player::attackMotion(float sp)
 {
-	//if (_action_Now == ACTION::ATTACK)
-	//{
-	//	AnimMng::ChangeAnim(delta, "attack");
-	//	return;
-	//}
-
-	// 現在のアクション状態と比べて、一致しているものに切り替える
-	for (ACTION _act = begin(ACTION()); _act <= end(ACTION()); ++_act)
+	// flagがtrueの時は強制的にAttackBへ切替
+	if (attackflg)
 	{
-		if (_action_Now == _act)
+		actionNow_ = "AttackB";
+	}
+
+	if (actionNow_ == "AttackA" || actionOld_ == "AttackA")
+	{
+		// フレーム数の取得テスト
+		//auto a = cntTest * 100;
+		//auto b = 0.05 * 100;
+		//auto c = (int)a / (int)b;
+		//TRACE("%d\n", c);
+
+		// 攻撃中にもう一度攻撃ボタンが押されたらAttackAが終了後、AttackBへ移行するようにする
+		auto keyN = _oprtState->GetNowData();
+		auto keyO = _oprtState->GetOldData();
+		if (keyN[1] && !keyO[1])
 		{
-			lpAnimMng.ChangeAnimation(*delta, _animTable[static_cast<int>(_act)],true,ActorType::Player);
-			return;							// 一致したときにそれ以上for文を回す必要がないからreturnする
+			attackflg = true;
+		}
+
+		cntTest += sp;
+		if (cntTest <= 0.5f)
+		{
+			if (_dir_Now == DIR::LEFT)
+			{
+				// アンカーポイント右端
+				this->setAnchorPoint(Vec2(1.0f, 0.0f));
+			}
+			else if (_dir_Now == DIR::RIGHT)
+			{
+				// アンカーポイント左端
+				this->setAnchorPoint(Vec2(0.0f, 0.0f));
+			}
+			actionNow_ = "AttackA";
+		}
+		else
+		{
+			if (!attackflg)
+			{
+				actionNow_ = "Look_Intro";
+			}
+			else
+			{
+				actionNow_ = "AttackB";
+				oldPos_ = this->getPosition().x;
+			}
+			cntTest = 0.0f;
+
+			// HP減少のテストコード
+			// 攻撃するたびにHPが10減るようにしている
+			auto a = ((Game*)Director::getInstance()->getRunningScene());
+			auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+			b->SetHP(b->GetHP() - 10);
+		}
+	}
+
+	if ((actionNow_ == "AttackB" && attackflg))
+	{
+		cntTest += sp;
+		if (attackflg && cntTest <= 0.8f)
+		{
+			if (_dir_Now == DIR::LEFT)
+			{
+				// アンカーポイント右端
+				this->setAnchorPoint(Vec2(1.0f, 0.0f));
+				// 踏み込み移動
+				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - 30, this->getPosition().y)));
+				this->setPosition(Vec2(oldPos_ - 30, this->getPosition().y));
+			}
+			else if (_dir_Now == DIR::RIGHT)
+			{
+				// アンカーポイント左端
+				this->setAnchorPoint(Vec2(0.0f, 0.0f));
+				// 踏み込み移動
+				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + 30, this->getPosition().y)));
+				this->setPosition(Vec2(oldPos_ + 30, this->getPosition().y));
+			}
+			actionNow_ = "AttackB";
+		}
+		else
+		{
+			attackflg = false;
+			actionNow_ = "Look_Intro";
+			cntTest = 0.0f;
 		}
 	}
 }
@@ -326,6 +301,9 @@ void Player::AnimCheck(cocos2d::Sprite * delta)
 void Player::Anim_Registration(Sprite* delta)
 {
 	// アニメーションをキャッシュに登録
+	// non
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "NON", 6, (float)0.3, ActorType::Player);
+
 	// idle
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Look_Intro", 6, (float)0.3, ActorType::Player);
 
@@ -338,23 +316,28 @@ void Player::Anim_Registration(Sprite* delta)
 	// jump
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jump", 3, (float)0.05, ActorType::Player);
 
-	// attack
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jumping", 3, (float)0.05, ActorType::Player);
+
+	// attackA
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackA", 9, (float)0.05, ActorType::Player);
+
+	// attackB
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackB", 9, (float)0.08, ActorType::Player);
 
 	lpAnimMng.InitAnimation(*delta, ActorType::Player);
 
 }
 
 // 現在のアクション情報を取得する
-ACTION Player::GetAction(void)
+std::string Player::GetAction(void)
 {
-	return _action_Now;
+	return actionNow_;
 }
 
 // 現在のアクション状態をセットする
-void Player::SetAction(ACTION action)
+void Player::SetAction(std::string action)
 {
-	_action_Now = action;
+	actionNow_ = action;
 }
 
 void Player::SetDir(DIR dir)
@@ -434,7 +417,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = _oprtState;
 		act.vel = Vec2{ 5,0 };
-		act.action = ACTION::RUN_R;
+		act.actName = "Run";
 		act.button = BUTTON::RIGHT;
 		act.checkPoint1 = Vec2{ charSize.x/2, charSize.y/2 };	// 右上
 		act.checkPoint2 = Vec2{ charSize.x/2,  15 };			// 右下
@@ -443,7 +426,8 @@ void Player::actModuleRegistration(void)
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
-		act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back("AttackA");
+		act.blackList.emplace_back("AttackB");
 		_actCtl.ActCtl("右移動", act);
 	}
 
@@ -452,7 +436,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = _oprtState;
 		act.vel = Vec2{ -5,0 };
-		act.action = ACTION::RUN_L;
+		act.actName = "Run";
 		act.button = BUTTON::LEFT;
 		act.checkPoint1 = Vec2{ -charSize.x/2, charSize.y/2 };	// 左上
 		act.checkPoint2 = Vec2{ -charSize.x/2,  15 };			// 左下
@@ -462,7 +446,8 @@ void Player::actModuleRegistration(void)
 		//act.blackList.emplace_back(ACTION::FALLING);
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
-		act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back("AttackA");
+		act.blackList.emplace_back("AttackB");
 		_actCtl.ActCtl("左移動", act);
 	}
 
@@ -471,14 +456,15 @@ void Player::actModuleRegistration(void)
 		ActModule flipAct;
 		flipAct.state = _oprtState;
 		flipAct.flipFlg = false;
-		flipAct.action = ACTION::NON;
+		flipAct.actName = "NON";
 		flipAct.button = BUTTON::RIGHT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
-		flipAct.blackList.emplace_back(ACTION::ATTACK);
+		flipAct.blackList.emplace_back("AttackA");
+		flipAct.blackList.emplace_back("AttackB");
 		_actCtl.ActCtl("右向き", flipAct);
 	}
 
@@ -487,14 +473,15 @@ void Player::actModuleRegistration(void)
 		ActModule flipAct;
 		flipAct.state = _oprtState;
 		flipAct.flipFlg = true;
-		flipAct.action = ACTION::NON;
+		flipAct.actName = "NON";
 		flipAct.button = BUTTON::LEFT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
-		flipAct.blackList.emplace_back(ACTION::ATTACK);
+		flipAct.blackList.emplace_back("AttackA");
+		flipAct.blackList.emplace_back("AttackB");
 		_actCtl.ActCtl("左向き", flipAct);
 	}
 
@@ -502,7 +489,7 @@ void Player::actModuleRegistration(void)
 	{
 		// checkkeylistに離している間の設定もしたけど特に効果なし
 		ActModule act;
-		act.action = ACTION::FALLING;
+		act.actName = "Fall";
 		act.state = _oprtState;
 		act.button = BUTTON::DOWN;
 		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
@@ -516,8 +503,9 @@ void Player::actModuleRegistration(void)
 		act.gravity = Vec2{ 0.0f,-5.0f };
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
 		act.jumpFlg = false;
-		act.blackList.emplace_back(ACTION::JUMPING);	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
 		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
+
 		_actCtl.ActCtl("落下", act);
 	}
 
@@ -526,7 +514,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = _oprtState;
 		act.button = BUTTON::UP;
-		act.action = ACTION::JUMP;
+		act.actName = "Jump";
 		act.checkPoint1 = Vec2{ -charSize.x/3 + 5, charSize.y };		// 左上
 		act.checkPoint2 = Vec2{ charSize.x/3 - 5, charSize.y };			// 右上
 		//act.checkPoint1 = Vec2{ -10, 30 };						// 左上
@@ -537,9 +525,10 @@ void Player::actModuleRegistration(void)
 		// これをコメントアウトしていると、左右押しながらのジャンプができる
 		// でも連続でジャンプして上昇し続けるようになる
 		// しかもFALLとJUMPが混ざって高さが出ない
-		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
+		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
 		act.jumpFlg = true;
-		act.blackList.emplace_back(ACTION::ATTACK);
+		act.blackList.emplace_back("AttackA");
+		act.blackList.emplace_back("AttackB");
 
 		//act.whiteList.emplace_back(ACTION::RUN);
 
@@ -551,7 +540,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = _oprtState;
 		act.button = BUTTON::UP;
-		act.action = ACTION::JUMPING;
+		act.actName = "Jumping";
 		act.checkPoint1 = Vec2{ -charSize.x/3 + 5, charSize.y };	// 左上
 		act.checkPoint2 = Vec2{ charSize.x/3 - 5, charSize.y };		// 右上
 		//act.checkPoint1 = Vec2{ -10, 30 };					// 左上
@@ -560,15 +549,14 @@ void Player::actModuleRegistration(void)
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
 		act.jumpFlg = true;
 
-		act.blackList.emplace_back(ACTION::FALLING);	// 落下中にジャンプしてほしくない
-		act.blackList.emplace_back(ACTION::IDLE);
-		act.blackList.emplace_back(ACTION::RUN_L);
-		act.blackList.emplace_back(ACTION::RUN_R);
-		act.blackList.emplace_back(ACTION::ATTACK);
-		act.blackList.emplace_back(ACTION::NON);
+		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
+		act.blackList.emplace_back("Look_Intro");
+		act.blackList.emplace_back("Run");
+		act.blackList.emplace_back("AttackA");
+		act.blackList.emplace_back("AttackB");
+		act.blackList.emplace_back("NON");
 
-		act.whiteList.emplace_back(ACTION::JUMP);
-
+		act.whiteList.emplace_back("Jump");
 		_actCtl.ActCtl("ジャンピング", act);
 		//_actCtl.ActCtl("ジャンプ", act);
 	}
@@ -579,7 +567,20 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		//act.button = BUTTON::ATTACK;
 		act.button = BUTTON::DOWN;
-		act.action = ACTION::ATTACK;
+		act.actName = "AttackA";
+		//act.checkPoint1 = Vec2{ 0, 0 };		
+		//act.checkPoint2 = Vec2{ 0, 0 };
+		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
+		_actCtl.ActCtl("攻撃", act);
+	}
+
+	// 攻撃2
+	{
+		ActModule act;
+		act.state = _oprtState;
+		//act.button = BUTTON::ATTACK;
+		act.button = BUTTON::DOWN;
+		act.actName = "AttackB";
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間

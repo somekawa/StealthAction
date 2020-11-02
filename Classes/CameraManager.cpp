@@ -1,5 +1,5 @@
 #include "CameraManager.h"
-#include "GameScene.h"
+#include "Scene/GameScene.h"
 
 USING_NS_CC;
 

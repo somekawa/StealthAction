@@ -51,7 +51,10 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	// 1アニメーションのキャッシュデータを格納する処理
 	CacheRegistration(animationCache, type, animName);
 
-	frameNum_[static_cast<int>(type)].try_emplace(animName, frame);
+	if (frameNum_[static_cast<int>(type)].find(animName) == frameNum_[static_cast<int>(type)].end())
+	{
+		frameNum_[static_cast<int>(type)].emplace(animName, frame);
+	}
 }
 
 void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type)
