@@ -141,8 +141,8 @@ const std::vector<Edge_Status> Delaunay::Triangle_To_Edge(void)
 	{
 		for (auto itr2 = edge_data.begin(); itr2 < edge_data.end();)
 		{
-			if (itr != itr2 && (itr._Ptr->pair_vertex[0] == itr2._Ptr->pair_vertex[0] && itr._Ptr->pair_vertex[1] == itr2._Ptr->pair_vertex[1])
-				|| (itr._Ptr->pair_vertex[0] == itr2._Ptr->pair_vertex[1] && itr._Ptr->pair_vertex[1] == itr2._Ptr->pair_vertex[0]))
+			if (itr != itr2 && ((*itr).pair_vertex[0] == (*itr2).pair_vertex[0] && (*itr).pair_vertex[1] == (*itr2).pair_vertex[1])
+				|| ((*itr).pair_vertex[0] == (*itr2).pair_vertex[1] && (*itr).pair_vertex[1] == (*itr2).pair_vertex[0]))
 			{
 				itr2 = edge_data.erase(itr2);
 			}

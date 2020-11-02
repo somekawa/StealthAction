@@ -34,50 +34,86 @@ void MST::Choice_Node()
 	cocos2d::Vec2 choice_u;
 	Edge_List min_edge;
 	float min_distance = FLT_MAX;
-	while (vertex_list.size() > V.size())
+	int size = vertex_list.size();
+
+	auto s = vertex_list[0];
+	std::vector<Edge_Status> distance_list;
+	for (auto itr = vertex_list.begin(); itr != vertex_list.end() - 1; itr++)
 	{
-		
-		for (auto u : V)
-		{
-			for (auto v = A.begin(); v < A.end(); ++v)
-			{
-				auto distance = std::sqrt(lpGeometry.Distance_Calculator(*v, u));
-				for (auto edge : edge_data)
-				{
-					if (min_distance > distance)
-					{
-						Edge_List uvEdge = { u, *v };
-						if ((edge.pair_vertex[0] == uvEdge[0] && edge.pair_vertex[1] == uvEdge[1])
-							|| (edge.pair_vertex[0] == uvEdge[1] && edge.pair_vertex[1] == uvEdge[0]))
-						{
-							min_distance = distance;
-							min_edge = Edge_List{ u, *v };
-							itr = v;
-						}
-						else
-						{
-
-							//continue;
-						}
-					}
-				}
-				choice_u = u;
-			}
-
-			//std::move(itr, itr + 1, std::back_inserter(V));
-			if (itr._Myproxy != nullptr)
-			{
-				V.emplace_back(*itr);
-				std::array<cocos2d::Vec2, 2> tmp{ choice_u, *itr };
-				A.erase(itr);
-				
-				node.emplace_back(tmp);
-			}
-		}
-		min_distance = FLT_MAX;
+		auto itr2 = std::next(itr);
+		distance_list.emplace_back(Edge_Status{ std::sqrt(lpGeometry.Distance_Calculator(*itr, *itr2)),Edge_List{*itr, *itr2} });
 	}
 
-	std::uniform_int_distribution<>::param_type param_i2(0, 15);
+	auto end_itr = distance_list.end();
+	std::vector<cocos2d::Vec2> used_vertex;
+	used_vertex.emplace_back(vertex_list[0]);
+	while (end_itr != distance_list.begin())
+	{
+		auto mincost = std::min_element(distance_list.begin(), end_itr,
+			[](const auto& a, const auto& b) {return (a).distance < (b).distance; });
+
+		for (auto d : distance_list)
+		{
+			if (s != d.pair_vertex[0] && s != d.pair_vertex[1])
+			{
+				continue;
+			}
+			if ((mincost->distance == d.distance)/* && (*mincost).pair_vertex == d.pair_vertex*/)
+			{
+				node.emplace_back(d.pair_vertex);
+			}
+		}
+
+		end_itr = std::remove_if(distance_list.begin(), end_itr,
+			[=](const auto& a) {return a.distance == (*mincost).distance; });
+
+		//distance_list.erase(a, distance_list.end());
+
+		//for (auto u : V)
+		//{
+		//	for (auto v = A.begin(); v < A.end(); ++v)
+		//	{
+		//		//auto distance = std::sqrt(lpGeometry.Distance_Calculator(*v, u));
+
+		//		for (auto edge : edge_data)
+		//		{
+		//			if (min_distance > distance)
+		//			{
+		//				Edge_List uvEdge = { u, *v };
+		//				if ((edge.pair_vertex[0] == uvEdge[0] && edge.pair_vertex[1] == uvEdge[1])
+		//					|| (edge.pair_vertex[0] == uvEdge[1] && edge.pair_vertex[1] == uvEdge[0]))
+		//				{
+		//					min_distance = distance;
+		//					min_edge = Edge_List{ u, *v };
+		//					itr = v;
+		//				}
+		//				else
+		//				{
+
+		//					//continue;
+		//				}
+		//			}
+		//		}
+		//		choice_u = u;
+		//	}
+
+		//	//std::move(itr, itr + 1, std::back_inserter(V));
+		//	if (&itr != nullptr)
+		//	{
+		//		auto i = (&itr);
+		//		//V.emplace_back(&(*itr));
+		//		std::array<cocos2d::Vec2, 2> tmp;
+		//		
+		//		tmp = { choice_u, cocos2d::Vec2(&itr->x, &itr->y) };
+		//		A.erase(itr);
+		//		
+		//		node.emplace_back(tmp);
+		//	}
+		//}
+		//min_distance = FLT_MAX;
+	}
+
+	/*std::uniform_int_distribution<>::param_type param_i2(0, 15);
 	dist.param(param_i2);
 	for (auto edge2 : node)
 	{
@@ -102,10 +138,23 @@ void MST::Choice_Node()
 		{
 			continue;
 		}
-	}
+	}*/
 }
 
 std::vector<std::array<cocos2d::Vec2, 2>> MST::GetNode()
 {
 	return node;
+}
+
+bool operator==(const Edge_List& edge, const Edge_List& edge1)
+{
+	if ((edge[0] == edge1[0]) || (edge[1] == edge1[1])
+		||(edge[1] == edge1[0])||(edge[0] == edge1[1]))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

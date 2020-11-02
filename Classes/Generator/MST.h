@@ -49,3 +49,5 @@ private:
 	std::uniform_int_distribution<> dist;
 };
 
+bool operator == (const Edge_List& edge, const Edge_List& edge1);
+
