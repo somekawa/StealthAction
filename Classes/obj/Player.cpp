@@ -1,4 +1,4 @@
-#include "GameScene.h"
+#include "Scene/GameScene.h"
 #include "PL_HPgauge.h"
 #include "Player.h"
 #include "anim/ActionCtl.h"

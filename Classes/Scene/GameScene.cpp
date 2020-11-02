@@ -254,7 +254,10 @@ bool Game::init()
 
 void Game::update(float sp)
 {
-
+	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
+	{
+		return;
+	}
 
 	/*if (++frame  == 60)
 	{

@@ -32,6 +32,7 @@
 #include <unordered_map>
 #include "cocos2d.h"
 #include "anim/AnimMng.h"
+#include "BaseScene.h"
 
 class ActionRect;
 using SharedRect = std::vector<std::shared_ptr<ActionRect>>;
@@ -49,13 +50,13 @@ class GameMap;
 class CameraManager;
 class Player;
 
-class Game : public cocos2d::Scene
+class Game : public BaseScene
 {
 public:
     static cocos2d::Scene* createScene();
 
-    virtual bool init();
-    void update(float sp);
+    bool init()override;
+    void update(float sp)override;
 
    // Player* plSprite;
     cocos2d::Sprite* enemySprite;

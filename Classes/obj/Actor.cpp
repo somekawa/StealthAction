@@ -1,5 +1,5 @@
 #include "Actor.h"
-#include "GameScene.h"
+#include "Scene/GameScene.h"
 
 //Actor::Actor()
 //{
