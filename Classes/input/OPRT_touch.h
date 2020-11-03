@@ -38,8 +38,6 @@ struct OPRT_touch : OPRT_state
 	void touchMove(cocos2d::Touch* touch);	// スワイプの移動が行われた時
 	void touchEnd(cocos2d::Touch* touch);	// スワイプが終わった時
 
-	void touchflg(cocos2d::Sprite* delta);
-
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetNowData(void);	// 今の情報を返す
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetOldData(void);	// 1フレーム前の情報を返す
 

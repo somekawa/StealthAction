@@ -1,4 +1,5 @@
-﻿#include "OPRT_touch.h"
+﻿#include "GameScene.h"
+#include "OPRT_touch.h"
 #include "_Debug/_DebugConOut.h"
 
 USING_NS_CC;
@@ -12,7 +13,6 @@ OPRT_touch::OPRT_touch(Sprite* delta)
 		_keyData._oldData[key] = false;
 	}
 	touchesflg(delta);
-	//touchflg(delta);
 }
 
 OPRT_touch::~OPRT_touch()
@@ -82,52 +82,6 @@ void OPRT_touch::touchEnd(cocos2d::Touch * touch)
 	{
 		_keyData._input[key] = false;
 	}
-}
-
-void OPRT_touch::touchflg(cocos2d::Sprite * delta)
-{
-	// 攻撃テスト用
-	auto listener = EventListenerTouchOneByOne::create();
-	listener->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event)->bool {
-		Point p = touch->getLocation();
-		auto director = Director::getInstance();
-		auto label1 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("attackBtn");
-		//auto label1 = director->getRunningScene()->getChildByName("test") -> getChildByName("item");
-		//auto visibleSize = director->getVisibleSize();
-		//float x = visibleSize.width - label1->getContentSize().width / 2;
-		//float y = label1->getContentSize().height / 2;
-		//label1->setPosition(Vec2(x, y));
-		//auto a = x;
-		//auto b = y;
-		auto r = label1->getBoundingBox();
-		if (r.containsPoint(p)) {
-			// label1がクリック/タッチされた場合の処理
-			//_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
-			_keyData._input[static_cast<int>(BUTTON::UP)] = true;
-		}
-		else
-		{
-			touchStart(touch);
-			return true;
-		}
-		return true;
-	};
-	//delta->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, delta);
-
-	//auto listener = EventListenerTouchOneByOne::create();
-	//listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)->bool {
-	//	touchStart(touch);
-	//	return true;
-	//};
-	listener->onTouchMoved = [this](cocos2d::Touch* touch, cocos2d::Event* event)->bool {
-		touchMove(touch);
-		return true;
-	};
-	listener->onTouchEnded = [this](cocos2d::Touch* touch, cocos2d::Event* event)->bool {
-		touchEnd(touch);
-		return true;
-	};
-	delta->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, delta);
 }
 
 void OPRT_touch::touchesStart(cocos2d::Touch* touch)
@@ -216,10 +170,10 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 		{
 			touchVectors[touch->getID()].pos = touch->getLocation();
 			auto director = Director::getInstance();
-			auto label1 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("attackBtn");
+			auto label1 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("attackBtn");
 			auto r = label1->getBoundingBox();
 
-			auto label2 = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("jumpBtn");
+			auto label2 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("jumpBtn");
 			auto r2 = label2->getBoundingBox();
 			if (r.containsPoint(touchVectors[touch->getID()].pos)) {
 				// label1がクリック/タッチされた場合の処理
@@ -235,7 +189,7 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 				touchesStart(touch);
 				if (!moveFlag)
 				{			
-					auto startSp = director->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("startSp");
+					auto startSp = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("startSp");
 					startSp->setPosition(touchVectors[touch->getID()].pos);
 					moveFlag = true;
 					touchVectors[touch->getID()].isMoveTouch = true;
@@ -266,7 +220,7 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 			{
 				touchVectors[touch->getID()].isMoveTouch = false;
 				moveFlag = false;
-				auto startSp = Director::getInstance()->getRunningScene()->getChildByName("UI_LAYER")->getChildByName("startSp");
+				auto startSp = Director::getInstance()->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("startSp");
 				startSp->setPosition(150, 150);
 			}
 		}
