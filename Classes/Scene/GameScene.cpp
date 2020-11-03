@@ -254,6 +254,7 @@ bool Game::init()
 
 void Game::update(float sp)
 {
+	// ¡‚ÌScene‚ªGameSceneˆÈŠO‚¾‚Á‚½ê‡Areturn‚³‚¹‚é
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		return;
