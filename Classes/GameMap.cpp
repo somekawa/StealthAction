@@ -6,15 +6,20 @@ USING_NS_CC;
 
 void GameMap::CreateMap(cocos2d::Layer& layer, std::string omotePath, std::string uraPath)
 {
-	createMapFromPath(omotePath, layer);
-	if (uraPath != "")
-	{
-		createMapFromPath(uraPath, layer);
-	} 
-	maps_[0]->setName("MapData");
-	maps_[1]->setVisible(false);
+	nodeIdx_ = 0;
+	auto mapArray = createMapFromPath(omotePath, uraPath, layer); 
+	maps_.own = mapArray;
 	mapLayer_ = &layer;	
 	
+}
+
+void GameMap::AddNextMap(cocos2d::Layer& layer, std::string omotePath, std::string uraPath)
+{
+	auto mapArray = createMapFromPath(omotePath, uraPath, layer);
+	MapState mapS;
+	mapS.own = mapArray;
+	// éqãüÇì¸ÇÍÇÈèàóù - dataÇ≈îªíf
+	maps_.child.push_back(mapS);
 }
 
 void GameMap::ReplaceMap()
@@ -23,21 +28,21 @@ void GameMap::ReplaceMap()
 
 cocos2d::TMXTiledMap* GameMap::GetMap()
 {
-	return maps_[static_cast<int>(mapType_)];
+	return maps_.own[static_cast<int>(mapType_)];
 }
 
 void GameMap::SetMapInfo(MapType mapType)
 {
-	maps_[static_cast<int>(mapType)]->setVisible(true);
-	maps_[static_cast<int>(mapType)]->setName("MapData");
-	maps_[(static_cast<int>(mapType) ^! 0)]->setVisible(false);
-	maps_[(static_cast<int>(mapType) ^ !0)]->setName("");
+	maps_.own[static_cast<int>(mapType)]->setVisible(true);
+	maps_.own[static_cast<int>(mapType)]->setName("MapData");
+	maps_.own[static_cast<int>(mapType) ^ !0]->setVisible(false);
+	maps_.own[static_cast<int>(mapType) ^ !0]->setName("");
 	mapType_ = mapType;
 }
 
 void GameMap::update(cocos2d::Vec2 pos)
 {
-	auto col = maps_[static_cast<int>(mapType_)]->getLayer("gate");
+	auto col = maps_.own[static_cast<int>(mapType_)]->getLayer("gate");
 	if (col == nullptr)
 	{
 		return;
@@ -46,7 +51,7 @@ void GameMap::update(cocos2d::Vec2 pos)
 	pPos = pos / 48;
 	pPos = { pPos.x,col->getLayerSize().height - pPos.y - 1 };
 	auto gid = col->getTileGIDAt(pPos);
-	auto proparties = maps_[static_cast<int>(mapType_)]->getPropertiesForGID(gid);
+	auto proparties = maps_.own[static_cast<int>(mapType_)]->getPropertiesForGID(gid);
 	if (proparties.isNull())
 	{
 		return;
@@ -57,6 +62,9 @@ void GameMap::update(cocos2d::Vec2 pos)
 	bool gateFlag = mapProp["gate"].asBool();
 	if (gateFlag)
 	{
+		// mapsÇêÿÇËë÷Ç¶
+		maps_.own = maps_.child[0].own;
+		maps_.child = maps_.child[0].child;
 		auto fade = TransitionFade::create(3.0f, LoadScene::create(), Color3B::BLACK);
 		director->pushScene(fade);
 
@@ -66,13 +74,23 @@ void GameMap::update(cocos2d::Vec2 pos)
 }
 
 
-void GameMap::createMapFromPath(std::string& path, cocos2d::Layer& layer)
+std::array<cocos2d::TMXTiledMap*, 2> GameMap::createMapFromPath(std::string& omotePath, std::string& uraPath, cocos2d::Layer& layer)
 {
-	
-	TMXTiledMap* map = TMXTiledMap::create(path);
-	auto colLayer = map->getLayer("Collision");
+	TMXTiledMap* omote = TMXTiledMap::create(omotePath);
+	auto colLayer = omote->getLayer("Collision");
 	colLayer->setName("col");
-	layer.addChild(map);
+	layer.addChild(omote);
+	TMXTiledMap* ura = TMXTiledMap::create(uraPath);
+	auto colLayer2 = ura->getLayer("Collision");
+	colLayer2->setName("col");
+	layer.addChild(ura);
 	//map->setPosition(map->getPosition());
-	maps_.emplace_back(map);
+	/*MapState map;
+	maps_.own[0] = omote;
+	maps_.own[0]->setName("MapData");
+	maps_.own[1] = ura;
+	maps_.own[1]->setVisible(false);*/
+
+	std::array<cocos2d::TMXTiledMap*, 2> mapArray = {omote, ura};
+	return mapArray;
 }

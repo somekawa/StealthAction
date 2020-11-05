@@ -1,5 +1,5 @@
 #include "CheckObjHit.h"
-#include "GameScene.h"
+#include "scene/GameScene.h"
 
 USING_NS_CC;
 

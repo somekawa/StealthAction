@@ -203,9 +203,12 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(gate, 10000);
 
 	// map読み込み
+	// つながっているマップも読む
 	// collisionLayerの取得
 	gameMap_ = std::make_shared<GameMap>();
 	gameMap_->CreateMap(*layer_[(int)zOlder::BG], "image/Environment/test.tmx", "image/Environment/uratest.tmx");
+	gameMap_->AddNextMap(*layer_[(int)zOlder::BG], "image/Environment/map2.tmx", "image/Environment/uratest.tmx");
+	//gameMap_->CreateMap(*layer_[(int)zOlder::BG], "image/Environment/map2.tmx", "image/Environment/uratest.tmx");
 
 	// キャラの登録(charLayerはGameSceneに直接ぶら下がり、plSpriteはcharLayerにぶら下がる)
 
