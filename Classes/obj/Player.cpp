@@ -181,6 +181,25 @@ void Player::update(float sp)
 	// 範囲外check
 	//OutOfMapCheck();	
 
+	if (actionNow_ == "Wall_Slide")
+	{
+		if (_dir_Now == DIR::LEFT)
+		{
+			// アンカーポイント右端
+			this->setAnchorPoint(Vec2(1.0f, 0.0f));
+		}
+		else if (_dir_Now == DIR::RIGHT)
+		{
+			// アンカーポイント左端
+			this->setAnchorPoint(Vec2(0.0f, 0.0f));
+		}
+	}
+
+	//if (actionNow_ == "Look_Intro")
+	//{
+	//	this->setAnchorPoint(Vec2(0.5f, 0.0f));
+	//}
+
 	if (actionNow_ != actionOld_)
 	{
 		lpAnimMng.ChangeAnimation(*this, actionNow_, true, ActorType::Player);
@@ -318,6 +337,9 @@ void Player::Anim_Registration(Sprite* delta)
 	// AttackSecond
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackSecond", 9, (float)0.08, ActorType::Player);
 
+	// wallslide
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Wall_Slide", 3, (float)0.3, ActorType::Player);
+
 	lpAnimMng.InitAnimation(*delta, ActorType::Player);
 
 }
@@ -422,6 +444,7 @@ void Player::actModuleRegistration(void)
 		//act.whiteList.emplace_back(ACTION::JUMPING);
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("Wall_Slide");
 		_actCtl.ActCtl("右移動", act);
 	}
 
@@ -442,6 +465,7 @@ void Player::actModuleRegistration(void)
 		//act.whiteList.emplace_back(ACTION::JUMPING);
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("Wall_Slide");
 		_actCtl.ActCtl("左移動", act);
 	}
 
@@ -459,6 +483,7 @@ void Player::actModuleRegistration(void)
 
 		flipAct.blackList.emplace_back("AttackFirst");
 		flipAct.blackList.emplace_back("AttackSecond");
+		flipAct.blackList.emplace_back("Wall_Slide");
 		_actCtl.ActCtl("右向き", flipAct);
 	}
 
@@ -476,6 +501,7 @@ void Player::actModuleRegistration(void)
 
 		flipAct.blackList.emplace_back("AttackFirst");
 		flipAct.blackList.emplace_back("AttackSecond");
+		flipAct.blackList.emplace_back("Wall_Slide");
 		_actCtl.ActCtl("左向き", flipAct);
 	}
 
@@ -498,6 +524,7 @@ void Player::actModuleRegistration(void)
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
 		act.jumpFlg = false;
 		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Wall_Slide");	
 		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
 
 		_actCtl.ActCtl("落下", act);
@@ -549,6 +576,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
 		act.blackList.emplace_back("NON");
+		act.blackList.emplace_back("Wall_Slide");
 
 		act.whiteList.emplace_back("Jump");
 		_actCtl.ActCtl("ジャンピング", act);
@@ -572,12 +600,49 @@ void Player::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = _oprtState;
-		//act.button = BUTTON::ATTACK;
 		act.button = BUTTON::DOWN;
 		act.actName = "AttackSecond";
-		//act.checkPoint1 = Vec2{ 0, 0 };		
-		//act.checkPoint2 = Vec2{ 0, 0 };
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
+	}
+
+	// 右壁スライド
+	{
+		ActModule act;
+		act.state = _oprtState;
+		act.gravity = Vec2{ 0.0f,-1.0f };
+		act.checkPoint1 = Vec2{ charSize.x / 2, charSize.y / 2 };	// 右上
+		act.checkPoint2 = Vec2{ charSize.x / 2, 0 };				// 右下
+		act.button = BUTTON::RIGHT;
+		act.flipFlg = true;
+		act.actName = "Wall_Slide";
+		act.touch = TOUCH_TIMMING::TOUCHING;	
+		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Run");	
+		act.blackList.emplace_back("Fall");
+		act.blackList.emplace_back("Look_Intro");
+		act.blackList.emplace_back("NON");
+		act.num = 95;
+		_actCtl.ActCtl("右壁スライド", act);
+	}
+
+	// 左壁スライド
+	{
+		ActModule act;
+		act.state = _oprtState;
+		act.gravity = Vec2{ 0.0f,-1.0f };
+		act.checkPoint1 = Vec2{-charSize.x / 2, charSize.y / 2 };	// 左上
+		act.checkPoint2 = Vec2{-charSize.x / 2, 0 };				// 左下
+		act.button = BUTTON::LEFT;
+		act.flipFlg = false;
+		act.actName = "Wall_Slide";
+		act.touch = TOUCH_TIMMING::TOUCHING;
+		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Run");
+		act.blackList.emplace_back("Fall");
+		act.blackList.emplace_back("Look_Intro");
+		act.blackList.emplace_back("NON");
+		act.num = 95;
+		_actCtl.ActCtl("左壁スライド", act);
 	}
 }

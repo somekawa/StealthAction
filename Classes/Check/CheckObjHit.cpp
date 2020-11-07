@@ -1,5 +1,6 @@
 #include "CheckObjHit.h"
 #include "scene/GameScene.h"
+#include "obj/Player.h"
 
 USING_NS_CC;
 
@@ -39,25 +40,30 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	auto plCheckPoint1Gid = CollisionData->getTileGIDAt(plCheckPoint1Pos);
 	auto plCheckPoint2Gid = CollisionData->getTileGIDAt(plCheckPoint2Pos);
 
+	auto lambda = [&](Vec2 point) {
+		auto plCheckPointChip = Vec2{ point } / chipSize;
+		auto plCheckPointPos = Vec2(plCheckPointChip.x, ColSize.height - plCheckPointChip.y);
+		auto plCheckPointGid = CollisionData->getTileGIDAt(plCheckPointPos);
+		if (plCheckPointGid != 0)
+		{
+			// 補正が必要なときにtrue
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		return false;
+	};
+
+	if ((plCheckPoint1Gid == 95 && plCheckPoint2Gid == 95))
+	{
+		((Player&)sprite).SetAction("Wall_Slide");
+	}
+
 	// 段差落下時の補正処理
 	if (module.actName == "Fall")
 	{
-		auto lambda = [&](Vec2 point) {
-			auto plCheckPointChip = Vec2{ point } / chipSize;
-			auto plCheckPointPos = Vec2(plCheckPointChip.x, ColSize.height - plCheckPointChip.y);
-			auto plCheckPointGid = CollisionData->getTileGIDAt(plCheckPointPos);
-			if (plCheckPointGid != 0)
-			{
-				// 補正が必要なときにtrue
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-			return false;
-		};
-
 		if (lambda(plPos + module.checkPoint3))
 		{
 			sprite.setPosition(sprite.getPosition().x - 1.0f, sprite.getPosition().y);
