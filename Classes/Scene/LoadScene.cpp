@@ -2,12 +2,14 @@
 #include "GameScene.h"
 #include "GameMap.h"
 #include "obj/Player.h"
+#include <algorithm>
 
 USING_NS_CC;
 
-Scene* LoadScene::CreateLoadScene(Player& player, MapParentState& state)
+Scene* LoadScene::CreateLoadScene(
+	Player& player,MapData& mapData, MapParentList& mpList)
 {
-	LoadScene* pRet = new(std::nothrow) LoadScene(player, state);
+	LoadScene* pRet = new(std::nothrow) LoadScene(player, mapData ,mpList );
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -21,7 +23,10 @@ Scene* LoadScene::CreateLoadScene(Player& player, MapParentState& state)
 	}
 }
 
-LoadScene::LoadScene(Player& player, MapParentState& state) : player_(player), mapstate_(state)
+LoadScene::LoadScene(Player& player, 
+	MapData& mapData,
+	MapParentList& mpList)
+	: player_(player), mapParentList_(mpList), mapData_(mapData)
 {
 	scene = nullptr;
 	
@@ -54,11 +59,19 @@ void LoadScene::update(float delta)
 	}
 	//auto fade = TransitionFade::create(3.0f, LoadScene::create(), Color3B::BLACK);
 	player_.setPosition(200, 300);
-	mapstate_.child[0].own[static_cast<int>(mapstate_.mapType)]->setVisible(true);
-	mapstate_.child[0].own[static_cast<int>(mapstate_.mapType)]->setName("MapData");
-	mapstate_.own[static_cast<int>(mapstate_.mapType)]->setVisible(false);
-	mapstate_.own[static_cast<int>(mapstate_.mapType)]->setName("");
-	mapstate_.own = mapstate_.child[0].own;
+	/*auto cameras = this->getCameras();
+	std::find_if(cameras.begin(), cameras.end(),)*/
+
+	auto mapState_ = mapParentList_.mapParents[mapParentList_.nowID];
+	auto selectNextMap = mapData_[static_cast<int>(mapState_.child[0].mapID)];
+	auto nowMap = mapData_[static_cast<int>(mapState_.mapID)];
+	auto mapType = static_cast<int>(mapState_.mapType);
+	selectNextMap[mapType]->setVisible(true);
+	selectNextMap[mapType]->setName("MapData");
+	nowMap[mapType]->setVisible(false);
+	nowMap[mapType]->setName("");
+	mapParentList_.nowID = static_cast<int>(mapState_.child[0].mapID);
+	//mapState_.mapID;
 	director->popScene();
 }
 

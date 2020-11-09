@@ -3,6 +3,8 @@
 #include <array>
 #include <vector>
 
+using MapData = std::vector<std::array<cocos2d::TMXTiledMap*, 2>>;
+
 enum class MapType
 {
 	OMOTE,
@@ -10,21 +12,20 @@ enum class MapType
 };
 struct MapChild
 {
-	int ID;	// mapのID
-	std::array<cocos2d::TMXTiledMap*, 2> own;
+	int mapID;	// mapのID
+	int nextParentID;
 	cocos2d::Vec2 nextPos;
 };
 
 struct MapParentState
 {
-	int ID;	// mapのID
-	std::array<cocos2d::TMXTiledMap*, 2> own;
+	int mapID;	// mapのID
 	std::vector<MapChild> child;	// 子供へのアクセス
 	MapType mapType;
 };
 struct MapParentList
 {
-	int nowID;	// 今のparentID
+	int nowID;	 // 現在の親ID
 	std::vector<MapParentState> mapParents;	// 親たち
 };
 class Player;
@@ -33,8 +34,8 @@ class GameMap
 public:
 	GameMap(cocos2d::Layer& layer);
 	// マップ生成をする (表と裏の二つを読む )
-	void CreateMap(std::string omotePath, std::string uraPath = "");
-	void AddNextMap( std::string omotePath, std::string uraPath = "");
+	void AddMap(std::string omotePath, std::string uraPath = "");
+	void AddNextMap(std::string omotePath, std::string uraPath = "");
 	cocos2d::TMXTiledMap* GetMap();
 	void ReplaceMap();
 	void SetMapInfo(MapType mapType);
@@ -45,11 +46,12 @@ private:
 	
 	cocos2d::Layer* mapLayer_;	// マップがあるシーンのレイヤー
 	cocos2d::TMXLayer* colisionLayer_;	// マップの当たり判定があるレイヤー
+
 	std::vector<std::array<std::string, 2>>pathList_;
 	MapParentList mapParentsList_;
-	MapParentState mapParents;	// マップ
+	
 	//MapType mapType_;
-	std::vector<std::array<cocos2d::TMXTiledMap*, 2>> mapDatas_;	// 0番が親
-	int nodeIdx_;
+	MapData mapDatas_;	// 0番が親
+	int nowIdx;
 };
 

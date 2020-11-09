@@ -206,8 +206,8 @@ bool Game::init()
 	// つながっているマップも読む
 	// collisionLayerの取得
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
-	gameMap_->CreateMap("image/Environment/test.tmx", "image/Environment/uratest.tmx");
-	gameMap_->AddNextMap("image/Environment/map2.tmx", "image/Environment/uratest.tmx");
+	/*gameMap_->CreateMap("image/Environment/test.tmx", "image/Environment/uratest.tmx");
+	gameMap_->AddNextMap("image/Environment/map2.tmx", "image/Environment/uratest.tmx");*/
 	//gameMap_->CreateMap(*layer_[(int)zOlder::BG], "image/Environment/map2.tmx", "image/Environment/uratest.tmx");
 
 	// キャラの登録(charLayerはGameSceneに直接ぶら下がり、plSpriteはcharLayerにぶら下がる)

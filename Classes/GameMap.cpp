@@ -7,40 +7,58 @@ USING_NS_CC;
 
 GameMap::GameMap(cocos2d::Layer& layer)
 {
-	
-	mapParents.mapType = MapType::OMOTE;
+	MapParentState mapParent;
+	mapParent.mapType = MapType::OMOTE;
 	mapLayer_ = &layer;
 	// パスをリスト化
 	pathList_.push_back({ "image/Environment/test.tmx", "image/Environment/uratest.tmx" });
 	pathList_.push_back({ "image/Environment/map2.tmx", "image/Environment/uratest.tmx" });
 
-	// 最初のマップデータ作成
-	CreateMap(pathList_[0][0], pathList_[0][1]);
-	AddNextMap(pathList_[1][0], pathList_[1][1]);
-
+	// 最初のマップデータ作成(データ化)
+	AddMap(pathList_[0][0], pathList_[0][1]);
+	AddMap(pathList_[1][0], pathList_[1][1]);
+	{		
+		mapParent.mapID = 0;	// サイズが1だったらIDは0
+		MapChild mapChild;
+		mapChild.mapID = 1;
+		mapChild.nextParentID = 1;
+		// 子供を入れる処理 
+		mapParent.child.push_back(mapChild);
+		// 親リストに登録
+		mapParentsList_.mapParents.push_back(mapParent);
+	}
+	{
+		mapParent.mapID = 1;	// サイズが1だったらIDは0
+		MapChild mapChild;
+		mapChild.mapID = 0;
+		mapChild.nextParentID = 0;
+		// 子供を入れる処理 
+		mapParent.child.push_back(mapChild);
+		// 親リストに登録
+		mapParentsList_.mapParents.push_back(mapParent);
+	}
 	mapParentsList_.nowID = 0;
-	mapParentsList_.mapParents.push_back(mapParents);
+	for (auto data : mapDatas_)
+	{
+		if (mapDatas_[mapParentsList_.nowID] == data)
+		{
+			continue;
+		}
+		data[0]->setVisible(false);
+		data[1]->setVisible(false);
+	}
 }
 
-void GameMap::CreateMap( std::string omotePath, std::string uraPath)
+void GameMap::AddMap( std::string omotePath, std::string uraPath)
 {
-	nodeIdx_ = 0;
 	auto mapArray = createMapFromPath(omotePath, uraPath); 
 	mapDatas_.push_back(mapArray);
-	mapParents.ID = mapDatas_.size() - 1;	// サイズが1だったらIDは0
 }
 
-void GameMap::AddNextMap(std::string omotePath, std::string uraPath)
+void GameMap::AddNextMap( std::string omotePath, std::string uraPath)
 {
 	auto mapArray = createMapFromPath(omotePath, uraPath);
-	MapChild mapChild;
-	mapChild.own = mapArray;
-	for (auto map : mapChild.own)
-	{
-		map->setVisible(false);
-	}
-	// 子供を入れる処理 - dataで判断
-	mapParents.child.push_back(mapChild);
+	mapDatas_.push_back(mapArray);
 }
 
 void GameMap::ReplaceMap()
@@ -49,21 +67,24 @@ void GameMap::ReplaceMap()
 
 cocos2d::TMXTiledMap* GameMap::GetMap()
 {
-	return mapParents.own[static_cast<int>(mapParents.mapType)];
+	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
+	return mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(nowMapParent.mapType)];
 }
 
 void GameMap::SetMapInfo(MapType mapType)
 {
-	mapParents.own[static_cast<int>(mapType)]->setVisible(true);
-	mapParents.own[static_cast<int>(mapType)]->setName("MapData");
-	mapParents.own[static_cast<int>(mapType) ^ !0]->setVisible(false);
-	mapParents.own[static_cast<int>(mapType) ^ !0]->setName("");
-	mapParents.mapType = mapType;
+	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
+	mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(mapType)]->setVisible(true);
+	mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(mapType)]->setName("MapData");
+	mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(mapType) ^ !0]->setVisible(false);
+	mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(mapType) ^ !0]->setName("");
+	nowMapParent.mapType = mapType;
 }
 
 void GameMap::update(Player& player)
 {
-	auto col = mapParents.own[static_cast<int>(mapParents.mapType)]->getLayer("gate");
+	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
+	auto col = mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(nowMapParent.mapType)]->getLayer("gate");
 	if (col == nullptr)
 	{
 		return;
@@ -72,24 +93,22 @@ void GameMap::update(Player& player)
 	pPos = pPos / 48;
 	pPos = { pPos.x,col->getLayerSize().height - pPos.y - 1 };
 	auto gid = col->getTileGIDAt(pPos);
-	auto proparties = mapParents.own[static_cast<int>(mapParents.mapType)]->getPropertiesForGID(gid);
+	auto proparties = mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(nowMapParent.mapType)]->getPropertiesForGID(gid);
 	if (proparties.isNull())
 	{
 		return;
 	}
 	auto director = Director::getInstance();
-	//auto scene = director->getRunningScene();
 	auto mapProp = proparties.asValueMap();
 	bool gateFlag = mapProp["gate"].asBool();
 	if (gateFlag)
 	{		
-		auto fade = TransitionFade::create(3.0f, LoadScene::CreateLoadScene(player, mapParents), Color3B::BLACK);
+		auto fade = TransitionFade::create(3.0f, LoadScene::CreateLoadScene(player,mapDatas_,mapParentsList_), Color3B::BLACK);
 		director->pushScene(fade);	
 	}
 	
 	TRACE( "%d\n", gateFlag);
 }
-
 
 std::array<cocos2d::TMXTiledMap*, 2> GameMap::createMapFromPath(std::string& omotePath, std::string& uraPath)
 {
