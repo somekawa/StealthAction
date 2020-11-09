@@ -18,6 +18,10 @@ void CameraManager::NotOutRangeSetPos(cocos2d::Vec2& pos,CameraType cameraType, 
 {
 	auto director = Director::getInstance();
 	auto map = (TMXTiledMap*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData");
+	if (map == nullptr)
+	{
+		return;
+	}
 	auto size = director->getWinSize();
 	float mapMoveX = cameras_[static_cast<int>(cameraType)]->getPositionX();
 	float mapMoveY = cameras_[static_cast<int>(cameraType)]->getPositionY();

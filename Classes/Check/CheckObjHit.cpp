@@ -8,7 +8,7 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 {
 	auto director = Director::getInstance();
 	auto a = director->getRunningScene()->getChildByTag((int)zOlder::BG);
-	if ((TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col") == nullptr)
+	if ((TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData") == nullptr)
 	{
 		return false;
 	}
