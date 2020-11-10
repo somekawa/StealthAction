@@ -132,8 +132,8 @@ const std::vector<Edge_Status> Delaunay::Triangle_To_Edge(void)
 	{
 		for (int n = 0; n < triangle.vertex.size(); ++n)
 		{
-			auto distance = lpGeometry.Distance_Calculator(triangle.vertex[n], triangle.vertex[(n + 1) % 3]);
-			edge_data.emplace_back(Edge_Status{ distance,Edge_List{data.vertex[n], data.vertex[(n + 1) % 3]} });
+			auto distance = std::sqrtf(lpGeometry.Distance_Calculator(triangle.vertex[n], triangle.vertex[(n + 1) % 3]));
+			edge_data.emplace_back(Edge_Status{ distance,Edge_List{data.vertex[n], data.vertex[(n + 1) % 3] }, false });
 		}
 	}
 
@@ -151,7 +151,8 @@ const std::vector<Edge_Status> Delaunay::Triangle_To_Edge(void)
 				++itr2;
 			}
 		}
-	}return edge_data;
+	}
+	return edge_data;
 }
 
 void Delaunay::FinishDelaunay()

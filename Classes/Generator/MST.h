@@ -4,22 +4,21 @@
 #include <map>
 #include "cocos2d.h"
 
-using Link_Map = std::map<cocos2d::Vec2, std::vector<cocos2d::Vec2>>;
 using Edge_List = std::array<cocos2d::Vec2,2>;
-using Node_List = std::vector<cocos2d::Vec2>;
 using Vertex_List = std::vector<cocos2d::Vec2>;
 
 struct Node_Status
 {
 	cocos2d::Vec2 key;
 	bool link;				//‘¼‚Ìnode‚Æ‚Â‚È‚ª‚Á‚Ä‚¢‚é‚©
-	Node_List pair_node;	//Œq‚ª‚Á‚Ä‚¢‚énode‚ÌÀ•W
+	Vertex_List pair_node;	//Œq‚ª‚Á‚Ä‚¢‚énode‚ÌÀ•W
 };
 
 struct Edge_Status
 {
 	float distance;
 	Edge_List pair_vertex;	//Œq‚ª‚Á‚Ä‚¢‚énode‚ÌÀ•W
+	bool used;
 };
 
 class Delaunay;
@@ -32,16 +31,12 @@ public:
 	~MST();
 
 	void Choice_Node();
-	std::vector<std::array<cocos2d::Vec2, 2>> GetNode();
+	std::vector<Edge_List> GetNode();
 	std::vector<Edge_Status> edge_data;		//edgeî•ñ‚ğ•Û‘¶
 private:
-	Link_Map link_vertex;
 	Vertex_List vertex_list;
 	std::vector<std::array<cocos2d::Vec2,2>> node;
-	//std::map<cocos2d::Vec2,Node_Status> node;
-	std::vector<Edge_Status> edge;
 
-	int start;
 	Delaunay* delaunay;
 
 	std::random_device seed_gen;

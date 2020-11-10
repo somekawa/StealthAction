@@ -62,34 +62,63 @@ bool MapGenerator::Create_Room(void)
         double result = _dist(_engine);
         double r = 100 * _dist(_engine);
         auto  t = 2 * M_PI * result;
-        auto pos = (cocos2d::Vec2(450 + r * cos(t), 500 + r * sin(t)));
-        auto pos_area2 = (cocos2d::Vec2(750 + r * cos(t), 500 + r * sin(t)));
-        auto pos_area3 = (cocos2d::Vec2(600 + r * cos(t), 600 + r * sin(t)));
-        auto pos_area4 = (cocos2d::Vec2(600 + r * cos(t), 400 + r * sin(t)));
+        auto pos = (cocos2d::Vec2(400 + r * cos(t), 500 + r * sin(t)));
+        auto pos2 = (cocos2d::Vec2(600 + r * cos(t), 500 + r * sin(t)));
+        auto pos_area2 = (cocos2d::Vec2(800 + r * cos(t), 500 + r * sin(t)));
+        auto pos_area3 = (cocos2d::Vec2(600 + r * cos(t), 700 + r * sin(t)));
+        auto pos_area4 = (cocos2d::Vec2(600 + r * cos(t), 300 + r * sin(t)));
         auto size = (cocos2d::Size(4.0f * _dist_i(_engine), 4.0f * _dist_n(_engine)));
         auto name = "floor" + cocos2d::StringUtils::toString(n);
-        if (n < FLOOR / 4)
+
+        auto area = (n / (FLOOR / 5));
+        if (area == 0)
         {
             if (n == 0)
             {
-                _data.emplace_back(Room_Data{ cocos2d::Vec2(600, 500),size,cocos2d::Vec2(600, 500),name,cocos2d::Color4F(1, 0, 1, 0.5),cocos2d::Color4F(0.89, 0.19, 0.05, 0.5)});
-                //draw->setTag(0);
+                _data.emplace_back(Room_Data{ cocos2d::Vec2(600, 500),size,cocos2d::Vec2(600, 500),name,cocos2d::Color4F(1, 0, 1, 0.5),cocos2d::Color4F(0.89, 0.19, 0.05, 0.5) });
                 continue;
             }
+            _data.emplace_back(Room_Data{ pos2,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(0, 0, 1, 0.5), cocos2d::Color4F(1, 0.5,0, 0.5) });
+        }
+        else if (area == 1)
+        {
             _data.emplace_back(Room_Data{ pos,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(0, 0, 1, 0.5), cocos2d::Color4F(0.38, 0.73, 1, 0.5)});
         }
-        else if (n < FLOOR / 2)
+        else if (area == 2)
         {
-            _data.emplace_back(Room_Data{ pos_area3,size,cocos2d::Vec2(600,600),name,cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0.05, 0.19, 0.89, 0.5)});
+           _data.emplace_back(Room_Data{ pos_area3,size,cocos2d::Vec2(600,600),name,cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0.05, 0.19, 0.89, 0.5)});
         }
-        else if (n > (FLOOR / 2) + (FLOOR / 4))
+        else if (area == 3)
         {
-            _data.emplace_back(Room_Data{ pos_area4,size,cocos2d::Vec2(600,400),name, cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0, 1, 0, 0.5) });
+           _data.emplace_back(Room_Data{ pos_area4,size,cocos2d::Vec2(600,400),name, cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0, 1, 0, 0.5) });
         }
-        else
+        else if (area == 4)
         {
-            _data.emplace_back(Room_Data{pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0.59, 0.7, 0, 0.5)});
+           _data.emplace_back(Room_Data{pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0.59, 0.7, 0, 0.5)});
         }
+
+        //if (n < FLOOR / 4)
+        //{
+        //    if (n == 0)
+        //    {
+        //        _data.emplace_back(Room_Data{ cocos2d::Vec2(600, 500),size,cocos2d::Vec2(600, 500),name,cocos2d::Color4F(1, 0, 1, 0.5),cocos2d::Color4F(0.89, 0.19, 0.05, 0.5)});
+        //        //draw->setTag(0);
+        //        continue;
+        //    }
+        //    _data.emplace_back(Room_Data{ pos,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(0, 0, 1, 0.5), cocos2d::Color4F(0.38, 0.73, 1, 0.5)});
+        //}
+        //else if (n < FLOOR / 2)
+        //{
+        //    _data.emplace_back(Room_Data{ pos_area3,size,cocos2d::Vec2(600,600),name,cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0.05, 0.19, 0.89, 0.5)});
+        //}
+        //else if (n > (FLOOR / 2) + (FLOOR / 4))
+        //{
+        //    _data.emplace_back(Room_Data{ pos_area4,size,cocos2d::Vec2(600,400),name, cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0, 1, 0, 0.5) });
+        //}
+        //else
+        //{
+        //    _data.emplace_back(Room_Data{pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1, 0, 1, 0.5), cocos2d::Color4F(0.59, 0.7, 0, 0.5)});
+        //}
     }
     return true;
 }
