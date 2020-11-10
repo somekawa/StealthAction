@@ -5,6 +5,7 @@
 #include "move/Jump.h"
 #include "move/JumpJumping.h"
 #include "move/Attack.h"
+#include "move/WallSlide.h"
 #include "Check/CheckKeyList.h"
 #include "Check/CheckObjHit.h"
 #include "Check/CheckList.h"
@@ -84,6 +85,14 @@ void ActionCtl::ActCtl(std::string actName,ActModule & module)
 		_mapModule[actName].runAction = Attack();
 	}
 
+	if (actName == "右壁スライド" || actName == "左壁スライド")
+	{
+		_mapModule.emplace(actName, std::move(module));
+		_mapModule[actName].act.emplace_back(CheckKeyList());
+		_mapModule[actName].act.emplace_back(CheckObjHit());
+		_mapModule[actName].act.emplace_back(CheckList());
+		_mapModule[actName].runAction = WallSlide();
+	}
 	// jumpingのときは自然と落ちるときとcollisionで当たった時に落下に切り替える
 	// collisionは関数オブジェクトで呼び出す必要がある
 	//  →当たっていたら切り替える

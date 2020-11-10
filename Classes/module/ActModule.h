@@ -38,4 +38,6 @@ struct ActModule {
 	float flame;												// 落下とジャンプにつかうフレーム数
 
 	bool jumpFlg;
+
+	int num;
 };

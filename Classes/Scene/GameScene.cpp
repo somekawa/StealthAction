@@ -203,9 +203,12 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(gate, 10000);
 
 	// map読み込み
+	// つながっているマップも読む
 	// collisionLayerの取得
-	gameMap_ = std::make_shared<GameMap>();
-	gameMap_->CreateMap(*layer_[(int)zOlder::BG], "image/Environment/test.tmx", "image/Environment/uratest.tmx");
+	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
+	/*gameMap_->CreateMap("image/Environment/test.tmx", "image/Environment/uratest.tmx");
+	gameMap_->AddNextMap("image/Environment/map2.tmx", "image/Environment/uratest.tmx");*/
+	//gameMap_->CreateMap(*layer_[(int)zOlder::BG], "image/Environment/map2.tmx", "image/Environment/uratest.tmx");
 
 	// キャラの登録(charLayerはGameSceneに直接ぶら下がり、plSpriteはcharLayerにぶら下がる)
 
@@ -254,6 +257,7 @@ bool Game::init()
 
 void Game::update(float sp)
 {
+	// 今のSceneがGameScene以外だった場合、returnさせる
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		return;
@@ -268,8 +272,8 @@ void Game::update(float sp)
 		gameMap_->SetMapInfo(MapType::OMOTE);
 		frame = 0;
 	}*/
-
-	gameMap_->update(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition());
+	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
+	gameMap_->update(*player);
 	
 	// プレイヤーのカメラがうまくいかない
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
