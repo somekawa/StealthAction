@@ -12,8 +12,7 @@
 class Player : public Actor
 {
 public:
-	Player(std::unordered_map<std::string,
-		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
+	Player();
 
 	~Player();
 
@@ -25,9 +24,9 @@ public:
 	std::string GetAction(void);								// 現在のアクション情報を取得する
 	void SetAction(std::string action);							// 現在のアクション状態をセットする
 	void SetDir(DIR dir);										// 現在の方向をセットする
-
-	static Player* CreatePlayer(std::unordered_map<std::string,
-		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
+	// アニメーションの登録
+	void AnimRegistrator(void);
+	static Player* CreatePlayer(void);
 private:
 	//CREATE_FUNC(Player);
 

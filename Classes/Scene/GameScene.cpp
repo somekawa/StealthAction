@@ -135,7 +135,7 @@ bool Game::init()
 	// ˆø”‚ÉÚ‘±‚µ‚Ä‚¢‚éƒvƒŒƒCƒ„[”‚ğ‹Lq
 	AddPlayer(1);
 	// enemyList_‚É“G’Ç‰Á
-	//AddEnemy(ActorType::Imp);
+	AddEnemy(ActorType::Imp);
 	// “G‚ğ¶¬‚µ‚½‰ñ”(‘½•ª‚¢‚ç‚È‚¢)
 	// “G‚ÌsetName‚·‚é‚½‚ß‚É—pˆÓ‚µ‚½‚à‚Ì
 	generateEnemyNum_ = 0;
@@ -241,6 +241,8 @@ bool Game::init()
 	cameraManager_->AddCamera(*this, size, CameraType::UI, CameraFlag::USER2);
 
 	layer_[static_cast<int>(zOlder::CHAR_PL)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
+
 	//charLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
@@ -321,7 +323,7 @@ void Game::AddPlayer(int playerNum)
 	// player”resize
 	for (int p = 0; p < playerNum; p++)
 	{
-		auto plSprite = Player::CreatePlayer(colliderBox_[static_cast<int>(ActorType::Player)]);
+		auto plSprite = Player::CreatePlayer();
 		plSprite->setName("player" + std::to_string(p + 1));
 		plSprite->setScale(3.0f);
 		plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
@@ -340,8 +342,7 @@ void Game::AddEnemy(const ActorType& type)
 		// Imp‚ğ¶¬‚·‚éê‡
 	case ActorType::Imp:
 		// “G‚Ì¶¬
-		sprite = Imp::CreateImp(layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren(),
-			colliderBox_[static_cast<int>(ActorType::Imp)]);
+		sprite = Imp::CreateImp(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
 		break;
 	default:
 		break;

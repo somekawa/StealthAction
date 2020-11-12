@@ -5,6 +5,7 @@
 #include "input/DIR_ID.h"
 #include "ActionRect.h"
 #include "_Debug/_DebugConOut.h"
+#include "Loader/CollisionLoader.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
@@ -16,8 +17,7 @@ USING_NS_CC;
 
 int Player::no_ = 0;
 
-Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shared_ptr<ActionRect>>>>& collider):
-	Actor(collider)
+Player::Player()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -46,14 +46,19 @@ Player::Player(std::unordered_map<std::string, std::vector<std::vector<std::shar
 	_attackCheckL = Vec2(0, 0);
 	_attackCheckR = Vec2(0, 0);
 
-	Anim_Registration((Sprite*)this);			// アニメーションの登録
+	// アニメーションの登録
+	AnimRegistrator();
+	//Anim_Registration((Sprite*)this);			// アニメーションの登録
 
 	pos_ = { (int)visibleSize.width / 2 + (int)origin.x - 0,(int)visibleSize.height / 2 + (int)origin.y + 200 };
 	setPosition(Vec2(pos_.x, pos_.y));
 	myNo_ = no_;
 	no_++;
 	type_ = ActorType::Player;
-
+	/*for (auto anim : lpAnimMng.GetAnimations(type_))
+	{
+		lpCol.Load(collider_, anim, "player");
+	}*/
 	//for (auto anim : lpAnimMng.GetAnimations(type_))
 	//{
 	//	auto a = lpAnimMng.GetFrameNum(type_, anim);
@@ -200,6 +205,7 @@ void Player::update(float sp)
 	//	this->setAnchorPoint(Vec2(0.5f, 0.0f));
 	//}
 
+
 	if (actionNow_ != actionOld_)
 	{
 		lpAnimMng.ChangeAnimation(*this, actionNow_, true, ActorType::Player);
@@ -340,7 +346,7 @@ void Player::Anim_Registration(Sprite* delta)
 	// wallslide
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Wall_Slide", 3, (float)0.3, ActorType::Player);
 
-	lpAnimMng.InitAnimation(*delta, ActorType::Player);
+	lpAnimMng.InitAnimation(*delta, ActorType::Player,"NON");
 
 }
 
@@ -361,9 +367,41 @@ void Player::SetDir(DIR dir)
 	_dir_Now = dir;
 }
 
-Player* Player::CreatePlayer(std::unordered_map<std::string, std::vector<std::vector<std::shared_ptr<ActionRect>>>>& collider)
+void Player::AnimRegistrator(void)
 {
-	Player* pRet = new(std::nothrow) Player(collider);
+	// アニメーションをキャッシュに登録
+// non
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "NON", 6, (float)0.3, ActorType::Player);
+
+	// idle
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Look_Intro", 6, (float)0.3, ActorType::Player);
+
+	// run
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Run", 9, (float)0.08, ActorType::Player);
+
+	// fall
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Fall", 3, (float)1.0, ActorType::Player);
+
+	// jump
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jump", 3, (float)0.05, ActorType::Player);
+
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jumping", 3, (float)0.05, ActorType::Player);
+
+	// AttackFirst
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackFirst", 9, (float)0.05, ActorType::Player);
+
+	// AttackSecond
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackSecond", 9, (float)0.08, ActorType::Player);
+
+	// wallslide
+	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Wall_Slide", 3, (float)0.3, ActorType::Player);
+
+	lpAnimMng.InitAnimation(*this, ActorType::Player, "NON");
+}
+
+Player* Player::CreatePlayer()
+{
+	Player* pRet = new(std::nothrow) Player();
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();

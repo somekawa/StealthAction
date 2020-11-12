@@ -18,8 +18,7 @@ class Actor :
 public:
 	// デフォルトコンストラクタ追加中
 	//Actor();
-	Actor(std::unordered_map<std::string,
-		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
+	Actor();
 	~Actor();
 	// 各Actorの行動処理
 	virtual void Action(void) = 0;
@@ -29,7 +28,8 @@ public:
 
 	// 方向変更
 	virtual void ChangeDirection(void) = 0;
-
+	// 初期アニメーション登録
+	virtual void AnimRegistrator(void) = 0;
 	// オブジェクトが死んだらdeleteFlagをtrueにする
 	virtual void Delete(void)
 	{

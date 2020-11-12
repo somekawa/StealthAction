@@ -3,9 +3,8 @@
 
 USING_NS_CC;
 
-Enemy::Enemy(Vector<Node*>& player, std::unordered_map<std::string,
-	std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider):
-	player_(player),Actor(collider)
+Enemy::Enemy(Vector<Node*>& player):
+	player_(player)
 {
 
 }

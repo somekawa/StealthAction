@@ -1,5 +1,6 @@
 #include "Imp.h"
 #include "anim/AnimMng.h"
+#include "Loader/CollisionLoader.h"
 
 USING_NS_CC;
 
@@ -7,9 +8,8 @@ USING_NS_CC;
 constexpr int Sight = 150;
 constexpr int AttackRange = 45;
 
-Imp::Imp(Vector<Node*>& player, std::unordered_map<std::string,
-	std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider):
-	Enemy(player,collider)
+Imp::Imp(Vector<Node*>& player):
+	Enemy(player)
 {
 	pos_ = { 980,100 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
@@ -18,7 +18,12 @@ Imp::Imp(Vector<Node*>& player, std::unordered_map<std::string,
 	flipFlag_ = FlipX::create(true);
 	type_ = ActorType::Imp;
 
-	lpAnimMng.InitAnimation(*this, type_);
+	AnimRegistrator();
+	for (auto anim : lpAnimMng.GetAnimations(type_))
+	{
+		lpCol.Load(collider_, anim, "imp");
+	}
+
 	//lpAnimMng.InitAnimation(*this,type_,"walk");
 
 	direction_ = Direction::Left;
@@ -30,10 +35,9 @@ Imp::~Imp()
 {
 }
 
-Imp* Imp::CreateImp(Vector<Node*>& player, std::unordered_map<std::string,
-	std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider)
+Imp* Imp::CreateImp(Vector<Node*>& player)
 {
-	Imp* pRet = new(std::nothrow) Imp(player,collider);
+	Imp* pRet = new(std::nothrow) Imp(player);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -78,6 +82,24 @@ void Imp::update(float delta)
 	Action();
 }
 
+void Imp::AnimRegistrator(void)
+{
+	// アニメーションをキャッシュに登録
+	// walk
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/imp/imp", "walk", 6, (float)0.3, ActorType::Imp);
+
+	// run
+	//lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/imp/imp", "run", 6, (float)0.3, ActorType::Imp);
+
+	// attack1
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/imp/imp", "attackFirst", 6, (float)0.08, ActorType::Imp);
+
+	// death
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/imp/imp", "death", 5, (float)1.0, ActorType::Imp);
+
+	lpAnimMng.InitAnimation(*this, ActorType::Imp, "walk");
+}
+
 void Imp::Walk(void)
 {
 	switch (direction_)
@@ -104,12 +126,12 @@ void Imp::Walk(void)
 	this->setPosition(Vec2(pos_.x, pos_.y));
 	this->runAction(flipFlag_);
 
-	if (DistanceCalcurator() <= Sight)
+	/*if (DistanceCalcurator() <= Sight)
 	{
 		currentAnimation_ = "run";
 		lpAnimMng.ChangeAnimation(*this, "run", true,type_);
 		updater_ = &Imp::Run;
-	}
+	}*/
 
 	if (pos_.x <= 0)
 	{
@@ -146,8 +168,8 @@ void Imp::Run(void)
 
 	if (DistanceCalcurator() <= AttackRange)
 	{
-		currentAnimation_ = "attack1";
-		lpAnimMng.ChangeAnimation(*this, "attack1", true,type_);
+		currentAnimation_ = "attackFirst";
+		lpAnimMng.ChangeAnimation(*this, "attackFirst", true,type_);
 		updater_ = &Imp::Attack;
 	}
 

@@ -7,8 +7,7 @@ class Enemy :
 	public Actor
 {
 public:
-	Enemy(cocos2d::Vector<cocos2d::Node*>& player_, std::unordered_map<std::string,
-		std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider);
+	Enemy(cocos2d::Vector<cocos2d::Node*>& player_);
 	~Enemy();
 
 	void Action(void);
@@ -16,7 +15,7 @@ public:
 
 	virtual const float& DistanceCalcurator(void);
 	virtual void update(float delta) {};
-
+	virtual void AnimRegistrator(void) = 0;
 	//virtual Enemy* CreateEnemy(std::vector<std::shared_ptr<Player>>& player_) = 0;
 
 	//CREATE_FUNC(Enemy);
