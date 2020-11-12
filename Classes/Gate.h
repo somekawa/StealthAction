@@ -1,15 +1,22 @@
 #pragma once
 #include "cocos2d.h"
+#include <memory>
+
+class Player;
 class Gate : public cocos2d::Sprite
 {
 public:
-	Gate(cocos2d::Vec2 pos);
+	Gate(cocos2d::Vec2 pos, int gateNum);
 	~Gate() = default;
+	static Gate* CreateGate(cocos2d::Vec2 pos,int gateNum);
 
-	static Gate* CreateGate(cocos2d::Vec2 pos);
+	void Update(Player& player);
+	bool IsHit(Player& player);
+	int GetGateNum();
 private:
 	cocos2d::Vec2 pos_;
-
+	Sprite* own_;
+	int gateNum_;
 
 };
 

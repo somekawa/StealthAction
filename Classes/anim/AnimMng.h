@@ -25,7 +25,7 @@ public:
 	// param@: duration :: アニメーションを再生する間隔
 	void addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type);
 	// アニメーションの初期化と実行
-	void InitAnimation(cocos2d::Sprite& sprite, ActorType type);
+	void InitAnimation(cocos2d::Sprite& sprite, ActorType type, std::string animName);
 	// アニメーションの実行
 	//void anim_action(cocos2d::Sprite* delta);
 	// アニメーションの変更

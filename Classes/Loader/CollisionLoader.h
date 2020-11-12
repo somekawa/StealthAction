@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 #include "obj/Actor.h"
-#include "GameScene.h"
+#include "scene/GameScene.h"
 
 class ActionRect;
 

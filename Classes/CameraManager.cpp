@@ -25,14 +25,25 @@ void CameraManager::NotOutRangeSetPos(cocos2d::Vec2& pos,CameraType cameraType, 
 	auto size = director->getWinSize();
 	float mapMoveX = cameras_[static_cast<int>(cameraType)]->getPositionX();
 	float mapMoveY = cameras_[static_cast<int>(cameraType)]->getPositionY();
-	if (pos.x > size.width / 2 * scale && pos.x < map->getContentSize().width - size.width / 2 * scale)
+	mapMoveX = pos.x - size.width / 2 * scale;
+	mapMoveY = pos.y - size.height / 2 * scale;
+	if (mapMoveX < 0 )
 	{
-		mapMoveX = pos.x - size.width / 2 * scale;
+		mapMoveX = 0;
 	}
-	if (pos.y > size.height / 2 * scale && pos.y < map->getContentSize().height - size.height / 2 * scale)
+	if (mapMoveX > map->getContentSize().width - size.width)
 	{
-		mapMoveY = pos.y - size.height / 2 * scale;
+		mapMoveX = map->getContentSize().width - size.width;
 	}
+	if (mapMoveY < 0)
+	{
+		mapMoveY = 0;
+	}
+	if (mapMoveY > map->getContentSize().height - size.height)
+	{
+		mapMoveY = map->getContentSize().height - size.height;
+	}
+	
 	cameras_[static_cast<int>(cameraType)]->setPosition(mapMoveX, mapMoveY);
 }
 

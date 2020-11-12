@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="22" height="12" tilewidth="48" tileheight="48" infinite="0" nextlayerid="3" nextobjectid="15">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer id="1" name="Collision" width="22" height="12">
+  <data encoding="csv">
+255,256,255,256,256,256,256,256,256,256,256,256,256,256,255,256,256,256,256,256,256,211,
+212,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,235,
+236,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,259,
+260,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,235,
+212,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,259,
+236,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,211,
+260,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,235,
+212,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,259,
+212,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,211,
+236,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,235,
+260,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,259,
+27,28,29,30,31,27,28,29,30,31,27,28,29,30,31,27,28,29,30,31,27,28
+</data>
+ </layer>
+ <objectgroup id="2" name="gate">
+  <object id="7" name="gate" x="1012" y="149.333" width="38.6667" height="37.3333">
+   <properties>
+    <property name="gateNum" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="8" name="gate" x="1010.67" y="434.667" width="42.6667" height="45.3333">
+   <properties>
+    <property name="gateNum" type="int" value="7"/>
+   </properties>
+  </object>
+  <object id="9" name="gate" x="2.66667" y="150.667" width="42.6667" height="38.6667">
+   <properties>
+    <property name="gateNum" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="10" name="gate" x="4" y="433.333" width="41.3333" height="46.6667">
+   <properties>
+    <property name="gateNum" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="11" name="gate" x="292" y="4" width="44" height="45.3333">
+   <properties>
+    <property name="gateNum" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="12" name="gate" x="721.333" y="4" width="48" height="40">
+   <properties>
+    <property name="gateNum" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="13" name="gate" x="292" y="529.333" width="45.3333" height="42.6667">
+   <properties>
+    <property name="gateNum" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="14" name="gate" x="724" y="520" width="46.6667" height="49.3333">
+   <properties>
+    <property name="gateNum" type="int" value="5"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

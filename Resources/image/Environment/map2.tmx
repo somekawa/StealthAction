@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="42" height="22" tilewidth="48" tileheight="48" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="42" height="22" tilewidth="48" tileheight="48" infinite="0" nextlayerid="4" nextobjectid="7">
  <tileset firstgid="1" source="tilesets-big.tsx"/>
  <tileset firstgid="289" source="../../floortiles.tsx"/>
  <layer id="1" name="Collision" width="42" height="22">
@@ -54,4 +54,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="3" name="gate">
+  <object id="1" name="gate" x="1827.27" y="772.727" width="181.818" height="184.848">
+   <properties>
+    <property name="gate" type="bool" value="true"/>
+    <property name="gateNum" type="int" value="0"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

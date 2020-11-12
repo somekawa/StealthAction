@@ -199,9 +199,6 @@ bool Game::init()
 	startSp->setPosition(Vec2(150.0f,150.0f ));
 	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
 
-	auto gate = Gate::CreateGate({ 1200, 150 });
-	layer_[(int)zOlder::BG]->addChild(gate, 10000);
-
 	// map“Ç‚İ‚İ
 	// ‚Â‚È‚ª‚Á‚Ä‚¢‚éƒ}ƒbƒv‚à“Ç‚Ş
 	// collisionLayer‚Ìæ“¾

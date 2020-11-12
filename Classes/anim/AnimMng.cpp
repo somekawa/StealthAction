@@ -57,9 +57,9 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	}
 }
 
-void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type)
+void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type, std::string animName)
 {
-	Animation* animation = caches_[static_cast<int>(type)]["Run"];
+	Animation* animation = caches_[static_cast<int>(type)][animName];
 
 	RepeatForever* action = RepeatForever::create(Animate::create(animation));
 

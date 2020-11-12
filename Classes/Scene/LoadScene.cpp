@@ -7,9 +7,10 @@
 USING_NS_CC;
 
 Scene* LoadScene::CreateLoadScene(
-	Player& player,MapData& mapData, MapParentList& mpList)
+	Player& player,MapData& mapData,
+	MapParentList& mpList,GameMap& gameMap)
 {
-	LoadScene* pRet = new(std::nothrow) LoadScene(player, mapData ,mpList );
+	LoadScene* pRet = new(std::nothrow) LoadScene(player, mapData ,mpList, gameMap);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -25,8 +26,9 @@ Scene* LoadScene::CreateLoadScene(
 
 LoadScene::LoadScene(Player& player, 
 	MapData& mapData,
-	MapParentList& mpList)
-	: player_(player), mapParentList_(mpList), mapData_(mapData)
+	MapParentList& mpList,
+	GameMap& gameMap)
+	: player_(player), mapParentList_(mpList), mapData_(mapData), gameMap_(&gameMap)
 {
 	scene = nullptr;
 	
@@ -41,10 +43,17 @@ bool LoadScene::init()
 	//this->scheduleUpdate();
 	if (Director::getInstance()->getRunningScene()->getName() == "GameScene")
 	{
+		auto size = Director::getInstance()->getWinSize();
+	
+		
+		/*auto c = this->getDefaultCamera();
+		auto camera = Camera::createOrthographic(size.width, size.height, c->getNearPlane() - 768, c->getFarPlane());
+		camera->setCameraFlag(CameraFlag::USER1);*/
+		
 		scene = Director::getInstance()->getRunningScene();
 		scene->retain();
-
 	}
+	
 	this->setName("LoadScene");
 	this->scheduleUpdate();
 	return true;
@@ -57,20 +66,19 @@ void LoadScene::update(float delta)
 	{
 		return;
 	}
-	//auto fade = TransitionFade::create(3.0f, LoadScene::create(), Color3B::BLACK);
-	player_.setPosition(200, 300);
-	/*auto cameras = this->getCameras();
-	std::find_if(cameras.begin(), cameras.end(),)*/
-
+	
+	int childId = gameMap_->GetNextChildID();
 	auto mapState_ = mapParentList_.mapParents[mapParentList_.nowID];
-	auto selectNextMap = mapData_[static_cast<int>(mapState_.child[0].mapID)];
+	auto selectNextMap = mapData_[static_cast<int>(mapState_.child[childId].mapID)];
 	auto nowMap = mapData_[static_cast<int>(mapState_.mapID)];
 	auto mapType = static_cast<int>(mapState_.mapType);
 	selectNextMap[mapType]->setVisible(true);
 	selectNextMap[mapType]->setName("MapData");
 	nowMap[mapType]->setVisible(false);
 	nowMap[mapType]->setName("");
-	mapParentList_.nowID = static_cast<int>(mapState_.child[0].mapID);
+	mapParentList_.nowID = static_cast<int>(mapState_.child[childId].nextParentID);
+	player_.setPosition(200, 300);
+	gameMap_->CreateObject();
 	//mapState_.mapID;
 	director->popScene();
 }
