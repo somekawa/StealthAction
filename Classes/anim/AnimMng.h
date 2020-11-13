@@ -23,7 +23,7 @@ public:
 	// param@: cacheName:: 登録するアニメーション名
 	// param@: frame    :: アニメーションの総フレーム
 	// param@: duration :: アニメーションを再生する間隔
-	void addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type);
+	void addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type,bool isLoop);
 	// アニメーションの初期化と実行
 	void InitAnimation(cocos2d::Sprite& sprite, ActorType type, std::string animName);
 	// アニメーションの実行
@@ -51,13 +51,23 @@ public:
 	{
 		return frameNum_[static_cast<int>(type)][animName];
 	}
+	// アニメーションキャッシュの取得
+	cocos2d::Animation* GetAnimationCache(ActorType type, std::string animationName)
+	{
+		return caches_[static_cast<int>(type)][animationName];
+	}
+	// アニメーションループフラグの取得
+	const bool& GetIsLoop(ActorType type, std::string animationName)
+	{
+		return isLoop_[static_cast<int>(type)][animationName];
+	}
 private:
 	AnimMng();
 
 	void operator=(AnimMng&) = delete;
 
 	// キャラ別のアニメーションキャッシュの登録
-	void CacheRegistration(cocos2d::AnimationCache* animCache, const ActorType& type, std::string animName);
+	void CacheRegistration(cocos2d::AnimationCache* animCache, const ActorType& type, std::string animName,bool isLoop);
 
 	// キャラクターのタイプ別のアニメーションキャッシュ
 	std::array<std::map<std::string, cocos2d::Animation*>, static_cast<int>(ActorType::Max)> caches_;
@@ -70,6 +80,9 @@ private:
 	std::array<std::string, static_cast<int>(ActorType::Max)> actorNames_;
 	// アニメーションフレーム数
 	std::array<std::map<std::string, int>, static_cast<int>(ActorType::Max)> frameNum_;
+
+	// アニメーションのループフラグ
+	std::array<std::map< std::string,bool>, static_cast<int>(ActorType::Max)> isLoop_;
 
 	static std::unique_ptr<AnimMng> s_instance;
 };

@@ -28,9 +28,9 @@ ActionRect::~ActionRect()
 {
 }
 
-DrawNode* ActionRect::CreateCollider(void)
+ActionRect* ActionRect::CreateCollider(void)
 {
-	return ActionRect::create();
+	return this;
 }
 
 void ActionRect::Set(Vector2I begin,

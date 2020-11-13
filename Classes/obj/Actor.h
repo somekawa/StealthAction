@@ -25,6 +25,8 @@ public:
 	// 更新処理
 	virtual void Update(void);
 	virtual void update(float delta) = 0;
+	// アニメーションの更新
+	virtual void UpdateAnimation(float delta);
 
 	// 方向変更
 	virtual void ChangeDirection(void) = 0;
@@ -61,6 +63,9 @@ protected:
 	std::string currentAnimation_;
 	// ｱﾆﾒｰｼｮﾝしている時はこのﾌﾚｰﾑ変数を加算
 	float animationFrame_;
+	// アニメーションが終了しているかどうかのフラグ
+	bool isAnimEnd_;
+
 	// 画像反転のフラグ
 	cocos2d::FlipX* flipFlag_;
 

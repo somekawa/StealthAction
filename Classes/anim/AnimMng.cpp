@@ -12,44 +12,43 @@ AnimMng::~AnimMng()
 {
 }
 
-void AnimMng::addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type)
+void AnimMng::addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type,bool isLoop)
 {
 	actorNames_[static_cast<int>(type)] = actorName;
 
-	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã¯ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³
+	// ƒAƒjƒ[ƒVƒ‡ƒ“ƒLƒƒƒbƒVƒ…‚ÍƒVƒ“ƒOƒ‹ƒgƒ“
 	AnimationCache *animationCache = AnimationCache::getInstance();
 
-	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚·ãƒ¼ãƒˆã®æº–å‚™
+	//ƒXƒvƒ‰ƒCƒgƒV[ƒg‚Ì€”õ
 	auto cache = SpriteFrameCache::getInstance();
 
-	// ãƒ‘ã‚¹æŒ‡å®š
+	// ƒpƒXw’è
 	auto pListStr = actorName + "_" + animName;
 	cache->addSpriteFramesWithFile(pListStr + ".plist");
 
-	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”»åƒè¿½åŠ 
+	// ƒAƒjƒ[ƒVƒ‡ƒ“‰æ‘œ’Ç‰Á
 	Animation* animation = Animation::create();
 
 	for (int i = 0; i < frame; i++)
 	{
-		auto string = animName + "%d.png";		// plistã®ä¸­ã ã‹ã‚‰ãƒ‘ã‚¹ã˜ã‚ƒãªã„
+		auto string = animName + "%d.png";		// plist‚Ì’†‚¾‚©‚çƒpƒX‚¶‚á‚È‚¢
 		auto str = StringUtils::format(string.c_str(), i);
 		SpriteFrame* sprite = cache->getSpriteFrameByName(str);
 		animation->addSpriteFrame(sprite);
 	}
 
-	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é–“éš”
+	// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌŠÔŠu
 	animation->setDelayPerUnit(duration);
 
-	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†å¾Œã«æœ€åˆã«æˆ»ã™ã‹ã©ã†ã‹
+	// ƒAƒjƒ[ƒVƒ‡ƒ“I—¹Œã‚ÉÅ‰‚É–ß‚·‚©‚Ç‚¤‚©
 	animation->setRestoreOriginalFrame(true);
 
-	// å‡ºæ¥ãŸã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«ç™»éŒ²
+	// o—ˆ‚½ƒAƒjƒ[ƒVƒ‡ƒ“‚ğƒLƒƒƒbƒVƒ…‚É“o˜^
 	animationCache->addAnimation(animation, animName);
 	//animationCache_->addAnimation(animation, actorName + "_" + animName);
 
-
-	// 1ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´ã™ã‚‹å‡¦ç†
-	CacheRegistration(animationCache, type, animName);
+	// 1ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒLƒƒƒbƒVƒ…ƒf[ƒ^‚ğŠi”[‚·‚éˆ—
+	CacheRegistration(animationCache, type, animName,isLoop);
 
 	if (frameNum_[static_cast<int>(type)].find(animName) == frameNum_[static_cast<int>(type)].end())
 	{
@@ -68,37 +67,40 @@ void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type, std::string
 
 void AnimMng::ChangeAnimation(cocos2d::Sprite& sprite, std::string name, bool loop, ActorType type)
 {
-	// ä»Šã®å‹•ãã‚’æ­¢ã‚ã‚‹
+	// ¡‚Ì“®‚«‚ğ~‚ß‚é
 	sprite.stopAllActions();
 
-	// ã‚­ãƒ¼ã«ã‚ˆã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å–ã‚Šå‡ºã—
+	// ƒL[‚É‚æ‚éƒAƒjƒ[ƒVƒ‡ƒ“‚Ìæ‚èo‚µ
 	Animation* animation = caches_[static_cast<int>(type)][name];
 
-	// ãƒ•ãƒ¬ãƒ¼ãƒ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã¯ç¹°ã‚Šè¿”ã—
+	// ƒtƒŒ[ƒ€ƒAƒjƒ[ƒVƒ‡ƒ“‚ÍŒJ‚è•Ô‚µ
 	if (loop)
 	{
 		RepeatForever* action = RepeatForever::create(Animate::create(animation));
 
-		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œ
+		//ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÀs
 		sprite.runAction(action);
 	}
 	else
 	{
 		auto action_ = Repeat::create(Animate::create(animation), 1);
-		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œ
+		//ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÀs
 		sprite.runAction(action_);
 	}
 }
 
-void AnimMng::CacheRegistration(cocos2d::AnimationCache* animCache, const ActorType& type, std::string animName)
+void AnimMng::CacheRegistration(cocos2d::AnimationCache* animCache, const ActorType& type, std::string animName,bool isLoop)
 {
-	// ã‚­ãƒ£ãƒ©ã®ã‚¿ã‚¤ãƒ—åˆ¥ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«1ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´
+	// ƒLƒƒƒ‰‚Ìƒ^ƒCƒv•Ê‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ƒLƒƒƒbƒVƒ…‚É1ƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^‚ğŠi”[
 	caches_[static_cast<int>(type)].emplace(animName, animCache->getAnimation(animName));
-	// ï½±ï¾†ï¾’ï½°ï½¼ï½®ï¾ã®æ–‡å­—åˆ—æ ¼ç´
+	// ±ÆÒ°¼®İ‚Ì•¶š—ñŠi”[
 	animations_[static_cast<int>(type)].emplace_back(animName);
-	// 1ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã«ã‹ã‹ã‚‹æ™‚é–“ã®æ ¼ç´
+	// 1ƒAƒjƒ[ƒVƒ‡ƒ“‚É‚©‚©‚éŠÔ‚ÌŠi”[
 	animMaxFrame_[static_cast<int>(type)].emplace(animName, caches_[static_cast<int>(type)][animName]->getDelayPerUnit()*
 		caches_[static_cast<int>(type)][animName]->getFrames().size());
+
+	// ƒ‹[ƒvƒtƒ‰ƒO‚ğİ’è
+	isLoop_[static_cast<int>(type)][animName] = isLoop;
 }
 
 bool AnimMng::IsAnimEnd(const float& delta, ActorType type, std::string animName)
