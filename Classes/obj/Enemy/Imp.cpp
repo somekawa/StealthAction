@@ -163,8 +163,8 @@ void Imp::Walk(void)
 
 	if (pos_.x <= 0)
 	{
-		currentAnimation_ = "death";
-		lpAnimMng.ChangeAnimation(*this, "death", false,type_);
+		ChangeAnimation("death");
+		//lpAnimMng.ChangeAnimation(*this, "death", false,type_);
 		updater_ = &Imp::Death;
 	}
 }
@@ -196,38 +196,37 @@ void Imp::Run(void)
 
 	if (DistanceCalcurator() <= AttackRange)
 	{
-		currentAnimation_ = "attackFirst";
-		lpAnimMng.ChangeAnimation(*this, "attackFirst", true,type_);
+		ChangeAnimation("attackFirst");
+		//lpAnimMng.ChangeAnimation(*this, "attackFirst", true,type_);
 		updater_ = &Imp::Attack;
 	}
 
 	if (DistanceCalcurator() >= Sight)
 	{
-		currentAnimation_ = "walk";
-		lpAnimMng.ChangeAnimation(*this, "walk", true,type_);
+		ChangeAnimation("walk");
+		//lpAnimMng.ChangeAnimation(*this, "walk", true,type_);
 		updater_ = &Imp::Walk;
 	}
 }
 
 void Imp::Attack(void)
 {
-	animationFrame_ += 0.01f;
-	if (lpAnimMng.IsAnimEnd(animationFrame_, type_, currentAnimation_))
+	//animationFrame_ += 0.01f;
+	if (isAnimEnd_)
 	{
-		animationFrame_ = 0.0f;
-		currentAnimation_ = "walk";
-		lpAnimMng.ChangeAnimation(*this, "walk", true, type_);
+		ChangeAnimation("walk");
+		//lpAnimMng.ChangeAnimation(*this, "walk", true, type_);
 		updater_ = &Imp::Walk;
 	}
 }
 
 void Imp::Death(void)
 {
-	animationFrame_ += 0.02f;
-	if (lpAnimMng.IsAnimEnd(animationFrame_,type_,currentAnimation_))
+	//animationFrame_ += 0.02f;
+	if (isAnimEnd_)
 	{
 		this->setName("death");
-		animationFrame_ = lpAnimMng.GetAnimationMaxFrame(type_,currentAnimation_);
+		//animationFrame_ = lpAnimMng.GetAnimationMaxFrame(type_,currentAnimation_);
 		Delete();
 	}
 }

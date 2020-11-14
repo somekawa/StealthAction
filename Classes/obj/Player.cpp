@@ -321,6 +321,8 @@ void Player::Anim_Registration(Sprite* delta)
 {
 	// アニメーションをキャッシュに登録
 	// non
+	// 単語の綴りが違う
+	// PlayerAnim "a" tionAsset
 	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "NON", 6, (float)0.3, ActorType::Player,false);
 
 	// idle

@@ -49,3 +49,20 @@ void Actor::UpdateAnimation(float delta)
 	}
 }
 
+void Actor::ChangeAnimation(std::string animName)
+{
+	// 今の動きを止める
+	this->stopAllActions();
+	// 変更したいアニメーションが現在のアニメーションと同じならば何もしない。
+	if (currentAnimation_ == animName)
+	{
+		return;
+	}
+	// 現在のアニメーションを変更先のアニメーション名に変更
+	currentAnimation_ = animName;
+	// アニメーション終了フラグをfalseに
+	isAnimEnd_ = false;
+	// アニメーションのフレーム数を初期値に戻す
+	animationFrame_ = 0.0f;
+}
+

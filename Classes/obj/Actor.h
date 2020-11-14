@@ -27,10 +27,13 @@ public:
 	virtual void update(float delta) = 0;
 	// アニメーションの更新
 	virtual void UpdateAnimation(float delta);
+	// アニメーションの変更
+	// param@ animName: 変更先アニメーション名
+	virtual void ChangeAnimation(std::string animName);
 
 	// 方向変更
 	virtual void ChangeDirection(void) = 0;
-	// 初期アニメーション登録
+	// アニメーション登録
 	virtual void AnimRegistrator(void) = 0;
 	// オブジェクトが死んだらdeleteFlagをtrueにする
 	virtual void Delete(void)
@@ -47,6 +50,8 @@ public:
 	{
 		return pos_;
 	}
+
+
 
 private:
 

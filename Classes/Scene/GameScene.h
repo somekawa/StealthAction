@@ -37,6 +37,8 @@
 class ActionRect;
 using SharedRect = std::vector<std::shared_ptr<ActionRect>>;
 
+// 単語の綴りが違う
+// 書くなら "zOrder"　ここ要変更！
  // zOlder(奥行き)
 enum class zOlder {
     BG,
