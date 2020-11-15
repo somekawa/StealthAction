@@ -134,13 +134,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>run_blink.png</string>
+            <string>assassin_run_blink.png</string>
             <key>size</key>
             <string>{848,76}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:0f76abcc49876f2e5031b6ebdf675005:52626849f1b423f797a39ae0e3f7c416:452491f664d7605a22d3614ca48f07d9$</string>
             <key>textureFileName</key>
-            <string>run_blink.png</string>
+            <string>assassin_run_blink.png</string>
         </dict>
     </dict>
 </plist>

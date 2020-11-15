@@ -59,13 +59,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>hit_noEffect.png</string>
+            <string>assassin_hit_noEffect.png</string>
             <key>size</key>
             <string>{318,76}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:1c33b68f3690aeed2eac9b3c421f1b0b:3e019eff584f26328081fb2cb15436ce:ba4ca7313fb55891f1eaf1efec50ef38$</string>
             <key>textureFileName</key>
-            <string>hit_noEffect.png</string>
+            <string>assassin_hit_noEffect.png</string>
         </dict>
     </dict>
 </plist>

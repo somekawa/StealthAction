@@ -59,13 +59,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>fall.png</string>
+            <string>assassin_fall.png</string>
             <key>size</key>
             <string>{318,76}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:7a830ea59b5cb71f0e4649a199f5298d:00223a7bf03790c57a8eaf1742618951:1019844efcac5c9a306b32841df54365$</string>
             <key>textureFileName</key>
-            <string>fall.png</string>
+            <string>assassin_fall.png</string>
         </dict>
     </dict>
 </plist>

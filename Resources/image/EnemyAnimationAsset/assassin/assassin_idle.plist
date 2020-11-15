@@ -134,13 +134,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>idle.png</string>
+            <string>assassin_idle.png</string>
             <key>size</key>
             <string>{848,76}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:f92c50ec29fa9263966482ded7287495:2f898c37bc611bb94df503708aeae198:917f08b16c21adbead6303a7c10c595b$</string>
             <key>textureFileName</key>
-            <string>idle.png</string>
+            <string>assassin_idle.png</string>
         </dict>
     </dict>
 </plist>
