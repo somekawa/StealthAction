@@ -33,7 +33,6 @@ private:
 	void attackMotion(float sp);
 
 	// アニメーション関係
-	void Anim_Registration(cocos2d::Sprite* delta);				// アニメーションの登録
 	std::string actionNow_;
 	std::string actionOld_;
 	DIR _dir_Now;
