@@ -50,8 +50,9 @@ public:
 	{
 		return pos_;
 	}
-
-
+	// これ作る必要あるのか分からないが、皆が使うと思い、作成しました
+	// 整数値で現在のフレーム値を取得
+	virtual const int& GetAnimationFrameInt(void);
 
 private:
 
@@ -68,6 +69,9 @@ protected:
 	std::string currentAnimation_;
 	// ｱﾆﾒｰｼｮﾝしている時はこのﾌﾚｰﾑ変数を加算
 	float animationFrame_;
+	// コライダーボックスの矩形表示や、データを配列から取り出すため、
+	// 上記のアニメーションフレームをint型整数に直したframe値
+	int animationFrame_int_;
 	// アニメーションが終了しているかどうかのフラグ
 	bool isAnimEnd_;
 
@@ -84,5 +88,6 @@ protected:
 
 	std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>collider_;
+
 
 };

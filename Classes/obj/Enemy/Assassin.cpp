@@ -1,5 +1,7 @@
 #include "Assassin.h"
 #include "_Debug/_DebugConOut.h"
+#include "ActionRect.h"
+#include "Loader/CollisionLoader.h"
 #include "anim/AnimMng.h"
 
 USING_NS_CC;
@@ -19,6 +21,39 @@ Assassin::Assassin(cocos2d::Vector<cocos2d::Node*>& player):
 	currentAnimation_ = "idle";
 	this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
 	direction_ = Direction::Left;
+
+	lpCol.Load(collider_, "idle", "assassin");
+	for (auto col : collider_["idle"])
+	{
+		for (int colNum = 0; colNum < col.size(); colNum++)
+		{
+			// colliderBoxを自身の子にする
+			auto draw = col[colNum]->create();
+			// ポジションがおかしい...
+			draw->setAnchorPoint(Vec2(0.0f, 0.0f));
+			draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+			draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+			draw->setTag(col[colNum]->GetData().frame_);
+			this->addChild(draw, 0, "idle");
+		}
+	}
+	//for (auto anim : lpAnimMng.GetAnimations(type_))
+	//{
+	//	// colliderBoxのLoad
+	//	lpCol.Load(collider_, anim, "imp");
+	//	for (auto col : collider_[anim])
+	//	{
+	//		for (int colNum = 0; colNum < col.size(); colNum++)
+	//		{
+	//			// colliderBoxを自身の子にする
+	//			auto draw = col[colNum]->create();
+	//			draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+	//			draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+	//			draw->setTag(colNum);
+	//			this->addChild(draw, 0, anim);
+	//		}
+	//	}
+	//}
 
 	updater_ = &Assassin::Idle;
 
@@ -53,6 +88,20 @@ void Assassin::Action(void)
 void Assassin::update(float delta)
 {
 	Action();
+	// 現在のフレームを整数値で取得
+	animationFrame_int_ = GetAnimationFrameInt();
+	for (auto collider : this->getChildren())
+	{
+		if (currentAnimation_ == collider->getName() &&
+			animationFrame_int_ == collider->getTag())
+		{
+			collider->setVisible(true);
+		}
+		else
+		{
+			collider->setVisible(false);
+		}
+	}
 	// アニメーションの更新
 	UpdateAnimation(delta);
 	//TRACE("Enemy->%s", currentAnimation_);

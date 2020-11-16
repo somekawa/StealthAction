@@ -29,6 +29,7 @@
 #include "obj/Player.h"
 #include "obj/Enemy/Imp.h"
 #include "obj/Enemy/Assassin.h"
+#include "obj/Enemy/TwistedCultist.h"
 #include "PL_HPgauge.h"
 #include "Loader/CollisionLoader.h"
 #include "GameMap.h"
@@ -346,6 +347,9 @@ void Game::AddEnemy(const ActorType& type)
 		break;
 	case ActorType::Assassin:
 		sprite = Assassin::CreateAssassin(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
+		break;
+	case ActorType::TwistedCultist:
+		sprite = TwistedCultist::CreateTwistedCultist(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
 		break;
 	default:
 		break;
