@@ -2,16 +2,19 @@
 #include <vector>
 #include <array>
 #include <map>
+#include "Direction/Direction.h"
 #include "cocos2d.h"
 
 using Edge_List = std::array<cocos2d::Vec2,2>;
 using Vertex_List = std::vector<cocos2d::Vec2>;
+using Lock_List = std::vector<std::pair<cocos2d::Vec2, bool>>;
 
 struct Node_Status
 {
 	cocos2d::Vec2 key;
-	bool link;				//‘¼‚Ìnode‚Æ‚Â‚È‚ª‚Á‚Ä‚¢‚é‚©
-	Vertex_List pair_node;	//Œq‚ª‚Á‚Ä‚¢‚énode‚ÌÀ•W
+	bool lock;				//‘¼‚Ìnode‚Æ‚Â‚È‚ª‚Á‚Ä‚¢‚é‚©
+	Lock_List pair_node;	//Œq‚ª‚Á‚Ä‚¢‚énode‚ÌÀ•W
+	std::list<MapDirection> dirList;
 };
 
 struct Edge_Status
@@ -27,19 +30,21 @@ class Delaunay;
 class MST
 {
 public:
-	MST(std::vector<Edge_Status> data, std::vector<cocos2d::Vec2> vertex,int floor_cnt);
+	MST(std::vector<Edge_Status> data, Vertex_List vertex,std::vector<int> areaData,int floor_cnt);
 	~MST();
 
 	void Choice_Node();
-	std::vector<Edge_List> GetNode();
+	std::vector<Node_Status> GetNode();
 	std::vector<Edge_Status> edge_data;		//edgeî•ñ‚ğ•Û‘¶
 private:
-	Vertex_List vertex_list;
-	std::vector<std::array<cocos2d::Vec2,2>> node;
+	Vertex_List vertexList_;
+	std::vector<int> areaData_;
+	std::vector<Edge_List> node;
+	std::vector<Node_Status> nodeList_;
 
-	Delaunay* delaunay;
+	Delaunay* delaunay_;
 
-	std::random_device seed_gen;
+	std::random_device seedGen_;
 	std::default_random_engine engine;
 	std::uniform_int_distribution<> dist;
 };

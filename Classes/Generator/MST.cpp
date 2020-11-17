@@ -9,13 +9,14 @@ using namespace std;
 
 constexpr auto FLOOR = 150;
 
-MST::MST(std::vector<Edge_Status> data, std::vector<cocos2d::Vec2> vertex, int floor_cnt)
+MST::MST(std::vector<Edge_Status> data, Vertex_List vertex, std::vector<int>areaData, int floor_cnt)
 {
 	std::uniform_int_distribution<>::param_type param_i(0, floor_cnt);
-	engine.seed(seed_gen());
+	engine.seed(/*seedGen_()*/0);
 	dist.param(param_i);
 	edge_data = data;
-	vertex_list = vertex;
+	vertexList_ = vertex;
+	areaData_ = areaData;
 }
 
 MST::~MST()
@@ -25,7 +26,7 @@ MST::~MST()
 void MST::Choice_Node()
 {
 	/*VとAを空集合とする．*/
-	Vertex_List A = vertex_list;
+	Vertex_List A = vertexList_;
 	Vertex_List V;
 	//グラフから任意の頂点をひとつ選び，Vに加える．
 	std::move(A.begin(), A.begin() + 1, std::back_inserter(V));
@@ -38,7 +39,7 @@ void MST::Choice_Node()
 
 
 	//Vがグラフのすべての頂点を含むまで，以下を繰り返す．
-	while (vertex_list.size() > V.size())
+	while (vertexList_.size() > V.size())
 	{
 		for (auto u : V)
 		{
@@ -94,11 +95,11 @@ void MST::Choice_Node()
 			}
 		}
 	}
-	std::vector<Node_Status>nodeList;
 
+	int i = 0;
 	int a = 0;
 	std::vector<int>alist;
-	for (auto& v : vertex_list)
+	for (auto& v : vertexList_)
 	{
 		a = 0;
 		Node_Status nodeA;
@@ -112,11 +113,11 @@ void MST::Choice_Node()
 					a++;
 					if (edge.pair_vertex[0] != v)
 					{
-						nodeA.pair_node.push_back(edge.pair_vertex[0]);
+						nodeA.pair_node.push_back(std::make_pair(edge.pair_vertex[0], true));
 					}
 					else
 					{
-						nodeA.pair_node.push_back(edge.pair_vertex[1]);
+						nodeA.pair_node.push_back(std::make_pair(edge.pair_vertex[1], true));
 					}
 				}
 			}
@@ -130,8 +131,9 @@ void MST::Choice_Node()
 			Choice_Node();
 
 		}
-		nodeList.push_back(nodeA);
+		nodeList_.push_back(nodeA);
 		alist.push_back(a);
+		i++;
 	}
 	//std::shuffle(edge_data.begin(), edge_data.end(), engine);
 	std::uniform_int_distribution<>::param_type param_i2(0, 10);
@@ -142,21 +144,33 @@ void MST::Choice_Node()
 		{
 			continue;
 		}
-		for (int i = 0; i < vertex_list.size(); i++)
+		for (int i = 0; i < vertexList_.size(); i++)
 		{
-			for (int j = i + 1; j < vertex_list.size(); j++)
+			for (int j = i+1; j < vertexList_.size(); j++)
 			{
-				
-				Edge_List uvEdge = { vertex_list[i], vertex_list[j] };
+
+				Edge_List uvEdge = { vertexList_[i], vertexList_[j] };
 				if ((edge.pair_vertex[0] == uvEdge[0] && edge.pair_vertex[1] == uvEdge[1])
 					|| (edge.pair_vertex[0] == uvEdge[1] && edge.pair_vertex[1] == uvEdge[0]))
 				{
-					
-					if (alist[i]  < 3 && alist[j] < 3 && dist(engine) <= 1)
+
+					if (alist[i] < 3 && alist[j] < 3 && dist(engine) <= 1)
 					{
 						alist[i]++;
 						alist[j]++;
 						//edge.used = true;
+						for (auto& status : nodeList_)
+						{
+							if (status.key == edge.pair_vertex[0] )
+							{
+								status.pair_node.push_back(std::make_pair(edge.pair_vertex[1], true));
+
+							}
+							if (status.key == edge.pair_vertex[1])
+							{
+								status.pair_node.push_back(std::make_pair(edge.pair_vertex[0], true));
+							}
+						}
 						node.emplace_back(edge.pair_vertex);
 					}
 					break;
@@ -164,11 +178,44 @@ void MST::Choice_Node()
 			}
 		}
 	}
+	int idx = 0;
+	for (int i = 0; i < nodeList_.size(); i++)
+	{
+		auto dir = MapDirection::Max;
+
+		for (auto& pair : nodeList_[i].pair_node)
+		{
+			//中心に向かうベクトル
+			auto vec = pair.first - nodeList_[i].key;
+			auto nvec1 = Vec2(1, 0)/*nodeList_[i].key / hypot(nodeList_[i].key.x, nodeList_[i].key.y)*/;
+			auto nvec2 = vec / hypot(vec.x, vec.y);
+			auto cos = lpGeometry.Dot(nvec1, nvec2);
+			auto sin = lpGeometry.Cross(nvec1, nvec2);
+			auto rad = atan2(sin, cos);
+			float angle = rad * (180 / std::_Pi);
+			if (angle < 0)
+			{
+				angle = angle + 360;
+			}
+			/*0~7*/
+			dir = static_cast<MapDirection>(static_cast<int>((angle - 1) / 45));
+			
+			nodeList_[i].dirList.push_back(dir);
+
+			for (int j = 0; j < vertexList_.size(); j++)
+			{
+				if (pair.first == vertexList_[j] && areaData_[i] != areaData_[j])
+				{
+					pair.second = false;
+				}
+			}
+		}
+	}
 }
 
-std::vector<std::array<cocos2d::Vec2, 2>> MST::GetNode()
+std::vector<Node_Status> MST::GetNode()
 {
-	return node;
+	return nodeList_;
 }
 
 bool operator==(const Edge_List& edge, const Edge_List& edge1)

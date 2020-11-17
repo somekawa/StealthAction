@@ -14,6 +14,7 @@ public:
 	const float& Dot(cocos2d::Vec2 vec, cocos2d::Vec2 vec2);
 	//ŠOÏ
 	const float& Cross(const cocos2d::Vec2& point, const cocos2d::Vec2& vertex1, const cocos2d::Vec2& vertex2);
+	const float& Cross(const cocos2d::Vec2& vec1, const cocos2d::Vec2& vec2);
 	//”¼Œa‚ğZo
 	const float& Radius_Calculator(const cocos2d::Vec2& size);
 	//distance‚ğ2æ‚µ‚½’l‚ğZo

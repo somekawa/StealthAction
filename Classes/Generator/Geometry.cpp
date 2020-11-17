@@ -12,6 +12,10 @@ const float& Geometry::Cross(const cocos2d::Vec2& point, const cocos2d::Vec2& ve
 	auto vec = point - vertex2;
 	auto vec2 = vertex1 - vertex2;
 	return (vec.x * vec2.y) - (vec2.x * vec.y);
+}const float& Geometry::Cross(const cocos2d::Vec2& vec1, const cocos2d::Vec2& vec2)
+{
+	auto closs = (vec1.x * vec2.y) - (vec1.y * vec2.x);
+	return closs;
 }
 
 const float& Geometry::Radius_Calculator(const cocos2d::Vec2& size)

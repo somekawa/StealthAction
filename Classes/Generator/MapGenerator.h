@@ -1,10 +1,17 @@
 #pragma once
 #include <vector>
+#include <list>
 #include <string>
-constexpr auto FLOOR = 150;
+#include "Direction/Direction.h"
+constexpr auto FLOOR = 10;
+enum class Map
+{
 
+};
 struct Room_Data
 {
+    int area;
+    bool lock;
     cocos2d::Vec2 pos;
     cocos2d::Size size;
     cocos2d::Vec2 offset;
@@ -24,7 +31,8 @@ public:
 
     const std::vector<Room_Data>& GetRoomData(void);
     const Triangle_Data GetDelaunayData(void);
-    const std::vector<std::array<cocos2d::Vec2, 2>> GetMSTNode(void);
+    const std::vector<Node_Status> GetMSTNode(void);
+    const std::list<MapDirection> FloorDir(void);
 private:
     //エリアごとに設定されている中心点の周囲にMapのもととなる部屋を作成.
     bool Create_Room(void);
@@ -32,12 +40,13 @@ private:
     bool DistributedRoom(void);
     bool Create_Delaunay(void);
     bool Create_MST(void);
-    std::vector<Room_Data> _data;
-    std::vector<cocos2d::Vec2> _vertex;
+    std::vector<Room_Data> data_;
+    Vertex_List vertex_;
+    std::vector<int> areaData_;
 
-    std::random_device _seed_gen;
-    std::default_random_engine _engine;
-    std::uniform_real_distribution<> _dist;
+    std::random_device seed_gen_;
+    std::default_random_engine engine_;
+    std::uniform_real_distribution<> dist_;
     std::uniform_int_distribution<> _dist_i;
     std::uniform_int_distribution<> _dist_n;
 
