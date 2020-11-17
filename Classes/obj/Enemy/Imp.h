@@ -10,7 +10,7 @@ public:
 
 	void Action(void)override;
 	void update(float delta)override;
-	virtual void AnimRegistrator(void);
+	void AnimRegistrator(void);
 	//CREATE_FUNC(Imp);
 
 private:

@@ -28,6 +28,8 @@
 #include "CameraManager.h"
 #include "obj/Player.h"
 #include "obj/Enemy/Imp.h"
+#include "obj/Enemy/Assassin.h"
+#include "obj/Enemy/TwistedCultist.h"
 #include "PL_HPgauge.h"
 #include "Loader/CollisionLoader.h"
 #include "GameMap.h"
@@ -135,7 +137,9 @@ bool Game::init()
 	// ˆø”‚ÉÚ‘±‚µ‚Ä‚¢‚éƒvƒŒƒCƒ„[”‚ğ‹Lq
 	AddPlayer(1);
 	// enemyList_‚É“G’Ç‰Á
-	AddEnemy(ActorType::Imp);
+	//AddEnemy(ActorType::Imp);
+	// assassin‚ğ’Ç‰Á
+	AddEnemy(ActorType::Assassin);
 	// “G‚ğ¶¬‚µ‚½‰ñ”(‘½•ª‚¢‚ç‚È‚¢)
 	// “G‚ÌsetName‚·‚é‚½‚ß‚É—pˆÓ‚µ‚½‚à‚Ì
 	generateEnemyNum_ = 0;
@@ -340,6 +344,12 @@ void Game::AddEnemy(const ActorType& type)
 	case ActorType::Imp:
 		// “G‚Ì¶¬
 		sprite = Imp::CreateImp(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
+		break;
+	case ActorType::Assassin:
+		sprite = Assassin::CreateAssassin(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
+		break;
+	case ActorType::TwistedCultist:
+		sprite = TwistedCultist::CreateTwistedCultist(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
 		break;
 	default:
 		break;

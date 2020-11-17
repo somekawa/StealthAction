@@ -48,17 +48,18 @@ Player::Player()
 
 	// アニメーションの登録
 	AnimRegistrator();
-	//Anim_Registration((Sprite*)this);			// アニメーションの登録
 
 	pos_ = { (int)visibleSize.width / 2 + (int)origin.x - 0,(int)visibleSize.height / 2 + (int)origin.y + 200 };
 	setPosition(Vec2(pos_.x, pos_.y));
 	myNo_ = no_;
 	no_++;
 	type_ = ActorType::Player;
-	/*for (auto anim : lpAnimMng.GetAnimations(type_))
+
+	// ファイル名を変更してこのLoadが使えるようにしないといけない
+	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		lpCol.Load(collider_, anim, "player");
-	}*/
+	}
 	//for (auto anim : lpAnimMng.GetAnimations(type_))
 	//{
 	//	auto a = lpAnimMng.GetFrameNum(type_, anim);
@@ -316,40 +317,6 @@ void Player::attackMotion(float sp)
 	}
 }
 
-// ("plistの名前","plistにあるpngの名前","つけたい名前",開始番号, 終了番号,反転するか,描画速度)
-void Player::Anim_Registration(Sprite* delta)
-{
-	// アニメーションをキャッシュに登録
-	// non
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "NON", 6, (float)0.3, ActorType::Player);
-
-	// idle
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Look_Intro", 6, (float)0.3, ActorType::Player);
-
-	// run
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Run",9, (float)0.08, ActorType::Player);
-
-	// fall
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Fall", 3, (float)1.0, ActorType::Player);
-
-	// jump
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jump", 3, (float)0.05, ActorType::Player);
-
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jumping", 3, (float)0.05, ActorType::Player);
-
-	// AttackFirst
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackFirst", 9, (float)0.05, ActorType::Player);
-
-	// AttackSecond
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackSecond", 9, (float)0.08, ActorType::Player);
-
-	// wallslide
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Wall_Slide", 3, (float)0.3, ActorType::Player);
-
-	lpAnimMng.InitAnimation(*delta, ActorType::Player,"NON");
-
-}
-
 // 現在のアクション情報を取得する
 std::string Player::GetAction(void)
 {
@@ -370,31 +337,31 @@ void Player::SetDir(DIR dir)
 void Player::AnimRegistrator(void)
 {
 	// アニメーションをキャッシュに登録
-// non
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "NON", 6, (float)0.3, ActorType::Player);
+	// non
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "NON", 6, (float)0.3, ActorType::Player,false);
 
 	// idle
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Look_Intro", 6, (float)0.3, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Look_Intro", 6, (float)0.3, ActorType::Player, false);
 
 	// run
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Run", 9, (float)0.08, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Run", 9, (float)0.08, ActorType::Player, false);
 
 	// fall
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Fall", 3, (float)1.0, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Fall", 3, (float)1.0, ActorType::Player, false);
 
 	// jump
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jump", 3, (float)0.05, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Jump", 3, (float)0.05, ActorType::Player, false);
 
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Jumping", 3, (float)0.05, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Jumping", 3, (float)0.05, ActorType::Player, false);
 
 	// AttackFirst
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackFirst", 9, (float)0.05, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "AttackFirst", 9, (float)0.05, ActorType::Player, false);
 
 	// AttackSecond
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "AttackSecond", 9, (float)0.08, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "AttackSecond", 9, (float)0.08, ActorType::Player, false);
 
 	// wallslide
-	lpAnimMng.addAnimationCache("image/PlayerAnimetionAsset/Light/Light", "Wall_Slide", 3, (float)0.3, ActorType::Player);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Wall_Slide", 3, (float)0.3, ActorType::Player, false);
 
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "NON");
 }

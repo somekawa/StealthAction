@@ -57,7 +57,7 @@ public:
 	ActionRect(Vector2I begin, Vector2I end, char type, int frame);
 	~ActionRect();
 
-	cocos2d::DrawNode* CreateCollider(void);
+	ActionRect* CreateCollider(void);
 
 	void Set(Vector2I begin, Vector2I end, char type, int frame, std::string actionName);
 

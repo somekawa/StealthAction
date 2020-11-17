@@ -25,10 +25,15 @@ public:
 	// 更新処理
 	virtual void Update(void);
 	virtual void update(float delta) = 0;
+	// アニメーションの更新
+	virtual void UpdateAnimation(float delta);
+	// アニメーションの変更
+	// param@ animName: 変更先アニメーション名
+	virtual void ChangeAnimation(std::string animName);
 
 	// 方向変更
 	virtual void ChangeDirection(void) = 0;
-	// 初期アニメーション登録
+	// アニメーション登録
 	virtual void AnimRegistrator(void) = 0;
 	// オブジェクトが死んだらdeleteFlagをtrueにする
 	virtual void Delete(void)
@@ -45,6 +50,9 @@ public:
 	{
 		return pos_;
 	}
+	// これ作る必要あるのか分からないが、皆が使うと思い、作成しました
+	// 整数値で現在のフレーム値を取得
+	virtual const int& GetAnimationFrameInt(void);
 
 private:
 
@@ -61,6 +69,12 @@ protected:
 	std::string currentAnimation_;
 	// ｱﾆﾒｰｼｮﾝしている時はこのﾌﾚｰﾑ変数を加算
 	float animationFrame_;
+	// コライダーボックスの矩形表示や、データを配列から取り出すため、
+	// 上記のアニメーションフレームをint型整数に直したframe値
+	int animationFrame_int_;
+	// アニメーションが終了しているかどうかのフラグ
+	bool isAnimEnd_;
+
 	// 画像反転のフラグ
 	cocos2d::FlipX* flipFlag_;
 
@@ -74,5 +88,6 @@ protected:
 
 	std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>collider_;
+
 
 };
