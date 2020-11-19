@@ -11,6 +11,7 @@
 class Input;
 class Collider;
 class ActionRect;
+class Gravity;
 
 class Actor :
 	public cocos2d::Sprite
@@ -50,6 +51,8 @@ public:
 	{
 		return pos_;
 	}
+
+	virtual void SetPos(Vector2I pos);
 	// これ作る必要あるのか分からないが、皆が使うと思い、作成しました
 	// 整数値で現在のフレーム値を取得
 	virtual const int& GetAnimationFrameInt(void);
@@ -88,6 +91,6 @@ protected:
 
 	std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>collider_;
-
-
+	// 重力
+	std::unique_ptr<Gravity> gravity_;
 };

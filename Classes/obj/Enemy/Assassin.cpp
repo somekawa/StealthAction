@@ -1,4 +1,5 @@
 #include "Assassin.h"
+#include "Gravity.h"
 #include "_Debug/_DebugConOut.h"
 #include "ActionRect.h"
 #include "Loader/CollisionLoader.h"
@@ -9,7 +10,7 @@ USING_NS_CC;
 Assassin::Assassin(cocos2d::Vector<cocos2d::Node*>& player):
 	Enemy(player)
 {
-	pos_ = { 980,200 };
+	pos_ = { 980,500 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
 	this->setScale(2.0f);
 	flipFlag_ = FlipX::create(true);
@@ -23,37 +24,37 @@ Assassin::Assassin(cocos2d::Vector<cocos2d::Node*>& player):
 	direction_ = Direction::Left;
 
 	lpCol.Load(collider_, "idle", "assassin");
-	for (auto col : collider_["idle"])
-	{
-		for (int colNum = 0; colNum < col.size(); colNum++)
-		{
-			// colliderBoxを自身の子にする
-			auto draw = col[colNum]->create();
-			// ポジションがおかしい...
-			draw->setAnchorPoint(Vec2(0.0f, 0.0f));
-			draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-			draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
-			draw->setTag(col[colNum]->GetData().frame_);
-			this->addChild(draw, 0, "idle");
-		}
-	}
-	//for (auto anim : lpAnimMng.GetAnimations(type_))
+	//for (auto col : collider_["idle"])
 	//{
-	//	// colliderBoxのLoad
-	//	lpCol.Load(collider_, anim, "imp");
-	//	for (auto col : collider_[anim])
+	//	for (int colNum = 0; colNum < col.size(); colNum++)
 	//	{
-	//		for (int colNum = 0; colNum < col.size(); colNum++)
-	//		{
-	//			// colliderBoxを自身の子にする
-	//			auto draw = col[colNum]->create();
-	//			draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-	//			draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
-	//			draw->setTag(colNum);
-	//			this->addChild(draw, 0, anim);
-	//		}
+	//		// colliderBoxを自身の子にする
+	//		auto draw = col[colNum]->create();
+	//		// ポジションがおかしい...
+	//		draw->setAnchorPoint(Vec2(0.0f, 0.0f));
+	//		draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+	//		draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+	//		draw->setTag(col[colNum]->GetData().frame_);
+	//		this->addChild(draw, 0, "idle");
 	//	}
 	//}
+	for (auto anim : lpAnimMng.GetAnimations(type_))
+	{
+		// colliderBoxのLoad
+		lpCol.Load(collider_, anim, "assassin");
+		for (auto col : collider_[anim])
+		{
+			for (int colNum = 0; colNum < col.size(); colNum++)
+			{
+				// colliderBoxを自身の子にする
+				auto draw = col[colNum]->create();
+				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+				draw->setTag(col[colNum]->GetData().frame_);
+				this->addChild(draw, 0, anim);
+			}
+		}
+	}
 
 	updater_ = &Assassin::Idle;
 
@@ -87,6 +88,8 @@ void Assassin::Action(void)
 
 void Assassin::update(float delta)
 {
+	gravity_->ApplyGravityToTarget(delta);
+
 	Action();
 	// 現在のフレームを整数値で取得
 	animationFrame_int_ = GetAnimationFrameInt();

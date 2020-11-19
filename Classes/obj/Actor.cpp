@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include "Scene/GameScene.h"
+#include "Gravity.h"
 
 USING_NS_CC;
 
@@ -12,6 +13,8 @@ Actor::Actor()
 	deleteFlag_ = false;
 	isAnimEnd_ = false;
 	animationFrame_ = 0.0f;
+	// 自分自身を参照で渡し、生成
+	gravity_ = std::make_unique<Gravity>(*this);
 }
 
 Actor::~Actor()
@@ -20,6 +23,7 @@ Actor::~Actor()
 
 void Actor::Update(void)
 {
+
 	Action();
 }
 
@@ -64,6 +68,11 @@ void Actor::ChangeAnimation(std::string animName)
 	isAnimEnd_ = false;
 	// アニメーションのフレーム数を初期値に戻す
 	animationFrame_ = 0.0f;
+}
+
+void Actor::SetPos(Vector2I pos)
+{
+	pos_ = pos;
 }
 
 const int& Actor::GetAnimationFrameInt(void)
