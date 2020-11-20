@@ -17,6 +17,8 @@ private:
 	cocos2d::Vec2 pos_;
 	Sprite* own_;
 	int gateNum_;
+	bool isOpen_;
+	int frame = 0;
 
 };
 

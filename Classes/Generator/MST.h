@@ -7,15 +7,23 @@
 
 using Edge_List = std::array<cocos2d::Vec2,2>;
 using Vertex_List = std::vector<cocos2d::Vec2>;
-using Lock_List = std::vector<std::pair<cocos2d::Vec2, bool>>;
+//using Lock_List = std::pair<cocos2d::Vec2, bool>;
+
+struct NodeChild
+{
+	int childId;
+	cocos2d::Vec2 pair_node;	//Œq‚ª‚Á‚Ä‚¢‚énode‚ÌÀ•W
+	bool lock;	// ˆÚ“®‚Å‚«‚é‚©
+	MapDirection dir;
+};
 
 struct Node_Status
 {
-	cocos2d::Vec2 key;
-	bool lock;				//‘¼‚Ìnode‚Æ‚Â‚È‚ª‚Á‚Ä‚¢‚é‚©
-	Lock_List pair_node;	//Œq‚ª‚Á‚Ä‚¢‚énode‚ÌÀ•W
-	std::list<MapDirection> dirList;
+	int id;
+	cocos2d::Vec2 key;	
+	std::vector<NodeChild>childData;
 };
+
 
 struct Edge_Status
 {

@@ -5,24 +5,19 @@
 #include <memory>
 #include "Direction/Direction.h"
 
-using MapData = std::vector<std::array<cocos2d::TMXTiledMap*, 2>>;
+using MapData = std::vector<cocos2d::TMXTiledMap*>;
 
-enum class MapType
-{
-	OMOTE,
-	URA
-};
 struct MapChild
 {
-	int mapID;	// mapのID
-	int nextParentID;
-	cocos2d::Vec2 nextPos;
+	int mapID;	// 子供のmapID
+	int nextParentID;		// 次の親ID
+	MapDirection gateDir;	// 子供に行くためのゲートの場所
+	cocos2d::Vec2 nextPos;	// 次のプレイヤー座標
 };
 struct MapParentState
 {
-	int mapID;	// mapのID
+	int mapID;	// 親のmapID
 	std::vector<MapChild> child;	// 子供へのアクセス
-	MapType mapType;
 };
 struct MapParentList
 {
@@ -31,34 +26,35 @@ struct MapParentList
 };
 class Gate;
 class Player;
+class MapGenerator;
 class GameMap
 {
 public:
 	GameMap(cocos2d::Layer& layer);
 	// マップ生成をする (表と裏の二つを読む )
-	void AddMap(std::string omotePath, std::string uraPath = "");
+	void AddMap(std::string& mapPath);
 	// オブジェクトレイヤを読み込んで配置
 	void CreateObject();
 	cocos2d::TMXTiledMap* GetMap();
 	void ReplaceMap(Player& player);
-	void SetMapInfo(MapType mapType);
 	void update(Player& pos);
 	int GetNextChildID();
 private:
 	// パスからマップ読み込みを行う
-	std::array<cocos2d::TMXTiledMap*, 2> createMapFromPath(std::string& omotePath, std::string& uraPath);
+	cocos2d::TMXTiledMap* createMapFromPath(std::string& mapPath);
 	
 	cocos2d::Layer* mapLayer_;	// マップがあるシーンのレイヤー
-	cocos2d::Layer* objLayer_;	// マップがあるシーンのレイヤー
-	cocos2d::TMXLayer* colisionLayer_;	// マップの当たり判定があるレイヤー
+	cocos2d::Layer* objLayer_;	// マップオブジェクトのレイヤー
 
-	std::vector<std::array<std::string, 2>>pathList_;
+	std::vector<std::string>pathList_;
 	MapParentList mapParentsList_;
 	
-	//MapType mapType_;
 	MapData mapDatas_;	// 0番が親
-	int nowIdx;
 	std::vector<Gate*>objs_;
 	int nextId;
+	int frame_;
+	std::array<cocos2d::Vec2, static_cast<int>(MapDirection::Max)>nextPosTbl;
+	std::shared_ptr<MapGenerator>mapGenerator_;
+
 };
 

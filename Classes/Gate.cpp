@@ -12,6 +12,7 @@ Gate::Gate(Vec2 pos, int gateNum)
 	own_->setScaleX(1);
 	own_->setScaleY(2);
 	this->addChild(own_);
+	isOpen_ = false;
 }
 
 
@@ -33,9 +34,11 @@ Gate* Gate::CreateGate(cocos2d::Vec2 pos, int gateNum)
 
 void Gate::Update(Player& player)
 {
-
-
-
+	if (frame > 180)
+	{
+		isOpen_ = true;
+	}
+	frame++;
 }
 
 int Gate::GetGateNum()
@@ -45,6 +48,10 @@ int Gate::GetGateNum()
 
 bool Gate::IsHit(Player& player)
 {
+	if (!isOpen_)
+	{
+		return false;
+	}
 	auto gRect = own_->getBoundingBox();
 	auto pRect = player.getBoundingBox();
 

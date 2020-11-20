@@ -20,7 +20,14 @@ struct Room_Data
     cocos2d::Color4F line_color;
     cocos2d::Color4F fill_color;
 };
+
+struct Triangle_Status;
+using Triangle_Data = std::vector<Triangle_Status>;
+using Vertex_List = std::vector<cocos2d::Vec2>;
+
+struct Node_Status;
 class Delaunay;
+class MST;
 class MapGenerator
 {
 public:

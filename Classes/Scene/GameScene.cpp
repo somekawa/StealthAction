@@ -171,9 +171,9 @@ bool Game::init()
 	bgSprite2->setPosition(Vec2(720, visibleSize.height / 2));
 	layer_[(int)zOlder::BG]->addChild(bgSprite2, -1);
 
-	auto bgMiddle = Sprite::create("image/Environment/middleground-big.png");
+	/*auto bgMiddle = Sprite::create("image/Environment/middleground-big.png");
 	bgMiddle->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);
+	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);*/
 
 	// ボタンテスト用
 	// 攻撃ボタン
@@ -237,9 +237,9 @@ bool Game::init()
 	
 	// カメラ作成
 	cameraManager_ = std::make_shared<CameraManager>();
-	auto size = Director::getInstance()->getWinSize();
-	cameraManager_->AddCamera(*this, size,CameraType::PLAYER1, CameraFlag::USER1);
-	cameraManager_->AddCamera(*this, size, CameraType::UI, CameraFlag::USER2);
+	
+	cameraManager_->AddCamera(*this, visibleSize,CameraType::PLAYER1, CameraFlag::USER1);
+	cameraManager_->AddCamera(*this, visibleSize, CameraType::UI, CameraFlag::USER2);
 
 	layer_[static_cast<int>(zOlder::CHAR_PL)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->setCameraMask(static_cast<int>(CameraFlag::USER1));

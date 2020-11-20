@@ -23,3 +23,4 @@ enum class MapDirection
 	E_Down,	// “Œ‚Ì‰º	‰E‘¤‚Ì‰º	315`359
 	Max
 };
+//0,3 : 1, 6 :  2,5 : 4,7

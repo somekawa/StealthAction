@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 #include <vector>
-using MapData = std::vector<std::array<cocos2d::TMXTiledMap*, 2>>;
+using MapData = std::vector<cocos2d::TMXTiledMap*>;
 
 class Player;
 struct MapParentList;

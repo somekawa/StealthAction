@@ -71,13 +71,15 @@ void LoadScene::update(float delta)
 	auto mapState_ = mapParentList_.mapParents[mapParentList_.nowID];
 	auto selectNextMap = mapData_[static_cast<int>(mapState_.child[childId].mapID)];
 	auto nowMap = mapData_[static_cast<int>(mapState_.mapID)];
-	auto mapType = static_cast<int>(mapState_.mapType);
-	selectNextMap[mapType]->setVisible(true);
-	selectNextMap[mapType]->setName("MapData");
-	nowMap[mapType]->setVisible(false);
-	nowMap[mapType]->setName("");
+	if (nowMap != selectNextMap)
+	{
+		selectNextMap->setVisible(true);
+		selectNextMap->setName("MapData");
+		nowMap->setVisible(false);
+		nowMap->setName("");
+	}
 	mapParentList_.nowID = static_cast<int>(mapState_.child[childId].nextParentID);
-	player_.setPosition(200, 300);
+	player_.setPosition(mapState_.child[childId].nextPos);
 	gameMap_->CreateObject();
 	//mapState_.mapID;
 	director->popScene();
