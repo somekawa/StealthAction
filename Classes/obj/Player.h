@@ -2,12 +2,15 @@
 #include <array>
 #include <memory>
 #include "cocos2d.h"
+#include "Direction/Direction.h"
 #include "anim/AnimMng.h"
 #include "anim/ActionCtl.h"
 #include "input/OPRT_state.h"
 #include "module/ActModule.h"
 #include "obj/Actor.h"
 #include "obj/Player.h"
+
+#define AttackMove 60
 
 class Player : public Actor
 {
@@ -16,31 +19,23 @@ public:
 
 	~Player();
 
-	void Action(void);
-	void ChangeDirection(void);
-
-	void update(float sp);
+	void Action(void) override;
+	void ChangeDirection(void) override;
+	void update(float sp) override;
+	void AnimRegistrator(void) override;						// アニメーションの登録
 
 	std::string GetAction(void);								// 現在のアクション情報を取得する
 	void SetAction(std::string action);							// 現在のアクション状態をセットする
-	void SetDir(DIR dir);										// 現在の方向をセットする
-	// アニメーションの登録
-	void AnimRegistrator(void);
+	void SetDir(Direction dir);									// 現在の方向をセットする
 	static Player* CreatePlayer(void);
 private:
 	//CREATE_FUNC(Player);
 
-	void attackMotion(float sp);
+	void attackMotion(float sp);								// 攻撃モーションの設定
 
 	// アニメーション関係
 	std::string actionNow_;
 	std::string actionOld_;
-	DIR _dir_Now;
-
-	cocos2d::FlipX* _flip;									    // 画像反転処理
-	bool _flipFlag = false;										// 反転するかのフラグ
-
-	bool _AnimOneStopFlag = false;								// アニメーションを1回で止める(jumpの時とか)
 
 	// OPRT関係
 	OPRT_state* _oprtState;										// OPRT_stateのものを呼び出す
@@ -51,30 +46,10 @@ private:
 	void actModuleRegistration(void);							// モジュールの登録
 	ActionCtl _actCtl = ActionCtl();							// ActionCtlを呼び出す
 
-	// プレイヤー関係
-	void CharCallData(cocos2d::Director* director, const char * charName);		// playerの情報
-	void OutOfMapCheck(void);									// playerがmapの範囲外に出ていないかの確認
-	cocos2d::TMXLayer* _player;									// playerのキャラデータ
-	cocos2d::Vec2 _outOfMapCheckVel = { 0,0 };					// OutOfMapCheckに使う
-	cocos2d::Vec2 _plPos;										// playerのpos
-	cocos2d::Vec2 _collisionBuckSpeed;							// 当たり判定で使う押し返す用の値
-	cocos2d::Vec2 _gravity  = { 0.0f,0.0f };					// 重力
-	cocos2d::Vec2 _velocity = { 0.0f,0.0f };					// 速度
-	bool _jumpFlg = false;										// ジャンプしているか判定
-
-	// マップ関係
-	void CollisionMapCallData(cocos2d::Director* director, const char* mapName, const char* collisionName);	// 当たり判定したいmapの情報
-	cocos2d::TMXLayer* _CollisionData;							// コリジョンマップのデータ
-	const int _tileChip = 48;									// 1タイル当たりの大きさ
-	cocos2d::Size _ColLayerSize;								// コリジョンマップの大きさ
-
-	float cntTest = 0.0f;
-	cocos2d::Vec2 _attackCheckL;
-	cocos2d::Vec2 _attackCheckR;
-
 	static int no_;
 	int myNo_;
 
-	bool attackflg = false;
-	float oldPos_;
+	float oldPos_;												// 攻撃モーション実行前の座標を保管する
+	bool oldPosOnceKeepFlg_;									// 攻撃モーション実行前の座標を保管を1度だけの実行にするためのフラグ
+	bool SecondAttackFlg_;										// 2撃目攻撃モーションフラグ
 };

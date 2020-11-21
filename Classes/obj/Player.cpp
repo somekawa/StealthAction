@@ -2,7 +2,6 @@
 #include "PL_HPgauge.h"
 #include "Player.h"
 #include "anim/ActionCtl.h"
-#include "input/DIR_ID.h"
 #include "ActionRect.h"
 #include "_Debug/_DebugConOut.h"
 #include "Loader/CollisionLoader.h"
@@ -41,10 +40,7 @@ Player::Player()
 
 	actionNow_ = "Look_Intro";
 	actionOld_ = "Run";
-	_dir_Now = DIR::RIGHT;
-
-	_attackCheckL = Vec2(0, 0);
-	_attackCheckR = Vec2(0, 0);
+	direction_ = Direction::Right;
 
 	// アニメーションの登録
 	AnimRegistrator();
@@ -54,6 +50,9 @@ Player::Player()
 	myNo_ = no_;
 	no_++;
 	type_ = ActorType::Player;
+	oldPos_ = 0;
+	oldPosOnceKeepFlg_ = false;
+	SecondAttackFlg_ = false;
 
 	// ファイル名を変更してこのLoadが使えるようにしないといけない
 	for (auto anim : lpAnimMng.GetAnimations(type_))
@@ -98,8 +97,6 @@ void Player::update(float sp)
 	// 実行する入力先(keyかtouch)のupdateへ移動
 	_oprtState->update();	
 
-	attackMotion(sp);
-
 	//if (_action_Now == ACTION::JUMPING)
 	//{
 	//	cntTest ++;
@@ -138,7 +135,6 @@ void Player::update(float sp)
 	//		}
 	//	}
 	//}
-
 
 	// 敵との当たり判定テスト
 	//if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
@@ -187,32 +183,28 @@ void Player::update(float sp)
 	// 範囲外check
 	//OutOfMapCheck();	
 
+	
 	if (actionNow_ == "Wall_Slide")
 	{
-		if (_dir_Now == DIR::LEFT)
+		if (direction_ == Direction::Left)
 		{
 			// アンカーポイント右端
 			this->setAnchorPoint(Vec2(1.0f, 0.0f));
 		}
-		else if (_dir_Now == DIR::RIGHT)
+		else if (direction_ == Direction::Right)
 		{
 			// アンカーポイント左端
 			this->setAnchorPoint(Vec2(0.0f, 0.0f));
 		}
 	}
 
-	//if (actionNow_ == "Look_Intro")
-	//{
-	//	this->setAnchorPoint(Vec2(0.5f, 0.0f));
-	//}
-
+	attackMotion(sp);
 
 	if (actionNow_ != actionOld_)
 	{
 		lpAnimMng.ChangeAnimation(*this, actionNow_, true, ActorType::Player);
 	}
 	actionOld_ = actionNow_;
-
 }
 
 void Player::Action(void)
@@ -227,8 +219,28 @@ void Player::ChangeDirection(void)
 
 void Player::attackMotion(float sp)
 {
+	auto lambda = [&](int sign) {
+		//if (direction_ == Direction::Left)
+		//{
+		//	// アンカーポイント右端
+		//	//this->setAnchorPoint(Vec2(1.0f, 0.0f));
+		//	this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - AttackMove, this->getPosition().y)));
+		//	this->setPosition(Vec2(oldPos_ - AttackMove, this->getPosition().y));
+		//}
+		//else if (direction_ == Direction::Right)
+		//{
+		//	// アンカーポイント左端
+		//	//this->setAnchorPoint(Vec2(0.0f, 0.0f));
+		//	this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + AttackMove, this->getPosition().y)));
+		//	this->setPosition(Vec2(oldPos_ + AttackMove, this->getPosition().y));
+		//}
+
+		this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + (AttackMove * sign), this->getPosition().y)));
+		this->setPosition(Vec2(oldPos_ + (AttackMove * sign), this->getPosition().y));
+	};
+
 	// flagがtrueの時は強制的にAttackSecondへ切替
-	if (attackflg)
+	if (SecondAttackFlg_)
 	{
 		actionNow_ = "AttackSecond";
 	}
@@ -236,7 +248,7 @@ void Player::attackMotion(float sp)
 	if (actionNow_ == "AttackFirst" || actionOld_ == "AttackFirst")
 	{
 		// フレーム数の取得テスト
-		//auto a = cntTest * 100;
+		//auto a = animationFrame_ * 100;
 		//auto b = 0.05 * 100;
 		//auto c = (int)a / (int)b;
 		//TRACE("%d\n", c);
@@ -246,27 +258,24 @@ void Player::attackMotion(float sp)
 		auto keyO = _oprtState->GetOldData();
 		if (keyN[1] && !keyO[1])
 		{
-			attackflg = true;
+			SecondAttackFlg_ = true;
 		}
 
-		cntTest += sp;
-		if (cntTest <= 0.5f)
+		animationFrame_ += sp;
+		if (animationFrame_ <= 0.5f)
 		{
-			if (_dir_Now == DIR::LEFT)
+			if (!oldPosOnceKeepFlg_)
 			{
-				// アンカーポイント右端
-				this->setAnchorPoint(Vec2(1.0f, 0.0f));
+				oldPos_ = this->getPosition().x;
+				oldPosOnceKeepFlg_ = true;
 			}
-			else if (_dir_Now == DIR::RIGHT)
-			{
-				// アンカーポイント左端
-				this->setAnchorPoint(Vec2(0.0f, 0.0f));
-			}
+
+			direction_ == Direction::Left ? lambda(-1) : lambda(1);
 			actionNow_ = "AttackFirst";
 		}
 		else
 		{
-			if (!attackflg)
+			if (!SecondAttackFlg_)
 			{
 				actionNow_ = "Look_Intro";
 			}
@@ -275,7 +284,8 @@ void Player::attackMotion(float sp)
 				actionNow_ = "AttackSecond";
 				oldPos_ = this->getPosition().x;
 			}
-			cntTest = 0.0f;
+			animationFrame_ = 0.0f;
+			oldPosOnceKeepFlg_ = false;
 
 			// HP減少のテストコード
 			// 攻撃するたびにHPが10減るようにしている
@@ -285,34 +295,19 @@ void Player::attackMotion(float sp)
 		}
 	}
 
-	if ((actionNow_ == "AttackSecond" && attackflg))
+	if ((actionNow_ == "AttackSecond" && SecondAttackFlg_))
 	{
-		cntTest += sp;
-		if (attackflg && cntTest <= 0.8f)
+		animationFrame_ += sp;
+		if (SecondAttackFlg_ && animationFrame_ <= 0.8f)
 		{
-			if (_dir_Now == DIR::LEFT)
-			{
-				// アンカーポイント右端
-				this->setAnchorPoint(Vec2(1.0f, 0.0f));
-				// 踏み込み移動
-				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - 30, this->getPosition().y)));
-				this->setPosition(Vec2(oldPos_ - 30, this->getPosition().y));
-			}
-			else if (_dir_Now == DIR::RIGHT)
-			{
-				// アンカーポイント左端
-				this->setAnchorPoint(Vec2(0.0f, 0.0f));
-				// 踏み込み移動
-				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + 30, this->getPosition().y)));
-				this->setPosition(Vec2(oldPos_ + 30, this->getPosition().y));
-			}
+			direction_ == Direction::Left ? lambda(-1) : lambda(1);
 			actionNow_ = "AttackSecond";
 		}
 		else
 		{
-			attackflg = false;
+			SecondAttackFlg_ = false;
 			actionNow_ = "Look_Intro";
-			cntTest = 0.0f;
+			animationFrame_ = 0.0f;
 		}
 	}
 }
@@ -329,9 +324,9 @@ void Player::SetAction(std::string action)
 	actionNow_ = action;
 }
 
-void Player::SetDir(DIR dir)
+void Player::SetDir(Direction dir)
 {
-	_dir_Now = dir;
+	direction_ = dir;
 }
 
 void Player::AnimRegistrator(void)
@@ -382,53 +377,6 @@ Player* Player::CreatePlayer()
 	}
 }
 
-// playerがmapの範囲外に出ていないかの確認
-void Player::OutOfMapCheck(void)
-{
-	auto director = Director::getInstance();
-	CharCallData(director, "player");
-	CollisionMapCallData(director, "MapData", "col");
-	_plPos = { _player->getPosition()+ _outOfMapCheckVel };
-	_ColLayerSize = _CollisionData->getLayerSize();
-
-	// 上
-	if (_plPos.y > _ColLayerSize.height * _tileChip - (_tileChip * 2))
-	{
-		setPosition(getPosition().x , _ColLayerSize.height * _tileChip - (_tileChip * 2));
-	}
-
-	// 下
-	if (_plPos.y < 90)
-	{
-		setPosition(getPosition() + Vec2{ 0.0f,5.0f });
-	}
-
-	// 左
-	if (_plPos.x < 40)
-	{
-		setPosition(getPosition() - _outOfMapCheckVel+ Vec2{ 5.0f,0.0f });
-	}
-
-	// 右
-	if (_plPos.x > _ColLayerSize.width  * _tileChip - 70)
-	{
-		setPosition(getPosition() - _outOfMapCheckVel - Vec2{ 5.0f,0.0f });
-	}
-}
-
-// playerの情報
-void Player::CharCallData(cocos2d::Director * director, const char * charName)
-{
-	// 情報の辿り方(Director->GameScene->CharLayer->PlSprite)
-	_player = (TMXLayer*)director->getRunningScene()->getChildByName("CHAR_LAYER")->getChildByName(charName);
-}
-
-// 当たり判定したいmapの情報
-void Player::CollisionMapCallData(cocos2d::Director * director, const char * mapName, const char * collisionName)
-{
-	// 情報の辿り方(Director->GameScene->bgLayer->TMXのmapData->さらにその中のcollisionレイヤー)
-	_CollisionData = (TMXLayer*)director->getRunningScene()->getChildByName("BG_BACK")->getChildByName(mapName)->getChildByName(collisionName);
-}
 
 void Player::actModuleRegistration(void)
 {
@@ -651,3 +599,5 @@ void Player::actModuleRegistration(void)
 		_actCtl.ActCtl("左壁スライド", act);
 	}
 }
+
+// アンカーポイントを変更せずに攻撃モーション追加しないといけない

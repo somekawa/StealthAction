@@ -1,7 +1,6 @@
 #pragma once
 
 #include "cocos2d.h"
-#include "input/DIR_ID.h"
 
 enum class OPRT_TYPE {
 	KEY,

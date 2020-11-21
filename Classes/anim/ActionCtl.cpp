@@ -207,11 +207,11 @@ void ActionCtl::update(float sp,Sprite& sprite)
 		// プレイヤー向き変更(アンカーポイントの変更に必要)
 		if (actCheck("左向き"))
 		{
-			((Player&)sprite).SetDir(DIR::LEFT);
+			((Player&)sprite).SetDir(Direction::Left);
 		}
 		else if (actCheck("右向き"))
 		{
-			((Player&)sprite).SetDir(DIR::RIGHT);
+			((Player&)sprite).SetDir(Direction::Right);
 		}
 	}
 
