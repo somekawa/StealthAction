@@ -27,6 +27,7 @@ public:
 	std::string GetAction(void);								// 現在のアクション情報を取得する
 	void SetAction(std::string action);							// 現在のアクション状態をセットする
 	void SetDir(Direction dir);									// 現在の方向をセットする
+	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
 	static Player* CreatePlayer(void);
 private:
 	//CREATE_FUNC(Player);

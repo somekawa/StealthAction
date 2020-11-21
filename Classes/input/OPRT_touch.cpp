@@ -231,6 +231,16 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 	delta->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, delta);
 }
 
+void OPRT_touch::KeyReset(void)
+{
+	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+	{
+		_keyData._input[key] = false;
+		_keyData._data[key] = false;
+		_keyData._oldData[key] = false;
+	}
+}
+
 const std::array<bool, static_cast<int>(BUTTON::MAX)>& OPRT_touch::GetNowData(void)
 {
 	return _keyData._data;

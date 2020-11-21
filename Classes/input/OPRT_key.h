@@ -22,6 +22,7 @@ struct OPRT_key : OPRT_state
 	void keyflg(cocos2d::Sprite* sprite);		// ボタンを押したとき・離したときの処理
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetNowData(void);	// dataの情報を返す(現在はplayerで使っている)
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetOldData(void);
+	void KeyReset(void);						// マップ切替時のキーリセット
 private:
 	KeyData _keyData;
 };

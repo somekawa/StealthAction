@@ -49,6 +49,8 @@ struct OPRT_touch : OPRT_state
 	void touchesflg(cocos2d::Sprite* delta);
 	std::vector<Touches> touchVectors;
 	bool moveFlag;
+
+	void KeyReset(void);						// マップ切替時のキーリセット
 private:
 	KeyData _keyData;
 };

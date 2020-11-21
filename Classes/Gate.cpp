@@ -57,6 +57,8 @@ bool Gate::IsHit(Player& player)
 
 	if (gRect.intersectsRect(pRect))
 	{
+		// ゲートをくぐるときに、キー入力情報の初期化
+		player.KeyInputClear();
 		return true;
 	}
 	return false;

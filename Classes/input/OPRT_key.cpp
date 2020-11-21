@@ -99,3 +99,13 @@ const std::array<bool, static_cast<int>(BUTTON::MAX)> &OPRT_key::GetOldData(void
 {
 	return _keyData._oldData;
 }
+
+void OPRT_key::KeyReset(void)
+{
+	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+	{
+		_keyData._input[key] = false;
+		_keyData._data[key] = false;
+		_keyData._oldData[key] = false;
+	}
+}

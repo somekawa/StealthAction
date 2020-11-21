@@ -40,4 +40,5 @@ struct OPRT_state
 	virtual void update() = 0;							// 純粋仮想関数にしてたときのupdate
 	virtual const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetNowData(void) = 0;
 	virtual const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetOldData(void) = 0;
+	virtual void KeyReset(void) = 0;					// マップ切替時のキーリセット
 };

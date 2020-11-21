@@ -329,6 +329,11 @@ void Player::SetDir(Direction dir)
 	direction_ = dir;
 }
 
+void Player::KeyInputClear(void)
+{
+	_oprtState->KeyReset();
+}
+
 void Player::AnimRegistrator(void)
 {
 	// アニメーションをキャッシュに登録
