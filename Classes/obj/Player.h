@@ -53,4 +53,5 @@ private:
 	float oldPos_;												// 攻撃モーション実行前の座標を保管する
 	bool oldPosOnceKeepFlg_;									// 攻撃モーション実行前の座標を保管を1度だけの実行にするためのフラグ
 	bool SecondAttackFlg_;										// 2撃目攻撃モーションフラグ
+	bool ThirdAttackFlg_ = false;
 };

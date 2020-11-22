@@ -219,7 +219,7 @@ void Player::ChangeDirection(void)
 
 void Player::attackMotion(float sp)
 {
-	auto lambda = [&](int sign) {
+	auto moveLambda = [&](int sign) {
 		//if (direction_ == Direction::Left)
 		//{
 		//	// アンカーポイント右端
@@ -239,10 +239,27 @@ void Player::attackMotion(float sp)
 		this->setPosition(Vec2(oldPos_ + (AttackMove * sign), this->getPosition().y));
 	};
 
+	auto keyLambda = [&](bool flag) {
+		// すでにtrueになってたらtrueで抜ける
+		if (flag)
+		{
+			return true;
+		}
+		if (_oprtState->GetNowData()[1] && !_oprtState->GetOldData()[1] && !flag)
+		{
+			return true;
+		}
+		return false;
+	};
+
 	// flagがtrueの時は強制的にAttackSecondへ切替
 	if (SecondAttackFlg_)
 	{
 		actionNow_ = "AttackSecond";
+	}
+	else if (ThirdAttackFlg_)
+	{
+		actionNow_ = "AttackThird";
 	}
 
 	if (actionNow_ == "AttackFirst" || actionOld_ == "AttackFirst")
@@ -254,12 +271,17 @@ void Player::attackMotion(float sp)
 		//TRACE("%d\n", c);
 
 		// 攻撃中にもう一度攻撃ボタンが押されたらAttackFirstが終了後、AttackSecondへ移行するようにする
-		auto keyN = _oprtState->GetNowData();
-		auto keyO = _oprtState->GetOldData();
-		if (keyN[1] && !keyO[1])
-		{
-			SecondAttackFlg_ = true;
-		}
+		//auto keyN = _oprtState->GetNowData();
+		//auto keyO = _oprtState->GetOldData();
+		//if (keyN[1] && !keyO[1])
+		//{
+		//	if (!SecondAttackFlg_)
+		//	{
+		//		SecondAttackFlg_ = true;
+		//	}
+		//}
+
+		SecondAttackFlg_ = keyLambda(SecondAttackFlg_);
 
 		animationFrame_ += sp;
 		if (animationFrame_ <= 0.5f)
@@ -270,7 +292,7 @@ void Player::attackMotion(float sp)
 				oldPosOnceKeepFlg_ = true;
 			}
 
-			direction_ == Direction::Left ? lambda(-1) : lambda(1);
+			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
 			actionNow_ = "AttackFirst";
 		}
 		else
@@ -297,15 +319,53 @@ void Player::attackMotion(float sp)
 
 	if ((actionNow_ == "AttackSecond" && SecondAttackFlg_))
 	{
+		// 攻撃中にもう一度攻撃ボタンが押されたらAttackSecondが終了後、AttackThirdへ移行するようにする
+		//auto keyN = _oprtState->GetNowData();
+		//auto keyO = _oprtState->GetOldData();
+		//if (keyN[1] && !keyO[1])
+		//{
+		//	if (!ThirdAttackFlg_)
+		//	{
+		//		ThirdAttackFlg_ = true;
+		//	}
+		//}
+
+		ThirdAttackFlg_ = keyLambda(ThirdAttackFlg_);
+
 		animationFrame_ += sp;
 		if (SecondAttackFlg_ && animationFrame_ <= 0.8f)
 		{
-			direction_ == Direction::Left ? lambda(-1) : lambda(1);
+			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
 			actionNow_ = "AttackSecond";
 		}
 		else
 		{
+			if (!ThirdAttackFlg_)
+			{
+				actionNow_ = "Look_Intro";
+			}
+			else
+			{
+				actionNow_ = "AttackThird";
+				oldPos_ = this->getPosition().x;
+			}
+
 			SecondAttackFlg_ = false;
+			animationFrame_ = 0.0f;
+		}
+	}
+
+	if ((actionNow_ == "AttackThird" && ThirdAttackFlg_))
+	{
+		animationFrame_ += sp;
+		if (ThirdAttackFlg_ && animationFrame_ <= 0.8f)
+		{
+			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
+			actionNow_ = "AttackThird";
+		}
+		else
+		{
+			ThirdAttackFlg_ = false;
 			actionNow_ = "Look_Intro";
 			animationFrame_ = 0.0f;
 		}
@@ -360,6 +420,9 @@ void Player::AnimRegistrator(void)
 	// AttackSecond
 	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "AttackSecond", 9, (float)0.08, ActorType::Player, false);
 
+	// AttackThird
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "AttackThird", 10, (float)0.08, ActorType::Player, false);
+
 	// wallslide
 	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Wall_Slide", 3, (float)0.3, ActorType::Player, false);
 
@@ -402,6 +465,7 @@ void Player::actModuleRegistration(void)
 		//act.whiteList.emplace_back(ACTION::JUMPING);
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		act.blackList.emplace_back("Wall_Slide");
 		_actCtl.ActCtl("右移動", act);
 	}
@@ -423,6 +487,7 @@ void Player::actModuleRegistration(void)
 		//act.whiteList.emplace_back(ACTION::JUMPING);
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		act.blackList.emplace_back("Wall_Slide");
 		_actCtl.ActCtl("左移動", act);
 	}
@@ -441,6 +506,7 @@ void Player::actModuleRegistration(void)
 
 		flipAct.blackList.emplace_back("AttackFirst");
 		flipAct.blackList.emplace_back("AttackSecond");
+		flipAct.blackList.emplace_back("AttackThird");
 		flipAct.blackList.emplace_back("Wall_Slide");
 		_actCtl.ActCtl("右向き", flipAct);
 	}
@@ -459,6 +525,7 @@ void Player::actModuleRegistration(void)
 
 		flipAct.blackList.emplace_back("AttackFirst");
 		flipAct.blackList.emplace_back("AttackSecond");
+		flipAct.blackList.emplace_back("AttackThird");
 		flipAct.blackList.emplace_back("Wall_Slide");
 		_actCtl.ActCtl("左向き", flipAct);
 	}
@@ -508,7 +575,7 @@ void Player::actModuleRegistration(void)
 		act.jumpFlg = true;
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
-
+		act.blackList.emplace_back("AttackThird");
 		//act.whiteList.emplace_back(ACTION::RUN);
 
 		_actCtl.ActCtl("ジャンプ", act);
@@ -533,6 +600,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("Run");
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		act.blackList.emplace_back("NON");
 		act.blackList.emplace_back("Wall_Slide");
 
@@ -560,6 +628,16 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::DOWN;
 		act.actName = "AttackSecond";
+		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
+		_actCtl.ActCtl("攻撃", act);
+	}
+
+	// 攻撃3
+	{
+		ActModule act;
+		act.state = _oprtState;
+		act.button = BUTTON::DOWN;
+		act.actName = "AttackThird";
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
 	}
