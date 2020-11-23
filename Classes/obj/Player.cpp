@@ -55,16 +55,19 @@ Player::Player()
 	SecondAttackFlg_ = false;
 
 	// ファイル名を変更してこのLoadが使えるようにしないといけない
-	for (auto anim : lpAnimMng.GetAnimations(type_))
-	{
-		lpCol.Load(collider_, anim, "player");
-	}
 	//for (auto anim : lpAnimMng.GetAnimations(type_))
 	//{
+	//	lpCol.Load(collider_, anim, "player");
+	//}
+
+	// これを追加しようとすると、TiledMapのクラスでエラーがでる
+	//for (auto anim : lpAnimMng.GetAnimations(type_))
+	//{
+	//	lpCol.Load(collider_, anim, "player");
 	//	auto a = lpAnimMng.GetFrameNum(type_, anim);
 	//	for (int i = 0; i < lpAnimMng.GetFrameNum(type_, anim); i++)
 	//	{
-	//		for (auto c : collider[anim][i])
+	//		for (auto c : collider_[anim][i])
 	//		{
 	//			auto col = c->CreateCollider();
 	//			col->drawRect(Vec2(0, 0), Vec2(c->GetSize().x, c->GetSize().y), c->GetColor());
@@ -73,6 +76,26 @@ Player::Player()
 	//		}
 	//	}
 	//}
+
+	// これを追加すると全部のコリジョンボックスがでてくる!!
+	//for (auto anim : lpAnimMng.GetAnimations(type_))
+	//{
+	//	// colliderBoxのLoad
+	//	lpCol.Load(collider_, anim, "player");
+	//	for (auto col : collider_[anim])
+	//	{
+	//		for (int colNum = 0; colNum < col.size(); colNum++)
+	//		{
+	//			// colliderBoxを自身の子にする
+	//			auto draw = col[colNum]->create();
+	//			draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+	//			draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+	//			draw->setTag(col[colNum]->GetData().frame_);
+	//			this->addChild(draw, 0, anim);
+	//		}
+	//	}
+	//}
+
 }
 
 Player::~Player()
@@ -197,8 +220,34 @@ void Player::update(float sp)
 			this->setAnchorPoint(Vec2(0.0f, 0.0f));
 		}
 	}
+	else
+	{
+		this->setAnchorPoint(Vec2(0.5f, 0.0f));
+	}
 
 	attackMotion(sp);
+
+	// トランスフォーム
+	if (_oprtState->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !_oprtState->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
+	{
+		this->setPosition(this->getPosition().x, this->getPosition().y - 10);	// 位置補正を入れないと浮いて見える
+		actionNow_ = "Transform";
+		transFlg_ = true;
+	}
+	if (transFlg_)
+	{
+		animationFrame_ += sp;
+		if (animationFrame_ >= 1.85f)
+		{
+			transFlg_ = false;
+			animationFrame_ = 0.0f;
+			this->setPosition(this->getPosition().x, this->getPosition().y + 10);	// 位置補正分戻す
+		}
+		else
+		{
+			actionNow_ = "Transform";
+		}
+	}
 
 	if (actionNow_ != actionOld_)
 	{
@@ -426,6 +475,9 @@ void Player::AnimRegistrator(void)
 	// wallslide
 	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Wall_Slide", 3, (float)0.3, ActorType::Player, false);
 
+	// Transform
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Transform", 37, (float)0.05, ActorType::Player, false);
+
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "NON");
 }
 
@@ -603,6 +655,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("AttackThird");
 		act.blackList.emplace_back("NON");
 		act.blackList.emplace_back("Wall_Slide");
+		act.blackList.emplace_back("Transform");
 
 		act.whiteList.emplace_back("Jump");
 		_actCtl.ActCtl("ジャンピング", act);
