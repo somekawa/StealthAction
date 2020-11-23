@@ -51,8 +51,12 @@ Player::Player()
 	no_++;
 	type_ = ActorType::Player;
 	oldPos_ = 0;
-	oldPosOnceKeepFlg_ = false;
-	SecondAttackFlg_ = false;
+
+	oldPosKeepFlg_ = false;
+	bitFlg_.FirstAttackFlg = false;
+	bitFlg_.SecondAttackFlg = false;
+	bitFlg_.ThirdAttackFlg = false;
+	bitFlg_.TransfromFlg = false;
 
 	// ファイル名を変更してこのLoadが使えるようにしないといけない
 	//for (auto anim : lpAnimMng.GetAnimations(type_))
@@ -232,14 +236,14 @@ void Player::update(float sp)
 	{
 		this->setPosition(this->getPosition().x, this->getPosition().y - 10);	// 位置補正を入れないと浮いて見える
 		actionNow_ = "Transform";
-		transFlg_ = true;
+		bitFlg_.TransfromFlg = true;
 	}
-	if (transFlg_)
+	if (bitFlg_.TransfromFlg)
 	{
 		animationFrame_ += sp;
 		if (animationFrame_ >= 1.85f)
 		{
-			transFlg_ = false;
+			bitFlg_.TransfromFlg = false;
 			animationFrame_ = 0.0f;
 			this->setPosition(this->getPosition().x, this->getPosition().y + 10);	// 位置補正分戻す
 		}
@@ -251,6 +255,10 @@ void Player::update(float sp)
 
 	if (actionNow_ != actionOld_)
 	{
+		if (actionNow_ == "AttackFirst" && !bitFlg_.FirstAttackFlg)
+		{
+			bitFlg_.FirstAttackFlg = true;
+		}
 		lpAnimMng.ChangeAnimation(*this, actionNow_, true, ActorType::Player);
 	}
 	actionOld_ = actionNow_;
@@ -302,16 +310,20 @@ void Player::attackMotion(float sp)
 	};
 
 	// flagがtrueの時は強制的にAttackSecondへ切替
-	if (SecondAttackFlg_)
+	if (bitFlg_.FirstAttackFlg)
+	{
+		actionNow_ = "AttackFirst";
+	}
+	else if (bitFlg_.SecondAttackFlg)
 	{
 		actionNow_ = "AttackSecond";
 	}
-	else if (ThirdAttackFlg_)
+	else if (bitFlg_.ThirdAttackFlg)
 	{
 		actionNow_ = "AttackThird";
 	}
 
-	if (actionNow_ == "AttackFirst" || actionOld_ == "AttackFirst")
+	if (actionNow_ == "AttackFirst" && bitFlg_.FirstAttackFlg)
 	{
 		// フレーム数の取得テスト
 		//auto a = animationFrame_ * 100;
@@ -330,23 +342,23 @@ void Player::attackMotion(float sp)
 		//	}
 		//}
 
-		SecondAttackFlg_ = keyLambda(SecondAttackFlg_);
+		bitFlg_.SecondAttackFlg = keyLambda(bitFlg_.SecondAttackFlg);
 
 		animationFrame_ += sp;
-		if (animationFrame_ <= 0.5f)
+		if (bitFlg_.FirstAttackFlg && animationFrame_ <= 0.5f)
 		{
-			if (!oldPosOnceKeepFlg_)
+			if (!oldPosKeepFlg_)
 			{
 				oldPos_ = this->getPosition().x;
-				oldPosOnceKeepFlg_ = true;
+				oldPosKeepFlg_ = true;
+				direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
 			}
-
-			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
+			auto a = sizeof(bitFlg_);
 			actionNow_ = "AttackFirst";
 		}
 		else
 		{
-			if (!SecondAttackFlg_)
+			if (!bitFlg_.SecondAttackFlg)
 			{
 				actionNow_ = "Look_Intro";
 			}
@@ -356,7 +368,8 @@ void Player::attackMotion(float sp)
 				oldPos_ = this->getPosition().x;
 			}
 			animationFrame_ = 0.0f;
-			oldPosOnceKeepFlg_ = false;
+			oldPosKeepFlg_ = false;
+			bitFlg_.FirstAttackFlg = false;
 
 			// HP減少のテストコード
 			// 攻撃するたびにHPが10減るようにしている
@@ -366,7 +379,7 @@ void Player::attackMotion(float sp)
 		}
 	}
 
-	if ((actionNow_ == "AttackSecond" && SecondAttackFlg_))
+	if ((actionNow_ == "AttackSecond" && bitFlg_.SecondAttackFlg))
 	{
 		// 攻撃中にもう一度攻撃ボタンが押されたらAttackSecondが終了後、AttackThirdへ移行するようにする
 		//auto keyN = _oprtState->GetNowData();
@@ -379,17 +392,17 @@ void Player::attackMotion(float sp)
 		//	}
 		//}
 
-		ThirdAttackFlg_ = keyLambda(ThirdAttackFlg_);
+		bitFlg_.ThirdAttackFlg = keyLambda(bitFlg_.ThirdAttackFlg);
 
 		animationFrame_ += sp;
-		if (SecondAttackFlg_ && animationFrame_ <= 0.8f)
+		if (bitFlg_.SecondAttackFlg && animationFrame_ <= 0.8f)
 		{
 			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
 			actionNow_ = "AttackSecond";
 		}
 		else
 		{
-			if (!ThirdAttackFlg_)
+			if (!bitFlg_.ThirdAttackFlg)
 			{
 				actionNow_ = "Look_Intro";
 			}
@@ -399,22 +412,22 @@ void Player::attackMotion(float sp)
 				oldPos_ = this->getPosition().x;
 			}
 
-			SecondAttackFlg_ = false;
+			bitFlg_.SecondAttackFlg = false;
 			animationFrame_ = 0.0f;
 		}
 	}
 
-	if ((actionNow_ == "AttackThird" && ThirdAttackFlg_))
+	if ((actionNow_ == "AttackThird" && bitFlg_.ThirdAttackFlg))
 	{
 		animationFrame_ += sp;
-		if (ThirdAttackFlg_ && animationFrame_ <= 0.8f)
+		if (bitFlg_.ThirdAttackFlg && animationFrame_ <= 0.8f)
 		{
 			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
 			actionNow_ = "AttackThird";
 		}
 		else
 		{
-			ThirdAttackFlg_ = false;
+			bitFlg_.ThirdAttackFlg = false;
 			actionNow_ = "Look_Intro";
 			animationFrame_ = 0.0f;
 		}

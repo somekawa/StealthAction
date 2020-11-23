@@ -10,6 +10,15 @@
 #include "obj/Actor.h"
 #include "obj/Player.h"
 
+// ビットフィールド
+struct Bits
+{
+	unsigned int FirstAttackFlg  : 1;		// 1撃目攻撃モーションフラグ
+	unsigned int SecondAttackFlg : 1;		// 2撃目攻撃モーションフラグ
+	unsigned int ThirdAttackFlg  : 1;		// 3撃目攻撃モーションフラグ
+	unsigned int TransfromFlg    : 1;		// 変身用フラグ
+};
+
 #define AttackMove 60
 
 class Player : public Actor
@@ -51,8 +60,7 @@ private:
 	int myNo_;
 
 	float oldPos_;												// 攻撃モーション実行前の座標を保管する
-	bool oldPosOnceKeepFlg_;									// 攻撃モーション実行前の座標を保管を1度だけの実行にするためのフラグ
-	bool SecondAttackFlg_;										// 2撃目攻撃モーションフラグ
-	bool ThirdAttackFlg_ = false;
-	bool transFlg_ = false;
+	bool oldPosKeepFlg_;										// 攻撃モーション実行前の座標を保管を1度だけの実行にするためのフラグ
+
+	Bits bitFlg_;
 };
