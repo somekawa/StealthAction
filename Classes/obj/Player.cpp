@@ -292,6 +292,24 @@ void Player::attackMotion(float sp)
 		//	this->setPosition(Vec2(oldPos_ + AttackMove, this->getPosition().y));
 		//}
 
+		// ここで壁すり抜け防止したい
+		auto director = Director::getInstance();
+		auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
+		auto ColSize = CollisionData->getLayerSize();
+		auto plCheckPoint1 = Vec2(oldPos_ + (AttackMove * sign), this->getPosition().y + 37);	// 自分の縦サイズ/2を加算しておく(アンカーポイントが足元だから)
+		auto plCheckPoint1Pos = Vec2(plCheckPoint1.x / 48, ColSize.height - (plCheckPoint1.y / 48));
+		// 範囲外check(早めのcheckで)
+		if (plCheckPoint1Pos.x > ColSize.width - 2 || plCheckPoint1Pos.x < 2 ||
+			plCheckPoint1Pos.y > ColSize.height || plCheckPoint1Pos.y < 0)
+		{
+			return false;
+		}
+		//TRACE("X:%f,Y:%f\n", plCheckPoint1Chip.x, plCheckPoint1Chip.y);
+		if (CollisionData->getTileGIDAt(plCheckPoint1Pos) != 0)
+		{
+			return false;
+		}
+
 		this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + (AttackMove * sign), this->getPosition().y)));
 		this->setPosition(Vec2(oldPos_ + (AttackMove * sign), this->getPosition().y));
 	};
