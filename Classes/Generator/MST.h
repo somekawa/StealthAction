@@ -42,12 +42,14 @@ public:
 	~MST();
 
 	void Choice_Node();
+	Edge_List FindShortest(cocos2d::Vec2& v, cocos2d::Vec2& usedvert, float& min_distance, Edge_List& min_edge);
 	std::vector<Node_Status> GetNode();
 	std::vector<Edge_Status> edge_data;		//edgeî•ñ‚ğ•Û‘¶
 private:
+
 	Vertex_List vertexList_;
 	std::vector<int> areaData_;
-	std::vector<Edge_List> node;
+	std::vector<Edge_List> minEdgeList_;
 	std::vector<Node_Status> nodeList_;
 
 	Delaunay* delaunay_;

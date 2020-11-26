@@ -3,7 +3,7 @@
 #include <list>
 #include <string>
 #include "Direction/Direction.h"
-constexpr auto FLOOR = 10;
+constexpr auto FLOOR = 50;
 enum class Map
 {
 
