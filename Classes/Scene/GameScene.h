@@ -51,6 +51,7 @@ enum class zOlder {
 class GameMap;
 class CameraManager;
 class Player;
+class ProgramState;
 
 class Game : public BaseScene
 {
@@ -95,6 +96,8 @@ private:
 	int generateEnemyNum_;
 	// リスポーンするフラグ
 	bool respawnFlag_;
+
+    
 
 	std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
 		static_cast<int>(ActorType::Max)> colliderBox_;

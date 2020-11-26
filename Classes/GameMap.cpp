@@ -7,6 +7,7 @@
 #include "Generator/MST.h"
 
 USING_NS_CC;
+#pragma execution_character_set("utf-8")
 
 GameMap::GameMap(cocos2d::Layer& layer)
 {
@@ -16,6 +17,12 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	mapLayer_ = &layer;
 	objLayer_ = Layer::create();
 	
+
+
+	mapName =  Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
+	mapName->setPosition(100, 500);
+
+	objLayer_->addChild(mapName);
 	// マップレイヤーより前へ
 	layer.addChild(objLayer_,layer.getLocalZOrder() + 1);	
 
@@ -53,50 +60,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 		}
 		mapParentsList_.mapParents.push_back(mapParent);
 	}
-	//{		
-	//	
-	//	MapChild mapChild;
-	//	mapChild.mapID = 0;
-	//	
-	//	
-	//	mapChild.nextPos = nextPosTbl[static_cast<int>(mapChild.gateDir)];
-	//	// 子供を入れる処理 
-	//	mapParent.child.push_back(mapChild);
-	//	// 親リストに登録
-	//	mapParentsList_.mapParents.push_back(mapParent);
-	//}
-	//{
-	//	MapParentState mapParent;
-	//	mapParent.mapID = 0;	
-	//	MapChild mapChild;
-	//	mapChild.mapID = 0;
-	//	mapChild.nextParentID = 2;
-	//	mapChild.gateDir = MapDirection::W_UP;
-	//	mapChild.nextPos = nextPosTbl[static_cast<int>(mapChild.gateDir)];
-	//	// 子供を入れる処理 
-	//	mapParent.child.push_back(mapChild);
-	//	// 親リストに登録
-	//	mapParentsList_.mapParents.push_back(mapParent);
-	//}
-	//{
-	//	MapParentState mapParent;
-	//	mapParent.mapID = 0;	
-	//	MapChild mapChild;
-	//	mapChild.mapID = 0;
-	//	mapChild.nextParentID = 0;
-	//	mapChild.gateDir = MapDirection::E_UP;
-	//	mapChild.nextPos = nextPosTbl[static_cast<int>(mapChild.gateDir)];
-	//	// 子供を入れる処理 
-	//	mapParent.child.push_back(mapChild);
-	//	mapChild.mapID = 0;
-	//	mapChild.nextParentID = 1;
-	//	mapChild.gateDir = MapDirection::W_DOWN;
-	//	mapChild.nextPos = nextPosTbl[static_cast<int>(mapChild.gateDir)];
-	//	mapParent.child.push_back(mapChild);
-	//	
-	//	// 親リストに登録
-	//	mapParentsList_.mapParents.push_back(mapParent);
-	//}
+
 	mapParentsList_.nowID = 0;
 	// 最初のマップのオブジェクトを作る処理
 	CreateObject();
@@ -121,8 +85,10 @@ void GameMap::AddMap(std::string& mapPath)
 
 void GameMap::ReplaceMap(Player& player)
 {
+	
 	auto fade = TransitionFade::create(1.0f, LoadScene::CreateLoadScene(player, mapDatas_, mapParentsList_, *this), Color3B::BLACK);
 	Director::getInstance()->pushScene(fade);
+	
 }
 
 void GameMap::CreateObject()
