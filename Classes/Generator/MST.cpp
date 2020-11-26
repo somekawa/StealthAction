@@ -46,9 +46,9 @@ void MST::Choice_Node()
 			for (auto v : A)
 			{
 				auto distance = std::sqrt(lpGeometry.Distance_Calculator(v, u));
-				for (auto edge : edge_data)
+				if (min_distance > distance)
 				{
-					if (min_distance > distance)
+					for (auto edge : edge_data)
 					{
 						Edge_List uvEdge = { u, v };
 						//Vに含まれる頂点uと含まれない頂点vを結ぶ重みが最小の辺(u, v)をグラフから選び、Eに加える．
@@ -193,6 +193,7 @@ void MST::Choice_Node()
 			if (itr != nodeList_.end())
 			{
 				child.childId = itr->id;
+				break;
 			}
 		}
 	}
@@ -204,6 +205,7 @@ void MST::Choice_Node()
 		for (auto& pair : nodeList_[i].childData)
 		{
 			//中心に向かうベクトル
+			// 扉を置く方向
 			auto vec = pair.pair_node - nodeList_[i].key;
 			auto nvec1 = Vec2(1, 0)/*nodeList_[i].key / hypot(nodeList_[i].key.x, nodeList_[i].key.y)*/;
 			auto nvec2 = vec / hypot(vec.x, vec.y);
@@ -220,6 +222,7 @@ void MST::Choice_Node()
 			
 			pair.dir = dir;
 
+			// エリアロック
 			for (int j = 0; j < vertexList_.size(); j++)
 			{
 				if (pair.pair_node == vertexList_[j] && areaData_[i] != areaData_[j])
