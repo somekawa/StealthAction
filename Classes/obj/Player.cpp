@@ -370,6 +370,14 @@ void Player::attackMotion(float sp)
 				oldPos_ = this->getPosition().x;
 				oldPosKeepFlg_ = true;
 				direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
+				if (direction_ == Direction::Left)
+				{
+					TRACE("ひだりぃぃぃぃぃぃ\n");
+				}
+				else
+				{
+					TRACE("右ぃぃぃぃぃぃ\n");
+				}
 			}
 			auto a = sizeof(bitFlg_);
 			actionNow_ = "AttackFirst";
@@ -582,7 +590,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = false;
 		flipAct.actName = "NON";
 		flipAct.button = BUTTON::RIGHT;
-		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
+		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -601,7 +609,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = true;
 		flipAct.actName = "NON";
 		flipAct.button = BUTTON::LEFT;
-		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
+		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -777,3 +785,7 @@ void Player::actModuleRegistration(void)
 }
 
 // アンカーポイントを変更せずに攻撃モーション追加しないといけない
+
+// 左と下を同時に押したときに後ろに下がりながら斬ってしまうのは
+// 左入力が先に入って、左向きでSetDirされた後に下入力で攻撃モーションに入るから。
+// どうしましょう
