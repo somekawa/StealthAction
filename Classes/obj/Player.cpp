@@ -702,6 +702,7 @@ void Player::actModuleRegistration(void)
 		act.actName = "AttackFirst";
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };
+		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
 	}
@@ -712,6 +713,7 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::DOWN;
 		act.actName = "AttackSecond";
+		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
 	}
@@ -722,6 +724,7 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::DOWN;
 		act.actName = "AttackThird";
+		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
 	}
@@ -737,11 +740,14 @@ void Player::actModuleRegistration(void)
 		act.flipFlg = true;
 		act.actName = "Wall_Slide";
 		act.touch = TOUCH_TIMMING::TOUCHING;	
-		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Jumping");	
 		act.blackList.emplace_back("Run");	
 		act.blackList.emplace_back("Fall");
 		act.blackList.emplace_back("Look_Intro");
 		act.blackList.emplace_back("NON");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		act.num = 95;
 		_actCtl.ActCtl("右壁スライド", act);
 	}
@@ -757,11 +763,14 @@ void Player::actModuleRegistration(void)
 		act.flipFlg = false;
 		act.actName = "Wall_Slide";
 		act.touch = TOUCH_TIMMING::TOUCHING;
-		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Jumping");	
 		act.blackList.emplace_back("Run");
 		act.blackList.emplace_back("Fall");
 		act.blackList.emplace_back("Look_Intro");
 		act.blackList.emplace_back("NON");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		act.num = 95;
 		_actCtl.ActCtl("左壁スライド", act);
 	}
