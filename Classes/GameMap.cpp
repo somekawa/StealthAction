@@ -17,8 +17,6 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	mapLayer_ = &layer;
 	objLayer_ = Layer::create();
 	
-
-
 	mapName =  Label::createWithTTF("•”‰®  0", "fonts/HGRGE.ttc", 24);
 	mapName->setPosition(100, 500);
 

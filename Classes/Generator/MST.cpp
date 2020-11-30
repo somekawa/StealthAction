@@ -82,12 +82,13 @@ void MST::Choice_Node()
 			}
 		}
 	}
-
+	int id = 0;
 	// ノードリストといくつリンクしているかのリストの作成
 	for (auto& v : vertexList_)
 	{
 		Node_Status tmpNode;
 		tmpNode.key = v;
+		tmpNode.id = id;
 		for (auto& edge : edge_data)
 		{
 			if (!edge.used)
@@ -118,7 +119,7 @@ void MST::Choice_Node()
 			Choice_Node();
 
 		}
-		
+		id++;
 		nodeList_.push_back(tmpNode);
 
 	}
@@ -178,7 +179,6 @@ void MST::Choice_Node()
 			if (itr != nodeList_.end())
 			{
 				child.childId = itr->id;
-				break;
 			}
 		}
 	}
