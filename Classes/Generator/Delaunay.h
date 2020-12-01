@@ -26,19 +26,21 @@ public:
 	Delaunay();
 	~Delaunay();
 
-	const Triangle_Status& Create_Triangle(cocos2d::Vec2 pos,cocos2d::Vec2 size);
+	const Triangle_Status& CreateTriangle(cocos2d::Vec2 pos,cocos2d::Vec2 size);
 
-	const Triangle_Data Get_Triangle_Data(void);
-	const void Subdivision_Triangle(cocos2d::Vec2 point);
-	const std::vector<Edge_Status> Triangle_To_Edge(void);
+	const Triangle_Data GetTriangleData(void);
+	const void SubdivisionTriangle(cocos2d::Vec2 point);
+	const std::vector<Edge_Status> TriangletoEdge(void);
 	void FinishDelaunay(void);
 private:
-	const Triangle_Status Circumscribed_circle_Center(Triangle_Status triangle);
-	//三角形内に頂点が追加されたか
-	Triangle_Data Check_Duplicative(Triangle_Data& data,Triangle_Data* duplicative_data,Triangle_Status status, cocos2d::Vec2 point);
-	Triangle_Status triangle;	//頂点3つで三角形を保存
-	Triangle_Status firstTriangle;	//最初の三角形を保存
-	Triangle_Data triangle_data; //できた三角形を保存
+	// すべて分割したのち後重複していればその三角形を修正し削除する
+	void DuplicateTriangle(Triangle_Data data, Triangle_Data duplicative_data);
+	const Triangle_Status CircumscribedCircleCenter(Triangle_Status triangle);
+	// 三角形内に頂点が追加されたか
+	Triangle_Data CheckDuplicative(Triangle_Data& data,Triangle_Data* duplicative_data,Triangle_Status status, cocos2d::Vec2 point);
+	Triangle_Status triangle_;	//頂点3つで三角形を保存
+	Triangle_Status firstTriangle_;	//最初の三角形を保存
+	Triangle_Data triangleData_; //できた三角形を保存
 };
 struct Triangle_Status;
 bool operator==(const Triangle_Status& t, const Triangle_Status& t2);

@@ -20,30 +20,30 @@ Delaunay::~Delaunay()
 {
 }
 
-const Triangle_Status& Delaunay::Create_Triangle(cocos2d::Vec2 pos, cocos2d::Vec2 size)
+const Triangle_Status& Delaunay::CreateTriangle(cocos2d::Vec2 pos, cocos2d::Vec2 size)
 {
-	triangle.radius = lpGeometry.Radius_Calculator(size);
-	triangle.vertex[0] = Vec2(pos.x, pos.y + 2 * triangle.radius);
-	triangle.vertex[1] = Vec2(pos.x - triangle.radius * std::sqrtf(3), pos.y - triangle.radius);
-	triangle.vertex[2] = Vec2(pos.x + triangle.radius * std::sqrtf(3), pos.y - triangle.radius);
+	triangle_.radius = lpGeometry.Radius_Calculator(size);
+	triangle_.vertex[0] = Vec2(pos.x, pos.y + 2 * triangle_.radius);
+	triangle_.vertex[1] = Vec2(pos.x - triangle_.radius * std::sqrtf(3), pos.y - triangle_.radius);
+	triangle_.vertex[2] = Vec2(pos.x + triangle_.radius * std::sqrtf(3), pos.y - triangle_.radius);
 
 	//外接円の中心と半径
-	Circumscribed_circle_Center(triangle);
-	firstTriangle = triangle;
+	CircumscribedCircleCenter(triangle_);
+	firstTriangle_ = triangle_;
 
-	triangle_data.emplace_back(triangle);
-	return triangle;
+	triangleData_.emplace_back(triangle_);
+	return triangle_;
 }
 
-Triangle_Data Delaunay::Check_Duplicative(Triangle_Data& data,Triangle_Data* duplicative_data,Triangle_Status status, cocos2d::Vec2 point)
+Triangle_Data Delaunay::CheckDuplicative(Triangle_Data& data,Triangle_Data* duplicative_data,Triangle_Status status, cocos2d::Vec2 point)
 {
 	for (auto n = 0; n < 3; ++n)
 	{
-		triangle.vertex[0] = point;
-		triangle.vertex[1] = status.vertex[(n % 3)];
-		triangle.vertex[2] = status.vertex[(n + 1) % 3];
+		triangle_.vertex[0] = point;
+		triangle_.vertex[1] = status.vertex[(n % 3)];
+		triangle_.vertex[2] = status.vertex[(n + 1) % 3];
 		//外接円の中心と半径
-		triangle = Circumscribed_circle_Center(triangle);
+		triangle_ = CircumscribedCircleCenter(triangle_);
 		//新規に分割した三角形の中で重複している三角形があれば重複している用のdetaに保存し,
 		//プッシュしない
 
@@ -52,14 +52,14 @@ Triangle_Data Delaunay::Check_Duplicative(Triangle_Data& data,Triangle_Data* dup
 			iter != data.end(); iter++)
 		{
 
-			if (*iter == triangle) {
+			if (*iter == triangle_) {
 				existsInNewTriangleList = true;
 				bool existsInDuplicativeTriangleList = false;
 
 				for (auto iter2 = duplicative_data->begin();
 					iter2 != duplicative_data->end(); iter2++)
 				{
-					if (*iter2 == triangle)
+					if (*iter2 == triangle_)
 					{
 						existsInDuplicativeTriangleList = true;
 						break;
@@ -68,24 +68,24 @@ Triangle_Data Delaunay::Check_Duplicative(Triangle_Data& data,Triangle_Data* dup
 				}
 				if (!existsInDuplicativeTriangleList)
 				{
-					duplicative_data->push_back(triangle);
+					duplicative_data->push_back(triangle_);
 				}
 				break;
 			}
 		}
-		if (!existsInNewTriangleList) data.push_back(triangle);
+		if (!existsInNewTriangleList) data.push_back(triangle_);
 	}
 	return data;
 }
 
-const void Delaunay::Subdivision_Triangle(cocos2d::Vec2 point)
+const void Delaunay::SubdivisionTriangle(cocos2d::Vec2 point)
 {
-	triangle_data.reserve(100/*triangle_data.size() + 3*/);
+	triangleData_.reserve(100/*triangle_data.size() + 3*/);
 	std::vector<Triangle_Data::iterator> erase_itr;
 	Triangle_Data new_triangle_data;	//一時保存用
 	Triangle_Data duplicative_triangle_data;	//一時保存用
 	//全探査した後外接円内であれば分割する
-	for (auto itr = triangle_data.begin(); itr < triangle_data.end();)
+	for (auto itr = triangleData_.begin(); itr < triangleData_.end();)
 	{
 		Triangle_Status status = *itr;
 		auto X = std::abs(point.x - status.center.x);
@@ -97,42 +97,25 @@ const void Delaunay::Subdivision_Triangle(cocos2d::Vec2 point)
 		//外接円の中にpointが追加されたか
 		if (A > B)
 		{
-			Check_Duplicative(new_triangle_data, &duplicative_triangle_data,status, point);
-			itr = triangle_data.erase(itr);
+			CheckDuplicative(new_triangle_data, &duplicative_triangle_data,status, point);
+			itr = triangleData_.erase(itr);
 		}
 		else
 		{
 			itr++;
 		}
 	}
-	auto a = 0;
-	bool findFlag = false;
-	//すべて分割したのち後重複していればその三角形を修正し削除する
-	for (auto itr = new_triangle_data.begin();
-		itr != new_triangle_data.end(); ++itr)
-	{
-		bool exists = false;
-		for (auto itr2 = duplicative_triangle_data.begin();
-			itr2 != duplicative_triangle_data.end(); ++itr2)
-		{
-			if (*itr == *itr2)
-			{
-				exists = true;
-				break;
-			}
-		}
-		if (!exists) triangle_data.emplace_back(*itr);
-	}
+	DuplicateTriangle(new_triangle_data, duplicative_triangle_data);
 }
 
-const std::vector<Edge_Status> Delaunay::Triangle_To_Edge(void)
+const std::vector<Edge_Status> Delaunay::TriangletoEdge(void)
 {
 	std::vector<Edge_Status> edge_data;
-	for (auto data : triangle_data)
+	for (auto data : triangleData_)
 	{
-		for (int n = 0; n < triangle.vertex.size(); ++n)
+		for (int n = 0; n < triangle_.vertex.size(); ++n)
 		{
-			auto distance = std::sqrtf(lpGeometry.Distance_Calculator(triangle.vertex[n], triangle.vertex[(n + 1) % 3]));
+			auto distance = std::sqrtf(lpGeometry.Distance_Calculator(triangle_.vertex[n], triangle_.vertex[(n + 1) % 3]));
 			edge_data.emplace_back(Edge_Status{ distance,Edge_List{data.vertex[n], data.vertex[(n + 1) % 3] }, false });
 		}
 	}
@@ -158,11 +141,11 @@ const std::vector<Edge_Status> Delaunay::Triangle_To_Edge(void)
 void Delaunay::FinishDelaunay()
 {
 	// 初期頂点とつながっている三角形の削除
-	for (auto itr = triangle_data.begin(); itr != triangle_data.end(); )
+	for (auto itr = triangleData_.begin(); itr != triangleData_.end(); )
 	{
-		if (ORCheck(*itr, firstTriangle))
+		if (ORCheck(*itr, firstTriangle_))
 		{
-			itr = triangle_data.erase(itr);
+			itr = triangleData_.erase(itr);
 		}
 		else
 		{
@@ -171,7 +154,26 @@ void Delaunay::FinishDelaunay()
 	}
 }
 
-const Triangle_Status Delaunay::Circumscribed_circle_Center(Triangle_Status triangle)
+void Delaunay::DuplicateTriangle(Triangle_Data data,Triangle_Data duplicative_data)
+{
+	for (auto itr = data.begin();
+		itr != data.end(); ++itr)
+	{
+		bool exists = false;
+		for (auto itr2 = duplicative_data.begin();
+			itr2 != duplicative_data.end(); ++itr2)
+		{
+			if (*itr == *itr2)
+			{
+				exists = true;
+				break;
+			}
+		}
+		if (!exists) triangleData_.emplace_back(*itr);
+	}
+}
+
+const Triangle_Status Delaunay::CircumscribedCircleCenter(Triangle_Status triangle)
 {
 	//頂点算出
 	//辺の長さ算出
@@ -213,9 +215,9 @@ const Triangle_Status Delaunay::Circumscribed_circle_Center(Triangle_Status tria
 	return triangle;
 }
 
-const Triangle_Data Delaunay::Get_Triangle_Data(void)
+const Triangle_Data Delaunay::GetTriangleData(void)
 {
-	return triangle_data;
+	return triangleData_;
 }
 
 bool operator==(const Triangle_Status& t, const Triangle_Status& t2)

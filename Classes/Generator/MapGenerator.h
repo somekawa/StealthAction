@@ -2,8 +2,9 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <mutex>
 #include "Direction/Direction.h"
-constexpr auto FLOOR = 50;
+constexpr auto FLOOR = 150;
 enum class Map
 {
 
@@ -42,22 +43,22 @@ public:
     const std::list<MapDirection> FloorDir(void);
 private:
     //エリアごとに設定されている中心点の周囲にMapのもととなる部屋を作成.
-    bool Create_Room(void);
+    bool CreateRoom(void);
     //重なっている部屋を"BoidAlgorithm"を用いて分散させる.
     bool DistributedRoom(void);
-    bool Create_Delaunay(void);
-    bool Create_MST(void);
+    bool CreateDelaunay(void);
+    bool CreateRoot(void);
     std::vector<Room_Data> data_;
     Vertex_List vertex_;
     std::vector<int> areaData_;
 
-    std::random_device seed_gen_;
+    std::random_device seedGen_;
     std::default_random_engine engine_;
     std::uniform_real_distribution<> dist_;
     std::uniform_int_distribution<> _dist_i;
     std::uniform_int_distribution<> _dist_n;
 
-    Triangle_Data triangle_data;
-    Delaunay* _delaunay = nullptr;
-    MST* _mst = nullptr;
+    Triangle_Data triangleData_;
+    std::unique_ptr <Delaunay> delaunay_ = nullptr;
+    std::unique_ptr<MST> mst_ = nullptr;
 };

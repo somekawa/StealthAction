@@ -16,28 +16,19 @@ MapGenerator::MapGenerator()
     _dist_i.param(param_i);
     _dist_n.param(param_n);
 
-    _delaunay = new Delaunay();
+    delaunay_ = std::make_unique<Delaunay>();
 }
 
 MapGenerator::~MapGenerator()
 {
-    if (_delaunay != nullptr)
-    {
-        delete _delaunay;
-        _delaunay = nullptr;
-    }if (_mst != nullptr)
-    {
-        delete _mst;
-        _mst = nullptr;
-    }
 }
 
 void MapGenerator::Call()
 {
-    Create_Room();
+    CreateRoom();
     DistributedRoom();
-    Create_Delaunay();
-    Create_MST();
+    CreateDelaunay();
+    CreateRoot();
 }
 
 const std::vector<Room_Data>& MapGenerator::GetRoomData(void)
@@ -47,12 +38,12 @@ const std::vector<Room_Data>& MapGenerator::GetRoomData(void)
 
 const Triangle_Data MapGenerator::GetDelaunayData(void)
 {
-    return _delaunay->Get_Triangle_Data();
+    return delaunay_->GetTriangleData();
 }
 
 const std::vector<Node_Status> MapGenerator::GetMSTNode(void)
 {
-    return _mst->GetNode();
+    return mst_->GetNode();
 }
 
 const std::list<MapDirection> MapGenerator::FloorDir(void)
@@ -60,7 +51,7 @@ const std::list<MapDirection> MapGenerator::FloorDir(void)
     return std::list<MapDirection>();
 }
 
-bool MapGenerator::Create_Room(void)
+bool MapGenerator::CreateRoom(void)
 {
     for (std::size_t n = 0; n < FLOOR; n++)
     {
@@ -83,23 +74,23 @@ bool MapGenerator::Create_Room(void)
                 data_.emplace_back(Room_Data{0,false,cocos2d::Vec2(600, 500),size,cocos2d::Vec2(600, 500),name,cocos2d::Color4F(1, 1, 1, 0.5),cocos2d::Color4F(1,0, 0,1) });
                 continue;
             }
-            data_.emplace_back(Room_Data{0,false,pos2,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(1, 0, 0, 0.5), cocos2d::Color4F(0.5, 0,0, 0.5) });
+            data_.emplace_back(Room_Data{0,false,pos2,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(1, 0, 0, 0.5), cocos2d::Color4F(0.8,0.8,0.8, 0.5) });
         }
         else if (area == 1)
         {
-            data_.emplace_back(Room_Data{1,true,pos,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(0, 0, 1,1), cocos2d::Color4F(0.0,0.0, 1,0.5)});
+            data_.emplace_back(Room_Data{1,true,pos,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(0, 0, 1,1), cocos2d::Color4F(0.8,0.8,0.8,0.5)});
         }
         else if (area == 2)
         {
-           data_.emplace_back(Room_Data{2,true,pos_area3,size,cocos2d::Vec2(600,600),name,cocos2d::Color4F(0, 1,0,1), cocos2d::Color4F(0.0,1.0,0.0,0.5)});
+           data_.emplace_back(Room_Data{2,true,pos_area3,size,cocos2d::Vec2(600,600),name,cocos2d::Color4F(0, 1,0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5)});
         }
         else if (area == 3)
         {
-           data_.emplace_back(Room_Data{3,true,pos_area4,size,cocos2d::Vec2(600,400),name, cocos2d::Color4F(0.0,1.0,1.0,1), cocos2d::Color4F(0.0,1.0,1.0,0.5) });
+           data_.emplace_back(Room_Data{3,true,pos_area4,size,cocos2d::Vec2(600,400),name, cocos2d::Color4F(0.0,1.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5) });
         }
         else if (area == 4)
         {
-           data_.emplace_back(Room_Data{4,true,pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1.0, 0.0,1.0,1), cocos2d::Color4F(1.0,0.0,1.0,0.5)});
+           data_.emplace_back(Room_Data{4,true,pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1.0, 0.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5)});
         }
     }
     return true;
@@ -153,22 +144,22 @@ bool MapGenerator::DistributedRoom(void)
     return true;
 }
 
-bool MapGenerator::Create_Delaunay(void)
+bool MapGenerator::CreateDelaunay(void)
 {
-    _delaunay->Create_Triangle(cocos2d::Vec2(0, 0), cocos2d::Vec2(600, 500));
+    delaunay_->CreateTriangle(cocos2d::Vec2(0, 0), cocos2d::Vec2(600, 500));
     for (int i = 0; i < FLOOR; i++)
     {
-        _delaunay->Subdivision_Triangle((data_[i].pos + data_[i].size / 2) - cocos2d::Vec2(600, 400));
+        delaunay_->SubdivisionTriangle((data_[i].pos + data_[i].size / 2) - cocos2d::Vec2(600, 400));
         vertex_.push_back((data_[i].pos + data_[i].size / 2) - cocos2d::Vec2(600, 400));
         areaData_.push_back(data_[i].area);
     }
-    _delaunay->FinishDelaunay();
+    delaunay_->FinishDelaunay();
     return true;
 }
 
-bool MapGenerator::Create_MST(void)
+bool MapGenerator::CreateRoot(void)
 {
-    _mst = new MST(_delaunay->Triangle_To_Edge(),vertex_,areaData_, 0);
-    _mst->Choice_Node();
+    mst_ = std::make_unique<MST>(delaunay_->TriangletoEdge(),vertex_,areaData_, 0);
+    mst_->CreateMST();
     return false;
 }

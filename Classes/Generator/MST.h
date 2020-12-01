@@ -24,7 +24,6 @@ struct Node_Status
 	std::vector<NodeChild>childData;
 };
 
-
 struct Edge_Status
 {
 	float distance;
@@ -41,12 +40,24 @@ public:
 	MST(std::vector<Edge_Status> data, Vertex_List vertex,std::vector<int> areaData,int floor_cnt);
 	~MST();
 
-	void Choice_Node();
+	void CreateMST();
+	
+	// 最も短いエッジを返す
 	Edge_List FindShortest(cocos2d::Vec2& v, cocos2d::Vec2& usedvert, float& min_distance, Edge_List& min_edge);
 	std::vector<Node_Status> GetNode();
-	std::vector<Edge_Status> edge_data;		//edge情報を保存
+	std::vector<Edge_Status> edgeData;		//edge情報を保存
 private:
-
+	// プリム法を用いてMSTを作成
+	void MakeMSTforPrim();
+	// edge_dataとminEdgeListの重複判定
+	// 重複していたら使用済みにする
+	void UsedIfDuplicate();
+	// 親から繋がっている子を作成する
+	void CreateLinkNode();
+	//一度削除したノードの一部復元
+	void RevertPartofEdge();
+	//Mapの管理クラスに渡す前の下処理
+	void NextFancPrepation(void);
 	Vertex_List vertexList_;
 	std::vector<int> areaData_;
 	std::vector<Edge_List> minEdgeList_;
