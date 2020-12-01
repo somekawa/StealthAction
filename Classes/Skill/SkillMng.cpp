@@ -20,7 +20,7 @@ SkillMng::SkillMng(std::string directory)
 		{
 			std::string f_name = win32_fd.cFileName;
 			f_name = f_name.erase(f_name.find("."));
-			skill_data_[f_name].lock = true;
+			skillData_[f_name].lock = true;
 			f_names.emplace_back(f_name);
 		}
 	} while (FindNextFileA(h_find, &win32_fd));
@@ -34,45 +34,45 @@ SkillMng::~SkillMng()
 
 SkillParam SkillMng::GetSkillData(std::string name)
 {
-	return skill_data_[name];
+	return skillData_[name];
 }
 
 SkillParam SkillMng::ChangeAllData(std::string name, SkillParam param)
 {
-	return skill_data_[name] = param;
+	return skillData_[name] = param;
 }
 
 bool SkillMng::SkillUnlock(std::string name)
 {
-	return skill_data_[name].lock = false;
+	return skillData_[name].lock = false;
 }
 
 bool SkillMng::SkillInActivate(std::string name)
 {
-	return skill_data_[name].activation = false;
+	return skillData_[name].activation = false;
 }
 
 bool SkillMng::SkillActivate(std::string name)
 {
-	return skill_data_[name].activation = true;
+	return skillData_[name].activation = true;
 }
 
 void SkillMng::UpDate(std::string name)
 {
-	if (skill_data_[name].lock == true)
+	if (skillData_[name].lock == true)
 	{
 		return;
 	}
-	if(skill_data_[name].activation == true)
+	if(skillData_[name].activation == true)
 	{
-		if (skill_data_[name].ct > 0.0f)
+		if (skillData_[name].ct > 0.0f)
 		{
-			skill_data_[name].ct--;
+			skillData_[name].ct--;
 		}
 		else
 		{
 			//‚±‚±‚ÅCT‚ðƒŠƒZƒbƒg‚·‚é
-			skill_data_[name].ct;
+			skillData_[name].ct;
 			SkillInActivate(name);
 		}
 	}
