@@ -39,6 +39,7 @@ public:
 	void ReplaceMap(Player& player);
 	void update(Player& pos);
 	int GetNextChildID();
+	cocos2d::Label* mapName;
 private:
 	// パスからマップ読み込みを行う
 	cocos2d::TMXTiledMap* createMapFromPath(std::string& mapPath);
@@ -55,6 +56,8 @@ private:
 	int frame_;
 	std::array<cocos2d::Vec2, static_cast<int>(MapDirection::Max)>nextPosTbl;
 	std::shared_ptr<MapGenerator>mapGenerator_;
+
+	
 
 };
 

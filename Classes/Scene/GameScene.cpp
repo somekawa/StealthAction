@@ -34,7 +34,14 @@
 #include "Loader/CollisionLoader.h"
 #include "GameMap.h"
 #include "Gate.h"
+#include "renderer/backend/Device.h"
 USING_NS_CC;
+
+namespace
+{
+	backend::ProgramState* programState;
+	backend::ProgramState* programState2;
+}
 
 Scene* Game::createScene()
 {
@@ -177,6 +184,7 @@ bool Game::init()
 
 	// ボタンテスト用
 	// 攻撃ボタン
+	
 	auto attackBtnSp = Sprite::create("image/button1.png");
 	attackBtnSp->setName("attackBtn");
 	attackBtnSp->setAnchorPoint(Vec2(0.5f, 0.0f));
@@ -254,6 +262,16 @@ bool Game::init()
 
 	PL_HPgaugeSp->scheduleUpdate();
 
+	auto fileUtiles = FileUtils::getInstance();
+	auto vertexSource = fileUtiles->getStringFromFile("OutLineTest.vert");
+	auto fragmentSource = fileUtiles->getStringFromFile("OutLineTest.frag");
+	auto program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
+	programState = new backend::ProgramState(program);
+	auto fileUtiles2 = FileUtils::getInstance();
+	auto vertexSource2 = fileUtiles2->getStringFromFile("OutLineTest.vert");
+	auto fragmentSource2 = fileUtiles2->getStringFromFile("OutLineTest.frag");
+	auto program2 = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
+	programState2 = new backend::ProgramState(program);
 	this->scheduleUpdate();
 	return true;
 }
@@ -281,8 +299,13 @@ void Game::update(float sp)
 	// プレイヤーのカメラがうまくいかない
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
-
-
+	
+	auto c = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
+	for (auto e : c)
+	{
+		e->setProgramState(programState2);
+	}
+	player->setProgramState(programState);
 	//// 当たり判定用の枠を出してみる
 	//auto ppos = plSprite->getPosition();
 	//auto psize = plSprite->getContentSize();
@@ -321,6 +344,7 @@ void Game::menuCloseCallback(Ref* pSender)
 
 void Game::AddPlayer(int playerNum)
 {
+	
 	// player数resize
 	for (int p = 0; p < playerNum; p++)
 	{

@@ -28,6 +28,6 @@ public:
 	void UpDate(std::string name);
 private:
 	//スキルデータの保存
-	std::map<std::string, SkillParam> skill_data_;
+	std::map<std::string, SkillParam> skillData_;
 };
 

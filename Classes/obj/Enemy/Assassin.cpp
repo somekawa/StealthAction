@@ -88,7 +88,7 @@ void Assassin::Action(void)
 
 void Assassin::update(float delta)
 {
-	gravity_->ApplyGravityToTarget(delta);
+//	gravity_->ApplyGravityToTarget(delta);
 
 	Action();
 	// Œ»İ‚ÌƒtƒŒ[ƒ€‚ğ®”’l‚Åæ“¾

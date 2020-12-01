@@ -1,4 +1,5 @@
 #include "AnimMng.h"
+#include "renderer/backend/Device.h"
 
 USING_NS_CC;
 
@@ -28,12 +29,13 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 
 	// アニメーション画像追加
 	Animation* animation = Animation::create();
-
+	
 	for (int i = 0; i < frame; i++)
 	{
 		auto string = animName + "%d.png";		// plistの中だからパスじゃない
 		auto str = StringUtils::format(string.c_str(), i);
 		SpriteFrame* sprite = cache->getSpriteFrameByName(str);
+
 		animation->addSpriteFrame(sprite);
 	}
 
@@ -69,15 +71,13 @@ void AnimMng::ChangeAnimation(cocos2d::Sprite& sprite, std::string name, bool lo
 {
 	// 今の動きを止める
 	sprite.stopAllActions();
-
+	
 	// キーによるアニメーションの取り出し
 	Animation* animation = caches_[static_cast<int>(type)][name];
-
 	// フレームアニメーションは繰り返し
 	if (loop)
 	{
 		RepeatForever* action = RepeatForever::create(Animate::create(animation));
-
 		//アニメーションを実行
 		sprite.runAction(action);
 	}

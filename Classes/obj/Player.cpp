@@ -370,6 +370,14 @@ void Player::attackMotion(float sp)
 				oldPos_ = this->getPosition().x;
 				oldPosKeepFlg_ = true;
 				direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
+				if (direction_ == Direction::Left)
+				{
+					TRACE("ひだりぃぃぃぃぃぃ\n");
+				}
+				else
+				{
+					TRACE("右ぃぃぃぃぃぃ\n");
+				}
 			}
 			auto a = sizeof(bitFlg_);
 			actionNow_ = "AttackFirst";
@@ -582,7 +590,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = false;
 		flipAct.actName = "NON";
 		flipAct.button = BUTTON::RIGHT;
-		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
+		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -601,7 +609,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = true;
 		flipAct.actName = "NON";
 		flipAct.button = BUTTON::LEFT;
-		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
+		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
 		flipAct.jumpFlg = false;
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
@@ -702,6 +710,7 @@ void Player::actModuleRegistration(void)
 		act.actName = "AttackFirst";
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };
+		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
 	}
@@ -712,6 +721,7 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::DOWN;
 		act.actName = "AttackSecond";
+		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
 	}
@@ -722,6 +732,7 @@ void Player::actModuleRegistration(void)
 		act.state = _oprtState;
 		act.button = BUTTON::DOWN;
 		act.actName = "AttackThird";
+		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
 	}
@@ -737,11 +748,14 @@ void Player::actModuleRegistration(void)
 		act.flipFlg = true;
 		act.actName = "Wall_Slide";
 		act.touch = TOUCH_TIMMING::TOUCHING;	
-		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Jumping");	
 		act.blackList.emplace_back("Run");	
 		act.blackList.emplace_back("Fall");
 		act.blackList.emplace_back("Look_Intro");
 		act.blackList.emplace_back("NON");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		act.num = 95;
 		_actCtl.ActCtl("右壁スライド", act);
 	}
@@ -757,14 +771,21 @@ void Player::actModuleRegistration(void)
 		act.flipFlg = false;
 		act.actName = "Wall_Slide";
 		act.touch = TOUCH_TIMMING::TOUCHING;
-		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Jumping");	
 		act.blackList.emplace_back("Run");
 		act.blackList.emplace_back("Fall");
 		act.blackList.emplace_back("Look_Intro");
 		act.blackList.emplace_back("NON");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		act.num = 95;
 		_actCtl.ActCtl("左壁スライド", act);
 	}
 }
 
 // アンカーポイントを変更せずに攻撃モーション追加しないといけない
+
+// 左と下を同時に押したときに後ろに下がりながら斬ってしまうのは
+// 左入力が先に入って、左向きでSetDirされた後に下入力で攻撃モーションに入るから。
+// どうしましょう

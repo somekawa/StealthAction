@@ -14,7 +14,7 @@ MST::MST(std::vector<Edge_Status> data, Vertex_List vertex, std::vector<int>area
 	std::uniform_int_distribution<>::param_type param_i(0, floor_cnt);
 	engine.seed(/*seedGen_()*/0);
 	dist.param(param_i);
-	edge_data = data;
+	edgeData = data;
 	vertexList_ = vertex;
 	areaData_ = areaData;
 }
@@ -23,7 +23,7 @@ MST::~MST()
 {
 }
 
-void MST::Choice_Node()
+void MST::MakeMSTforPrim()
 {
 	/*VとAを空集合とする．*/
 	Vertex_List A = vertexList_;
@@ -31,79 +31,76 @@ void MST::Choice_Node()
 	//グラフから任意の頂点をひとつ選び，Vに加える．
 	std::move(A.begin(), A.begin() + 1, std::back_inserter(V));
 	A.erase(A.begin());
-	//Node_List::iterator& itr = vertex_list.end();
-	cocos2d::Vec2 itr;
-	cocos2d::Vec2 choice_u;
 	Edge_List min_edge;
 	float min_distance = FLT_MAX;
-
 
 	//Vがグラフのすべての頂点を含むまで，以下を繰り返す．
 	while (vertexList_.size() > V.size())
 	{
-		for (auto u : V)
+		for (auto usedvert : V)
 		{
-			for (auto v : A)
+			for (auto unUsedvert : A)
 			{
-				auto distance = std::sqrt(lpGeometry.Distance_Calculator(v, u));
-				for (auto edge : edge_data)
-				{
-					if (min_distance > distance)
-					{
-						Edge_List uvEdge = { u, v };
-						//Vに含まれる頂点uと含まれない頂点vを結ぶ重みが最小の辺(u, v)をグラフから選び、Eに加える．
-						if ((edge.pair_vertex[0] == uvEdge[0] && edge.pair_vertex[1] == uvEdge[1])
-							|| (edge.pair_vertex[0] == uvEdge[1] && edge.pair_vertex[1] == uvEdge[0]))
-						{
-							min_distance = distance;
-							min_edge = uvEdge;
-							itr = v;
-						}
-					}
-				}
+				FindShortest(unUsedvert, usedvert, min_distance, min_edge);
 			}
 		}
-		Vertex_List::iterator a = remove_if(A.begin(), A.end(), [itr](const Vec2& a)
+		// min_edgeの中身は{unUsedvert,usedvert}だから0番目
+		auto minVert = min_edge[0];
+
+		//そしてvをVに加える．
+		V.emplace_back(minVert);
+		//そしてAからvを削除
+		Vertex_List::iterator vertItr = remove_if(A.begin(), A.end(), [minVert](const Vec2& vert)
 			{
-				return a == itr;
+				return vert == minVert;
 			});
-		if (a == A.end())
+		if (vertItr == A.end())
 		{
 			continue;
 		}
-		//そしてvをVに加える．
-		V.emplace_back(itr);
-		A.erase(a, A.end());
+		A.erase(vertItr, A.end());
 
 		//最終的にグラフ(V, E)が最小全域木となる．
-		node.push_back(min_edge);
+		minEdgeList_.push_back(min_edge);
 
 		min_distance = FLT_MAX;
 	}
+}
 
+void MST::CreateMST()
+{
+	MakeMSTforPrim();
+	UsedIfDuplicate();
+	CreateLinkNode();	
+	RevertPartofEdge();
+	NextFancPrepation();
+}
 
-	for (auto& edge : edge_data)
+void MST::UsedIfDuplicate()
+{
+	// edge_dataとminEdgeListの重複判定
+	// 重複していたら使用済みにする
+	for (auto& edge : edgeData)
 	{
-		//edge_dataの重複判定
-		for (auto& n : node)
+		for (auto& minEdge : minEdgeList_)
 		{
-			if ((edge.pair_vertex[0] == n[0] && edge.pair_vertex[1] == n[1])
-				|| (edge.pair_vertex[0] == n[1] && edge.pair_vertex[1] == n[0]))
+			if (edge.pair_vertex == minEdge)
 			{
 				edge.used = true;
 				break;
 			}
 		}
 	}
+}
 
-	int i = 0;
+void MST::CreateLinkNode()
+{
 	// ノードリストといくつリンクしているかのリストの作成
 	for (auto& v : vertexList_)
 	{
-		Node_Status nodeA;
-		nodeA.id = i;
-		nodeA.key = v;
-		for (auto& edge : edge_data)
+		Node_Status tmpNode;
+		tmpNode.key = v;
+		for (auto& edge : edgeData)
 		{
 			if (!edge.used)
 			{
@@ -111,74 +108,82 @@ void MST::Choice_Node()
 			}
 			if ((edge.pair_vertex[0] == v || edge.pair_vertex[1] == v))
 			{
-				
+
 				if (edge.pair_vertex[0] != v)
 				{
-					nodeA.childData.push_back({nodeA.id, edge.pair_vertex[0], true, MapDirection::Max });
+					tmpNode.childData.push_back({ 0, edge.pair_vertex[0], true, MapDirection::Max });
 				}
 				else
 				{
-					nodeA.childData.push_back({nodeA.id, edge.pair_vertex[1], true, MapDirection::Max });
+					tmpNode.childData.push_back({ 0, edge.pair_vertex[1], true, MapDirection::Max });
 				}
-				
 			}
 		}
-		if (nodeA.childData.size() >= 5)
+		//万が一バグが出た場合生成しなおす
+		if (tmpNode.childData.size() >= 5)
 		{
 			cocos2d::log("超えている");
-			node.clear();
-			node.reserve(0);
+			minEdgeList_.clear();
+			minEdgeList_.reserve(0);
+			nodeList_.clear();
 			engine.seed(0);
-			Choice_Node();
+			CreateMST();
 
 		}
-		
-		nodeList_.push_back(nodeA);
-		i++;
+
+		nodeList_.push_back(tmpNode);
+
 	}
-	
+}
+
+void MST::RevertPartofEdge()
+{
 	//std::shuffle(edge_data.begin(), edge_data.end(), engine);
 	std::uniform_int_distribution<>::param_type param_i2(0, 10);
 	dist.param(param_i2);
 
-	// エッジを追加する
-	for (auto edge : edge_data)
-	{
+	// エッジを追加す
+	for (auto edge : edgeData)
+	{		
 		if (edge.used)
 		{
+			
 			continue;
 		}
-		for (int i = 0; i < vertexList_.size(); i++)
+		for (int i = 0; i < nodeList_.size(); i++)
 		{
-			for (int j = i+1; j < vertexList_.size(); j++)
+			if (nodeList_[i].key != edge.pair_vertex[0] && nodeList_[i].key != edge.pair_vertex[1])
 			{
-				Edge_List uvEdge = { vertexList_[i], vertexList_[j] };
-				if ((edge.pair_vertex[0] == uvEdge[0] && edge.pair_vertex[1] == uvEdge[1])
-					|| (edge.pair_vertex[0] == uvEdge[1] && edge.pair_vertex[1] == uvEdge[0]))
+				continue;
+			}
+			for (int j = i + 1; j < nodeList_.size(); j++)
+			{
+				Edge_List uvEdge = { nodeList_[i].key, nodeList_[j].key };
+				if (!(edge.pair_vertex == uvEdge)|| nodeList_[i].childData.size() > 4 
+					|| nodeList_[j].childData.size() > 4 || dist(engine) > 1)
 				{
-
-					if (nodeList_[i].childData.size() < 3 && nodeList_[i].childData.size() < 3 && dist(engine) <= 1)
-					{
-						for (auto& status : nodeList_)
-						{
-							if (status.key == edge.pair_vertex[0] )
-							{
-								status.childData.push_back({0, edge.pair_vertex[1], true, MapDirection::Max });
-
-							}
-							if (status.key == edge.pair_vertex[1])
-							{
-								status.childData.push_back({0, edge.pair_vertex[0], true, MapDirection::Max });
-							}							
-						}
-						node.emplace_back(edge.pair_vertex);
-					}
-					break;
+					continue;
 				}
+				for (auto& status : nodeList_)
+				{
+					if (status.key == edge.pair_vertex[0])
+					{
+						status.childData.push_back({ 0, edge.pair_vertex[1], true, MapDirection::Max });
+
+					}
+					if (status.key == edge.pair_vertex[1])
+					{
+						status.childData.push_back({ 0, edge.pair_vertex[0], true, MapDirection::Max });
+					}
+				}
+				break;				
 			}
 		}
 	}
+}
 
+void MST::NextFancPrepation(void)
+{
 	// 子供に次のIDをセット
 	for (auto& status : nodeList_)
 	{
@@ -204,13 +209,14 @@ void MST::Choice_Node()
 		for (auto& pair : nodeList_[i].childData)
 		{
 			//中心に向かうベクトル
+			// 扉を置く方向
 			auto vec = pair.pair_node - nodeList_[i].key;
 			auto nvec1 = Vec2(1, 0)/*nodeList_[i].key / hypot(nodeList_[i].key.x, nodeList_[i].key.y)*/;
 			auto nvec2 = vec / hypot(vec.x, vec.y);
 			auto cos = lpGeometry.Dot(nvec1, nvec2);
 			auto sin = lpGeometry.Cross(nvec1, nvec2);
 			auto rad = atan2(sin, cos);
-			float angle = rad * (180 / std::_Pi);
+			float angle = rad * (180 /M_PI);
 			if (angle < 0)
 			{
 				angle = angle + 360;
@@ -220,15 +226,36 @@ void MST::Choice_Node()
 			
 			pair.dir = dir;
 
+			// エリアロック
 			for (int j = 0; j < vertexList_.size(); j++)
 			{
-				if (pair.pair_node == vertexList_[j] && areaData_[i] != areaData_[j])
+				if (pair.pair_node == vertexList_[j] && areaData_[i] == areaData_[j])
 				{
 					pair.lock = false;
 				}
 			}
 		}
 	}
+}
+
+Edge_List MST::FindShortest(cocos2d::Vec2& unUsedvert, cocos2d::Vec2& usedvert, float& min_distance, Edge_List& min_edge)
+{
+	auto distance = std::sqrt(lpGeometry.Distance_Calculator(unUsedvert, usedvert));
+	Edge_List tmpEdge = { unUsedvert, usedvert };
+	if (min_distance > distance)
+	{
+		for (auto edge : edgeData)
+		{
+			//Vに含まれる頂点uと含まれない頂点vを結ぶ重みが最小の辺(u, v)をグラフから選び、Eに加える．
+			if (edge.pair_vertex == tmpEdge)
+			{
+				min_distance = distance;
+				min_edge = tmpEdge;
+				return min_edge;
+			}
+		}
+	}
+	return min_edge;
 }
 
 std::vector<Node_Status> MST::GetNode()
@@ -238,8 +265,8 @@ std::vector<Node_Status> MST::GetNode()
 
 bool operator==(const Edge_List& edge, const Edge_List& edge1)
 {
-	if ((edge[0] == edge1[0]) || (edge[1] == edge1[1])
-		||(edge[1] == edge1[0])||(edge[0] == edge1[1]))
+	if ((edge[0] == edge1[0]) && (edge[1] == edge1[1])
+		||(edge[1] == edge1[0])&&(edge[0] == edge1[1]))
 	{
 		return true;
 	}

@@ -5,6 +5,7 @@
 #include <algorithm>
 
 USING_NS_CC;
+#pragma execution_character_set("utf-8")
 
 Scene* LoadScene::CreateLoadScene(
 	Player& player,MapData& mapData,
@@ -81,7 +82,8 @@ void LoadScene::update(float delta)
 	mapParentList_.nowID = static_cast<int>(mapState_.child[childId].nextParentID);
 	player_.setPosition(mapState_.child[childId].nextPos);
 	gameMap_->CreateObject();
-	//mapState_.mapID;
+	auto str = StringUtils::format("•”‰®@%d", mapParentList_.nowID);
+	gameMap_->mapName->setString(str);
 	director->popScene();
 }
 
