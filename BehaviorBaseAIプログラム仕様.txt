@@ -1,0 +1,108 @@
+BehaviorBaseAI の仕様
+
+BehaviorData class
+特に使用しない。
+
+BehaviorTree class
+
+SelectRule:
+行動を決定する方法
+
+BehaviorTreeはrootからchildを辿っていくが、nodeを辿る際に「１つの共通処理:Non」と
+「５つの選択処理」によってどのノードを選択するかを決める。
+
+Priority
+各ノードに優先順位がつけられており、
+実行可能なノードの中から最も優先順位の高いノードを実行する。
+
+Sequence
+子ノードを上から順番に実行していく方法。
+子ノードが末端に至ったらルートに戻る。
+
+SequencialLooping
+ループするシーケンス法。
+シーケンスのノードが末端に至ったらノードの先頭に戻ってノードを実行。
+
+Random
+実行可能なノードからランダムにノードを選択する手法。
+
+OnOff
+実行可能なノードからまだ実行していないノードを選択する手法。
+
+主に使用する関数
+AddNode(その行動のrootNodeに対応する名前,
+その行動の名前,優先順位,先ほど記述したSelectRule,
+その行動を実行するかしないかの決定シングルトンクラス,
+実行するActionシングルトンクラス);
+
+この関数を使用すると、各rootNodeにActionがぶら下がってくれる。
+
+例えば
+
+BehaviorTree playerBehavior_;
+
+playerBehavior_.AddNode("root","attack",1,BehaviorTree::SelectRule::Priority,AttackJudgement::Instance(),NULL);
+playerBehavior_.AddNode("root","deffence",1,BehaviorTree::SelectRule::Priority,DeffenceJudgement::Instance(),NULL);
+
+playerBehavior_.AddNode("attack","phisycalAttack",1,BehaviorTree::SelectRule::Priority,NULL,PhisycalAction::Instance());
+playerBehavior_.AddNode("attack","skillAttack",1,BehaviorTree::SelectRule::Priority,SkillAttackJudgement::Instance(),SkillAttackAction::Instance());
+こうすることで
+
+player -----   attack   ------------------- phisycalAttack ----- NULL
+                                                       --------- skillAttack       ----- NULL
+               --- deffence
+
+
+というように行動がぶら下がる。
+
+Judgement class 
+
+特定の行動を実行するかどうか決定するクラス
+例えば　AttackJudgement はプレイヤーとの距離がある一定距離になったらtrue　それ以外はfalseを返す
+というように　条件が一致するかの判断クラス
+AttackJudgementがtrueになれば上記のようにぶら下げたとすると、
+その子供のphisycalAttack or skillAttack に現在見ているnodeを移動し、またAttackJudgementの中に入り思考を繰り返す。
+trueになるとphisycalAttackActionを実行し、skillAttackJudgementがtrueになるとskillAttackActionを実行する。
+
+あとはenemy の子供にした自クラスのupdate内でAIRun()を呼ぶだけでBehaviorTreeが実行される。
+
+とりあえずAddNodeをすればNodeが追加されるので、あとは実行したい行動、条件を基にJudgementをtrueにするかfalseにするかを
+考えて組めばよい。
+ここで注意すべきは
+このBehaviorTreeは全てのNodeを検索するので、trueになる行動が2つ以上にならないようにしないといけないこと。
+trueになる行動が2つ以上になる場合の行動にはSelectRule::Priorityにしてやれば2つ以上trueになってもPriorityが高い行動が実行される。と思う(まだ検証していない)
+
+あとはActionBase class 
+
+enum class のStateは3つの状態に分けられる
+ノード選択が終了し、末端のノードに行き着いたらそのノードに設定されている
+行動が実行される。
+
+●行動の情報の例
+・実行中
+	ノードで設定されている行動を実行している状態。
+
+・行動成功
+	ノードで設定されている行動が無事終了した状態。
+
+・行動失敗
+	ノードで設定されている行動が失敗に終わった状態。
+
+最低限必要な情報は上にあげているように実行中かどうかと
+終了した場合に成功したかどうかが必要。
+実行中かどうかは終了したら次の行動を決めるためにルートに戻る際に必要。
+行動の成否はシーケンス法やシーケンシャルルーピング法で使用。
+シーケンス法では途中の行動が成功したら次の行動に移動して
+失敗したらルートに戻るという仕様になっているケースが多い。
+なので、きちんと行動の成否が分かるようにしてスムーズに判断できるようにする。
+
+
+BehaviorBaseAIのフォルダ内のやつを見てください。
+
+＊　Judgement classを作成する際はJudgementToolフォルダ内に作成。<BehaviorBaseAIフォルダ直下のJudgementAIBase class を継承させる>
+Action classを作成する際にはAIActionsフォルダ内に作成。<BehaviorBaseAIフォルダ直下のActionBase class を継承させる>
+
+私も色々学びながらやっているので、説明が不足しています。まずプログラムを見てみてください。
+
+一応、テスト段階で作成したプログラムをAITestという名前で載せておきます。
+統合は明日以降やりますので。
