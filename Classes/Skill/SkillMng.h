@@ -11,7 +11,7 @@ struct SkillParam
 class SkillMng
 {
 public:
-	SkillMng(std::string directory);
+	SkillMng();
 	~SkillMng();
 
 	//skillƒf[ƒ^‚Ìæ“¾
