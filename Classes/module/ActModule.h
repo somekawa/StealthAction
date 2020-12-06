@@ -29,15 +29,11 @@ struct ActModule {
 
 	TOUCH_TIMMING touch;
 
-	std::list<std::string>blackList;									// ブラックリスト(動いてはいけないやつ)
-	std::list<std::string>whiteList;									// ホワイトリスト(動いていいやつ)
+	std::list<std::string>blackList;							// ブラックリスト(動いてはいけないやつ)
+	std::list<std::string>whiteList;							// ホワイトリスト(動いていいやつ)
 
 	funcActModule runAction;
 	std::list<funcActModule>act;
 
 	float flame;												// 落下とジャンプにつかうフレーム数
-
-	bool jumpFlg;
-
-	int num;
 };

@@ -38,7 +38,7 @@ Player::Player()
 
 	actModuleRegistration();
 
-	actionNow_ = "Look_Intro";
+	currentAnimation_ = "NON";
 	actionOld_ = "Run";
 	direction_ = Direction::Right;
 
@@ -82,23 +82,34 @@ Player::Player()
 	//}
 
 	// これを追加すると全部のコリジョンボックスがでてくる!!
-	//for (auto anim : lpAnimMng.GetAnimations(type_))
+	for (auto anim : lpAnimMng.GetAnimations(type_))
+	{
+		// colliderBoxのLoad
+		lpCol.Load(collider_, anim, "player");
+		for (auto col : collider_[anim])
+		{
+			for (int colNum = 0; colNum < col.size(); colNum++)
+			{
+				// colliderBoxを自身の子にする
+				auto draw = col[colNum]->create();
+				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+				draw->setTag(col[colNum]->GetData().frame_);
+				this->addChild(draw, 0, anim);
+			}
+		}
+	}
+
+
+	// こう書くとplayerが下の段に移動したときにくっついてくる文字になる
+	// updateで見るだけして、1度だけ読み込みさせて文字を描画できるようにしてみるとか
+	//auto label = Label::createWithTTF("Text_Yomikomitai", "fonts/Marker Felt.ttf", 24);
+	//if (label == nullptr)
 	//{
-	//	// colliderBoxのLoad
-	//	lpCol.Load(collider_, anim, "player");
-	//	for (auto col : collider_[anim])
-	//	{
-	//		for (int colNum = 0; colNum < col.size(); colNum++)
-	//		{
-	//			// colliderBoxを自身の子にする
-	//			auto draw = col[colNum]->create();
-	//			draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-	//			draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
-	//			draw->setTag(col[colNum]->GetData().frame_);
-	//			this->addChild(draw, 0, anim);
-	//		}
-	//	}
+	//	int a = 0;
 	//}
+	//label->setPosition(Vec2(100,100));
+	//this->addChild(label, 1);
 
 }
 
@@ -109,17 +120,35 @@ Player::~Player()
 }
 
 // 毎フレーム更新
-void Player::update(float sp)
+void Player::update(float delta)
 {
 	// getnameがgamesceneでない場合、何もしないreturn処理
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		return;
 	}
+
+	// 現在のフレームを整数値で取得
+	animationFrame_int_ = GetAnimationFrameInt();
+	for (auto collider : this->getChildren())
+	{
+		if (currentAnimation_ == collider->getName() &&
+			animationFrame_int_ == collider->getTag())
+		{
+			collider->setVisible(true);
+		}
+		else
+		{
+			collider->setVisible(false);
+		}
+	}
+	// アニメーションの更新
+	//UpdateAnimation(delta);
+
 	//TRACE("%f,%f\n",getPosition().x, getPosition().y);
 	Action();
 
-	_actCtl.update(sp,*this);
+	_actCtl.update(delta,*this);
 
 	// 実行する入力先(keyかtouch)のupdateへ移動
 	_oprtState->update();	
@@ -211,7 +240,7 @@ void Player::update(float sp)
 	//OutOfMapCheck();	
 
 	
-	if (actionNow_ == "Wall_Slide")
+	if (currentAnimation_ == "Wall_Slide")
 	{
 		if (direction_ == Direction::Left)
 		{
@@ -229,18 +258,26 @@ void Player::update(float sp)
 		this->setAnchorPoint(Vec2(0.5f, 0.0f));
 	}
 
-	attackMotion(sp);
+	// スライド終了時に左右向きを反転させる
+	if (currentAnimation_ != "Wall_Slide" && actionOld_ == "Wall_Slide")
+	{
+		auto dir = direction_;
+		direction_ == Direction::Right ? direction_ = Direction::Left : direction_ = Direction::Right;
+		auto tmpdir = direction_;
+	}
+
+	attackMotion(delta);
 
 	// トランスフォーム
 	if (_oprtState->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !_oprtState->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
 		this->setPosition(this->getPosition().x, this->getPosition().y - 10);	// 位置補正を入れないと浮いて見える
-		actionNow_ = "Transform";
+		currentAnimation_ = "Transform";
 		bitFlg_.TransfromFlg = true;
 	}
 	if (bitFlg_.TransfromFlg)
 	{
-		animationFrame_ += sp;
+		animationFrame_ += delta;
 		if (animationFrame_ >= 1.85f)
 		{
 			bitFlg_.TransfromFlg = false;
@@ -249,19 +286,19 @@ void Player::update(float sp)
 		}
 		else
 		{
-			actionNow_ = "Transform";
+			currentAnimation_ = "Transform";
 		}
 	}
 
-	if (actionNow_ != actionOld_)
+	if (currentAnimation_ != actionOld_)
 	{
-		if (actionNow_ == "AttackFirst" && !bitFlg_.FirstAttackFlg)
+		if (currentAnimation_ == "AttackFirst" && !bitFlg_.FirstAttackFlg)
 		{
 			bitFlg_.FirstAttackFlg = true;
 		}
-		lpAnimMng.ChangeAnimation(*this, actionNow_, true, ActorType::Player);
+		lpAnimMng.ChangeAnimation(*this, currentAnimation_, true, ActorType::Player);
 	}
-	actionOld_ = actionNow_;
+	actionOld_ = currentAnimation_;
 }
 
 void Player::Action(void)
@@ -330,18 +367,18 @@ void Player::attackMotion(float sp)
 	// flagがtrueの時は強制的にAttackSecondへ切替
 	if (bitFlg_.FirstAttackFlg)
 	{
-		actionNow_ = "AttackFirst";
+		currentAnimation_ = "AttackFirst";
 	}
 	else if (bitFlg_.SecondAttackFlg)
 	{
-		actionNow_ = "AttackSecond";
+		currentAnimation_ = "AttackSecond";
 	}
 	else if (bitFlg_.ThirdAttackFlg)
 	{
-		actionNow_ = "AttackThird";
+		currentAnimation_ = "AttackThird";
 	}
 
-	if (actionNow_ == "AttackFirst" && bitFlg_.FirstAttackFlg)
+	if (currentAnimation_ == "AttackFirst" && bitFlg_.FirstAttackFlg)
 	{
 		// フレーム数の取得テスト
 		//auto a = animationFrame_ * 100;
@@ -380,17 +417,17 @@ void Player::attackMotion(float sp)
 				}
 			}
 			auto a = sizeof(bitFlg_);
-			actionNow_ = "AttackFirst";
+			currentAnimation_ = "AttackFirst";
 		}
 		else
 		{
 			if (!bitFlg_.SecondAttackFlg)
 			{
-				actionNow_ = "Look_Intro";
+				currentAnimation_ = "Look_Intro";
 			}
 			else
 			{
-				actionNow_ = "AttackSecond";
+				currentAnimation_ = "AttackSecond";
 				oldPos_ = this->getPosition().x;
 			}
 			animationFrame_ = 0.0f;
@@ -405,7 +442,7 @@ void Player::attackMotion(float sp)
 		}
 	}
 
-	if ((actionNow_ == "AttackSecond" && bitFlg_.SecondAttackFlg))
+	if ((currentAnimation_ == "AttackSecond" && bitFlg_.SecondAttackFlg))
 	{
 		// 攻撃中にもう一度攻撃ボタンが押されたらAttackSecondが終了後、AttackThirdへ移行するようにする
 		//auto keyN = _oprtState->GetNowData();
@@ -424,17 +461,17 @@ void Player::attackMotion(float sp)
 		if (bitFlg_.SecondAttackFlg && animationFrame_ <= 0.8f)
 		{
 			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
-			actionNow_ = "AttackSecond";
+			currentAnimation_ = "AttackSecond";
 		}
 		else
 		{
 			if (!bitFlg_.ThirdAttackFlg)
 			{
-				actionNow_ = "Look_Intro";
+				currentAnimation_ = "Look_Intro";
 			}
 			else
 			{
-				actionNow_ = "AttackThird";
+				currentAnimation_ = "AttackThird";
 				oldPos_ = this->getPosition().x;
 			}
 
@@ -443,18 +480,18 @@ void Player::attackMotion(float sp)
 		}
 	}
 
-	if ((actionNow_ == "AttackThird" && bitFlg_.ThirdAttackFlg))
+	if ((currentAnimation_ == "AttackThird" && bitFlg_.ThirdAttackFlg))
 	{
 		animationFrame_ += sp;
 		if (bitFlg_.ThirdAttackFlg && animationFrame_ <= 0.8f)
 		{
 			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
-			actionNow_ = "AttackThird";
+			currentAnimation_ = "AttackThird";
 		}
 		else
 		{
 			bitFlg_.ThirdAttackFlg = false;
-			actionNow_ = "Look_Intro";
+			currentAnimation_ = "Look_Intro";
 			animationFrame_ = 0.0f;
 		}
 	}
@@ -463,13 +500,13 @@ void Player::attackMotion(float sp)
 // 現在のアクション情報を取得する
 std::string Player::GetAction(void)
 {
-	return actionNow_;
+	return currentAnimation_;
 }
 
 // 現在のアクション状態をセットする
 void Player::SetAction(std::string action)
 {
-	actionNow_ = action;
+	currentAnimation_ = action;
 }
 
 void Player::SetDir(Direction dir)
@@ -550,7 +587,6 @@ void Player::actModuleRegistration(void)
 		act.checkPoint1 = Vec2{ charSize.x/2, charSize.y/2 };	// 右上
 		act.checkPoint2 = Vec2{ charSize.x/2,  15 };			// 右下
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
-		act.jumpFlg = false;
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
@@ -571,7 +607,6 @@ void Player::actModuleRegistration(void)
 		act.checkPoint1 = Vec2{ -charSize.x/2, charSize.y/2 };	// 左上
 		act.checkPoint2 = Vec2{ -charSize.x/2,  15 };			// 左下
 		act.touch = TOUCH_TIMMING::TOUCHING;    // 押しっぱなし
-		act.jumpFlg = false;
 
 		//act.blackList.emplace_back(ACTION::FALLING);
 
@@ -590,8 +625,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = false;
 		flipAct.actName = "NON";
 		flipAct.button = BUTTON::RIGHT;
-		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
-		flipAct.jumpFlg = false;
+		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
@@ -609,8 +643,7 @@ void Player::actModuleRegistration(void)
 		flipAct.flipFlg = true;
 		flipAct.actName = "NON";
 		flipAct.button = BUTTON::LEFT;
-		flipAct.touch = TOUCH_TIMMING::ON_TOUCH; // 押しっぱなし
-		flipAct.jumpFlg = false;
+		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
@@ -638,7 +671,6 @@ void Player::actModuleRegistration(void)
 
 		act.gravity = Vec2{ 0.0f,-5.0f };
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
-		act.jumpFlg = false;
 		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
 		act.blackList.emplace_back("Wall_Slide");	
 		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
@@ -663,7 +695,6 @@ void Player::actModuleRegistration(void)
 		// でも連続でジャンプして上昇し続けるようになる
 		// しかもFALLとJUMPが混ざって高さが出ない
 		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
-		act.jumpFlg = true;
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
 		act.blackList.emplace_back("AttackThird");
@@ -684,7 +715,6 @@ void Player::actModuleRegistration(void)
 		//act.checkPoint2 = Vec2{ +10, 30 };					// 右上
 		act.jumpVel = Vec2{ 0.0f,20.0f };
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
-		act.jumpFlg = true;
 
 		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
 		act.blackList.emplace_back("Look_Intro");
@@ -756,7 +786,6 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
 		act.blackList.emplace_back("AttackThird");
-		act.num = 95;
 		_actCtl.ActCtl("右壁スライド", act);
 	}
 
@@ -779,7 +808,6 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("AttackFirst");
 		act.blackList.emplace_back("AttackSecond");
 		act.blackList.emplace_back("AttackThird");
-		act.num = 95;
 		_actCtl.ActCtl("左壁スライド", act);
 	}
 }

@@ -184,7 +184,9 @@ cocos2d::TMXTiledMap* GameMap::createMapFromPath(std::string& mapPath)
 {
 	TMXTiledMap* map = TMXTiledMap::create(mapPath);
 	auto colLayer = map->getLayer("Collision");
+	auto wallSlideLayer = map->getLayer("WallSlide");
 	colLayer->setName("col");
+	wallSlideLayer->setName("slide");
 	mapLayer_->addChild(map);
 	//map->setPosition(map->getPosition());
 

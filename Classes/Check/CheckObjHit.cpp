@@ -15,6 +15,7 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	const int chipSize = 48;
 	auto plPos = sprite.getPosition();
 	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
+	auto WallSlideData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("slide");
 	auto ColSize = CollisionData->getLayerSize();
 
 	// 当たり判定の位置に+module.velをすることで、次回移動値を加算したpointで当たり判定をするようにした
@@ -40,6 +41,9 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	auto plCheckPoint1Gid = CollisionData->getTileGIDAt(plCheckPoint1Pos);
 	auto plCheckPoint2Gid = CollisionData->getTileGIDAt(plCheckPoint2Pos);
 
+	auto plCheckPoint1GidW = WallSlideData->getTileGIDAt(plCheckPoint1Pos);
+	auto plCheckPoint2GidW = WallSlideData->getTileGIDAt(plCheckPoint2Pos);
+
 	auto lambda = [&](Vec2 point) {
 		auto plCheckPointChip = Vec2{ point } / chipSize;
 		auto plCheckPointPos = Vec2(plCheckPointChip.x, ColSize.height - plCheckPointChip.y);
@@ -56,9 +60,10 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 		return false;
 	};
 
-	if ((plCheckPoint1Gid == 95 && plCheckPoint2Gid == 95))
+	if ((plCheckPoint1GidW != 0 && plCheckPoint2GidW != 0))
 	{
 		((Player&)sprite).SetAction("Wall_Slide");
+		return false;
 	}
 
 	// 段差落下時の補正処理

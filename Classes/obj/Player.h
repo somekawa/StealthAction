@@ -30,7 +30,7 @@ public:
 
 	void Action(void) override;
 	void ChangeDirection(void) override;
-	void update(float sp) override;
+	void update(float delta) override;
 	void AnimRegistrator(void) override;						// アニメーションの登録
 
 	std::string GetAction(void);								// 現在のアクション情報を取得する
@@ -44,7 +44,7 @@ private:
 	void attackMotion(float sp);								// 攻撃モーションの設定
 
 	// アニメーション関係
-	std::string actionNow_;
+	//std::string actionNow_;
 	std::string actionOld_;
 
 	// OPRT関係
