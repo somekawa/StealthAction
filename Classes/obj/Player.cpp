@@ -16,7 +16,8 @@ USING_NS_CC;
 
 int Player::no_ = 0;
 
-Player::Player()
+Player::Player(int hp):
+	Actor(hp)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -127,9 +128,14 @@ void Player::update(float delta)
 	{
 		return;
 	}
-
 	// 現在のフレームを整数値で取得
 	animationFrame_int_ = GetAnimationFrameInt();
+	if (animationFrame_int_ <= 0)
+	{
+		animationFrame_int_ = 0;
+	}
+	CCLOG("plHP:%d", hp_);
+	currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	for (auto collider : this->getChildren())
 	{
 		if (currentAnimation_ == collider->getName() &&
@@ -265,6 +271,16 @@ void Player::update(float delta)
 		direction_ == Direction::Right ? direction_ = Direction::Left : direction_ = Direction::Right;
 		auto tmpdir = direction_;
 	}
+	if (onDamaged_)
+	{
+		// HP減少のテストコード
+		// 攻撃するたびにHPが10減るようにしている
+		auto a = ((Game*)Director::getInstance()->getRunningScene());
+		auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+		b->SetHP(b->GetHP() - 10);
+		onDamaged_ = false;
+	}
+
 
 	attackMotion(delta);
 
@@ -299,6 +315,8 @@ void Player::update(float delta)
 		lpAnimMng.ChangeAnimation(*this, currentAnimation_, true, ActorType::Player);
 	}
 	actionOld_ = currentAnimation_;
+
+	TRACE("playerPos:(%f,%f)", getPosition().x, getPosition().y);
 }
 
 void Player::Action(void)
@@ -438,7 +456,7 @@ void Player::attackMotion(float sp)
 			// 攻撃するたびにHPが10減るようにしている
 			auto a = ((Game*)Director::getInstance()->getRunningScene());
 			auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-			b->SetHP(b->GetHP() - 10);
+			b->SetHP(hp_-10);
 		}
 	}
 
@@ -557,9 +575,9 @@ void Player::AnimRegistrator(void)
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "NON");
 }
 
-Player* Player::CreatePlayer()
+Player* Player::CreatePlayer(int hp)
 {
-	Player* pRet = new(std::nothrow) Player();
+	Player* pRet = new(std::nothrow) Player(hp);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();

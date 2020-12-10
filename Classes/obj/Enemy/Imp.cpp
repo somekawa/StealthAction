@@ -9,8 +9,8 @@ USING_NS_CC;
 constexpr int Sight = 150;
 constexpr int AttackRange = 45;
 
-Imp::Imp(Vector<Node*>& player):
-	Enemy(player)
+Imp::Imp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp):
+	Enemy(player,aiTree,visionRange,hp)
 {
 	pos_ = { 980,100 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
@@ -48,9 +48,9 @@ Imp::~Imp()
 {
 }
 
-Imp* Imp::CreateImp(Vector<Node*>& player)
+Imp* Imp::CreateImp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp)
 {
-	Imp* pRet = new(std::nothrow) Imp(player);
+	Imp* pRet = new(std::nothrow) Imp(player,aiTree,visionRange,hp);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -126,6 +126,22 @@ void Imp::AnimRegistrator(void)
 	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/imp/imp", "death", 5,1.0f, ActorType::Imp,false);
 
 	lpAnimMng.InitAnimation(*this, ActorType::Imp, "walk");
+}
+
+void Imp::NormalAttack(void)
+{
+}
+
+void Imp::Idle(void)
+{
+}
+
+void Imp::Patrol(void)
+{
+}
+
+void Imp::Chase(void)
+{
 }
 
 void Imp::Walk(void)
@@ -207,6 +223,22 @@ void Imp::Run(void)
 		//lpAnimMng.ChangeAnimation(*this, "walk", true,type_);
 		updater_ = &Imp::Walk;
 	}
+}
+
+void Imp::Jump(void)
+{
+}
+
+void Imp::Fall(void)
+{
+}
+
+void Imp::Hit(void)
+{
+}
+
+void Imp::UseSkill(void)
+{
 }
 
 void Imp::Attack(void)

@@ -13,8 +13,6 @@ public:
 	~Gravity();
 	// d—Í‚ğ‚©‚¯‚é
 	void ApplyGravityToTarget(float delta);
-
-
 private:
 	// d—Í‚ğ‚©‚¯‚é‘ÎÛactor
 	Actor& target_;

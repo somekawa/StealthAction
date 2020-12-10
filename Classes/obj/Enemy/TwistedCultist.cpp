@@ -5,8 +5,9 @@
 
 USING_NS_CC;
 
-TwistedCultist::TwistedCultist(cocos2d::Vector<cocos2d::Node*>& player):
-	Enemy(player)
+TwistedCultist::TwistedCultist(Player& player,
+	BehaviorTree* aiTree,VisionRange visionRange,int hp):
+	Enemy(player,aiTree,visionRange,hp)
 {
 	pos_ = { 980,200 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
@@ -30,9 +31,10 @@ TwistedCultist::~TwistedCultist()
 {
 }
 
-TwistedCultist* TwistedCultist::CreateTwistedCultist(cocos2d::Vector<cocos2d::Node*>& player)
+TwistedCultist* TwistedCultist::CreateTwistedCultist(Player& player, 
+	BehaviorTree* aiTree, VisionRange visionRange,int hp)
 {
-	TwistedCultist* pRet = new(std::nothrow) TwistedCultist(player);
+	TwistedCultist* pRet = new(std::nothrow) TwistedCultist(player,aiTree,visionRange,hp);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -72,6 +74,42 @@ void TwistedCultist::AnimRegistrator(void)
 
 }
 
+void TwistedCultist::NormalAttack(void)
+{
+}
+
+void TwistedCultist::UseSkill(void)
+{
+}
+
 void TwistedCultist::Idle(void)
+{
+}
+
+void TwistedCultist::Patrol(void)
+{
+}
+
+void TwistedCultist::Chase(void)
+{
+}
+
+void TwistedCultist::Run(void)
+{
+}
+
+void TwistedCultist::Jump(void)
+{
+}
+
+void TwistedCultist::Fall(void)
+{
+}
+
+void TwistedCultist::Hit(void)
+{
+}
+
+void TwistedCultist::Death(void)
 {
 }

@@ -3,10 +3,13 @@
 class Imp :public Enemy
 {
 public:
-	Imp(cocos2d::Vector<cocos2d::Node*>& player);
+	Imp(Player& player,
+        BehaviorTree* aiTree,
+        VisionRange visionRange,int hp);
 	~Imp();
 
-	static Imp* CreateImp(cocos2d::Vector<cocos2d::Node*>& player);
+	static Imp* CreateImp(Player& player,
+        BehaviorTree* aiTree, VisionRange visionRange,int hp);
 
 	void Action(void)override;
 	void update(float delta)override;
@@ -14,11 +17,28 @@ public:
 	//CREATE_FUNC(Imp);
 
 private:
-	void(Imp::* updater_)(void);
 
-	void Walk(void);
-	void Run(void);
-	void Attack(void);
-	void Death(void);
+    // 物理攻撃
+    void NormalAttack(void);
+    // スキルを使用する。
+    void UseSkill(void);
+    void Attack(void);
+    // idleモーション
+    void Idle(void);
+    void Patrol(void);
+    void Chase(void);
+    // runモーション
+    // playerが自身の視界に入ったらplayerに向かって走る
+    void Run(void);
+    void Walk(void);
+    // ジャンプ
+    void Jump(void);
+    // ジャンプからの落ちるモーション
+    void Fall(void);
+    // プレイヤーからの攻撃のくらい
+    void Hit(void);
+    // 死ぬ
+    void Death(void);
+	void(Imp::* updater_)(void);
 
 };

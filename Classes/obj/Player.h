@@ -8,7 +8,7 @@
 #include "input/OPRT_state.h"
 #include "module/ActModule.h"
 #include "obj/Actor.h"
-#include "obj/Player.h"
+//#include "obj/Player.h"
 
 // ビットフィールド
 struct Bits
@@ -24,7 +24,7 @@ struct Bits
 class Player : public Actor
 {
 public:
-	Player();
+	Player(int hp);
 
 	~Player();
 
@@ -37,7 +37,8 @@ public:
 	void SetAction(std::string action);							// 現在のアクション状態をセットする
 	void SetDir(Direction dir);									// 現在の方向をセットする
 	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
-	static Player* CreatePlayer(void);
+	static Player* CreatePlayer(int hp);
+
 private:
 	//CREATE_FUNC(Player);
 

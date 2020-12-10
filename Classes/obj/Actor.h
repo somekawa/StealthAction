@@ -13,24 +13,34 @@ class Collider;
 class ActionRect;
 class Gravity;
 
+// 攻撃の矩形
+struct AttackRect
+{
+	// ポジション
+	cocos2d::Vec2 pos_;
+	// サイズ
+	cocos2d::Size size_;
+};
+
+#define FrameConverter(X) (X / 1000)
+
 class Actor :
 	public cocos2d::Sprite
 {
 public:
 	// デフォルトコンストラクタ追加中
 	//Actor();
-	Actor();
+	Actor(int hp);
 	~Actor();
 	// 各Actorの行動処理
 	virtual void Action(void) = 0;
 	// 更新処理
 	virtual void Update(void);
 	virtual void update(float delta) = 0;
-	// アニメーションの更新
-	virtual void UpdateAnimation(float delta);
-	// アニメーションの変更
-	// param@ animName: 変更先アニメーション名
-	virtual void ChangeAnimation(std::string animName);
+
+	// 現在のアニメーションを取得
+	virtual std::string GetAction(void);
+	virtual void SetAction(std::string actName);
 
 	// 方向変更
 	virtual void ChangeDirection(void) = 0;
@@ -52,14 +62,58 @@ public:
 		return pos_;
 	}
 
+	// 攻撃矩形の取得
+	virtual const AttackRect& GetAttackRect(void)
+	{
+		return attackRect_;
+	}
+
 	virtual void SetPos(Vector2I pos);
+	// 向いている方向のセット
+	virtual void SetDirection(Direction dir);
+
 	// これ作る必要あるのか分からないが、皆が使うと思い、作成しました
 	// 整数値で現在のフレーム値を取得
 	virtual const int& GetAnimationFrameInt(void);
 
+	virtual void CheckMapObjHit(float delta);
+	// 壁に当たっているか判定
+	virtual const bool& IsHitWall(void)
+	{
+		return isHitWall_;
+	}
+	// 床に接地しているかの判定
+	virtual const bool& OnFloor(void)
+	{
+		return onFloor_;
+	}
+	// ダメージをくらったときに使用
+	virtual void OnDamaged(void)
+	{
+		onDamaged_ = true;
+	}
+	// ﾀﾞﾒｰｼﾞをくらったﾌﾗｸﾞの取得関数
+	virtual const bool& GetOnDamaged(void)
+	{
+		return onDamaged_;
+	}
+	// 相手の攻撃に当たったかの判定
+	bool CheckHitAttack(const AttackRect& attackRect);
+	// 現在のコライダーボックスの取得
+	const std::vector <std::shared_ptr<ActionRect>>& GetCurrectCol(void)
+	{
+		return currentCol_;
+	}
+	// HPの取得
+	const int& GetHp(void)
+	{
+		return hp_;
+	}
 private:
 
 protected:
+	// hp
+	int hp_;
 	// ポジション
 	Vector2I pos_;
 	// 自身のサイズ
@@ -70,6 +124,8 @@ protected:
 	ActorType type_;
 	// 現在のｱﾆﾒｰｼｮﾝ
 	std::string currentAnimation_;
+	// 1フレーム前のアニメーション
+	std::string previousAnimation_;
 	// ｱﾆﾒｰｼｮﾝしている時はこのﾌﾚｰﾑ変数を加算
 	float animationFrame_;
 	// コライダーボックスの矩形表示や、データを配列から取り出すため、
@@ -86,11 +142,21 @@ protected:
 
 	// オブジェクトを消すフラグ
 	bool deleteFlag_;
+	// 接地しているかのフラグ
+	bool onFloor_;
+	// 壁に当たったかのフラグ
+	bool isHitWall_;
 	//std::unordered_map<std::string,
 	//	std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider_;
-
+	// 自分のｺﾗｲﾀﾞｰﾃﾞｰﾀ
 	std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>collider_;
+	// 現在のコライダー
+	std::vector <std::shared_ptr<ActionRect>> currentCol_;
 	// 重力
 	std::unique_ptr<Gravity> gravity_;
+	// ダメージを食らったフラグ
+	bool onDamaged_;
+	// 攻撃矩形
+	AttackRect attackRect_;
 };

@@ -33,6 +33,7 @@
 #include "cocos2d.h"
 #include "anim/AnimMng.h"
 #include "BaseScene.h"
+#include "BehaviorBaseAI/BehaviorTree.h"
 
 class ActionRect;
 using SharedRect = std::vector<std::shared_ptr<ActionRect>>;
@@ -45,6 +46,7 @@ enum class zOlder {
     CHAR_PL, 
 	CHAR_ENEMY,
     FRONT,
+    DEBUG,
     MAX
 };
 
@@ -97,7 +99,7 @@ private:
 	// リスポーンするフラグ
 	bool respawnFlag_;
 
-    
+    BehaviorTree assassinBehavior_;
 
 	std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
 		static_cast<int>(ActorType::Max)> colliderBox_;

@@ -83,7 +83,6 @@ void GameMap::AddMap(std::string& mapPath)
 
 void GameMap::ReplaceMap(Player& player)
 {
-	
 	auto fade = TransitionFade::create(1.0f, LoadScene::CreateLoadScene(player, mapDatas_, mapParentsList_, *this), Color3B::BLACK);
 	Director::getInstance()->pushScene(fade);
 	

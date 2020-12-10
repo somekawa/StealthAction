@@ -35,6 +35,16 @@
 #include "GameMap.h"
 #include "Gate.h"
 #include "renderer/backend/Device.h"
+
+ // AI関係のinclude
+#include "BehaviorBaseAI/AIActions/NormalAttack.h"
+#include "BehaviorBaseAI/AIActions/SkillAttackAction.h"
+#include "BehaviorBaseAI/AIActions/MoveAction.h"
+#include "BehaviorBaseAI/JudgementTool/AttackJudgement.h"
+#include "BehaviorBaseAI/JudgementTool/MoveJudgement.h"
+#include "BehaviorBaseAI/JudgementTool/SkillAttackJudgement.h"
+
+
 USING_NS_CC;
 
 namespace
@@ -84,7 +94,26 @@ bool Game::init()
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
+	// 各敵キャラのAINodeの生成---------------------------------------------------------
+	// root node
+	assassinBehavior_.AddNode("", "Root", 0,
+		BehaviorTree::SelectRule::Priority, NULL, NULL);
+	// attack node
+	assassinBehavior_.AddNode("Root", "Attack", 1,
+		BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
+	// move node
+	assassinBehavior_.AddNode("Root", "Move", 2,
+		BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
+	// attackの子にNormalAttackをぶら下げる
+	assassinBehavior_.AddNode("Attack", "NormalAttack", 1,
+		BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
+	// attackの子にskillAttackをぶら下げる
+	assassinBehavior_.AddNode("Attack", "SkillAttack", 2,
+		BehaviorTree::SelectRule::Sequence,
+		SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
+	assassinBehavior_.AddNode("Move", "moveAction", 1,
+		BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
+	//-------------------------------------------------------------------------------
 	/////////////////////////////
 	// 2. add a menu item with "X" image, which is clicked to quit the program
 	//    you may modify it.
@@ -258,7 +287,7 @@ bool Game::init()
 
 	//plSprite->scheduleUpdate();
 	// プレイヤーの更新
-	layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->scheduleUpdate();
+	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->scheduleUpdate();
 
 	PL_HPgaugeSp->scheduleUpdate();
 
@@ -348,13 +377,14 @@ void Game::AddPlayer(int playerNum)
 	// player数resize
 	for (int p = 0; p < playerNum; p++)
 	{
-		auto plSprite = Player::CreatePlayer();
+		auto plSprite = Player::CreatePlayer(100);
 		plSprite->setName("player" + std::to_string(p + 1));
 		plSprite->setScale(3.0f);
 		plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
 		// プレイヤーをキャラクター用のレイヤーの子供にする
 		layer_[static_cast<int>(zOlder::CHAR_PL)]
 			->addChild(plSprite, playerNum);
+		plSprite->scheduleUpdate();
 	}
 }
 
@@ -362,18 +392,21 @@ void Game::AddEnemy(const ActorType& type)
 {
 	//enSprites_.emplace_front(std::make_shared<Enemy>(plSprites_));
 	Enemy* sprite = nullptr;
+	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
+	std::string enemyName = "";
 	switch (type)
 	{
 		// Impを生成する場合
 	case ActorType::Imp:
 		// 敵の生成
-		sprite = Imp::CreateImp(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
+		//sprite = Imp::CreateImp(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren(),VisionRange(50.0f,50.0f));
 		break;
 	case ActorType::Assassin:
-		sprite = Assassin::CreateAssassin(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
+		enemyName = "Assassin";
+		sprite = Assassin::CreateAssassin(*player,&assassinBehavior_,VisionRange(20.0f,50.0f),50);
 		break;
 	case ActorType::TwistedCultist:
-		sprite = TwistedCultist::CreateTwistedCultist(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
+		//sprite = TwistedCultist::CreateTwistedCultist(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
 		break;
 	default:
 		break;
@@ -385,7 +418,12 @@ void Game::AddEnemy(const ActorType& type)
 
 	// 敵をActor用レイヤーの子供にする
 	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]
-		->addChild(sprite, (int)zOlder::CHAR_ENEMY);
+		->addChild(sprite, (int)zOlder::CHAR_ENEMY,enemyName);
+	// 敵のポジションに円を描く
+	auto dot = DrawNode::create();
+	//dot->setPosition(sprite->getPosition());
+	dot->drawDot(Vec2::ZERO, 5, Color4F::YELLOW);
+	layer_[static_cast<int>(zOlder::DEBUG)]->addChild(dot, static_cast<int>(zOlder::DEBUG), enemyName);
 	generateEnemyNum_++;
 	sprite->scheduleUpdate();
 }

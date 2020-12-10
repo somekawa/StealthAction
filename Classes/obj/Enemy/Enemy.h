@@ -2,25 +2,138 @@
 #include "obj/Actor.h"
 
 class Player;
+class BehaviorTree;
+class BehaviorData;
+class NodeBase;
+
+
+
+// 行動タイプ
+enum class MoveType
+{
+	// 何も動いていない
+	Non,
+	// 追跡
+	Chase,
+	// 巡回
+	Patrol,
+	Max
+};
+
+// 視界範囲
+// 敵の種類によって視界範囲をそれぞれ持たせたいので
+struct VisionRange
+{
+	// 攻撃範囲
+	const float attack_;
+	// 追跡モードになる範囲
+	const float chase_;
+	VisionRange():attack_(0.0f),chase_(0.0f) {};
+	VisionRange(float attack, float chase) :attack_(attack), chase_(chase) {};
+};
 
 class Enemy :
 	public Actor
 {
 public:
-	Enemy(cocos2d::Vector<cocos2d::Node*>& player_);
+	Enemy(Player& player_,
+		BehaviorTree* aiTree,VisionRange visionRange,int hp);
 	~Enemy();
 
-	void Action(void);
+	virtual void Action(void) = 0;
+
+	// 視界に入ったかの計算をし、vision_を返す
+	virtual const float& GetVision(void);
+
+	// 各視界範囲の取得
+	virtual const VisionRange& GetVisionRange(void)
+	{
+		return visionRange_;
+	}
+
 	virtual void ChangeDirection(void);
-
 	virtual const float& DistanceCalcurator(void);
-	virtual void update(float delta) {};
-	virtual void AnimRegistrator(void) = 0;
-	//virtual Enemy* CreateEnemy(std::vector<std::shared_ptr<Player>>& player_) = 0;
 
-	//CREATE_FUNC(Enemy);
+	void SetIsAttacking(bool flg);
+
+	// 攻撃しているかのフラグ取得関数
+	virtual const bool& IsAttacking(void)
+	{
+		return isAttacking_;
+	}
+	// 自分の行動タイプの取得
+	virtual const MoveType& GetMoveType(void)
+	{
+		return mType_;
+	}
+	virtual void update(float delta) = 0;
+	// 自分の攻撃がプレイヤーに当たっているかの判定
+	virtual bool OnAttacked(void);
+	// アニメーションの更新
+	virtual void UpdateAnimation(float delta);
+	// アニメーションの変更
+	// param@ animName: 変更先アニメーション名
+	virtual void ChangeAnimation(std::string animName);
+
+	virtual void AnimRegistrator(void) = 0;
+	// AI行動のNodeを探索して実行
+	virtual void AIRun(void);
+	// 移動タイプのセット
+	virtual void SetMoveType(MoveType type);
+
+	// 壁や床にぶつかっているかの判定
+	virtual bool CheckObjHit(void);
+	// Mapのオブジェクトに当たったかの関数
+	//virtual void CheckMapObjHit(float delta);
+	// 物理攻撃
+	virtual void NormalAttack(void) = 0;
+	// スキル使用
+	virtual void UseSkill(void) = 0;
+	// 待機モーション
+	virtual void Idle(void) = 0;
+	// Run or walk
+	virtual void Patrol(void) = 0;
+	virtual void Chase(void) = 0;
+	// ジャンプ
+	virtual void Jump(void) = 0;
+	// ジャンプからの落ちるモーション
+	virtual void Fall(void) = 0;
+	// プレイヤーからの攻撃のくらい
+	virtual void Hit(void) = 0;
+	// 死ぬ
+	virtual void Death(void) = 0;
 private:
 
 protected:
-	cocos2d::Vector<cocos2d::Node*>& player_;
+	Player& player_;
+	// 自分の攻撃が当たったかのフラグ
+	bool hittingToPlayer_;
+
+	// 視界範囲
+	float vision_;
+	cocos2d::Vec2 oldPos_;
+	// 各行動を実施する際の視界範囲
+	VisionRange visionRange_;
+	// プレイヤーを視認しているかのフラグ
+	bool identifiedPlayer_;
+
+	BehaviorTree* aiTree_;			// ビヘイビアツリー
+	BehaviorData* behaviorData_;	// ビヘイビアデータ
+	NodeBase* activeNode_;			// 実行中ノード
+
+	// 方向変更フラグ
+	bool isChangeDir_;
+
+	// 攻撃しているかのフラグ
+	bool isAttacking_;
+	// アニメーションが変更されたかのフラグ
+	bool isChangedAnim_;
+
+	// 移動の種類(patrol or chase)
+	MoveType mType_;
+
+	cocos2d::DrawNode* debugCircle_;
+	// 一定距離歩いたらtrueになる
+	bool isMoveComplete_;
+
 };
