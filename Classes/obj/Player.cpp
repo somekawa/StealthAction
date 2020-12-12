@@ -59,30 +59,6 @@ Player::Player(int hp):
 	bitFlg_.ThirdAttackFlg = false;
 	bitFlg_.TransfromFlg = false;
 
-	// ファイル名を変更してこのLoadが使えるようにしないといけない
-	//for (auto anim : lpAnimMng.GetAnimations(type_))
-	//{
-	//	lpCol.Load(collider_, anim, "player");
-	//}
-
-	// これを追加しようとすると、TiledMapのクラスでエラーがでる
-	//for (auto anim : lpAnimMng.GetAnimations(type_))
-	//{
-	//	lpCol.Load(collider_, anim, "player");
-	//	auto a = lpAnimMng.GetFrameNum(type_, anim);
-	//	for (int i = 0; i < lpAnimMng.GetFrameNum(type_, anim); i++)
-	//	{
-	//		for (auto c : collider_[anim][i])
-	//		{
-	//			auto col = c->CreateCollider();
-	//			col->drawRect(Vec2(0, 0), Vec2(c->GetSize().x, c->GetSize().y), c->GetColor());
-	//			col->setName(anim);
-	//			this->addChild(col);
-	//		}
-	//	}
-	//}
-
-	// これを追加すると全部のコリジョンボックスがでてくる!!
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBoxのLoad
@@ -112,6 +88,8 @@ Player::Player(int hp):
 	//label->setPosition(Vec2(100,100));
 	//this->addChild(label, 1);
 
+	// 攻撃矩形のサイズ設定
+	attackRect_.size_ = Size(30.0f, 30.0f);
 }
 
 Player::~Player()
@@ -128,26 +106,14 @@ void Player::update(float delta)
 	{
 		return;
 	}
+
 	// 現在のフレームを整数値で取得
-	animationFrame_int_ = GetAnimationFrameInt();
-	if (animationFrame_int_ <= 0)
+	if (currentAnimation_ != "AttackFirst")
 	{
-		animationFrame_int_ = 0;
+		animationFrame_int_ = GetAnimationFrameInt();
+		colliderVisible();
 	}
-	CCLOG("plHP:%d", hp_);
-	currentCol_ = collider_[currentAnimation_][animationFrame_int_];
-	for (auto collider : this->getChildren())
-	{
-		if (currentAnimation_ == collider->getName() &&
-			animationFrame_int_ == collider->getTag())
-		{
-			collider->setVisible(true);
-		}
-		else
-		{
-			collider->setVisible(false);
-		}
-	}
+
 	// アニメーションの更新
 	//UpdateAnimation(delta);
 
@@ -271,13 +237,13 @@ void Player::update(float delta)
 		direction_ == Direction::Right ? direction_ = Direction::Left : direction_ = Direction::Right;
 		auto tmpdir = direction_;
 	}
+
 	if (onDamaged_)
 	{
 		// HP減少のテストコード
-		// 攻撃するたびにHPが10減るようにしている
 		auto a = ((Game*)Director::getInstance()->getRunningScene());
 		auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-		b->SetHP(b->GetHP() - 10);
+		b->SetHP(b->GetHP() - 10);	// -10などのダメージ量は敵の攻撃力に変えればいい
 		onDamaged_ = false;
 	}
 
@@ -382,7 +348,6 @@ void Player::attackMotion(float sp)
 		return false;
 	};
 
-	// flagがtrueの時は強制的にAttackSecondへ切替
 	if (bitFlg_.FirstAttackFlg)
 	{
 		currentAnimation_ = "AttackFirst";
@@ -418,6 +383,25 @@ void Player::attackMotion(float sp)
 		bitFlg_.SecondAttackFlg = keyLambda(bitFlg_.SecondAttackFlg);
 
 		animationFrame_ += sp;
+
+		// frame計算
+		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.05 * 100);
+		if (animationFrame_int_ < 10)
+		{
+			// 攻撃当たり判定ポイントテスト
+			if (direction_ == Direction::Right)
+			{
+				attackRect_.pos_ = Vec2(getPosition().x + 5.0f, getPosition().y);
+			}
+			else if (direction_ == Direction::Left)
+			{
+				attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
+			}
+			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
+			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+			//colliderVisible();
+		}
+
 		if (bitFlg_.FirstAttackFlg && animationFrame_ <= 0.5f)
 		{
 			if (!oldPosKeepFlg_)
@@ -425,14 +409,6 @@ void Player::attackMotion(float sp)
 				oldPos_ = this->getPosition().x;
 				oldPosKeepFlg_ = true;
 				direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
-				if (direction_ == Direction::Left)
-				{
-					TRACE("ひだりぃぃぃぃぃぃ\n");
-				}
-				else
-				{
-					TRACE("右ぃぃぃぃぃぃ\n");
-				}
 			}
 			auto a = sizeof(bitFlg_);
 			currentAnimation_ = "AttackFirst";
@@ -454,9 +430,9 @@ void Player::attackMotion(float sp)
 
 			// HP減少のテストコード
 			// 攻撃するたびにHPが10減るようにしている
-			auto a = ((Game*)Director::getInstance()->getRunningScene());
-			auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-			b->SetHP(hp_-10);
+			//auto a = ((Game*)Director::getInstance()->getRunningScene());
+			//auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+			//b->SetHP(hp_-10);
 		}
 	}
 
@@ -511,6 +487,39 @@ void Player::attackMotion(float sp)
 			bitFlg_.ThirdAttackFlg = false;
 			currentAnimation_ = "Look_Intro";
 			animationFrame_ = 0.0f;
+		}
+	}
+}
+
+void Player::colliderVisible(void)
+{
+	if (animationFrame_int_ <= 0)
+	{
+		animationFrame_int_ = 0;
+	}
+	CCLOG("plHP:%d", hp_);
+	currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+	for (auto collider : this->getChildren())
+	{
+		if (currentAnimation_ == collider->getName() &&
+			animationFrame_int_ == collider->getTag())
+		{
+			// これだと毎フレーム最初にずれていくから…
+			// 攻撃の時だけ左右でオフセットが必要
+			//Vec2 tmpVec;
+			//if (currentAnimation_ == "AttackFirst")
+			//{
+			//	if (direction_ == Direction::Right)
+			//	{
+			//		tmpVec = collider->getPosition();
+			//	}
+			//}
+			//collider->setPosition(collider->getPosition());
+			collider->setVisible(true);
+		}
+		else
+		{
+			collider->setVisible(false);
 		}
 	}
 }
@@ -573,6 +582,11 @@ void Player::AnimRegistrator(void)
 	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Transform", 37, (float)0.05, ActorType::Player, false);
 
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "NON");
+}
+
+const AttackRect& Player::GetAttackRect(void)
+{
+	return attackRect_;
 }
 
 Player* Player::CreatePlayer(int hp)

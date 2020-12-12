@@ -148,6 +148,12 @@ void Actor::CheckMapObjHit(float delta)
 
 bool Actor::CheckHitAttack(const AttackRect& attackRect)
 {
+	if (currentCol_.size() <= 0)
+	{
+		return false;
+	}
+
+	// UŒ‚‹éŒ`‚Ì‚Æ‚«
 	if (currentCol_[0]->GetData().type_ == 0)
 	{
 		auto damageColData = currentCol_[0]->GetData();

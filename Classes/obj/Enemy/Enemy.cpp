@@ -111,8 +111,8 @@ void Enemy::UpdateAnimation(float delta)
 	}*/
 	// アニメーションカウントを毎フレームdelta値を加算
 	animationFrame_ -= delta * 10;
-	TRACE("%s", currentAnimation_);
-	TRACE("currentAnimation:%s,animFrame:%f\n", currentAnimation_.c_str(), animationFrame_);
+	//TRACE("%s", currentAnimation_);
+	//TRACE("currentAnimation:%s,animFrame:%f\n", currentAnimation_.c_str(), animationFrame_);
 	// あるアニメーションの終了までの継続時間の格納
 	auto duration = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDuration();
 	// アニメーションカウントが継続時間を超えていれば
@@ -183,12 +183,12 @@ void Enemy::AIRun(void)
 {
 	// ダメージくらい
 	// ダメージが当たればtrueになる
-	//onDamaged_ = CheckHitAttack(player_.GetAttackRect());
-	//// ダメージテスト
-	//if (onDamaged_)
-	//{
-	//	int i = 0;
-	//}
+	onDamaged_ = CheckHitAttack(player_.GetAttackRect());
+	// ダメージテスト
+	if (onDamaged_)
+	{
+		int i = 0;
+	}
 
 	if (activeNode_ == NULL)
 	{

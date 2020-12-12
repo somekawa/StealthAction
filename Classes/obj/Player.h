@@ -32,6 +32,7 @@ public:
 	void ChangeDirection(void) override;
 	void update(float delta) override;
 	void AnimRegistrator(void) override;						// アニメーションの登録
+	const AttackRect& GetAttackRect(void);
 
 	std::string GetAction(void);								// 現在のアクション情報を取得する
 	void SetAction(std::string action);							// 現在のアクション状態をセットする
@@ -43,6 +44,7 @@ private:
 	//CREATE_FUNC(Player);
 
 	void attackMotion(float sp);								// 攻撃モーションの設定
+	void colliderVisible(void);									// 矩形の描画関連
 
 	// アニメーション関係
 	//std::string actionNow_;
@@ -65,3 +67,6 @@ private:
 
 	Bits bitFlg_;
 };
+
+// まずは敵との攻撃矩形とダメージ矩形の当たり判定
+// 敵に攻撃できたときに、どの敵にどれだけダメージが入ったかを伝える用の関数をつくる
