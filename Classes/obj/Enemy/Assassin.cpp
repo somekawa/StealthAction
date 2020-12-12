@@ -99,7 +99,6 @@ void Assassin::Action(void)
 
 void Assassin::update(float delta)
 {
-
 	if (!isAttacking_)
 	{
 		// 方向の変更
@@ -110,6 +109,13 @@ void Assassin::update(float delta)
 	if (animationFrame_int_ <= 0)
 	{
 		animationFrame_int_ = 0;
+	}
+	// 無条件に通っていたら処理が重くなるので
+	// ﾌﾟﾚｲﾔｰが攻撃態勢で自分が攻撃食らっていなかったら(今のところこうしているが、後で自分がhitﾓｰｼｮﾝが終わったらに変更予定)
+	if (player_.IsAttacking() && !onDamaged_)
+	{
+		// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
+		CheckHitPLAttack();
 	}
 
 	//if (currentAnimation_ == "attack")

@@ -351,14 +351,17 @@ void Player::attackMotion(float sp)
 	if (bitFlg_.FirstAttackFlg)
 	{
 		currentAnimation_ = "AttackFirst";
+		isAttacking_ = true;
 	}
 	else if (bitFlg_.SecondAttackFlg)
 	{
 		currentAnimation_ = "AttackSecond";
+		isAttacking_ = true;
 	}
 	else if (bitFlg_.ThirdAttackFlg)
 	{
 		currentAnimation_ = "AttackThird";
+		isAttacking_ = true;
 	}
 
 	if (currentAnimation_ == "AttackFirst" && bitFlg_.FirstAttackFlg)
@@ -389,17 +392,17 @@ void Player::attackMotion(float sp)
 		if (animationFrame_int_ < 10)
 		{
 			// 攻撃当たり判定ポイントテスト
-			if (direction_ == Direction::Right)
+			/*if (direction_ == Direction::Right)
 			{
 				attackRect_.pos_ = Vec2(getPosition().x + 5.0f, getPosition().y);
 			}
 			else if (direction_ == Direction::Left)
 			{
 				attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
-			}
+			}*/
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
 			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
-			//colliderVisible();
+			colliderVisible();
 		}
 
 		if (bitFlg_.FirstAttackFlg && animationFrame_ <= 0.5f)
@@ -427,7 +430,7 @@ void Player::attackMotion(float sp)
 			animationFrame_ = 0.0f;
 			oldPosKeepFlg_ = false;
 			bitFlg_.FirstAttackFlg = false;
-
+			isAttacking_ = false;
 			// HP減少のテストコード
 			// 攻撃するたびにHPが10減るようにしている
 			//auto a = ((Game*)Director::getInstance()->getRunningScene());
@@ -470,6 +473,7 @@ void Player::attackMotion(float sp)
 			}
 
 			bitFlg_.SecondAttackFlg = false;
+			isAttacking_ = false;
 			animationFrame_ = 0.0f;
 		}
 	}
@@ -485,6 +489,7 @@ void Player::attackMotion(float sp)
 		else
 		{
 			bitFlg_.ThirdAttackFlg = false;
+			isAttacking_ = false;
 			currentAnimation_ = "Look_Intro";
 			animationFrame_ = 0.0f;
 		}

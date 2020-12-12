@@ -16,6 +16,8 @@ Actor::Actor(int hp):hp_(hp)
 	isAnimEnd_ = false;
 	onFloor_ = false;
 	isHitWall_ = false;
+	// 攻撃しているかのフラグの初期化
+	isAttacking_ = false;
 	// ダメージをくらったフラグの初期化
 	onDamaged_ = false;
 	animationFrame_ = 0.0f;
@@ -144,6 +146,11 @@ void Actor::CheckMapObjHit(float delta)
 	{
 		onFloor_ = false;
 	}
+}
+
+void Actor::SetIsAttacking(bool flg)
+{
+	isAttacking_ = flg;
 }
 
 bool Actor::CheckHitAttack(const AttackRect& attackRect)

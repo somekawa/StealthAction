@@ -54,13 +54,6 @@ public:
 	virtual void ChangeDirection(void);
 	virtual const float& DistanceCalcurator(void);
 
-	void SetIsAttacking(bool flg);
-
-	// 攻撃しているかのフラグ取得関数
-	virtual const bool& IsAttacking(void)
-	{
-		return isAttacking_;
-	}
 	// 自分の行動タイプの取得
 	virtual const MoveType& GetMoveType(void)
 	{
@@ -69,6 +62,8 @@ public:
 	virtual void update(float delta) = 0;
 	// 自分の攻撃がプレイヤーに当たっているかの判定
 	virtual bool OnAttacked(void);
+	// ﾌﾟﾚｲﾔｰの当たり矩形との当たり判定
+	virtual void CheckHitPLAttack(void);
 	// アニメーションの更新
 	virtual void UpdateAnimation(float delta);
 	// アニメーションの変更
@@ -124,8 +119,6 @@ protected:
 	// 方向変更フラグ
 	bool isChangeDir_;
 
-	// 攻撃しているかのフラグ
-	bool isAttacking_;
 	// アニメーションが変更されたかのフラグ
 	bool isChangedAnim_;
 
