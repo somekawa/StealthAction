@@ -162,6 +162,22 @@ void ActionCtl::update(float sp,Sprite& sprite)
 				_mapFlame[data.first] = 3.0f;
 			}
 
+			// 空中での攻撃ボタンで一時静止用
+			if (_mapFlame["攻撃"] > 0.0f)
+			{
+				if (_mapFlame["落下"] <= 3.0f)
+				{
+					_mapModule["落下"].stopCnt = 1;
+				}
+			}
+			else if (_mapFlame["攻撃"] <= 0.0f)
+			{
+				if (_mapFlame["落下"] >= 3.0f)
+				{
+					_mapModule["落下"].stopCnt = 0;
+				}
+			}
+
 			//TRACE("%f\n", _mapFlame["ジャンプ"]);
 			TRACE("%f\n", _mapFlame["ジャンピング"]);
 

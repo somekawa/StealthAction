@@ -772,7 +772,7 @@ void Player::actModuleRegistration(void)
 		act.actName = "AttackFirst";
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };
-		act.blackList.emplace_back("Fall");
+		//act.blackList.emplace_back("Fall");	// 一時的コメントアウト
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		_actCtl.ActCtl("攻撃", act);
 	}
@@ -845,7 +845,3 @@ void Player::actModuleRegistration(void)
 }
 
 // アンカーポイントを変更せずに攻撃モーション追加しないといけない
-
-// 左と下を同時に押したときに後ろに下がりながら斬ってしまうのは
-// 左入力が先に入って、左向きでSetDirされた後に下入力で攻撃モーションに入るから。
-// どうしましょう
