@@ -92,6 +92,12 @@ public:
 	{
 		onDamaged_ = true;
 	}
+	void SetIsAttacking(bool flg);
+	// 攻撃しているかのフラグ取得関数
+	virtual const bool& IsAttacking(void)
+	{
+		return isAttacking_;
+	}
 	// ﾀﾞﾒｰｼﾞをくらったﾌﾗｸﾞの取得関数
 	virtual const bool& GetOnDamaged(void)
 	{
@@ -157,6 +163,8 @@ protected:
 	std::unique_ptr<Gravity> gravity_;
 	// ダメージを食らったフラグ
 	bool onDamaged_;
+	// 攻撃しているかのフラグ
+	bool isAttacking_;
 	// 攻撃矩形
 	AttackRect attackRect_;
 };

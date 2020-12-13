@@ -16,8 +16,7 @@ Enemy::Enemy(Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp
 {
 	// ビヘイビアデータの生成
 	behaviorData_ = new BehaviorData();
-	// 攻撃しているかのフラグの初期化
-	isAttacking_ = false;
+
 	// アニメーションが変更されたかのフラグの初期化
 	isChangedAnim_ = false;
 	// プレイヤーを視認したかのフラグの初期化
@@ -83,11 +82,14 @@ bool Enemy::OnAttacked(void)
 						auto plDamageCol = plCol->GetData();
 						// 自分の当たり判定のｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀにattackｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀを格納
 						auto attackColData = myCol->GetData();
+
+						auto attackColPos = Vec2{ getPosition().x + (attackColData.begin_.x + (attackColData.size_.x / 2)),
+												  getPosition().y + (attackColData.begin_.y + (attackColData.size_.y / 2)) };
+						auto damageColPos = Vec2{ player_.getPosition().x + (plDamageCol.begin_.x + (plDamageCol.size_.x / 2)) ,
+												  player_.getPosition().y + (plDamageCol.begin_.y + (plDamageCol.size_.y / 2)) };
 						// 当たり判定実施
-						if ((attackColData.begin_.x + (attackColData.size_.x / 2) -
-							(player_.getPosition().x + (plDamageCol.begin_.x + (plDamageCol.size_.x / 2)) <= 0) &&
-							(attackColData.begin_.y + (attackColData.size_.y / 2) -
-								(player_.getPosition().y + (plDamageCol.begin_.y + (plDamageCol.size_.y / 2)) <= 0))))
+						if (abs(attackColPos.x - damageColPos.x) <= 50.0 &&
+							abs(attackColPos.y - damageColPos.y) <= 50.0)
 						{
 							// 攻撃を当てたtriggerをtrueにする
 							hittingToPlayer_ = true;
@@ -100,6 +102,43 @@ bool Enemy::OnAttacked(void)
 	}
 	// 攻撃が当たっていない場合何もしない
 	return false;
+}
+
+void Enemy::CheckHitPLAttack(void)
+{
+	// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀ
+	auto plColData = player_.GetCurrectCol();
+	// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
+	for (auto attackCol : plColData)
+	{
+		// 現在のﾌﾟﾚｲﾔｰのｺﾘｼﾞｮﾝﾃﾞｰﾀの中に攻撃矩形が有れば
+		if (attackCol->GetData().type_ == 0)
+		{
+			// 現在の自分のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
+			for (auto myCol : currentCol_)
+			{
+				// 現在の自分のｺﾘｼﾞｮﾝﾃﾞｰﾀの中にﾀﾞﾒｰｼﾞ矩形が有れば
+				if (myCol->GetData().type_ == 1)
+				{
+					// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝが現在どこか不明
+					auto plPos = player_.getPosition();
+					// 攻撃矩形のﾎﾟｼﾞｼｮﾝ(真ん中に設定)
+					auto attackColPos = Vec2{ player_.getPosition().x + attackCol->GetData().begin_.x + (attackCol->GetData().size_.x/2),
+											  player_.getPosition().y + attackCol->GetData().begin_.y + (attackCol->GetData().size_.y/2)};
+					// ﾀﾞﾒｰｼﾞ矩形のﾎﾟｼﾞｼｮﾝ(真ん中に設定)
+					auto damageColPos = Vec2{ getPosition().x + myCol->GetData().begin_.x + (myCol->GetData().size_.x/2),
+											  getPosition().y + myCol->GetData().begin_.y + (myCol->GetData().size_.y/2) };
+					// 攻撃矩形とﾀﾞﾒｰｼﾞ矩形の距離が50以下だと当たっている判定に
+					if (abs(attackColPos.x - damageColPos.x) <= 50.0 &&
+						abs(attackColPos.y - damageColPos.y) <= 50.0)
+					{
+						// onDamaged_をtrueに
+						OnDamaged();
+					}
+				}
+			}
+		}
+	}
 }
 
 // アニメーションの更新関数(もうちょっと改良する)
@@ -172,11 +211,6 @@ const float& Enemy::DistanceCalcurator(void)
 	auto playerPos = player_.getPosition();
 
 	return abs(playerPos.x - getPosition().x);
-}
-
-void Enemy::SetIsAttacking(bool flg)
-{
-	isAttacking_ = flg;
 }
 
 void Enemy::AIRun(void)
