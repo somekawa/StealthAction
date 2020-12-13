@@ -163,14 +163,12 @@ void ActionCtl::update(float sp,Sprite& sprite)
 			}
 
 			// ‹ó’†‚Å‚ÌUŒ‚ƒ{ƒ^ƒ“‚ÅˆêŽžÃŽ~—p
-			if (_mapFlame["UŒ‚"] > 0.0f)
+			if (_mapFlame["UŒ‚"] > 0.0f && _mapFlame["—Ž‰º"] > 0.0f)
 			{
-				if (_mapFlame["—Ž‰º"] <= 3.0f)
-				{
-					_mapModule["—Ž‰º"].stopCnt = 1;
-				}
+				_mapModule["—Ž‰º"].stopCnt = 1;
 			}
-			else if (_mapFlame["UŒ‚"] <= 0.0f)
+
+			if (_mapModule["—Ž‰º"].stopCnt == 1)
 			{
 				if (_mapFlame["—Ž‰º"] >= 3.0f)
 				{
