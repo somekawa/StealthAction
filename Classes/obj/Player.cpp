@@ -90,6 +90,10 @@ Player::Player(int hp):
 
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(30.0f, 30.0f);
+
+	attackF_offsetPos_ = 0.0f;
+	attackS_offsetPos_ = 0.0f;
+	attackT_offsetPos_ = 0.0f;
 }
 
 Player::~Player()
@@ -108,11 +112,8 @@ void Player::update(float delta)
 	}
 
 	// 現在のフレームを整数値で取得
-	if (currentAnimation_ != "AttackFirst")
-	{
-		animationFrame_int_ = GetAnimationFrameInt();
-		colliderVisible();
-	}
+	animationFrame_int_ = GetAnimationFrameInt();
+	colliderVisible();
 
 	// アニメーションの更新
 	//UpdateAnimation(delta);
@@ -400,6 +401,7 @@ void Player::attackMotion(float sp)
 			{
 				attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
 			}*/
+
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
 			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 			colliderVisible();
@@ -455,6 +457,25 @@ void Player::attackMotion(float sp)
 		bitFlg_.ThirdAttackFlg = keyLambda(bitFlg_.ThirdAttackFlg);
 
 		animationFrame_ += sp;
+
+		// frame計算
+		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.08 * 100);
+		if (animationFrame_int_ < 10)
+		{
+			// 攻撃当たり判定ポイントテスト
+			/*if (direction_ == Direction::Right)
+			{
+				attackRect_.pos_ = Vec2(getPosition().x + 5.0f, getPosition().y);
+			}
+			else if (direction_ == Direction::Left)
+			{
+				attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
+			}*/
+			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
+			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+			colliderVisible();
+		}
+
 		if (bitFlg_.SecondAttackFlg && animationFrame_ <= 0.8f)
 		{
 			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
@@ -481,6 +502,25 @@ void Player::attackMotion(float sp)
 	if ((currentAnimation_ == "AttackThird" && bitFlg_.ThirdAttackFlg))
 	{
 		animationFrame_ += sp;
+
+		// frame計算
+		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.08 * 100);
+		if (animationFrame_int_ < 11)
+		{
+			// 攻撃当たり判定ポイントテスト
+			/*if (direction_ == Direction::Right)
+			{
+				attackRect_.pos_ = Vec2(getPosition().x + 5.0f, getPosition().y);
+			}
+			else if (direction_ == Direction::Left)
+			{
+				attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
+			}*/
+			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
+			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+			colliderVisible();
+		}
+
 		if (bitFlg_.ThirdAttackFlg && animationFrame_ <= 0.8f)
 		{
 			direction_ == Direction::Left ? moveLambda(-1) : moveLambda(1);
@@ -509,17 +549,62 @@ void Player::colliderVisible(void)
 		if (currentAnimation_ == collider->getName() &&
 			animationFrame_int_ == collider->getTag())
 		{
-			// これだと毎フレーム最初にずれていくから…
-			// 攻撃の時だけ左右でオフセットが必要
-			//Vec2 tmpVec;
-			//if (currentAnimation_ == "AttackFirst")
-			//{
-			//	if (direction_ == Direction::Right)
-			//	{
-			//		tmpVec = collider->getPosition();
-			//	}
-			//}
-			//collider->setPosition(collider->getPosition());
+			// 攻撃の時だけオフセットが必要
+			if (currentAnimation_ == "AttackFirst")
+			{
+				if (direction_ == Direction::Right)
+				{
+					if (!attackF_offsetFlg_)
+					{
+						attackF_offsetPos_ = collider->getPosition().x + 30.0f;
+						attackF_offsetFlg_ = true;
+					}
+				}
+				else
+				{
+					attackF_offsetPos_ = 0.0f;
+					attackF_offsetFlg_ = false;
+				}
+				collider->setPosition(attackF_offsetPos_,collider->getPosition().y);
+			}
+
+			if (currentAnimation_ == "AttackSecond")
+			{
+				if (direction_ == Direction::Right)
+				{
+					if (!attackS_offsetFlg_)
+					{
+						attackS_offsetPos_ = collider->getPosition().x + 30.0f;
+						attackS_offsetFlg_ = true;
+					}
+				}
+				else
+				{
+					attackS_offsetPos_ = 0.0f;
+					attackS_offsetFlg_ = false;
+				}
+				collider->setPosition(attackS_offsetPos_, collider->getPosition().y);
+			}
+
+
+			if (currentAnimation_ == "AttackThird")
+			{
+				if (direction_ == Direction::Right)
+				{
+					if (!attackT_offsetFlg_)
+					{
+						attackT_offsetPos_ = collider->getPosition().x + 30.0f;
+						attackT_offsetFlg_ = true;
+					}
+				}
+				else
+				{
+					attackT_offsetPos_ = 0.0f;
+					attackT_offsetFlg_ = false;
+				}
+				collider->setPosition(attackT_offsetPos_, collider->getPosition().y);
+			}
+
 			collider->setVisible(true);
 		}
 		else
@@ -850,3 +935,7 @@ void Player::actModuleRegistration(void)
 }
 
 // アンカーポイントを変更せずに攻撃モーション追加しないといけない
+// →MoveTo使用
+
+// ①colliderのpositionを保存しないといけない
+// ②保存した変数にdir毎のoffsetをかける

@@ -66,6 +66,14 @@ private:
 	bool oldPosKeepFlg_;										// 攻撃モーション実行前の座標を保管を1度だけの実行にするためのフラグ
 
 	Bits bitFlg_;
+
+	// 攻撃時のオフセットテスト
+	bool attackF_offsetFlg_ = false;
+	float attackF_offsetPos_;
+	bool attackS_offsetFlg_ = false;
+	float attackS_offsetPos_;
+	bool attackT_offsetFlg_ = false;
+	float attackT_offsetPos_;
 };
 
 // まずは敵との攻撃矩形とダメージ矩形の当たり判定
