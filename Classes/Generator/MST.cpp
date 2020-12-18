@@ -142,7 +142,7 @@ void MST::RevertPartofEdge()
 	std::uniform_int_distribution<>::param_type param_i2(0, 10);
 	dist.param(param_i2);
 
-	// エッジを追加す
+	// エッジを追加する
 	for (auto edge : edgeData)
 	{		
 		if (edge.used)
@@ -160,7 +160,7 @@ void MST::RevertPartofEdge()
 			{
 				Edge_List uvEdge = { nodeList_[i].key, nodeList_[j].key };
 				if (!(edge.pair_vertex == uvEdge)|| nodeList_[i].childData.size() > 4 
-					|| nodeList_[j].childData.size() > 4 || dist(engine) > 1)
+					|| nodeList_[j].childData.size() > 3 || dist(engine) > 1)
 				{
 					continue;
 				}
@@ -169,7 +169,6 @@ void MST::RevertPartofEdge()
 					if (status.key == edge.pair_vertex[0])
 					{
 						status.childData.push_back({ 0, edge.pair_vertex[1], true, MapDirection::Max });
-
 					}
 					if (status.key == edge.pair_vertex[1])
 					{
