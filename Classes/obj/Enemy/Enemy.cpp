@@ -28,6 +28,8 @@ Enemy::Enemy(Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp
 	// 自分の攻撃が当たったフラグの初期化
 	hittingToPlayer_ = false;
 
+	stateTransitioner_ = &Enemy::Idle;
+
 	oldPos_ = getPosition();
 	// プレイヤーと自分の距離を測ってインスタンス
 	vision_ = abs(player_.getPosition().x - getPosition().x);
@@ -149,7 +151,7 @@ void Enemy::UpdateAnimation(float delta)
 		animationFrame_ = lpAnimMng.GetFrameNum(type_,currentAnimation_);
 	}*/
 	// アニメーションカウントを毎フレームdelta値を加算
-	animationFrame_ -= delta * 10;
+	animationFrame_ -= delta*10;
 	//TRACE("%s", currentAnimation_);
 	//TRACE("currentAnimation:%s,animFrame:%f\n", currentAnimation_.c_str(), animationFrame_);
 	// あるアニメーションの終了までの継続時間の格納
@@ -217,12 +219,12 @@ void Enemy::AIRun(void)
 {
 	// ダメージくらい
 	// ダメージが当たればtrueになる
-	onDamaged_ = CheckHitAttack(player_.GetAttackRect());
+	//onDamaged_ = CheckHitAttack(player_.GetAttackRect());
 	// ダメージテスト
-	if (onDamaged_)
-	{
-		int i = 0;
-	}
+	//if (onDamaged_)
+	//{
+	//	int i = 0;
+	//}
 
 	if (activeNode_ == NULL)
 	{
@@ -295,4 +297,33 @@ bool Enemy::CheckObjHit(void)
 	}
 
 	return false;
+}
+
+void Enemy::Hit(void)
+{
+	TRACE("Hit!\n");
+	// hitﾓｰｼｮﾝが終了していたら
+	if (isAnimEnd_)
+	{
+		// またﾀﾞﾒｰｼﾞを与えられるようにするためにfalseにしておく
+		onDamaged_ = false;
+		// idleに戻す
+		stateTransitioner_ = &Enemy::Idle;
+	}
+}
+
+void Enemy::Death(void)
+{
+	TRACE("death");
+	// deatthﾓｰｼｮﾝが終了していたら
+	if (isAnimEnd_)
+	{
+		// 自身を消去するために自分の名前をdeathにする(仮でこうしている)
+		setName("death");
+	}
+}
+
+void Enemy::Idle(void)
+{
+	AIRun();
 }

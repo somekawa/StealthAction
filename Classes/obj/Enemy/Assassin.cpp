@@ -33,7 +33,7 @@ Assassin::Assassin(Player& player,
 
 	direction_ = Direction::Left;
 
-	lpCol.Load(collider_, "idle", "assassin");
+	//lpCol.Load(collider_, "idle", "assassin");
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(30.0f, 30.0f);
 	//for (auto col : collider_["idle"])
@@ -118,13 +118,33 @@ void Assassin::update(float delta)
 		CheckHitPLAttack();
 	}
 
+	// ﾀﾞﾒｰｼﾞを食らった
+	if (onDamaged_ && stateTransitioner_ != &Enemy::Hit)
+	{
+		// hpを削る
+		hp_ -= 10;
+		// hpが0になったら
+		if (hp_ <= 0)
+		{
+			// 死ぬ状態にする
+			ChangeAnimation("death");
+			stateTransitioner_ = &Enemy::Death;
+		}
+		else
+		{
+			// 0ではなかったらhit状態にする
+			ChangeAnimation("hit");
+			stateTransitioner_ = &Enemy::Hit;
+		}
+		
+	}
+
 	//if (currentAnimation_ == "attack")
 	{
 		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	}
 	//previousAnimation_ = currentAnimation_;
-	// AI起動
-	AIRun();
+
 	TRACE("pos:(%f,%f)",this->getPosition().x,this->getPosition().y);
 
 	TRACE("attackFlag:%d\n", isAttacking_);
@@ -165,6 +185,7 @@ void Assassin::update(float delta)
 			(*animationCol)->setVisible(false);
 		}
 	}
+	(this->*stateTransitioner_)();
 	// Mapオブジェクトに当たっているかの確認
 	//CheckMapObjHit(delta);
 	// 重力をかける
@@ -194,6 +215,9 @@ void Assassin::AnimRegistrator(void)
 
 	// death
 	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "death", 16, 1.0f, ActorType::Assassin, false);
+
+	// hit 
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "hit", 3, 0.09f, ActorType::Assassin, false);
 	// 初期アニメーションのセット
 	lpAnimMng.InitAnimation(*this, ActorType::Assassin, "idle");
 }
@@ -203,15 +227,6 @@ void Assassin::Jump(void)
 }
 
 void Assassin::Fall(void)
-{
-}
-
-void Assassin::Hit(void)
-{
-	
-}
-
-void Assassin::Death(void)
 {
 }
 
@@ -246,11 +261,6 @@ void Assassin::NormalAttack(void)
 
 void Assassin::UseSkill(void)
 {
-}
-
-void Assassin::Idle(void)
-{
-
 }
 
 void Assassin::Patrol(void)

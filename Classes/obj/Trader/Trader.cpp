@@ -1,6 +1,6 @@
 #include <cocos2d.h>
 #include <random>
-#include "../Player.h"
+#include "../Player/Player.h"
 #include "Trader.h"
 
 Trader::Trader(const std::vector<std::string>& f_data,std::shared_ptr<Player> player)

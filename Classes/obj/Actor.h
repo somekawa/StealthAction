@@ -152,8 +152,6 @@ protected:
 	bool onFloor_;
 	// •Ç‚É“–‚½‚Á‚½‚©‚Ìƒtƒ‰ƒO
 	bool isHitWall_;
-	//std::unordered_map<std::string,
-	//	std::vector<std::vector<std::shared_ptr<ActionRect>>>>&collider_;
 	// Ž©•ª‚Ìº×²ÀÞ°ÃÞ°À
 	std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>collider_;

@@ -23,8 +23,6 @@ private:
     // スキルを使用する。
     void UseSkill(void);
     void Attack(void);
-    // idleモーション
-    void Idle(void);
     void Patrol(void);
     void Chase(void);
     // runモーション
@@ -35,10 +33,7 @@ private:
     void Jump(void);
     // ジャンプからの落ちるモーション
     void Fall(void);
-    // プレイヤーからの攻撃のくらい
-    void Hit(void);
-    // 死ぬ
-    void Death(void);
+
 	void(Imp::* updater_)(void);
 
 };

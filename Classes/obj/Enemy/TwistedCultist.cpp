@@ -82,10 +82,6 @@ void TwistedCultist::UseSkill(void)
 {
 }
 
-void TwistedCultist::Idle(void)
-{
-}
-
 void TwistedCultist::Patrol(void)
 {
 }
@@ -103,13 +99,5 @@ void TwistedCultist::Jump(void)
 }
 
 void TwistedCultist::Fall(void)
-{
-}
-
-void TwistedCultist::Hit(void)
-{
-}
-
-void TwistedCultist::Death(void)
 {
 }

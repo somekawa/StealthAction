@@ -132,10 +132,6 @@ void Imp::NormalAttack(void)
 {
 }
 
-void Imp::Idle(void)
-{
-}
-
 void Imp::Patrol(void)
 {
 }
@@ -233,10 +229,6 @@ void Imp::Fall(void)
 {
 }
 
-void Imp::Hit(void)
-{
-}
-
 void Imp::UseSkill(void)
 {
 }
@@ -249,16 +241,5 @@ void Imp::Attack(void)
 		ChangeAnimation("walk");
 		//lpAnimMng.ChangeAnimation(*this, "walk", true, type_);
 		updater_ = &Imp::Walk;
-	}
-}
-
-void Imp::Death(void)
-{
-	//animationFrame_ += 0.02f;
-	if (isAnimEnd_)
-	{
-		this->setName("death");
-		//animationFrame_ = lpAnimMng.GetAnimationMaxFrame(type_,currentAnimation_);
-		Delete();
 	}
 }

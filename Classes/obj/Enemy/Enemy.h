@@ -84,8 +84,6 @@ public:
 	virtual void NormalAttack(void) = 0;
 	// スキル使用
 	virtual void UseSkill(void) = 0;
-	// 待機モーション
-	virtual void Idle(void) = 0;
 	// Run or walk
 	virtual void Patrol(void) = 0;
 	virtual void Chase(void) = 0;
@@ -93,13 +91,19 @@ public:
 	virtual void Jump(void) = 0;
 	// ジャンプからの落ちるモーション
 	virtual void Fall(void) = 0;
+	// 敵の状態を表す--------------------
+	// 待機モーション
+	virtual void Idle(void);
 	// プレイヤーからの攻撃のくらい
-	virtual void Hit(void) = 0;
+	virtual void Hit(void);
 	// 死ぬ
-	virtual void Death(void) = 0;
+	virtual void Death(void);
+	// ----------------------------------
 private:
 
 protected:
+	// 状態の遷移用関数ﾎﾟｲﾝﾀ
+	void(Enemy::* stateTransitioner_)(void);
 	Player& player_;
 	// 自分の攻撃が当たったかのフラグ
 	bool hittingToPlayer_;
