@@ -27,8 +27,8 @@ void MapGenerator::Call()
 {
     CreateRoom();
     DistributedRoom();
-    /*CreateDelaunay();
-    CreateRoot();*/
+    CreateDelaunay();
+    CreateRoot();
 }
 
 const std::vector<Room_Data>& MapGenerator::GetRoomData(void)
