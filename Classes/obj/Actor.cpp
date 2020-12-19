@@ -59,7 +59,7 @@ const int& Actor::GetAnimationFrameInt(void)
 	// 毎フレーム加算される値(animationFrame)に1フレームに要する時間(delayPerUnit)を引き
 	// delayPerUnitで割ると現在のフレーム値がintで取得可能
 	auto delay = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDelayPerUnit();
-	auto val = animationFrame_;
+	auto val = (int)(animationFrame_ * 100.0f) / (int)(delay * 100.0f);
 	return val;
 }
 
@@ -153,24 +153,7 @@ void Actor::SetIsAttacking(bool flg)
 	isAttacking_ = flg;
 }
 
-bool Actor::CheckHitAttack(const AttackRect& attackRect)
+void Actor::SetAttackOffset(cocos2d::Vec2 offset)
 {
-	if (currentCol_.size() <= 0)
-	{
-		return false;
-	}
-
-	// 攻撃矩形のとき
-	if (currentCol_[0]->GetData().type_ == 0)
-	{
-		auto damageColData = currentCol_[0]->GetData();
-		auto damageColPos = Vec2{ (float)damageColData.begin_.x + ((float)damageColData.size_.x / 2),
-							 (float)damageColData.begin_.y + ((float)damageColData.size_.y / 2) };
-		if (attackRect.pos_.x + (attackRect.size_.width / 2) - (getPosition().x + (float)damageColPos.x) <= 0 &&
-			attackRect.pos_.y + (attackRect.size_.height / 2) - (getPosition().y + (float)damageColPos.y) <= 0)
-		{
-			return true;
-		}
-	}
-	return false;
+	attackRect_.offset_ = offset;
 }

@@ -84,6 +84,8 @@ bool Enemy::OnAttacked(void)
 						auto plDamageCol = plCol->GetData();
 						// 自分の当たり判定のｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀにattackｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀを格納
 						auto attackColData = myCol->GetData();
+						// 方向によって矩形ﾎﾟｼﾞｼｮﾝが変更するので、変更したﾎﾟｼﾞｼｮﾝに応じてbeginを変更
+						attackColData.begin_ = Vector2I(myCol->getPosition().x,myCol->getPosition().y);
 
 						auto attackColPos = Vec2{ getPosition().x + (attackColData.begin_.x + (attackColData.size_.x / 2)),
 												  getPosition().y + (attackColData.begin_.y + (attackColData.size_.y / 2)) };
@@ -151,20 +153,20 @@ void Enemy::UpdateAnimation(float delta)
 		animationFrame_ = lpAnimMng.GetFrameNum(type_,currentAnimation_);
 	}*/
 	// アニメーションカウントを毎フレームdelta値を加算
-	animationFrame_ -= delta*10;
+	animationFrame_ += delta;
 	//TRACE("%s", currentAnimation_);
 	//TRACE("currentAnimation:%s,animFrame:%f\n", currentAnimation_.c_str(), animationFrame_);
 	// あるアニメーションの終了までの継続時間の格納
 	auto duration = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDuration();
 	// アニメーションカウントが継続時間を超えていれば
-	if (animationFrame_ <= 0.0f)
+	if (animationFrame_ >= duration)
 	{
 		// ループフラグがtrueの場合はループ再生
 		if (lpAnimMng.GetIsLoop(type_, currentAnimation_))
 		{
 			//auto action = RepeatForever::create(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
 			//this->runAction(action);
-			animationFrame_ = lpAnimMng.GetFrameNum(type_, currentAnimation_);
+			animationFrame_ = 0.0f;
 			//animationFrame_ = 0.0f;
 		}
 		else
@@ -191,7 +193,7 @@ void Enemy::ChangeAnimation(std::string animName)
 	}*/
 	// 現在のアニメーションを変更先のアニメーション名に変更
 	currentAnimation_ = animName;
-	animationFrame_ = lpAnimMng.GetFrameNum(type_, currentAnimation_);
+	animationFrame_ = 0.0f;
 
 	// アニメーション終了フラグをfalseに
 	isAnimEnd_ = false;

@@ -16,8 +16,9 @@ class Gravity;
 // 攻撃の矩形
 struct AttackRect
 {
+	bool offsetFlag_ = false;
 	// ポジション
-	cocos2d::Vec2 pos_;
+	cocos2d::Vec2 offset_ = {0.0f,0.0f};
 	// サイズ
 	cocos2d::Size size_;
 };
@@ -69,6 +70,11 @@ public:
 	}
 
 	virtual void SetPos(Vector2I pos);
+	// 方向の取得
+	virtual const Direction& GetDirection(void)
+	{
+		return direction_;
+	}
 	// 向いている方向のセット
 	virtual void SetDirection(Direction dir);
 
@@ -103,8 +109,8 @@ public:
 	{
 		return onDamaged_;
 	}
-	// 相手の攻撃に当たったかの判定
-	bool CheckHitAttack(const AttackRect& attackRect);
+	// 攻撃矩形のｵﾌｾｯﾄを設定
+	virtual void SetAttackOffset(cocos2d::Vec2 offset);
 	// 現在のコライダーボックスの取得
 	const std::vector <std::shared_ptr<ActionRect>>& GetCurrectCol(void)
 	{

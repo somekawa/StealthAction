@@ -335,6 +335,7 @@ void Game::update(float sp)
 		e->setProgramState(programState2);
 	}
 	player->setProgramState(programState);
+
 	//// “–‚½‚è”»’è—p‚Ì˜g‚ðo‚µ‚Ä‚Ý‚é
 	//auto ppos = plSprite->getPosition();
 	//auto psize = plSprite->getContentSize();

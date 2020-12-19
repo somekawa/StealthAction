@@ -63,8 +63,10 @@ Assassin::Assassin(Player& player,
 				auto draw = col[colNum]->create();
 				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
 				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+
 				draw->setTag(col[colNum]->GetData().frame_);
-				this->addChild(draw, 0, anim);
+
+				this->addChild(draw,col[colNum]->GetData().type_, anim);
 			}
 		}
 	}
@@ -99,104 +101,101 @@ void Assassin::Action(void)
 
 void Assassin::update(float delta)
 {
-	if (!isAttacking_)
+	if (getName() == "death")
 	{
-		// 方向の変更
-		ChangeDirection();
+		removeFromParentAndCleanup(true);
 	}
-	// 現在のフレームを整数値で取得
-	animationFrame_int_ = GetAnimationFrameInt();
-	if (animationFrame_int_ <= 0)
+	else
 	{
-		animationFrame_int_ = 0;
-	}
-	// 無条件に通っていたら処理が重くなるので
-	// ﾌﾟﾚｲﾔｰが攻撃態勢で自分が攻撃食らっていなかったら(今のところこうしているが、後で自分がhitﾓｰｼｮﾝが終わったらに変更予定)
-	if (player_.IsAttacking() && !onDamaged_)
-	{
-		// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
-		CheckHitPLAttack();
-	}
-
-	// ﾀﾞﾒｰｼﾞを食らった
-	if (onDamaged_ && stateTransitioner_ != &Enemy::Hit)
-	{
-		// hpを削る
-		hp_ -= 10;
-		// hpが0になったら
-		if (hp_ <= 0)
+		if (!isAttacking_)
 		{
-			// 死ぬ状態にする
-			ChangeAnimation("death");
-			stateTransitioner_ = &Enemy::Death;
+			// 方向の変更
+			ChangeDirection();
 		}
-		else
+		// 現在のフレームを整数値で取得
+		animationFrame_int_ = GetAnimationFrameInt()-1;
+		if (animationFrame_int_ < 0)
 		{
-			// 0ではなかったらhit状態にする
-			ChangeAnimation("hit");
-			stateTransitioner_ = &Enemy::Hit;
+			animationFrame_int_ = 0;
 		}
-		
-	}
-
-	//if (currentAnimation_ == "attack")
-	{
-		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
-	}
-	//previousAnimation_ = currentAnimation_;
-
-	TRACE("pos:(%f,%f)",this->getPosition().x,this->getPosition().y);
-
-	TRACE("attackFlag:%d\n", isAttacking_);
-	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
-	{
-		animationFrame_ = 0.0f;
-		return;
-	}
-
-
-	for (auto animationCol = this->getChildren().rbegin();
-		animationCol != this->getChildren().rend(); animationCol++)
-	{
-		TRACE("animationInt:%d\n", animationFrame_int_);
-		auto i = (*animationCol)->getTag()-2;
-		TRACE("i:%d,animInt:%d\n", i,animationFrame_int_);
-		if (currentAnimation_ == (*animationCol)->getName() &&
-			animationFrame_int_==i)
+		/*if (animationFrame_int_ <= 0)
 		{
-			// 攻撃矩形のポジション変更
-			// 変更がおかしい
-			/*if (direction_ == Direction::Right)
+			animationFrame_int_ = 0;
+		}*/
+		// 無条件に通っていたら処理が重くなるので
+		// ﾌﾟﾚｲﾔｰが攻撃態勢で自分が攻撃食らっていなかったら(今のところこうしているが、後で自分がhitﾓｰｼｮﾝが終わったらに変更予定)
+		if (player_.IsAttacking() && !onDamaged_)
+		{
+			// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
+			CheckHitPLAttack();
+		}
+
+		// ﾀﾞﾒｰｼﾞを食らった
+		if (onDamaged_ && stateTransitioner_ != &Enemy::Hit)
+		{
+			// hpを削る
+			hp_ -= 10;
+			// hpが0になったら
+			if (hp_ <= 0)
 			{
-				(*animationCol)->setPosition
-				(Vec2(getPosition().x + currentCol_[0]->GetData().begin_.x,
-					getPosition().y));
+				if (stateTransitioner_ != &Enemy::Death)
+				{
+					// 死ぬ状態にする
+					ChangeAnimation("death");
+					stateTransitioner_ = &Enemy::Death;
+				}
 			}
-			else if (direction_ == Direction::Left)
+			else
 			{
-				(*animationCol)->setPosition
-				(Vec2(getPosition().x - currentCol_[0]->GetData().begin_.x,
-					getPosition().y));
-			}*/
-			(*animationCol)->setVisible(true);
+				// 0ではなかったらhit状態にする
+				ChangeAnimation("hit");
+				stateTransitioner_ = &Enemy::Hit;
+			}
 		}
-		else
+
+		//if (currentAnimation_ == "attack")
 		{
-			(*animationCol)->setVisible(false);
+			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 		}
-	}
-	(this->*stateTransitioner_)();
-	// Mapオブジェクトに当たっているかの確認
-	//CheckMapObjHit(delta);
-	// 重力をかける
-	gravity_->ApplyGravityToTarget(delta);
-	// アニメーションの更新
-	UpdateAnimation(delta);
-	// アニメーション終了時に攻撃フラグをfalse
-	if (isAnimEnd_)
-	{
-		isAttacking_ = false;
-		hittingToPlayer_ = false;
+
+		//previousAnimation_ = currentAnimation_;
+
+		TRACE("pos:(%f,%f)", this->getPosition().x, this->getPosition().y);
+
+		TRACE("attackFlag:%d\n", isAttacking_);
+		if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
+		{
+			animationFrame_ = 0.0f;
+			return;
+		}
+
+
+		for (auto animationCol = this->getChildren().rbegin();
+			animationCol != this->getChildren().rend(); animationCol++)
+		{
+			if (currentAnimation_ == (*animationCol)->getName() &&
+				animationFrame_int_ == (*animationCol)->getTag())
+			{
+				(*animationCol)->setVisible(true);
+			}
+			else
+			{
+				(*animationCol)->setVisible(false);
+			}
+		}
+		(this->*stateTransitioner_)();
+		// Mapオブジェクトに当たっているかの確認
+		//CheckMapObjHit(delta);
+		// 重力をかける
+		gravity_->ApplyGravityToTarget(delta);
+		// アニメーションの更新
+		UpdateAnimation(delta);
+		// アニメーション終了時に攻撃フラグをfalse
+		if (isAnimEnd_)
+		{
+			isAttacking_ = false;
+			hittingToPlayer_ = false;
+		}
 	}
 }
 
@@ -214,7 +213,7 @@ void Assassin::AnimRegistrator(void)
 	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "attack", 13, 0.08f, ActorType::Assassin, false);
 
 	// death
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "death", 16, 1.0f, ActorType::Assassin, false);
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "death", 16, 0.08f, ActorType::Assassin, false);
 
 	// hit 
 	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "hit", 3, 0.09f, ActorType::Assassin, false);
@@ -233,30 +232,12 @@ void Assassin::Fall(void)
 void Assassin::NormalAttack(void)
 {
 	isAttacking_ = true;
-	// 攻撃当たり判定ポイント
-	if (direction_ == Direction::Right)
-	{
-		attackRect_.pos_ = Vec2(getPosition().x + 5.0f, getPosition().y);
-	}
-	else if (direction_ == Direction::Left)
-	{
-		attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
-	}
 
 	if (OnAttacked())
 	{
 		player_.OnDamaged();
 	}
 	TRACE("direction:%d", direction_);
-	TRACE("attackPoint(x:%f,y:%f)",attackRect_.pos_.x,attackRect_.pos_.y);
-	//TRACE("attackFlag:%d\n", isAttacking_);
-	//currentAnimation_ = "attack";
-	//if (11-animationFrame_ >= 11)
-	//{
-	//	isAttacking_ = false;
-	//	//TRACE("attackFlag:%d\n", isAttacking_);
-	//	ChangeAnimation("idle");
-	//}
 }
 
 void Assassin::UseSkill(void)
