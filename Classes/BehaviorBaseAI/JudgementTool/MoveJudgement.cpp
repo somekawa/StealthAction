@@ -16,9 +16,19 @@ bool MoveJudgement::Judgement(Enemy* enemy)
             // プレイヤーが視界に入っていなければPatrol
             if (enemy->DistanceCalcurator() > enemy->GetVisionRange().chase_)
             {
-                if (enemy->GetMoveType() != MoveType::Patrol)
+                if (enemy->GetType() == ActorType::Assassin)
                 {
-                    enemy->ChangeAnimation("run");
+                    if (enemy->GetMoveType() != MoveType::Patrol)
+                    {
+                        enemy->ChangeAnimation("run");
+                    }
+                }
+                else
+                {
+                    if (enemy->GetMoveType() != MoveType::Patrol)
+                    {
+                        enemy->ChangeAnimation("walk");
+                    }
                 }
                 enemy->SetMoveType(MoveType::Patrol);
                 return true;
@@ -26,9 +36,19 @@ bool MoveJudgement::Judgement(Enemy* enemy)
             // プレイヤーが視界に入ったらchase
             else if (enemy->DistanceCalcurator() < enemy->GetVisionRange().chase_)
             {
-                if (enemy->GetMoveType() != MoveType::Chase)
+                if (enemy->GetType() == ActorType::Assassin)
                 {
-                    enemy->ChangeAnimation("run");
+                    if (enemy->GetMoveType() != MoveType::Chase)
+                    {
+                        enemy->ChangeAnimation("run");
+                    }
+                }
+                else
+                {
+                    if (enemy->GetMoveType() != MoveType::Chase)
+                    {
+                        enemy->ChangeAnimation("walk");
+                    }
                 }
                 enemy->SetMoveType(MoveType::Chase);
                 return true;

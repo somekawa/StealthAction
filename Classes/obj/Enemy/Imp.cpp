@@ -128,6 +128,10 @@ void Imp::AnimRegistrator(void)
 	lpAnimMng.InitAnimation(*this, ActorType::Imp, "walk");
 }
 
+void Imp::AddAttackObj(void)
+{
+}
+
 void Imp::NormalAttack(void)
 {
 }

@@ -100,6 +100,8 @@ private:
 	bool respawnFlag_;
 
     BehaviorTree assassinBehavior_;
+    BehaviorTree twistedCultistBehavior_;
+    BehaviorTree cultistBehavior_;
 
 	std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
 		static_cast<int>(ActorType::Max)> colliderBox_;

@@ -1,15 +1,16 @@
 #pragma once
 #include "Enemy.h"
-class TwistedCultist :
+
+class Cultist :
     public Enemy
 {
 public:
-    TwistedCultist(Player& player,
-        BehaviorTree* aiTree, VisionRange visionRange,int hp);
-    ~TwistedCultist();
+    Cultist(Player& player,
+        BehaviorTree* aiTree, VisionRange visionRange, int hp);
+    ~Cultist();
 
-    static TwistedCultist* CreateTwistedCultist(Player& player,
-        BehaviorTree* aiTree, VisionRange visionRange,int hp);
+    static Cultist* CreateCultist(Player& player,
+        BehaviorTree* aiTree, VisionRange visionRange, int hp);
 
     void Action(void)override;
     void update(float delta)override;
@@ -31,7 +32,8 @@ private:
     void Jump(void);
     // ジャンプからの落ちるモーション
     void Fall(void);
+
     // 行動を決定する関数ポインタ
-    void(TwistedCultist::* updater_)(void);
+    void(Cultist::* updater_)(void);
 };
 

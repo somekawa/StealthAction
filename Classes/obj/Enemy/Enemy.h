@@ -1,12 +1,12 @@
 #pragma once
+#include <memory>
+#include <list>
 #include "obj/Actor.h"
 
 class Player;
 class BehaviorTree;
 class BehaviorData;
 class NodeBase;
-
-
 
 // 行動タイプ
 enum class MoveType
@@ -50,6 +50,8 @@ public:
 	{
 		return visionRange_;
 	}
+
+	virtual void AddAttackObj(void) = 0;
 
 	virtual void ChangeDirection(void);
 	virtual const float& DistanceCalcurator(void);
@@ -132,5 +134,4 @@ protected:
 	cocos2d::DrawNode* debugCircle_;
 	// 一定距離歩いたらtrueになる
 	bool isMoveComplete_;
-
 };

@@ -6,5 +6,6 @@ enum class ActorType
 	Imp,
 	Assassin,
 	TwistedCultist,
+	Cultist,
 	Max
 };

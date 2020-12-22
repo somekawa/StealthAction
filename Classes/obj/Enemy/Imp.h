@@ -14,6 +14,8 @@ public:
 	void Action(void)override;
 	void update(float delta)override;
 	void AnimRegistrator(void);
+
+    void AddAttackObj(void);
 	//CREATE_FUNC(Imp);
 
 private:

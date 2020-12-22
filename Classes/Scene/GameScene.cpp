@@ -30,6 +30,7 @@
 #include "obj/Enemy/Imp.h"
 #include "obj/Enemy/Assassin.h"
 #include "obj/Enemy/TwistedCultist.h"
+#include "obj/Enemy/Cultist.h"
 #include "PL_HPgauge.h"
 #include "Loader/CollisionLoader.h"
 #include "GameMap.h"
@@ -113,6 +114,44 @@ bool Game::init()
 		SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
 	assassinBehavior_.AddNode("Move", "moveAction", 1,
 		BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
+
+	// root node
+	twistedCultistBehavior_.AddNode("", "Root", 0,
+		BehaviorTree::SelectRule::Priority, NULL, NULL);
+	// attack node
+	twistedCultistBehavior_.AddNode("Root", "Attack", 1,
+		BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
+	// move node
+	twistedCultistBehavior_.AddNode("Root", "Move", 2,
+		BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
+	// attackの子にNormalAttackをぶら下げる
+	twistedCultistBehavior_.AddNode("Attack", "NormalAttack", 1,
+		BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
+	// attackの子にskillAttackをぶら下げる
+	twistedCultistBehavior_.AddNode("Attack", "SkillAttack", 2,
+		BehaviorTree::SelectRule::Sequence,
+		SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
+	twistedCultistBehavior_.AddNode("Move", "moveAction", 1,
+		BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
+
+	// root node
+	cultistBehavior_.AddNode("", "Root", 0,
+		BehaviorTree::SelectRule::Priority, NULL, NULL);
+	// attack node
+	cultistBehavior_.AddNode("Root", "Attack", 1,
+		BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
+	// move node
+	cultistBehavior_.AddNode("Root", "Move", 2,
+		BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
+	// attackの子にNormalAttackをぶら下げる
+	cultistBehavior_.AddNode("Attack", "NormalAttack", 1,
+		BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
+	// attackの子にskillAttackをぶら下げる
+	cultistBehavior_.AddNode("Attack", "SkillAttack", 2,
+		BehaviorTree::SelectRule::Sequence,
+		SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
+	cultistBehavior_.AddNode("Move", "moveAction", 1,
+		BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
 	//-------------------------------------------------------------------------------
 	/////////////////////////////
 	// 2. add a menu item with "X" image, which is clicked to quit the program
@@ -175,7 +214,7 @@ bool Game::init()
 	// enemyList_に敵追加
 	//AddEnemy(ActorType::Imp);
 	// assassinを追加
-	AddEnemy(ActorType::Assassin);
+	AddEnemy(ActorType::Cultist);
 	// 敵を生成した回数(多分いらない)
 	// 敵のsetNameするために用意したもの
 	generateEnemyNum_ = 0;
@@ -407,7 +446,12 @@ void Game::AddEnemy(const ActorType& type)
 		sprite = Assassin::CreateAssassin(*player,&assassinBehavior_,VisionRange(20.0f,50.0f),50);
 		break;
 	case ActorType::TwistedCultist:
-		//sprite = TwistedCultist::CreateTwistedCultist(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildren());
+		enemyName = "twistedCultist";
+		sprite = TwistedCultist::CreateTwistedCultist(*player, &twistedCultistBehavior_, VisionRange(50.0f, 200.0f), 50);
+		break;
+	case ActorType::Cultist:
+		enemyName = "Cultist";
+		sprite = Cultist::CreateCultist(*player, &cultistBehavior_, VisionRange(200.0f, 100.0f), 50);
 		break;
 	default:
 		break;

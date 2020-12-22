@@ -1,4 +1,4 @@
-#include "Assassin.h"
+#include "Cultist.h"
 #include "Gravity.h"
 #include "_Debug/_DebugConOut.h"
 #include "ActionRect.h"
@@ -9,17 +9,18 @@
 #include "BehaviorBaseAI/BehaviorData.h"
 #include "BehaviorBaseAI/NodeBase.h"
 
+#include "obj/Objects/Fireball.h"
+
 USING_NS_CC;
 
-Assassin::Assassin(Player& player,
-	BehaviorTree* aiTree,VisionRange visionRange,int hp):
-	Enemy(player,aiTree,visionRange,hp)
+Cultist::Cultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp):
+    Enemy(player, aiTree, visionRange, hp)
 {
 	pos_ = { 500,500 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
 	this->setScale(1.5f);
 	flipFlag_ = FlipX::create(true);
-	type_ = ActorType::Assassin;
+	type_ = ActorType::Cultist;
 
 	// アニメーションの登録
 	AnimRegistrator();
@@ -29,7 +30,7 @@ Assassin::Assassin(Player& player,
 	currentAnimation_ = "idle";
 	previousAnimation_ = currentAnimation_;
 
-	this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_,currentAnimation_)));
+	this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
 
 	direction_ = Direction::Left;
 
@@ -54,7 +55,7 @@ Assassin::Assassin(Player& player,
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBoxのLoad
-		lpCol.Load(collider_, anim, "assassin");
+		lpCol.Load(collider_, anim, "cultist");
 		for (auto col : collider_[anim])
 		{
 			for (int colNum = 0; colNum < col.size(); colNum++)
@@ -66,21 +67,19 @@ Assassin::Assassin(Player& player,
 
 				draw->setTag(col[colNum]->GetData().frame_);
 
-				this->addChild(draw,col[colNum]->GetData().type_, anim);
+				this->addChild(draw, col[colNum]->GetData().type_, anim);
 			}
 		}
 	}
 }
 
-Assassin::~Assassin()
+Cultist::~Cultist()
 {
-
 }
 
-Assassin* Assassin::CreateAssassin(Player& player,
-	BehaviorTree* aiTree,VisionRange visionRange,int hp)
+Cultist* Cultist::CreateCultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp)
 {
-	Assassin* pRet = new(std::nothrow) Assassin(player,aiTree,visionRange,hp);
+	Cultist* pRet = new(std::nothrow) Cultist(player, aiTree, visionRange, hp);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -94,12 +93,11 @@ Assassin* Assassin::CreateAssassin(Player& player,
 	}
 }
 
-void Assassin::Action(void)
+void Cultist::Action(void)
 {
-	//(this->*updater_)();
 }
 
-void Assassin::update(float delta)
+void Cultist::update(float delta)
 {
 	// 死んだ判定
 	if (getName() == "death")
@@ -115,7 +113,7 @@ void Assassin::update(float delta)
 			ChangeDirection();
 		}
 		// 現在のフレームを整数値で取得
-		animationFrame_int_ = GetAnimationFrameInt()-1;
+		animationFrame_int_ = GetAnimationFrameInt() - 1;
 		// 0以下になると0にする
 		if (animationFrame_int_ < 0)
 		{
@@ -199,183 +197,64 @@ void Assassin::update(float delta)
 	}
 }
 
-void Assassin::AnimRegistrator(void)
+void Cultist::AnimRegistrator(void)
 {
 	// アニメーションをキャッシュに登録
 	// idle
 	// 第一引数を変更したほうがよい
 	// パスが同名が並んでいて書く意味なし ex.)image/EnemyAnimationAsset/assassinでいい
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "idle", 8, 0.03f, ActorType::Assassin, true);
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "idle", 6, 0.03f, ActorType::Cultist, true);
 	// run
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "run", 8, 0.08f, ActorType::Assassin, true);
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "walk", 8, 0.08f, ActorType::Cultist, true);
 
 	// attack
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "attack", 13, 0.08f, ActorType::Assassin, false);
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "attack", 10, 0.08f, ActorType::Cultist, false);
 
 	// death
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "death", 16, 0.08f, ActorType::Assassin, false);
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "death", 12, 0.08f, ActorType::Cultist, false);
 
 	// hit 
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "hit", 3, 0.09f, ActorType::Assassin, false);
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "hit", 3, 0.09f, ActorType::Cultist, false);
 	// 初期アニメーションのセット
-	lpAnimMng.InitAnimation(*this, ActorType::Assassin, "idle");
+	lpAnimMng.InitAnimation(*this, ActorType::Cultist, "idle");
 }
 
-void Assassin::AddAttackObj(void)
+void Cultist::AddAttackObj(void)
 {
+	auto fireball = Fireball::CreateFireball(getPosition(), type_);
+
+	this->addChild(fireball);
+
+	fireball->scheduleUpdate();
 }
 
-void Assassin::Jump(void)
-{
-}
-
-void Assassin::Fall(void)
-{
-}
-
-void Assassin::NormalAttack(void)
+void Cultist::NormalAttack(void)
 {
 	isAttacking_ = true;
 
-	if (OnAttacked())
-	{
-		player_.OnDamaged();
-	}
-	TRACE("direction:%d", direction_);
+
 }
 
-void Assassin::UseSkill(void)
+void Cultist::UseSkill(void)
 {
 }
 
-void Assassin::Patrol(void)
+void Cultist::Patrol(void)
 {
-	if (isMoveComplete_)
-	{
-		// 一定距離歩いていたら
-		oldPos_ = getPosition();
-		isMoveComplete_ = false;
-	}
-	else
-	{
-		// 歩いた距離がある一定距離になるまで
-		if (getPosition().x >= oldPos_.x + 30.0f)
-		{
-			isMoveComplete_ = true;
-		}
-	}
-	auto previousPos = getPosition().x;
-	// 巡回処理
-	switch (direction_)
-	{
-	case Direction::Right:
-		speed_.x = 1;
-		flipFlag_ = FlipX::create(true);
-		break;
-	case Direction::Left:
-		speed_.x = -1;
-		flipFlag_ = FlipX::create(false);
-		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
-	case Direction::Max:
-		break;
-	default:
-		break;
-	}
-	currentAnimation_ = "run";
-	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x,getPosition().y));
-	//pos_.x += speed_.x;
-	//this->setPosition(Vec2(pos_.x, pos_.y));
-	this->runAction(move);
-	this->runAction(flipFlag_);
-	setPosition(Vec2(previousPos + speed_.x, getPosition().y));
 }
 
-void Assassin::Chase(void)
+void Cultist::Chase(void)
 {
-	auto previousPos = getPosition().x;
-
-	// プレイヤーを追いかける処理
-	switch (direction_)
-	{
-	case Direction::Right:
-		speed_.x = 2;
-		flipFlag_ = FlipX::create(true);
-		break;
-	case Direction::Left:
-		speed_.x = -2;
-		flipFlag_ = FlipX::create(false);
-		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
-	case Direction::Max:
-		break;
-	default:
-		break;
-	}
-	currentAnimation_ = "run";
-	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x, getPosition().y));
-	//pos_.x += speed_.x;
-	//this->setPosition(Vec2(pos_.x, pos_.y));
-	this->runAction(move);
-	this->runAction(flipFlag_);
-	setPosition(Vec2(previousPos + speed_.x, getPosition().y));
 }
 
-void Assassin::Run(void)
+void Cultist::Run(void)
 {
-	switch (direction_)
-	{
-	case Direction::Right:
-		speed_.x = 4;
-		flipFlag_ = FlipX::create(true);
-		break;
-	case Direction::Left:
-		speed_.x = -4;
-		flipFlag_ = FlipX::create(false);
-		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
-	case Direction::Max:
-		break;
-	default:
-		break;
-	}
-
-	pos_.x += speed_.x;
-	this->setPosition(Vec2(pos_.x, pos_.y));
-	this->runAction(flipFlag_);
-
-	// 今のとこ50.0fはマジックナンバー
-	// 後で変更あり
-	if (DistanceCalcurator() < 50.0f)
-	{
-		// アニメーションを変更して
-		ChangeAnimation("attack");
-		// 変更したアニメーションを走らせる
-		this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
-		// 行動をattackにする
-		updater_ = &Assassin::Attack;
-	}
 }
 
-void Assassin::Attack(void)
+void Cultist::Jump(void)
 {
-	// attackモーションが終了したら
-	if (isAnimEnd_)
-	{
-		// アニメーションを変更して
-		ChangeAnimation("idle");
-		// 変更したアニメーションを走らせる
-		this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
-		// 行動をidleにする
-		updater_ = &Assassin::Idle;
-	}
+}
+
+void Cultist::Fall(void)
+{
 }

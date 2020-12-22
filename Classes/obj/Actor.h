@@ -121,6 +121,11 @@ public:
 	{
 		return hp_;
 	}
+	// Ž©•ª‚ÌÀ²ÌßŽæ“¾
+	virtual const ActorType& GetType(void)
+	{
+		return type_;
+	}
 private:
 
 protected:

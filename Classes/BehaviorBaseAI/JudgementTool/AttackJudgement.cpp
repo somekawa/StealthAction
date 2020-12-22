@@ -7,6 +7,10 @@ bool AttackJudgement::Judgement(Enemy* enemy)
 	{
 		if (!enemy->IsAttacking())
 		{
+			if (enemy->GetType() == ActorType::Cultist)
+			{
+				enemy->AddAttackObj();
+			}
 			// direction_ == Left
 			if (enemy->GetDirection() == Direction::Left)
 			{
@@ -17,9 +21,16 @@ bool AttackJudgement::Judgement(Enemy* enemy)
 			// direction_ == Right
 			else if (enemy->GetDirection() == Direction::Right)
 			{
-				// 攻撃矩形に加えるｵﾌｾｯﾄ情報をｾｯﾄ
-				// 右向きになるとｵﾌｾｯﾄ分ずらす必要があるので、ｵﾌｾｯﾄを65に
-				enemy->SetAttackOffset(cocos2d::Vec2(65.0f, 0.0f));
+				if (enemy->GetType() == ActorType::Assassin)
+				{
+					// 攻撃矩形に加えるｵﾌｾｯﾄ情報をｾｯﾄ
+					// 右向きになるとｵﾌｾｯﾄ分ずらす必要があるので、ｵﾌｾｯﾄを65に
+					enemy->SetAttackOffset(cocos2d::Vec2(65.0f, 0.0f));
+				}
+				if (enemy->GetType() == ActorType::TwistedCultist)
+				{
+					enemy->SetAttackOffset(cocos2d::Vec2(30.0f,0.0f));
+				}
 			}
 			// ｱﾆﾒｰｼｮﾝの変更
 			enemy->ChangeAnimation("attack");
