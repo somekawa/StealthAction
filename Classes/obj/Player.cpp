@@ -91,9 +91,7 @@ Player::Player(int hp):
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(30.0f, 30.0f);
 
-	attackF_offsetPos_ = 0.0f;
-	attackS_offsetPos_ = 0.0f;
-	attackT_offsetPos_ = 0.0f;
+	attackColOffset_ = 0.0f;
 }
 
 Player::~Player()
@@ -115,103 +113,12 @@ void Player::update(float delta)
 	animationFrame_int_ = GetAnimationFrameInt();
 	colliderVisible();
 
-	// アニメーションの更新
-	//UpdateAnimation(delta);
-
-	//TRACE("%f,%f\n",getPosition().x, getPosition().y);
 	Action();
 
 	_actCtl.update(delta,*this);
 
 	// 実行する入力先(keyかtouch)のupdateへ移動
 	_oprtState->update();	
-
-	//if (_action_Now == ACTION::JUMPING)
-	//{
-	//	cntTest ++;
-	//	if (cntTest < 20.0f)
-	//	{
-	//		_action_Now = ACTION::JUMPING;
-	//		//actFlg = true;
-	//		//return;
-	//	}
-	//	else
-	//	{
-	//		_action_Now = ACTION::FALLING;
-	//		cntTest = 0.0f;
-	//	}
-	//	//((Player&)sprite).SetAction(ACTION::FALLING);
-	//}
-	// 当たり判定練習中
-	//if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
-	//{
-	//	int chipsize = 48;
-	//	int scale = 3.0f;
-	//	auto plpos = this->getPosition();
-	//	auto plsize = this->getContentSize();
-	//	auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
-	//	if (plpos.x + (plsize.width * scale) / 2 >= enepos.x - chipsize / 2 &&
-	//		plpos.x - (plsize.width * scale) / 2 < enepos.x + chipsize / 2 &&
-	//		plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
-	//		plpos.y < enepos.y + chipsize / 2)
-	//	{
-	//		// 攻撃した瞬間に当たり判定を入れる
-	//		if (_action_Now == ACTION::ATTACK)
-	//		{
-	//			// 敵のvisibleをfalseにして見えなくする
-	//			int a = 0;
-	//			((Game*)Director::getInstance()->getRunningScene())->enemySprite->setVisible(false);
-	//		}
-	//	}
-	//}
-
-	// 敵との当たり判定テスト
-	//if (_action_Now == ACTION::ATTACK || _action_Old == ACTION::ATTACK)
-	//{
-	//	if (((Game*)Director::getInstance()->getRunningScene())->enemySprite->isVisible())
-	//	{
-	//		int chipsize = 48;
-	//		int scale = 3.0;
-	//		auto plpos = this->getPosition();
-	//		auto plsize = this->getContentSize();
-	//		auto enepos = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getPosition();
-	//		//auto enesize = ((Game*)Director::getInstance()->getRunningScene())->enemySprite->getContentSize();
-	//		// 右の時はoffset+  左はoffset-
-	//		auto offset = Vec2(plsize.width * 3.0f, 0.0f);
-	//		if (_dir_Now == DIR::LEFT)
-	//		{
-	//			_attackCheckL = Vec2(plpos.x + plsize.width / 2, plpos.y) - offset;
-	//			_attackCheckR = Vec2(plpos.x + plsize.width + plsize.width / 2, plpos.y + plsize.width) - offset;
-	//		}
-	//		else if (_dir_Now == DIR::RIGHT)
-	//		{
-	//			_attackCheckL = Vec2(plpos.x - (plsize.width * scale + plsize.width * scale / 2), plpos.y + plsize.width * scale) + offset;
-	//			_attackCheckR = Vec2(plpos.x - plsize.width * scale / 2, plpos.y) + offset;
-	//		}
-	//		auto e = enepos.x - chipsize / 2;
-	//		auto ee = enepos.x + chipsize / 2;
-	//		//TRACE("%f\n", _attackCheckL.x + offset.x);
-	//		if (_attackCheckR.x >= enepos.x - chipsize / 2 &&
-	//			_attackCheckL.x < enepos.x + chipsize / 2 &&
-	//			plpos.y + (plsize.height * scale) >= enepos.y + chipsize / 2 &&
-	//			plpos.y < enepos.y + chipsize / 2)
-	//		{
-	//			// 攻撃した瞬間に当たり判定を入れる
-	//			if (_action_Now == ACTION::ATTACK)
-	//			{
-	//				// 敵のvisibleをfalseにして見えなくする
-	//				((Game*)Director::getInstance()->getRunningScene())->enemySprite->setVisible(false);
-	//			}
-	//		}
-	//	}
-	//}
-
-	//auto plpos = this->getPosition();
-	//TRACE("%f\n", plpos.y);
-	//TRACE("%d\n", _action_Now);
-	// 範囲外check
-	//OutOfMapCheck();	
-
 	
 	if (currentAnimation_ == "Wall_Slide")
 	{
@@ -299,21 +206,6 @@ void Player::ChangeDirection(void)
 void Player::attackMotion(float sp)
 {
 	auto moveLambda = [&](int sign) {
-		//if (direction_ == Direction::Left)
-		//{
-		//	// アンカーポイント右端
-		//	//this->setAnchorPoint(Vec2(1.0f, 0.0f));
-		//	this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - AttackMove, this->getPosition().y)));
-		//	this->setPosition(Vec2(oldPos_ - AttackMove, this->getPosition().y));
-		//}
-		//else if (direction_ == Direction::Right)
-		//{
-		//	// アンカーポイント左端
-		//	//this->setAnchorPoint(Vec2(0.0f, 0.0f));
-		//	this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + AttackMove, this->getPosition().y)));
-		//	this->setPosition(Vec2(oldPos_ + AttackMove, this->getPosition().y));
-		//}
-
 		// ここで壁すり抜け防止したい
 		auto director = Director::getInstance();
 		auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
@@ -372,18 +264,6 @@ void Player::attackMotion(float sp)
 		//auto b = 0.05 * 100;
 		//auto c = (int)a / (int)b;
 		//TRACE("%d\n", c);
-
-		// 攻撃中にもう一度攻撃ボタンが押されたらAttackFirstが終了後、AttackSecondへ移行するようにする
-		//auto keyN = _oprtState->GetNowData();
-		//auto keyO = _oprtState->GetOldData();
-		//if (keyN[1] && !keyO[1])
-		//{
-		//	if (!SecondAttackFlg_)
-		//	{
-		//		SecondAttackFlg_ = true;
-		//	}
-		//}
-
 		bitFlg_.SecondAttackFlg = keyLambda(bitFlg_.SecondAttackFlg);
 
 		animationFrame_ += sp;
@@ -392,16 +272,6 @@ void Player::attackMotion(float sp)
 		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.05 * 100);
 		if (animationFrame_int_ < 10)
 		{
-			// 攻撃当たり判定ポイントテスト
-			/*if (direction_ == Direction::Right)
-			{
-				attackRect_.pos_ = Vec2(getPosition().x + 5.0f, getPosition().y);
-			}
-			else if (direction_ == Direction::Left)
-			{
-				attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
-			}*/
-
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
 			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 			colliderVisible();
@@ -433,27 +303,11 @@ void Player::attackMotion(float sp)
 			oldPosKeepFlg_ = false;
 			bitFlg_.FirstAttackFlg = false;
 			isAttacking_ = false;
-			// HP減少のテストコード
-			// 攻撃するたびにHPが10減るようにしている
-			//auto a = ((Game*)Director::getInstance()->getRunningScene());
-			//auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-			//b->SetHP(hp_-10);
 		}
 	}
 
 	if ((currentAnimation_ == "AttackSecond" && bitFlg_.SecondAttackFlg))
 	{
-		// 攻撃中にもう一度攻撃ボタンが押されたらAttackSecondが終了後、AttackThirdへ移行するようにする
-		//auto keyN = _oprtState->GetNowData();
-		//auto keyO = _oprtState->GetOldData();
-		//if (keyN[1] && !keyO[1])
-		//{
-		//	if (!ThirdAttackFlg_)
-		//	{
-		//		ThirdAttackFlg_ = true;
-		//	}
-		//}
-
 		bitFlg_.ThirdAttackFlg = keyLambda(bitFlg_.ThirdAttackFlg);
 
 		animationFrame_ += sp;
@@ -462,15 +316,6 @@ void Player::attackMotion(float sp)
 		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.08 * 100);
 		if (animationFrame_int_ < 10)
 		{
-			// 攻撃当たり判定ポイントテスト
-			/*if (direction_ == Direction::Right)
-			{
-				attackRect_.pos_ = Vec2(getPosition().x + 5.0f, getPosition().y);
-			}
-			else if (direction_ == Direction::Left)
-			{
-				attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
-			}*/
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
 			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 			colliderVisible();
@@ -507,15 +352,6 @@ void Player::attackMotion(float sp)
 		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.08 * 100);
 		if (animationFrame_int_ < 11)
 		{
-			// 攻撃当たり判定ポイントテスト
-			/*if (direction_ == Direction::Right)
-			{
-				attackRect_.pos_ = Vec2(getPosition().x + 5.0f, getPosition().y);
-			}
-			else if (direction_ == Direction::Left)
-			{
-				attackRect_.pos_ = Vec2(getPosition().x - 5.0f, getPosition().y);
-			}*/
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
 			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 			colliderVisible();
@@ -538,6 +374,12 @@ void Player::attackMotion(float sp)
 
 void Player::colliderVisible(void)
 {
+	// トランスフォームの時はコライダーを無視する
+	if (currentAnimation_ == "Transform")
+	{
+		return;
+	}
+
 	if (animationFrame_int_ <= 0)
 	{
 		animationFrame_int_ = 0;
@@ -550,60 +392,61 @@ void Player::colliderVisible(void)
 			animationFrame_int_ == collider->getTag())
 		{
 			// 攻撃の時だけオフセットが必要
-			if (currentAnimation_ == "AttackFirst")
-			{
-				if (direction_ == Direction::Right)
-				{
-					if (!attackF_offsetFlg_)
-					{
-						attackF_offsetPos_ = collider->getPosition().x + 30.0f;
-						attackF_offsetFlg_ = true;
-					}
-				}
-				else
-				{
-					attackF_offsetPos_ = 0.0f;
-					attackF_offsetFlg_ = false;
-				}
-				collider->setPosition(attackF_offsetPos_,collider->getPosition().y);
-			}
+			attackCollider("AttackFirst", collider, attackColOffset_);
+			attackCollider("AttackSecond", collider, attackColOffset_);
+			attackCollider("AttackThird", collider, attackColOffset_);
 
-			if (currentAnimation_ == "AttackSecond")
-			{
-				if (direction_ == Direction::Right)
-				{
-					if (!attackS_offsetFlg_)
-					{
-						attackS_offsetPos_ = collider->getPosition().x + 30.0f;
-						attackS_offsetFlg_ = true;
-					}
-				}
-				else
-				{
-					attackS_offsetPos_ = 0.0f;
-					attackS_offsetFlg_ = false;
-				}
-				collider->setPosition(attackS_offsetPos_, collider->getPosition().y);
-			}
-
-
-			if (currentAnimation_ == "AttackThird")
-			{
-				if (direction_ == Direction::Right)
-				{
-					if (!attackT_offsetFlg_)
-					{
-						attackT_offsetPos_ = collider->getPosition().x + 30.0f;
-						attackT_offsetFlg_ = true;
-					}
-				}
-				else
-				{
-					attackT_offsetPos_ = 0.0f;
-					attackT_offsetFlg_ = false;
-				}
-				collider->setPosition(attackT_offsetPos_, collider->getPosition().y);
-			}
+			//if (currentAnimation_ == "AttackFirst")
+			//{
+			//	if (direction_ == Direction::Right)
+			//	{
+			//		if (!attackF_offsetFlg_)
+			//		{
+			//			attackColOffset_ = collider->getPosition().x + 30.0f;
+			//			attackF_offsetFlg_ = true;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		attackColOffset_ = 0.0f;
+			//		attackF_offsetFlg_ = false;
+			//	}
+			//	collider->setPosition(attackColOffset_,collider->getPosition().y);
+			//}
+			//if (currentAnimation_ == "AttackSecond")
+			//{
+			//	if (direction_ == Direction::Right)
+			//	{
+			//		if (!attackS_offsetFlg_)
+			//		{
+			//			attackS_offsetPos_ = collider->getPosition().x + 30.0f;
+			//			attackS_offsetFlg_ = true;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		attackS_offsetPos_ = 0.0f;
+			//		attackS_offsetFlg_ = false;
+			//	}
+			//	collider->setPosition(attackS_offsetPos_, collider->getPosition().y);
+			//}
+			//if (currentAnimation_ == "AttackThird")
+			//{
+			//	if (direction_ == Direction::Right)
+			//	{
+			//		if (!attackT_offsetFlg_)
+			//		{
+			//			attackT_offsetPos_ = collider->getPosition().x + 30.0f;
+			//			attackT_offsetFlg_ = true;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		attackT_offsetPos_ = 0.0f;
+			//		attackT_offsetFlg_ = false;
+			//	}
+			//	collider->setPosition(attackT_offsetPos_, collider->getPosition().y);
+			//}
 
 			collider->setVisible(true);
 		}
@@ -611,6 +454,33 @@ void Player::colliderVisible(void)
 		{
 			collider->setVisible(false);
 		}
+	}
+}
+
+void Player::attackCollider(std::string str,cocos2d::Node* col,float& pos)
+{
+	// すでにオフセット値が0以上で設定されているときはtrueにする
+	bool tmpFlg = false;
+	if (pos > 0)
+	{
+		tmpFlg = true;
+	}
+
+	// 攻撃の時だけオフセットが必要
+	if (currentAnimation_ == str.c_str())
+	{
+		if (direction_ == Direction::Right)
+		{
+			if (!tmpFlg)
+			{
+				pos = col->getPosition().x + 30.0f;
+			}
+		}
+		else
+		{
+			pos = 0.0f;
+		}
+		col->setPosition(pos, col->getPosition().y);
 	}
 }
 

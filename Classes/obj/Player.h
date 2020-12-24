@@ -45,6 +45,7 @@ private:
 
 	void attackMotion(float sp);								// 攻撃モーションの設定
 	void colliderVisible(void);									// 矩形の描画関連
+	void attackCollider(std::string str, cocos2d::Node* col, float& pos);	// 攻撃矩形のオフセット
 
 	// アニメーション関係
 	//std::string actionNow_;
@@ -68,12 +69,7 @@ private:
 	Bits bitFlg_;
 
 	// 攻撃時のオフセットテスト
-	bool attackF_offsetFlg_ = false;
-	float attackF_offsetPos_;
-	bool attackS_offsetFlg_ = false;
-	float attackS_offsetPos_;
-	bool attackT_offsetFlg_ = false;
-	float attackT_offsetPos_;
+	float attackColOffset_;
 };
 
 // まずは敵との攻撃矩形とダメージ矩形の当たり判定

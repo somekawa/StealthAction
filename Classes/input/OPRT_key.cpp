@@ -59,7 +59,7 @@ void OPRT_key::keyflg(Sprite* sprite)
 		}
 
 		if (keyCode == EventKeyboard::KeyCode::KEY_A) {
-			_keyData._input[static_cast<int>(BUTTON::ATTACK)] = true;
+			_keyData._input[static_cast<int>(BUTTON::Transfrom)] = true;
 		}
 		return true;
 	};
@@ -90,7 +90,7 @@ void OPRT_key::keyflg(Sprite* sprite)
 
 		if (keyCode == EventKeyboard::KeyCode::KEY_A)
 		{
-			_keyData._input[static_cast<int>(BUTTON::ATTACK)] = false;
+			_keyData._input[static_cast<int>(BUTTON::Transfrom)] = false;
 		}
 		return true;
 	};
