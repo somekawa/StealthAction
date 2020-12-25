@@ -4,11 +4,11 @@
 #include "MST.h"
 #include "MapGenerator.h"
 
-MapGenerator::MapGenerator()
+MapGenerator::MapGenerator(std::uint_fast32_t seed)
 {
     // メルセンヌ・ツイスター法による擬似乱数生成器を、
     // ハードウェア乱数をシードにして初期化
-    engine_.seed(0);
+    engine_.seed(seed);
     std::uniform_real_distribution<>::param_type param(0, 1);
     std::uniform_int_distribution<>::param_type param_i(8, 16);
     std::uniform_int_distribution<>::param_type param_n(4, 7);
@@ -63,11 +63,11 @@ bool MapGenerator::CreateRoom(void)
         auto pos_area2 = (cocos2d::Vec2(800 + r * cos(t), 500 + r * sin(t)));
         auto pos_area3 = (cocos2d::Vec2(600 + r * cos(t), 700 + r * sin(t)));
         auto pos_area4 = (cocos2d::Vec2(600 + r * cos(t), 300 + r * sin(t)));
-        auto size = (cocos2d::Size(4.0f * _dist_i(engine_), 4.0f * _dist_n(engine_)));
+        auto size = (cocos2d::Size(4.0f * 16, 4.0f * 8));
         auto name = "floor" + cocos2d::StringUtils::toString(n);
 
         auto area = (n / (FLOOR / 5));
-        /*if (area == 0)
+        if (area == 0)
         {
             if (n == 0)
             {
@@ -91,8 +91,8 @@ bool MapGenerator::CreateRoom(void)
         else if (area == 4)
         {
            data_.emplace_back(Room_Data{4,true,pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1.0, 0.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5)});
-        }*/
-        data_.emplace_back(Room_Data{ 4,true,pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1.0, 0.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5) });
+        }
+        //data_.emplace_back(Room_Data{ 4,true,pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1.0, 0.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5) });
 
     }
     return true;

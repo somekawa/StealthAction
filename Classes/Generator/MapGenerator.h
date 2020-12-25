@@ -32,7 +32,7 @@ class MST;
 class MapGenerator
 {
 public:
-    MapGenerator();
+    MapGenerator(std::uint_fast32_t seed = 0);
     ~MapGenerator();
 
     void Call();
