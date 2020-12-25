@@ -37,20 +37,20 @@ void MST::MakeMSTforPrim()
 	//Vがグラフのすべての頂点を含むまで，以下を繰り返す．
 	while (vertexList_.size() > V.size())
 	{
-		for (auto usedvert : V)
+		for (auto& usedvert : V)
 		{
-			for (auto unUsedvert : A)
+			for (auto& unUsedvert : A)
 			{
 				FindShortest(unUsedvert, usedvert, min_distance, min_edge);
 			}
 		}
 		// min_edgeの中身は{unUsedvert,usedvert}だから0番目
-		auto minVert = min_edge[0];
+		auto& minVert = min_edge[0];
 
 		//そしてvをVに加える．
 		V.emplace_back(minVert);
 		//そしてAからvを削除
-		Vertex_List::iterator vertItr = remove_if(A.begin(), A.end(), [minVert](const Vec2& vert)
+		auto& vertItr = remove_if(A.begin(), A.end(), [minVert](const Vec2& vert)
 			{
 				return vert == minVert;
 			});
@@ -58,6 +58,7 @@ void MST::MakeMSTforPrim()
 		{
 			continue;
 		}
+		
 		A.erase(vertItr, A.end());
 
 		//最終的にグラフ(V, E)が最小全域木となる．
@@ -95,27 +96,29 @@ void MST::UsedIfDuplicate()
 
 void MST::CreateLinkNode()
 {
+	int id = 0;
 	// ノードリストといくつリンクしているかのリストの作成
 	for (auto& v : vertexList_)
 	{
 		Node_Status tmpNode;
 		tmpNode.key = v;
+		tmpNode.id = id;
 		for (auto& edge : edgeData)
 		{
 			if (!edge.used)
 			{
 				continue;
 			}
-			if ((edge.pair_vertex[0] == v || edge.pair_vertex[1] == v))
+			if (edge.pair_vertex[0] == v || edge.pair_vertex[1] == v)
 			{
 
 				if (edge.pair_vertex[0] != v)
 				{
-					tmpNode.childData.push_back({ 0, edge.pair_vertex[0], true, MapDirection::Max });
+					tmpNode.childData.push_back({ id, edge.pair_vertex[0], true, MapDirection::Max });
 				}
 				else
 				{
-					tmpNode.childData.push_back({ 0, edge.pair_vertex[1], true, MapDirection::Max });
+					tmpNode.childData.push_back({ id, edge.pair_vertex[1], true, MapDirection::Max });
 				}
 			}
 		}
@@ -130,7 +133,7 @@ void MST::CreateLinkNode()
 			CreateMST();
 
 		}
-
+		id++;
 		nodeList_.push_back(tmpNode);
 
 	}

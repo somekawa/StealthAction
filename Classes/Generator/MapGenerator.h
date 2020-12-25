@@ -4,7 +4,7 @@
 #include <string>
 #include <mutex>
 #include "Direction/Direction.h"
-constexpr auto FLOOR = 150;
+constexpr auto FLOOR = 50;
 enum class Map
 {
 

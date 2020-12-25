@@ -9,7 +9,7 @@
 #include "BehaviorBaseAI/BehaviorData.h"
 #include "BehaviorBaseAI/NodeBase.h"
 
-#include "obj/Objects/Fireball.h"
+//#include "obj/Objects/Fireball.h"
 
 USING_NS_CC;
 
@@ -221,11 +221,11 @@ void Cultist::AnimRegistrator(void)
 
 void Cultist::AddAttackObj(void)
 {
-	auto fireball = Fireball::CreateFireball(getPosition(), type_);
+	//auto fireball = Fireball::CreateFireball(getPosition(), type_);
 
-	this->addChild(fireball);
+	//this->addChild(fireball);
 
-	fireball->scheduleUpdate();
+	//fireball->scheduleUpdate();
 }
 
 void Cultist::NormalAttack(void)

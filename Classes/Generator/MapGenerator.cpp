@@ -91,6 +91,7 @@ bool MapGenerator::CreateRoom(void)
         else if (area == 4)
         {
            data_.emplace_back(Room_Data{4,true,pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1.0, 0.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5)});
+       
         }
         //data_.emplace_back(Room_Data{ 4,true,pos_area2,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1.0, 0.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5) });
 
