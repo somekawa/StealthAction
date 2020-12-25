@@ -55,65 +55,67 @@ if(APPLE OR WINDOWS)
 endif()
 
 # add cross-platforms source files and header files 
-list(APPEND GAME_SOURCE
-     Classes/AppDelegate.cpp
-     Classes/GameScene.cpp
-	Classes/CameraManager.cpp
-	Classes/GameMap.cpp
-        Classes/anim/ActionCtl.cpp
-        Classes/anim/AnimMng.cpp
-        Classes/Check/CheckKeyList.cpp
-        Classes/Check/CheckList.cpp
-        Classes/Check/CheckObjHit.cpp
-        Classes/Check/Flip.cpp
-	Classes/Collision/Collider.cpp
-        Classes/input/DIR_ID.cpp
-        Classes/input/OPRT_key.cpp
-        Classes/input/OPRT_state.cpp
-        Classes/input/OPRT_touch.cpp
-	Classes/move/Attack.cpp
-        Classes/move/FallFalling.cpp
-        Classes/move/JumpJumping.cpp
-	Classes/move/Jump.cpp
-        Classes/move/MOVE_LR.cpp
-	Classes/obj/Enemy/Enemy.cpp
-	Classes/obj/Enemy/Imp.cpp
-	Classes/obj/Actor.cpp
-        Classes/obj/Player.cpp
-        Classes/PL_HPgauge.cpp
-        Classes/Gate.cpp
-        )
-list(APPEND GAME_HEADER
-     Classes/AppDelegate.h
-     Classes/GameScene.h
-	Classes/CameraManager.h
-	Classes/GameMap.h
-        Classes/anim/ActionCtl.h
-        Classes/anim/AnimMng.h
-	Classes/AnimationEnum/AnimationType.h
-        Classes/Check/CheckKeyList.h
-        Classes/Check/CheckList.h
-        Classes/Check/CheckObjHit.h
-        Classes/Check/Flip.h
-	Classes/Collision/Collider.h
-	Classes/Direction/Direction.h
-        Classes/input/DIR_ID.h
-        Classes/input/OPRT_key.h
-        Classes/input/OPRT_state.h
-        Classes/input/OPRT_touch.h
-	Classes/move/Attack.h
-        Classes/move/FallFalling.h
-        Classes/move/JumpJumping.h
-	Classes/move/Jump.h
-        Classes/move/MOVE_LR.h
-	Classes/obj/Enemy/Enemy.h
-	Classes/obj/Enemy/Imp.h
-	Classes/obj/Actor.h
-        Classes/obj/Player.h
-        Classes/module/ActModule.h
-        Classes/PL_HPgauge.h
-        Classes/Gate.h
-        )
+#list(APPEND GAME_SOURCE
+ #    Classes/AppDelegate.cpp
+ #    Classes/GameScene.cpp
+#	Classes/CameraManager.cpp
+#	Classes/GameMap.cpp
+ #       Classes/anim/ActionCtl.cpp
+#        Classes/anim/AnimMng.cpp
+#        Classes/Check/CheckKeyList.cpp
+#        Classes/Check/CheckList.cpp
+#        Classes/Check/CheckObjHit.cpp
+#        Classes/Check/Flip.cpp
+#	Classes/Collision/Collider.cpp
+#        Classes/input/DIR_ID.cpp
+#        Classes/input/OPRT_key.cpp
+#        Classes/input/OPRT_state.cpp
+#        Classes/input/OPRT_touch.cpp
+#	Classes/move/Attack.cpp
+ #       Classes/move/FallFalling.cpp
+#        Classes/move/JumpJumping.cpp
+#	Classes/move/Jump.cpp
+#        Classes/move/MOVE_LR.cpp
+#	Classes/obj/Enemy/Enemy.cpp
+#	Classes/obj/Enemy/Imp.cpp
+#	Classes/obj/Actor.cpp
+#        Classes/obj/Player.cpp
+#        Classes/PL_HPgauge.cpp
+#        Classes/Gate.cpp
+#        )
+file(GLOB_RECURSE GAME_SOURCE RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS "Classes/*.cpp")
+file(GLOB_RECURSE GAME_HEADER RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS "Classes/*.h")
+#list(APPEND GAME_HEADER
+ #    Classes/AppDelegate.h
+ #    Classes/GameScene.h
+#	Classes/CameraManager.h
+#	Classes/GameMap.h
+ #       Classes/anim/ActionCtl.h
+#        Classes/anim/AnimMng.h
+#	Classes/AnimationEnum/AnimationType.h
+#        Classes/Check/CheckKeyList.h
+#        Classes/Check/CheckList.h
+#        Classes/Check/CheckObjHit.h
+#        Classes/Check/Flip.h
+#	Classes/Collision/Collider.h
+#	Classes/Direction/Direction.h
+ #       Classes/input/DIR_ID.h
+ #       Classes/input/OPRT_key.h
+#        Classes/input/OPRT_state.h
+ #       Classes/input/OPRT_touch.h
+#	Classes/move/Attack.h
+#        Classes/move/FallFalling.h
+#        Classes/move/JumpJumping.h
+#	Classes/move/Jump.h
+ #       Classes/move/MOVE_LR.h
+#	Classes/obj/Enemy/Enemy.h
+#	Classes/obj/Enemy/Imp.h
+#	Classes/obj/Actor.h
+#        Classes/obj/Player.h
+#        Classes/module/ActModule.h
+#        Classes/PL_HPgauge.h
+#        Classes/Gate.h
+ #       )
 
 if(ANDROID)
     # change APP_NAME to the share library name for Android, it's value depend on AndroidManifest.xml
@@ -185,6 +187,8 @@ target_include_directories(${APP_NAME}
         PRIVATE Classes
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
+add_subdirectory(Effekseer)
+target_link_libraries(${APP_NAME} EffekseerForCocos2d-x)
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})

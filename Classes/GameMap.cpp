@@ -160,7 +160,6 @@ cocos2d::TMXTiledMap* GameMap::GetMap()
 
 void GameMap::update(Player& player)
 {
-	
 	for (auto obj : objs_)
 	{
 		obj->Update(player);
