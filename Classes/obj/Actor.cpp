@@ -10,12 +10,13 @@ USING_NS_CC;
 //{
 //}
 
-Actor::Actor(int hp):hp_(hp)
+Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 {
 	deleteFlag_ = false;
 	isAnimEnd_ = false;
 	onFloor_ = false;
 	isHitWall_ = false;
+	isFire_ = false;
 	// 攻撃しているかのフラグの初期化
 	isAttacking_ = false;
 	// ダメージをくらったフラグの初期化
@@ -23,6 +24,11 @@ Actor::Actor(int hp):hp_(hp)
 	animationFrame_ = 0.0f;
 	// 自分自身を参照で渡し、生成
 	gravity_ = std::make_unique<Gravity>(*this);
+
+	// 攻撃の際に出現するｵﾌﾞｼﾞｪｸﾄのﾚｲﾔｰ
+	attackLayer_ = Layer::create();
+	// ｼｰﾝのﾚｲﾔｰにattackLayer_をぶら下げる
+	myLayer.addChild(attackLayer_, 2, "attack");
 }
 
 Actor::~Actor()

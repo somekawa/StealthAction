@@ -31,7 +31,7 @@ class Actor :
 public:
 	// デフォルトコンストラクタ追加中
 	//Actor();
-	Actor(int hp);
+	Actor(int hp,cocos2d::Layer& myLayer);
 	~Actor();
 	// 各Actorの行動処理
 	virtual void Action(void) = 0;
@@ -67,6 +67,11 @@ public:
 	virtual const AttackRect& GetAttackRect(void)
 	{
 		return attackRect_;
+	}
+	// ｱﾆﾒｰｼｮﾝのﾌﾚｰﾑ値の取得
+	virtual const float& GetAnimationFrame(void)
+	{
+		return animationFrame_;
 	}
 
 	virtual void SetPos(Vector2I pos);
@@ -126,6 +131,11 @@ public:
 	{
 		return type_;
 	}
+	// 攻撃ｵﾌﾞｼﾞｪｸﾄを発射しているかの取得
+	virtual bool GetFire(void)
+	{
+		return isFire_;
+	}
 private:
 
 protected:
@@ -176,4 +186,10 @@ protected:
 	bool isAttacking_;
 	// 攻撃矩形
 	AttackRect attackRect_;
+	// 自分自身が存在するﾚｲﾔｰ
+	cocos2d::Layer& myLayer_;
+
+	cocos2d::Layer* attackLayer_;
+	// 攻撃ｵﾌﾞｼﾞｪｸﾄを出しているかのﾌﾗｸﾞ
+	bool isFire_;
 };

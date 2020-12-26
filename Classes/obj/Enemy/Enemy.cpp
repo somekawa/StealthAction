@@ -11,8 +11,8 @@
 
 USING_NS_CC;
 
-Enemy::Enemy(Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp):
-	Actor(hp),player_(player),aiTree_(aiTree),activeNode_(NULL),behaviorData_(NULL),visionRange_(visionRange)
+Enemy::Enemy(Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
+	Actor(hp,myLayer),player_(player),aiTree_(aiTree),activeNode_(NULL),behaviorData_(NULL),visionRange_(visionRange)
 {
 	// ビヘイビアデータの生成
 	behaviorData_ = new BehaviorData();

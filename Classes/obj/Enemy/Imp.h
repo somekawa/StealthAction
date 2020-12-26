@@ -5,17 +5,17 @@ class Imp :public Enemy
 public:
 	Imp(Player& player,
         BehaviorTree* aiTree,
-        VisionRange visionRange,int hp);
+        VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 	~Imp();
 
 	static Imp* CreateImp(Player& player,
-        BehaviorTree* aiTree, VisionRange visionRange,int hp);
+        BehaviorTree* aiTree, VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 
 	void Action(void)override;
 	void update(float delta)override;
 	void AnimRegistrator(void);
 
-    void AddAttackObj(void);
+    void AddAttackObj(const float& angle);
 	//CREATE_FUNC(Imp);
 
 private:

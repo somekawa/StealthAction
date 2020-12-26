@@ -16,8 +16,8 @@ USING_NS_CC;
 
 int Player::no_ = 0;
 
-Player::Player(int hp):
-	Actor(hp)
+Player::Player(int hp,Layer& myLayer):
+	Actor(hp,myLayer)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -549,9 +549,9 @@ const AttackRect& Player::GetAttackRect(void)
 	return attackRect_;
 }
 
-Player* Player::CreatePlayer(int hp)
+Player* Player::CreatePlayer(int hp,Layer& myLayer)
 {
-	Player* pRet = new(std::nothrow) Player(hp);
+	Player* pRet = new(std::nothrow) Player(hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();

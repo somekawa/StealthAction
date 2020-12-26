@@ -6,17 +6,18 @@ class Cultist :
 {
 public:
     Cultist(Player& player,
-        BehaviorTree* aiTree, VisionRange visionRange, int hp);
+        BehaviorTree* aiTree, VisionRange visionRange, int hp,cocos2d::Layer& myLayer);
     ~Cultist();
 
     static Cultist* CreateCultist(Player& player,
-        BehaviorTree* aiTree, VisionRange visionRange, int hp);
+        BehaviorTree* aiTree, VisionRange visionRange, int hp,cocos2d::Layer& myLayer);
 
     void Action(void)override;
     void update(float delta)override;
     void AnimRegistrator(void);
 
-    void AddAttackObj(void);
+    void AddAttackObj(const float& angle);
+    const float GetPLAngle(void);
 private:
     // 物理攻撃
     void NormalAttack(void);
@@ -35,5 +36,7 @@ private:
 
     // 行動を決定する関数ポインタ
     void(Cultist::* updater_)(void);
+    // 攻撃回数
+    int attackCnt_;
 };
 

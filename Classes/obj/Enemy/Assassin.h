@@ -5,16 +5,16 @@ class Assassin :
 {
 public:
     Assassin(Player& player,
-        BehaviorTree* aiTree,VisionRange visionRange,int hp);
+        BehaviorTree* aiTree,VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
     ~Assassin();
 
     static Assassin* CreateAssassin(Player& player,
-        BehaviorTree* aiTree,VisionRange visionRange,int hp);
+        BehaviorTree* aiTree,VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 
     void Action(void)override;
     void update(float delta)override;
     void AnimRegistrator(void);
-    void AddAttackObj(void);
+    void AddAttackObj(const float& angle);
 private:
     // ï®óùçUåÇ
     void NormalAttack(void);

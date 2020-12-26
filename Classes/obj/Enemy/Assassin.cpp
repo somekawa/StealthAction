@@ -12,8 +12,8 @@
 USING_NS_CC;
 
 Assassin::Assassin(Player& player,
-	BehaviorTree* aiTree,VisionRange visionRange,int hp):
-	Enemy(player,aiTree,visionRange,hp)
+	BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
+	Enemy(player,aiTree,visionRange,hp,myLayer)
 {
 	pos_ = { 500,500 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
@@ -78,9 +78,9 @@ Assassin::~Assassin()
 }
 
 Assassin* Assassin::CreateAssassin(Player& player,
-	BehaviorTree* aiTree,VisionRange visionRange,int hp)
+	BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer)
 {
-	Assassin* pRet = new(std::nothrow) Assassin(player,aiTree,visionRange,hp);
+	Assassin* pRet = new(std::nothrow) Assassin(player,aiTree,visionRange,hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -221,7 +221,7 @@ void Assassin::AnimRegistrator(void)
 	lpAnimMng.InitAnimation(*this, ActorType::Assassin, "idle");
 }
 
-void Assassin::AddAttackObj(void)
+void Assassin::AddAttackObj(const float& angle)
 {
 }
 

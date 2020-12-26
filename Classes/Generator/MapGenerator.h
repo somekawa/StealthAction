@@ -5,10 +5,10 @@
 #include <mutex>
 #include "Direction/Direction.h"
 constexpr auto FLOOR = 50;
-enum class Map
-{
-
-};
+//enum class Map
+//{
+//
+//};
 struct Room_Data
 {
     int area;

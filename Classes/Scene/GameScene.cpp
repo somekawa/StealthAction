@@ -417,7 +417,7 @@ void Game::AddPlayer(int playerNum)
 	// playerêîresize
 	for (int p = 0; p < playerNum; p++)
 	{
-		auto plSprite = Player::CreatePlayer(100);
+		auto plSprite = Player::CreatePlayer(100, *layer_[static_cast<int>(zOlder::CHAR_PL)]);
 		plSprite->setName("player" + std::to_string(p + 1));
 		plSprite->setScale(3.0f);
 		plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
@@ -443,15 +443,15 @@ void Game::AddEnemy(const ActorType& type)
 		break;
 	case ActorType::Assassin:
 		enemyName = "Assassin";
-		sprite = Assassin::CreateAssassin(*player,&assassinBehavior_,VisionRange(20.0f,50.0f),50);
+		sprite = Assassin::CreateAssassin(*player,&assassinBehavior_,VisionRange(20.0f,50.0f),50,*layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
 		break;
 	case ActorType::TwistedCultist:
 		enemyName = "twistedCultist";
-		sprite = TwistedCultist::CreateTwistedCultist(*player, &twistedCultistBehavior_, VisionRange(50.0f, 200.0f), 50);
+		sprite = TwistedCultist::CreateTwistedCultist(*player, &twistedCultistBehavior_, VisionRange(50.0f, 200.0f), 50,*layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
 		break;
 	case ActorType::Cultist:
 		enemyName = "Cultist";
-		sprite = Cultist::CreateCultist(*player, &cultistBehavior_, VisionRange(200.0f, 100.0f), 50);
+		sprite = Cultist::CreateCultist(*player, &cultistBehavior_, VisionRange(200.0f, 100.0f), 50,*layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
 		break;
 	default:
 		break;

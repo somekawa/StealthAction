@@ -5,17 +5,17 @@ class TwistedCultist :
 {
 public:
     TwistedCultist(Player& player,
-        BehaviorTree* aiTree, VisionRange visionRange,int hp);
+        BehaviorTree* aiTree, VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
     ~TwistedCultist();
 
     static TwistedCultist* CreateTwistedCultist(Player& player,
-        BehaviorTree* aiTree, VisionRange visionRange,int hp);
+        BehaviorTree* aiTree, VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 
     void Action(void)override;
     void update(float delta)override;
     void AnimRegistrator(void);
 
-    void AddAttackObj(void);
+    void AddAttackObj(const float& angle);
 private:
     // ï®óùçUåÇ
     void NormalAttack(void);

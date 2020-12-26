@@ -1,5 +1,7 @@
 #include "BehaviorBaseAI/JudgementTool/AttackJudgement.h"
 #include "obj/Enemy/Enemy.h"
+#include "obj/Objects/Fireball.h"
+#include "obj/Enemy/Cultist.h"
 
 bool AttackJudgement::Judgement(Enemy* enemy)
 {
@@ -9,27 +11,37 @@ bool AttackJudgement::Judgement(Enemy* enemy)
 		{
 			if (enemy->GetType() == ActorType::Cultist)
 			{
-				enemy->AddAttackObj();
+				if (!enemy->GetFire())
+				{
+					auto angle = dynamic_cast<Cultist&>(*enemy).GetPLAngle();
+					enemy->AddAttackObj(angle);
+					enemy->SetIsAttacking(true);
+				}
 			}
-			// direction_ == Left
-			if (enemy->GetDirection() == Direction::Left)
+			else
 			{
-				// 攻撃矩形に加えるｵﾌｾｯﾄ情報をｾｯﾄ
-				// 左向きはﾃﾞﾌｫなのでｵﾌｾｯﾄは加える必要なしなので0
-				enemy->SetAttackOffset(cocos2d::Vec2(0.0f, 0.0f));
-			}
-			// direction_ == Right
-			else if (enemy->GetDirection() == Direction::Right)
-			{
-				if (enemy->GetType() == ActorType::Assassin)
+				// direction_ == Left
+				if (enemy->GetDirection() == Direction::Left)
 				{
 					// 攻撃矩形に加えるｵﾌｾｯﾄ情報をｾｯﾄ
-					// 右向きになるとｵﾌｾｯﾄ分ずらす必要があるので、ｵﾌｾｯﾄを65に
-					enemy->SetAttackOffset(cocos2d::Vec2(65.0f, 0.0f));
+					// 左向きはﾃﾞﾌｫなのでｵﾌｾｯﾄは加える必要なしなので0
+					enemy->SetAttackOffset(cocos2d::Vec2(0.0f, 0.0f));
+					enemy->SetIsAttacking(true);
 				}
-				if (enemy->GetType() == ActorType::TwistedCultist)
+				// direction_ == Right
+				else if (enemy->GetDirection() == Direction::Right)
 				{
-					enemy->SetAttackOffset(cocos2d::Vec2(30.0f,0.0f));
+					if (enemy->GetType() == ActorType::Assassin)
+					{
+						// 攻撃矩形に加えるｵﾌｾｯﾄ情報をｾｯﾄ
+						// 右向きになるとｵﾌｾｯﾄ分ずらす必要があるので、ｵﾌｾｯﾄを65に
+						enemy->SetAttackOffset(cocos2d::Vec2(65.0f, 0.0f));
+					}
+					if (enemy->GetType() == ActorType::TwistedCultist)
+					{
+						enemy->SetAttackOffset(cocos2d::Vec2(30.0f, 0.0f));
+					}
+					enemy->SetIsAttacking(true);
 				}
 			}
 			// ｱﾆﾒｰｼｮﾝの変更
@@ -50,7 +62,6 @@ bool AttackJudgement::Judgement(Enemy* enemy)
 					}
 				}
 			}
-			enemy->SetIsAttacking(true);
 		}
 		return true;
 	}

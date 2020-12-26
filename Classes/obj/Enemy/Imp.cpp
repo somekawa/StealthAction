@@ -9,8 +9,8 @@ USING_NS_CC;
 constexpr int Sight = 150;
 constexpr int AttackRange = 45;
 
-Imp::Imp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp):
-	Enemy(player,aiTree,visionRange,hp)
+Imp::Imp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer):
+	Enemy(player,aiTree,visionRange,hp,myLayer)
 {
 	pos_ = { 980,100 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
@@ -48,9 +48,9 @@ Imp::~Imp()
 {
 }
 
-Imp* Imp::CreateImp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp)
+Imp* Imp::CreateImp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer)
 {
-	Imp* pRet = new(std::nothrow) Imp(player,aiTree,visionRange,hp);
+	Imp* pRet = new(std::nothrow) Imp(player,aiTree,visionRange,hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -128,7 +128,7 @@ void Imp::AnimRegistrator(void)
 	lpAnimMng.InitAnimation(*this, ActorType::Imp, "walk");
 }
 
-void Imp::AddAttackObj(void)
+void Imp::AddAttackObj(const float& angle)
 {
 }
 

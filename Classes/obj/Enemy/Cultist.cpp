@@ -9,16 +9,18 @@
 #include "BehaviorBaseAI/BehaviorData.h"
 #include "BehaviorBaseAI/NodeBase.h"
 
-//#include "obj/Objects/Fireball.h"
+#include "obj/Objects/Fireball.h"
 
 USING_NS_CC;
 
-Cultist::Cultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp):
-    Enemy(player, aiTree, visionRange, hp)
+Cultist::Cultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp,Layer& myLayer):
+    Enemy(player, aiTree, visionRange, hp,myLayer)
 {
+	attackCnt_ = 0;
+
 	pos_ = { 500,500 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
-	this->setScale(1.5f);
+	this->setScale(2.0f);
 	flipFlag_ = FlipX::create(true);
 	type_ = ActorType::Cultist;
 
@@ -34,23 +36,8 @@ Cultist::Cultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, 
 
 	direction_ = Direction::Left;
 
-	//lpCol.Load(collider_, "idle", "assassin");
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(30.0f, 30.0f);
-	//for (auto col : collider_["idle"])
-	//{
-	//	for (int colNum = 0; colNum < col.size(); colNum++)
-	//	{
-	//		// colliderBoxを自身の子にする
-	//		auto draw = col[colNum]->create();
-	//		// ポジションがおかしい...
-	//		draw->setAnchorPoint(Vec2(0.0f, 0.0f));
-	//		draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-	//		draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
-	//		draw->setTag(col[colNum]->GetData().frame_);
-	//		this->addChild(draw, 0, "idle");
-	//	}
-	//}
 
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
@@ -77,9 +64,9 @@ Cultist::~Cultist()
 {
 }
 
-Cultist* Cultist::CreateCultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp)
+Cultist* Cultist::CreateCultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp,Layer& myLayer)
 {
-	Cultist* pRet = new(std::nothrow) Cultist(player, aiTree, visionRange, hp);
+	Cultist* pRet = new(std::nothrow) Cultist(player, aiTree, visionRange, hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -112,13 +99,7 @@ void Cultist::update(float delta)
 			// 方向の変更
 			ChangeDirection();
 		}
-		// 現在のフレームを整数値で取得
-		animationFrame_int_ = GetAnimationFrameInt() - 1;
-		// 0以下になると0にする
-		if (animationFrame_int_ < 0)
-		{
-			animationFrame_int_ = 0;
-		}
+
 		// 無条件に通っていたら処理が重くなるので
 		// ﾌﾟﾚｲﾔｰが攻撃態勢で自分が攻撃食らっていなかったら(今のところこうしているが、後で自分がhitﾓｰｼｮﾝが終わったらに変更予定)
 		if (player_.IsAttacking() && !onDamaged_)
@@ -149,7 +130,13 @@ void Cultist::update(float delta)
 				stateTransitioner_ = &Enemy::Hit;
 			}
 		}
-
+		// 現在のフレームを整数値で取得
+		animationFrame_int_ = GetAnimationFrameInt() - 1;
+		// 0以下になると0にする
+		if (animationFrame_int_ < 0)
+		{
+			animationFrame_int_ = 0;
+		}
 		//if (currentAnimation_ == "attack")
 		{
 			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
@@ -165,7 +152,6 @@ void Cultist::update(float delta)
 			animationFrame_ = 0.0f;
 			return;
 		}
-
 
 		for (auto animationCol = this->getChildren().rbegin();
 			animationCol != this->getChildren().rend(); animationCol++)
@@ -192,6 +178,7 @@ void Cultist::update(float delta)
 		if (isAnimEnd_)
 		{
 			isAttacking_ = false;
+			isFire_ = false;
 			hittingToPlayer_ = false;
 		}
 	}
@@ -219,28 +206,83 @@ void Cultist::AnimRegistrator(void)
 	lpAnimMng.InitAnimation(*this, ActorType::Cultist, "idle");
 }
 
-void Cultist::AddAttackObj(void)
+void Cultist::AddAttackObj(const float& angle)
 {
-	//auto fireball = Fireball::CreateFireball(getPosition(), type_);
+	// 攻撃していたらfireballを飛ばす
+	auto fireball = Fireball::CreateFireball({ getPosition().x,getPosition().y + 30.0f },direction_,angle,player_);
+	// 攻撃ﾚｲﾔｰにfireballをぶら下げる
+	attackLayer_->addChild(fireball,attackCnt_);
+	attackCnt_++;
+	fireball->scheduleUpdate();
+}
 
-	//this->addChild(fireball);
+const float Cultist::GetPLAngle(void)
+{
+	auto plPos = player_.getPosition();
 
-	//fireball->scheduleUpdate();
+	auto angle = atan2(getPosition().y - plPos.y,getPosition().x - plPos.x);
+
+	return angle;
 }
 
 void Cultist::NormalAttack(void)
 {
-	isAttacking_ = true;
-
+	if (animationFrame_ >= 0.01f)
+	{
+		isFire_ = true;
+	}
 
 }
 
 void Cultist::UseSkill(void)
 {
+
 }
 
 void Cultist::Patrol(void)
 {
+	if (isMoveComplete_)
+	{
+		// 一定距離歩いていたら
+		oldPos_ = getPosition();
+		isMoveComplete_ = false;
+	}
+	else
+	{
+		// 歩いた距離がある一定距離になるまで
+		if (getPosition().x >= oldPos_.x + 30.0f)
+		{
+			isMoveComplete_ = true;
+		}
+	}
+	auto previousPos = getPosition().x;
+	// 巡回処理
+	switch (direction_)
+	{
+	case Direction::Right:
+		speed_.x = 1;
+		flipFlag_ = FlipX::create(true);
+		break;
+	case Direction::Left:
+		speed_.x = -1;
+		flipFlag_ = FlipX::create(false);
+		break;
+	case Direction::Up:
+		break;
+	case Direction::Down:
+		break;
+	case Direction::Max:
+		break;
+	default:
+		break;
+	}
+	currentAnimation_ = "walk";
+	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x, getPosition().y));
+	//pos_.x += speed_.x;
+	//this->setPosition(Vec2(pos_.x, pos_.y));
+	this->runAction(move);
+	this->runAction(flipFlag_);
+	setPosition(Vec2(previousPos + speed_.x, getPosition().y));
 }
 
 void Cultist::Chase(void)

@@ -24,7 +24,7 @@ struct Bits
 class Player : public Actor
 {
 public:
-	Player(int hp);
+	Player(int hp,cocos2d::Layer& myLayer);
 
 	~Player();
 
@@ -38,7 +38,7 @@ public:
 	void SetAction(std::string action);							// 現在のアクション状態をセットする
 	void SetDir(Direction dir);									// 現在の方向をセットする
 	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
-	static Player* CreatePlayer(int hp);
+	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer);
 
 private:
 	//CREATE_FUNC(Player);

@@ -37,7 +37,7 @@ class Enemy :
 {
 public:
 	Enemy(Player& player_,
-		BehaviorTree* aiTree,VisionRange visionRange,int hp);
+		BehaviorTree* aiTree,VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 	~Enemy();
 
 	virtual void Action(void) = 0;
@@ -51,7 +51,7 @@ public:
 		return visionRange_;
 	}
 
-	virtual void AddAttackObj(void) = 0;
+	virtual void AddAttackObj(const float& angle) = 0;
 
 	virtual void ChangeDirection(void);
 	virtual const float& DistanceCalcurator(void);

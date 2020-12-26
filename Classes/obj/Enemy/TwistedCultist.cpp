@@ -9,8 +9,8 @@
 USING_NS_CC;
 
 TwistedCultist::TwistedCultist(Player& player,
-	BehaviorTree* aiTree,VisionRange visionRange,int hp):
-	Enemy(player,aiTree,visionRange,hp)
+	BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
+	Enemy(player,aiTree,visionRange,hp,myLayer)
 {
 	pos_ = { 500,500 };
 	this->setPosition(Vec2(pos_.x, pos_.y));
@@ -52,9 +52,9 @@ TwistedCultist::~TwistedCultist()
 }
 
 TwistedCultist* TwistedCultist::CreateTwistedCultist(Player& player, 
-	BehaviorTree* aiTree, VisionRange visionRange,int hp)
+	BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer)
 {
-	TwistedCultist* pRet = new(std::nothrow) TwistedCultist(player,aiTree,visionRange,hp);
+	TwistedCultist* pRet = new(std::nothrow) TwistedCultist(player,aiTree,visionRange,hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -191,7 +191,7 @@ void TwistedCultist::AnimRegistrator(void)
 	lpAnimMng.InitAnimation(*this, ActorType::TwistedCultist, "idle");
 }
 
-void TwistedCultist::AddAttackObj(void)
+void TwistedCultist::AddAttackObj(const float& angle)
 {
 }
 
