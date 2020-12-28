@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>death_noEffect0.png</key>
+            <key>twistedCultist_death_noEffect0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death_noEffect1.png</key>
+            <key>twistedCultist_death_noEffect1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death_noEffect2.png</key>
+            <key>twistedCultist_death_noEffect2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -59,7 +59,7 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>death_noEffect.png</string>
+            <string>twistedCultist_death_noEffect.png</string>
             <key>size</key>
             <string>{135,42}</string>
             <key>smartupdate</key>

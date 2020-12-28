@@ -9,11 +9,12 @@ USING_NS_CC;
 constexpr int Sight = 150;
 constexpr int AttackRange = 45;
 
-Imp::Imp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer):
-	Enemy(player,aiTree,visionRange,hp,myLayer)
+Imp::Imp(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer):
+	Enemy(pos,player,aiTree,visionRange,hp,myLayer)
 {
 	pos_ = { 980,100 };
-	this->setPosition(Vec2(pos_.x, pos_.y));
+	myName_ = "imp";
+	//this->setPosition(Vec2(pos_.x, pos_.y));
 	this->setScale(2.0f);
 	//sprite_->setTextureRect(rect);
 	flipFlag_ = FlipX::create(true);
@@ -23,7 +24,7 @@ Imp::Imp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,La
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBox‚ÌLoad
-		lpCol.Load(collider_, anim, "imp");
+		lpCol.Load(collider_, anim);
 		for (auto col : collider_[anim])
 		{
 			for (int colNum = 0; colNum < col.size(); colNum++)
@@ -38,7 +39,7 @@ Imp::Imp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,La
 		}
 	}
 	//lpAnimMng.InitAnimation(*this,type_,"walk");
-	currentAnimation_ = "walk";
+	currentAnimation_ = "imp_walk";
 	direction_ = Direction::Left;
 
 	updater_ = &Imp::Walk;
@@ -48,9 +49,9 @@ Imp::~Imp()
 {
 }
 
-Imp* Imp::CreateImp(Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer)
+Imp* Imp::CreateImp(Vec2 pos,Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer)
 {
-	Imp* pRet = new(std::nothrow) Imp(player,aiTree,visionRange,hp,myLayer);
+	Imp* pRet = new(std::nothrow) Imp(pos,player,aiTree,visionRange,hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();

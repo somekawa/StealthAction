@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>hit0.png</key>
+            <key>twistedCultist_hit0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>hit1.png</key>
+            <key>twistedCultist_hit1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>hit2.png</key>
+            <key>twistedCultist_hit2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -59,7 +59,7 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>hit.png</string>
+            <string>twistedCultist_hit.png</string>
             <key>size</key>
             <string>{135,42}</string>
             <key>smartupdate</key>

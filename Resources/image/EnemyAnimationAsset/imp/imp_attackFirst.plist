@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>attackFirst0.png</key>
+            <key>imp_attackFirst0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attackFirst1.png</key>
+            <key>imp_attackFirst1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attackFirst2.png</key>
+            <key>imp_attackFirst2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attackFirst3.png</key>
+            <key>imp_attackFirst3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attackFirst4.png</key>
+            <key>imp_attackFirst4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attackFirst5.png</key>
+            <key>imp_attackFirst5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>

@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>uptoFall0.png</key>
+            <key>twistedCultist_uptoFall0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>uptoFall1.png</key>
+            <key>twistedCultist_uptoFall1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -44,7 +44,7 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>uptoFall.png</string>
+            <string>twistedCultist_uptoFall.png</string>
             <key>size</key>
             <string>{90,42}</string>
             <key>smartupdate</key>

@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>attack0.png</key>
+            <key>cultist_attack0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack9.png</key>
+            <key>cultist_attack9.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack1.png</key>
+            <key>cultist_attack1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack2.png</key>
+            <key>cultist_attack2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3.png</key>
+            <key>cultist_attack3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack4.png</key>
+            <key>cultist_attack4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack5.png</key>
+            <key>cultist_attack5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -109,7 +109,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack6.png</key>
+            <key>cultist_attack6.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -124,7 +124,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack7.png</key>
+            <key>cultist_attack7.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -139,7 +139,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack8.png</key>
+            <key>cultist_attack8.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -164,13 +164,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>Cultist_attack.png</string>
+            <string>cultist_attack.png</string>
             <key>size</key>
             <string>{450,42}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:2f69fa0c159c526ac1584ac95a290666:379b18566336ddc21776b8b38056940e:d1e30271aed5425046529dad4fa24f68$</string>
             <key>textureFileName</key>
-            <string>Cultist_attack.png</string>
+            <string>cultist_attack.png</string>
         </dict>
     </dict>
 </plist>

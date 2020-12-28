@@ -13,13 +13,14 @@
 
 USING_NS_CC;
 
-Cultist::Cultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp,Layer& myLayer):
-    Enemy(player, aiTree, visionRange, hp,myLayer)
+Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp,Layer& myLayer):
+    Enemy(pos,player, aiTree, visionRange, hp,myLayer)
 {
 	attackCnt_ = 0;
+	myName_ = "cultist";
 
-	pos_ = { 500,500 };
-	this->setPosition(Vec2(pos_.x, pos_.y));
+	//pos_ = { 500,500 };
+	//this->setPosition(Vec2(pos_.x, pos_.y));
 	this->setScale(2.0f);
 	flipFlag_ = FlipX::create(true);
 	type_ = ActorType::Cultist;
@@ -29,7 +30,7 @@ Cultist::Cultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, 
 	// ActModuleの登録
 	//ActModuleRegistrator();
 
-	currentAnimation_ = "idle";
+	currentAnimation_ = "cultist_idle";
 	previousAnimation_ = currentAnimation_;
 
 	this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
@@ -42,7 +43,7 @@ Cultist::Cultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, 
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBoxのLoad
-		lpCol.Load(collider_, anim, "cultist");
+		lpCol.Load(collider_, anim);
 		for (auto col : collider_[anim])
 		{
 			for (int colNum = 0; colNum < col.size(); colNum++)
@@ -58,15 +59,17 @@ Cultist::Cultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, 
 			}
 		}
 	}
+	// 初期アニメーションのセット
+	//lpAnimMng.InitAnimation(*this, ActorType::Cultist, "idle");
 }
 
 Cultist::~Cultist()
 {
 }
 
-Cultist* Cultist::CreateCultist(Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp,Layer& myLayer)
+Cultist* Cultist::CreateCultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp,Layer& myLayer)
 {
-	Cultist* pRet = new(std::nothrow) Cultist(player, aiTree, visionRange, hp,myLayer);
+	Cultist* pRet = new(std::nothrow) Cultist(pos,player, aiTree, visionRange, hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -87,7 +90,7 @@ void Cultist::Action(void)
 void Cultist::update(float delta)
 {
 	// 死んだ判定
-	if (getName() == "death")
+	if (getName() == "cultist_death")
 	{
 		// 自分を親であるGameSceneから削除する
 		removeFromParentAndCleanup(true);
@@ -186,24 +189,8 @@ void Cultist::update(float delta)
 
 void Cultist::AnimRegistrator(void)
 {
-	// アニメーションをキャッシュに登録
-	// idle
-	// 第一引数を変更したほうがよい
-	// パスが同名が並んでいて書く意味なし ex.)image/EnemyAnimationAsset/assassinでいい
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "idle", 6, 0.03f, ActorType::Cultist, true);
-	// run
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "walk", 8, 0.08f, ActorType::Cultist, true);
 
-	// attack
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "attack", 10, 0.08f, ActorType::Cultist, false);
 
-	// death
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "death", 12, 0.08f, ActorType::Cultist, false);
-
-	// hit 
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "hit", 3, 0.09f, ActorType::Cultist, false);
-	// 初期アニメーションのセット
-	lpAnimMng.InitAnimation(*this, ActorType::Cultist, "idle");
 }
 
 void Cultist::AddAttackObj(const float& angle)
@@ -211,7 +198,7 @@ void Cultist::AddAttackObj(const float& angle)
 	// 攻撃していたらfireballを飛ばす
 	auto fireball = Fireball::CreateFireball({ getPosition().x,getPosition().y + 30.0f },direction_,angle,player_);
 	// 攻撃ﾚｲﾔｰにfireballをぶら下げる
-	attackLayer_->addChild(fireball,attackCnt_);
+	attackLayer_->addChild(fireball,0);
 	attackCnt_++;
 	fireball->scheduleUpdate();
 }
@@ -276,7 +263,7 @@ void Cultist::Patrol(void)
 	default:
 		break;
 	}
-	currentAnimation_ = "walk";
+	currentAnimation_ = "cultist_walk";
 	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x, getPosition().y));
 	//pos_.x += speed_.x;
 	//this->setPosition(Vec2(pos_.x, pos_.y));

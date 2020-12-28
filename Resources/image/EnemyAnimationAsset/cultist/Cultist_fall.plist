@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>fall0.png</key>
+            <key>cultist_fall0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>fall1.png</key>
+            <key>cultist_fall1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>fall2.png</key>
+            <key>cultist_fall2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -59,13 +59,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>Cultist_fall.png</string>
+            <string>cultist_fall.png</string>
             <key>size</key>
             <string>{135,42}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:6c67c41f044f5851cae48113b7b6e45e:90662e97c9a6f9d68b1fc43ac0eaa2a4:44c49fa5dc1db15886cc0c816c60a0e6$</string>
             <key>textureFileName</key>
-            <string>Cultist_fall.png</string>
+            <string>cultist_fall.png</string>
         </dict>
     </dict>
 </plist>

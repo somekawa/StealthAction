@@ -36,7 +36,6 @@
 #include "GameMap.h"
 #include "Gate.h"
 #include "renderer/backend/Device.h"
-#include "Effect/EffectMng.h"
 
  // AI関係のinclude
 #include "BehaviorBaseAI/AIActions/NormalAttack.h"
@@ -58,10 +57,6 @@ namespace
 Scene* Game::createScene()
 {
 	return Game::create();
-}
-
-Game::~Game()
-{
 }
 
 // Print useful error message instead of segfaulting when files are not there.
@@ -101,62 +96,11 @@ bool Game::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	// 各敵キャラのAINodeの生成---------------------------------------------------------
-	// root node
-	assassinBehavior_.AddNode("", "Root", 0,
-		BehaviorTree::SelectRule::Priority, NULL, NULL);
-	// attack node
-	assassinBehavior_.AddNode("Root", "Attack", 1,
-		BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
-	// move node
-	assassinBehavior_.AddNode("Root", "Move", 2,
-		BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
-	// attackの子にNormalAttackをぶら下げる
-	assassinBehavior_.AddNode("Attack", "NormalAttack", 1,
-		BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
-	// attackの子にskillAttackをぶら下げる
-	assassinBehavior_.AddNode("Attack", "SkillAttack", 2,
-		BehaviorTree::SelectRule::Sequence,
-		SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
-	assassinBehavior_.AddNode("Move", "moveAction", 1,
-		BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
 
-	// root node
-	twistedCultistBehavior_.AddNode("", "Root", 0,
-		BehaviorTree::SelectRule::Priority, NULL, NULL);
-	// attack node
-	twistedCultistBehavior_.AddNode("Root", "Attack", 1,
-		BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
-	// move node
-	twistedCultistBehavior_.AddNode("Root", "Move", 2,
-		BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
-	// attackの子にNormalAttackをぶら下げる
-	twistedCultistBehavior_.AddNode("Attack", "NormalAttack", 1,
-		BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
-	// attackの子にskillAttackをぶら下げる
-	twistedCultistBehavior_.AddNode("Attack", "SkillAttack", 2,
-		BehaviorTree::SelectRule::Sequence,
-		SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
-	twistedCultistBehavior_.AddNode("Move", "moveAction", 1,
-		BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
-
-	// root node
-	cultistBehavior_.AddNode("", "Root", 0,
-		BehaviorTree::SelectRule::Priority, NULL, NULL);
-	// attack node
-	cultistBehavior_.AddNode("Root", "Attack", 1,
-		BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
-	// move node
-	cultistBehavior_.AddNode("Root", "Move", 2,
-		BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
-	// attackの子にNormalAttackをぶら下げる
-	cultistBehavior_.AddNode("Attack", "NormalAttack", 1,
-		BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
-	// attackの子にskillAttackをぶら下げる
-	cultistBehavior_.AddNode("Attack", "SkillAttack", 2,
-		BehaviorTree::SelectRule::Sequence,
-		SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
-	cultistBehavior_.AddNode("Move", "moveAction", 1,
-		BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
+	CharaInfoRegistrator(ActorType::Assassin);
+	CharaInfoRegistrator(ActorType::TwistedCultist);
+	//CharaInfoRegistrator(ActorType::Cultist);
+	//CharaInfoRegistrator(ActorType::Fireball);
 	//-------------------------------------------------------------------------------
 	/////////////////////////////
 	// 2. add a menu item with "X" image, which is clicked to quit the program
@@ -219,7 +163,11 @@ bool Game::init()
 	// enemyList_に敵追加
 	//AddEnemy(ActorType::Imp);
 	// assassinを追加
-	AddEnemy(ActorType::Cultist);
+
+	AddEnemy(ActorType::Assassin);
+	AddEnemy(ActorType::TwistedCultist);
+	//AddEnemy(ActorType::Assassin);
+
 	// 敵を生成した回数(多分いらない)
 	// 敵のsetNameするために用意したもの
 	generateEnemyNum_ = 0;
@@ -334,7 +282,7 @@ bool Game::init()
 	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->scheduleUpdate();
 
 	PL_HPgaugeSp->scheduleUpdate();
-	// シェーダ
+
 	auto fileUtiles = FileUtils::getInstance();
 	auto vertexSource = fileUtiles->getStringFromFile("OutLineTest.vert");
 	auto fragmentSource = fileUtiles->getStringFromFile("OutLineTest.frag");
@@ -346,8 +294,6 @@ bool Game::init()
 	auto program2 = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 	programState2 = new backend::ProgramState(program);
 	this->scheduleUpdate();
-
-
 	return true;
 }
 
@@ -375,13 +321,12 @@ void Game::update(float sp)
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
-	auto c = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
+	/*auto c = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
 	for (auto e : c)
 	{
 		e->setProgramState(programState2);
-	}
+	}*/
 	player->setProgramState(programState);
-
 	//// 当たり判定用の枠を出してみる
 	//auto ppos = plSprite->getPosition();
 	//auto psize = plSprite->getContentSize();
@@ -450,15 +395,15 @@ void Game::AddEnemy(const ActorType& type)
 		break;
 	case ActorType::Assassin:
 		enemyName = "Assassin";
-		sprite = Assassin::CreateAssassin(*player,&assassinBehavior_,VisionRange(20.0f,50.0f),50,*layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
+		sprite = Assassin::CreateAssassin(Vec2(300.0f * generateEnemyNum_,200.0f),*player, &assassinBehavior_, VisionRange(20.0f, 50.0f), 50, *layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
 		break;
 	case ActorType::TwistedCultist:
 		enemyName = "twistedCultist";
-		sprite = TwistedCultist::CreateTwistedCultist(*player, &twistedCultistBehavior_, VisionRange(50.0f, 200.0f), 50,*layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
+		sprite = TwistedCultist::CreateTwistedCultist(Vec2(300.0f * generateEnemyNum_, 200.0f), *player, &twistedCultistBehavior_, VisionRange(50.0f, 200.0f), 50, *layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
 		break;
 	case ActorType::Cultist:
 		enemyName = "Cultist";
-		sprite = Cultist::CreateCultist(*player, &cultistBehavior_, VisionRange(200.0f, 100.0f), 50,*layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
+		sprite = Cultist::CreateCultist(Vec2(300.0f * generateEnemyNum_, 200.0f), *player, &cultistBehavior_, VisionRange(200.0f, 100.0f), 50, *layer_[static_cast<int>(zOlder::CHAR_ENEMY)]);
 		break;
 	default:
 		break;
@@ -469,8 +414,7 @@ void Game::AddEnemy(const ActorType& type)
 	sprite->setName("enemy");
 
 	// 敵をActor用レイヤーの子供にする
-	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]
-		->addChild(sprite, (int)zOlder::CHAR_ENEMY,enemyName);
+	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->addChild(sprite);
 	// 敵のポジションに円を描く
 	auto dot = DrawNode::create();
 	//dot->setPosition(sprite->getPosition());
@@ -478,4 +422,132 @@ void Game::AddEnemy(const ActorType& type)
 	layer_[static_cast<int>(zOlder::DEBUG)]->addChild(dot, static_cast<int>(zOlder::DEBUG), enemyName);
 	generateEnemyNum_++;
 	sprite->scheduleUpdate();
+}
+
+void Game::CharaInfoRegistrator(ActorType type)
+{
+	switch (type)
+	{
+	case ActorType::Player:
+
+		break;
+	case ActorType::Imp:
+		break;
+	case ActorType::Assassin:
+		// アニメーションをキャッシュに登録
+		// idle
+		// 第一引数を変更したほうがよい
+		// パスが同名が並んでいて書く意味なし ex.)image/EnemyAnimationAsset/assassinでいい
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "idle", 8, 0.03f, ActorType::Assassin, true);
+		// run
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "run", 8, 0.08f, ActorType::Assassin, true);
+
+		// attack
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "attack", 13, 0.08f, ActorType::Assassin, false);
+
+		// death
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "death", 16, 0.08f, ActorType::Assassin, false);
+
+		// hit 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "hit", 3, 0.09f, ActorType::Assassin, false);
+
+		// root node
+		assassinBehavior_.AddNode("", "Root", 0,
+			BehaviorTree::SelectRule::Priority, NULL, NULL);
+		// attack node
+		assassinBehavior_.AddNode("Root", "Attack", 1,
+			BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
+		// move node
+		assassinBehavior_.AddNode("Root", "Move", 2,
+			BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
+		// attackの子にNormalAttackをぶら下げる
+		assassinBehavior_.AddNode("Attack", "NormalAttack", 1,
+			BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
+		// attackの子にskillAttackをぶら下げる
+		assassinBehavior_.AddNode("Attack", "SkillAttack", 2,
+			BehaviorTree::SelectRule::Sequence,
+			SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
+		assassinBehavior_.AddNode("Move", "moveAction", 1,
+			BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
+		break;
+	case ActorType::TwistedCultist:
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "idle", 6, 0.03f, ActorType::TwistedCultist, true);
+		// run
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "walk", 8, 0.08f, ActorType::TwistedCultist, true);
+		// attack
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "attack", 7, 0.08f, ActorType::TwistedCultist, false);
+
+		// death
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "death", 12, 0.08f, ActorType::TwistedCultist, false);
+
+		// hit 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "hit", 3, 0.09f, ActorType::TwistedCultist, false);
+		
+		// root node
+		twistedCultistBehavior_.AddNode("", "Root", 0,
+			BehaviorTree::SelectRule::Priority, NULL, NULL);
+		// attack node
+		twistedCultistBehavior_.AddNode("Root", "Attack", 1,
+			BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
+		// move node
+		twistedCultistBehavior_.AddNode("Root", "Move", 2,
+			BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
+		// attackの子にNormalAttackをぶら下げる
+		twistedCultistBehavior_.AddNode("Attack", "NormalAttack", 1,
+			BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
+		// attackの子にskillAttackをぶら下げる
+		twistedCultistBehavior_.AddNode("Attack", "SkillAttack", 2,
+			BehaviorTree::SelectRule::Sequence,
+			SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
+		twistedCultistBehavior_.AddNode("Move", "moveAction", 1,
+			BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
+		break;
+	case ActorType::Cultist:
+		// アニメーションをキャッシュに登録
+		// idle
+		// 第一引数を変更したほうがよい
+		// パスが同名が並んでいて書く意味なし ex.)image/EnemyAnimationAsset/assassinでいい
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "idle", 6, 0.03f, ActorType::Cultist, true);
+		// run
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "walk", 8, 0.08f, ActorType::Cultist, true);
+
+		// attack
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "attack", 10, 0.08f, ActorType::Cultist, false);
+
+		// death
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "death", 12, 0.08f, ActorType::Cultist, false);
+
+		// hit 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "hit", 3, 0.09f, ActorType::Cultist, false);
+		// root node
+		cultistBehavior_.AddNode("", "Root", 0,
+			BehaviorTree::SelectRule::Priority, NULL, NULL);
+		// attack node
+		cultistBehavior_.AddNode("Root", "Attack", 1,
+			BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
+		// move node
+		cultistBehavior_.AddNode("Root", "Move", 2,
+			BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
+		// attackの子にNormalAttackをぶら下げる
+		cultistBehavior_.AddNode("Attack", "NormalAttack", 1,
+			BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
+		// attackの子にskillAttackをぶら下げる
+		cultistBehavior_.AddNode("Attack", "SkillAttack", 2,
+			BehaviorTree::SelectRule::Sequence,
+			SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
+		cultistBehavior_.AddNode("Move", "moveAction", 1,
+			BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
+		break;
+	case ActorType::Fireball:
+		// fireball 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/Fireball/fireball", "normal", 4, 0.08f, ActorType::Fireball, true);
+		// fireball_impact
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/Fireball/fireball", "impact", 5, 0.08f, ActorType::Fireball, false);
+
+		break;
+	case ActorType::Max:
+		break;
+	default:
+		break;
+	}
 }

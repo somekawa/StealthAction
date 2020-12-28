@@ -11,13 +11,14 @@
 
 USING_NS_CC;
 
-Assassin::Assassin(Player& player,
+Assassin::Assassin(Vec2 pos, Player& player,
 	BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
-	Enemy(player,aiTree,visionRange,hp,myLayer)
+	Enemy(pos,player,aiTree,visionRange,hp,myLayer)
 {
-	pos_ = { 500,500 };
-	this->setPosition(Vec2(pos_.x, pos_.y));
+	//pos_ = { 500,500 };
+	//this->setPosition(Vec2(pos_.x, pos_.y));
 	this->setScale(1.5f);
+	myName_ = "assassin";
 	flipFlag_ = FlipX::create(true);
 	type_ = ActorType::Assassin;
 
@@ -26,10 +27,10 @@ Assassin::Assassin(Player& player,
 	// ActModuleの登録
 	//ActModuleRegistrator();
 
-	currentAnimation_ = "idle";
+	currentAnimation_ = "assassin_idle";
 	previousAnimation_ = currentAnimation_;
 
-	this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_,currentAnimation_)));
+	//this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_,currentAnimation_)));
 
 	direction_ = Direction::Left;
 
@@ -54,7 +55,7 @@ Assassin::Assassin(Player& player,
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBoxのLoad
-		lpCol.Load(collider_, anim, "assassin");
+		lpCol.Load(collider_, anim);
 		for (auto col : collider_[anim])
 		{
 			for (int colNum = 0; colNum < col.size(); colNum++)
@@ -70,6 +71,8 @@ Assassin::Assassin(Player& player,
 			}
 		}
 	}
+	// 初期アニメーションのセット
+	//lpAnimMng.InitAnimation(*this, ActorType::Assassin, "idle");
 }
 
 Assassin::~Assassin()
@@ -77,10 +80,10 @@ Assassin::~Assassin()
 
 }
 
-Assassin* Assassin::CreateAssassin(Player& player,
+Assassin* Assassin::CreateAssassin(Vec2 pos, Player& player,
 	BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer)
 {
-	Assassin* pRet = new(std::nothrow) Assassin(player,aiTree,visionRange,hp,myLayer);
+	Assassin* pRet = new(std::nothrow) Assassin(pos,player,aiTree,visionRange,hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -102,7 +105,7 @@ void Assassin::Action(void)
 void Assassin::update(float delta)
 {
 	// 死んだ判定
-	if (getName() == "death")
+	if (getName() == "assassin_death")
 	{
 		// 自分を親であるGameSceneから削除する
 		removeFromParentAndCleanup(true);
@@ -201,24 +204,8 @@ void Assassin::update(float delta)
 
 void Assassin::AnimRegistrator(void)
 {
-	// アニメーションをキャッシュに登録
-	// idle
-	// 第一引数を変更したほうがよい
-	// パスが同名が並んでいて書く意味なし ex.)image/EnemyAnimationAsset/assassinでいい
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "idle", 8, 0.03f, ActorType::Assassin, true);
-	// run
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "run", 8, 0.08f, ActorType::Assassin, true);
 
-	// attack
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "attack", 13, 0.08f, ActorType::Assassin, false);
 
-	// death
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "death", 16, 0.08f, ActorType::Assassin, false);
-
-	// hit 
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "hit", 3, 0.09f, ActorType::Assassin, false);
-	// 初期アニメーションのセット
-	lpAnimMng.InitAnimation(*this, ActorType::Assassin, "idle");
 }
 
 void Assassin::AddAttackObj(const float& angle)
@@ -285,7 +272,7 @@ void Assassin::Patrol(void)
 	default:
 		break;
 	}
-	currentAnimation_ = "run";
+	currentAnimation_ = "assassin_run";
 	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x,getPosition().y));
 	//pos_.x += speed_.x;
 	//this->setPosition(Vec2(pos_.x, pos_.y));
@@ -318,7 +305,7 @@ void Assassin::Chase(void)
 	default:
 		break;
 	}
-	currentAnimation_ = "run";
+	currentAnimation_ = "assassin_run";
 	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x, getPosition().y));
 	//pos_.x += speed_.x;
 	//this->setPosition(Vec2(pos_.x, pos_.y));
@@ -358,7 +345,7 @@ void Assassin::Run(void)
 	if (DistanceCalcurator() < 50.0f)
 	{
 		// アニメーションを変更して
-		ChangeAnimation("attack");
+		ChangeAnimation("assassin_attack");
 		// 変更したアニメーションを走らせる
 		this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
 		// 行動をattackにする
@@ -372,7 +359,7 @@ void Assassin::Attack(void)
 	if (isAnimEnd_)
 	{
 		// アニメーションを変更して
-		ChangeAnimation("idle");
+		ChangeAnimation("assassin_idle");
 		// 変更したアニメーションを走らせる
 		this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
 		// 行動をidleにする

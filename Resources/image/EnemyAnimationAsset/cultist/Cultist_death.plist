@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>death0.png</key>
+            <key>cultist_death0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death9.png</key>
+            <key>cultist_death9.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death10.png</key>
+            <key>cultist_death10.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death11.png</key>
+            <key>cultist_death11.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death1.png</key>
+            <key>cultist_death1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death2.png</key>
+            <key>cultist_death2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death3.png</key>
+            <key>cultist_death3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -109,7 +109,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death4.png</key>
+            <key>cultist_death4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -124,7 +124,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death5.png</key>
+            <key>cultist_death5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -139,7 +139,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death6.png</key>
+            <key>cultist_death6.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -154,7 +154,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death7.png</key>
+            <key>cultist_death7.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -169,7 +169,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>death8.png</key>
+            <key>cultist_death8.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -194,13 +194,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>Cultist_death.png</string>
+            <string>cultist_death.png</string>
             <key>size</key>
             <string>{540,42}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:6df1123edcac8f5b2d6a3400e19c6840:3c559e525bb7197e3e031289acd30bfe:90d0a6d09559869b8d0f49ff1119f614$</string>
             <key>textureFileName</key>
-            <string>Cultist_death.png</string>
+            <string>cultist_death.png</string>
         </dict>
     </dict>
 </plist>

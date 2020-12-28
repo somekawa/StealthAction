@@ -4,11 +4,10 @@ class TwistedCultist :
     public Enemy
 {
 public:
-    TwistedCultist(Player& player,
+    TwistedCultist(cocos2d::Vec2 pos,Player& player,
         BehaviorTree* aiTree, VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
     ~TwistedCultist();
-
-    static TwistedCultist* CreateTwistedCultist(Player& player,
+    static TwistedCultist* CreateTwistedCultist(cocos2d::Vec2 pos, Player& player,
         BehaviorTree* aiTree, VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 
     void Action(void)override;

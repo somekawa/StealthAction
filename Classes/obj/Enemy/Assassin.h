@@ -4,11 +4,11 @@ class Assassin :
     public Enemy
 {
 public:
-    Assassin(Player& player,
+    Assassin(cocos2d::Vec2 pos,Player& player,
         BehaviorTree* aiTree,VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
     ~Assassin();
 
-    static Assassin* CreateAssassin(Player& player,
+    static Assassin* CreateAssassin(cocos2d::Vec2 pos, Player& player,
         BehaviorTree* aiTree,VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 
     void Action(void)override;

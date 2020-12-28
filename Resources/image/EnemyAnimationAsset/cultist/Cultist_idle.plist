@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>idle0.png</key>
+            <key>cultist_idle0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>idle1.png</key>
+            <key>cultist_idle1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>idle2.png</key>
+            <key>cultist_idle2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>idle3.png</key>
+            <key>cultist_idle3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>idle4.png</key>
+            <key>cultist_idle4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>idle5.png</key>
+            <key>cultist_idle5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -104,13 +104,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>Cultist_idle.png</string>
+            <string>cultist_idle.png</string>
             <key>size</key>
             <string>{270,42}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:f0cf204ba48daebff0c627878adc5181:49546de68a863048735f8b89ec54b6fb:117d289e995614eddab303a550462b76$</string>
             <key>textureFileName</key>
-            <string>Cultist_idle.png</string>
+            <string>cultist_idle.png</string>
         </dict>
     </dict>
 </plist>

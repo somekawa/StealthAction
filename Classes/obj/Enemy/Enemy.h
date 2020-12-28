@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <list>
+#include <array>
 #include "obj/Actor.h"
 
 class Player;
@@ -36,7 +37,7 @@ class Enemy :
 	public Actor
 {
 public:
-	Enemy(Player& player_,
+	Enemy(cocos2d::Vec2 pos,Player& player,
 		BehaviorTree* aiTree,VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 	~Enemy();
 
@@ -104,6 +105,7 @@ public:
 private:
 
 protected:
+
 	// ó‘Ô‚Ì‘JˆÚ—pŠÖ”Îß²İÀ
 	void(Enemy::* stateTransitioner_)(void);
 	Player& player_;
@@ -134,4 +136,6 @@ protected:
 	cocos2d::DrawNode* debugCircle_;
 	// ˆê’è‹——£•à‚¢‚½‚çtrue‚É‚È‚é
 	bool isMoveComplete_;
+	// ©g‚Ì–¼‘O
+	std::string myName_;
 };

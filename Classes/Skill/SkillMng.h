@@ -1,6 +1,5 @@
 #pragma once
 #include <map>
-#include <string>
 struct SkillParam
 {
 	std::string name;	//ƒXƒLƒ‹–¼‚Ì•Û‘¶

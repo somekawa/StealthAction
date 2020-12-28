@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>AttackFirst0.png</key>
+            <key>player_AttackFirst0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst1.png</key>
+            <key>player_AttackFirst1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst2.png</key>
+            <key>player_AttackFirst2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst3.png</key>
+            <key>player_AttackFirst3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst4.png</key>
+            <key>player_AttackFirst4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst5.png</key>
+            <key>player_AttackFirst5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst6.png</key>
+            <key>player_AttackFirst6.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -109,7 +109,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst7.png</key>
+            <key>player_AttackFirst7.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -124,7 +124,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst8.png</key>
+            <key>player_AttackFirst8.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -139,7 +139,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>AttackFirst9.png</key>
+            <key>player_AttackFirst9.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>

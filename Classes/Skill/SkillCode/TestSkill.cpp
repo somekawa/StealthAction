@@ -3,7 +3,7 @@
 
 TestSkill::TestSkill(std::shared_ptr<SkillMng> skillMng)
 {
-	AddActiveSkill(std::make_shared<TestSkill>(skillMng));
+	AddActiveSkill(std::make_shared<TestSkill>());
 }
 
 TestSkill::~TestSkill()
@@ -17,10 +17,4 @@ void TestSkill::UpDate(void)
 
 void TestSkill::Init()
 {
-}
-
-bool TestSkill::GetActive(void)
-{
-	
-	return param.activation;
 }

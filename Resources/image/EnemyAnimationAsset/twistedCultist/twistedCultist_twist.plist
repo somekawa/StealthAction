@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>twist0.png</key>
+            <key>twistedCultist_twist0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist9.png</key>
+            <key>twistedCultist_twist9.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist10.png</key>
+            <key>twistedCultist_twist10.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist11.png</key>
+            <key>twistedCultist_twist11.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist1.png</key>
+            <key>twistedCultist_twist1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist2.png</key>
+            <key>twistedCultist_twist2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist3.png</key>
+            <key>twistedCultist_twist3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -109,7 +109,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist4.png</key>
+            <key>twistedCultist_twist4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -124,7 +124,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist5.png</key>
+            <key>twistedCultist_twist5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -139,7 +139,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist6.png</key>
+            <key>twistedCultist_twist6.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -154,7 +154,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist7.png</key>
+            <key>twistedCultist_twist7.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -169,7 +169,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>twist8.png</key>
+            <key>twistedCultist_twist8.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -194,7 +194,7 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>twist.png</string>
+            <string>twistedCultist_twist.png</string>
             <key>size</key>
             <string>{540,42}</string>
             <key>smartupdate</key>

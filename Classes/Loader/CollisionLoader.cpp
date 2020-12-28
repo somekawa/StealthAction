@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "cocos2d.h"
 #include "ActionRect.h"
 #include "CollisionLoader.h"
 
@@ -16,16 +15,16 @@ struct DataHeader
 };
 
 void CollisionLoader::Load(std::unordered_map<std::string, std::vector<SharedRect>>& colliderBox,
-						   std::string animName,std::string actorName)
+						   std::string pathName)
 {
 	FILE* f_;
-	auto fileName = "Data/" + actorName + "_" + animName + ".map";
+	auto fileName = "Data/" + pathName + ".map";
 	fopen_s(&f_, fileName.c_str(), "rb");
 
 	DataHeader expData;
 	fread(&expData.frameNum_, sizeof(int), 1, f_);
-	colliderBox[animName].resize(expData.frameNum_);
-	for (auto& rects : colliderBox[animName])
+	colliderBox[pathName].resize(expData.frameNum_);
+	for (auto& rects : colliderBox[pathName])
 	{
 		fread(&expData.rectNum_, sizeof(int), 1, f_);
 		rects.resize(expData.rectNum_);

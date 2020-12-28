@@ -3,12 +3,12 @@
 class Imp :public Enemy
 {
 public:
-	Imp(Player& player,
+	Imp(cocos2d::Vec2 pos, Player& player,
         BehaviorTree* aiTree,
         VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 	~Imp();
 
-	static Imp* CreateImp(Player& player,
+	static Imp* CreateImp(cocos2d::Vec2 pos, Player& player,
         BehaviorTree* aiTree, VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 
 	void Action(void)override;

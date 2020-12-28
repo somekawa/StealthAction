@@ -11,12 +11,12 @@
 
 USING_NS_CC;
 
-Enemy::Enemy(Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
+Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
 	Actor(hp,myLayer),player_(player),aiTree_(aiTree),activeNode_(NULL),behaviorData_(NULL),visionRange_(visionRange)
 {
 	// ビヘイビアデータの生成
 	behaviorData_ = new BehaviorData();
-
+	setPosition(pos);
 	// アニメーションが変更されたかのフラグの初期化
 	isChangedAnim_ = false;
 	// プレイヤーを視認したかのフラグの初期化
@@ -192,7 +192,7 @@ void Enemy::ChangeAnimation(std::string animName)
 		return;
 	}*/
 	// 現在のアニメーションを変更先のアニメーション名に変更
-	currentAnimation_ = animName;
+	currentAnimation_ = myName_ + "_" + animName;
 	animationFrame_ = 0.0f;
 
 	// アニメーション終了フラグをfalseに

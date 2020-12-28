@@ -3,7 +3,6 @@
 #include <cocos2d.h> 
 #include <memory>
 #include <list>
-#include <unordered_map>
 #include "Geometory.h"
 #include "Direction/Direction.h"
 #include "ActorType.h"

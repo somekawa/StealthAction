@@ -25,7 +25,7 @@ public:
 	}
 
 	void Load(std::unordered_map<std::string,std::vector<SharedRect>>& colliderBox,
-			  std::string animName,std::string actorName);
+			  std::string pathName);
 
 private:
 	CollisionLoader();

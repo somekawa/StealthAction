@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>hit_noEffect0.png</key>
+            <key>cultist_hit_noEffect0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>hit_noEffect1.png</key>
+            <key>cultist_hit_noEffect1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>hit_noEffect2.png</key>
+            <key>cultist_hit_noEffect2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -59,13 +59,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>Cultist_hit_noEffect.png</string>
+            <string>cultist_hit_noEffect.png</string>
             <key>size</key>
             <string>{135,42}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:53832e6d64422b54c0a203d3bcfa8d98:55a33b42d2ebc258588fc0e4e66ed88b:8f2a631682f93e463ef08221c92f8d36$</string>
             <key>textureFileName</key>
-            <string>Cultist_hit_noEffect.png</string>
+            <string>cultist_hit_noEffect.png</string>
         </dict>
     </dict>
 </plist>

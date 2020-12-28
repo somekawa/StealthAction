@@ -33,6 +33,7 @@ bool AttackJudgement::Judgement(Enemy* enemy)
 				{
 					if (enemy->GetType() == ActorType::Assassin)
 					{
+
 						// 攻撃矩形に加えるｵﾌｾｯﾄ情報をｾｯﾄ
 						// 右向きになるとｵﾌｾｯﾄ分ずらす必要があるので、ｵﾌｾｯﾄを65に
 						enemy->SetAttackOffset(cocos2d::Vec2(65.0f, 0.0f));

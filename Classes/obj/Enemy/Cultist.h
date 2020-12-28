@@ -5,11 +5,11 @@ class Cultist :
     public Enemy
 {
 public:
-    Cultist(Player& player,
+    Cultist(cocos2d::Vec2 pos, Player& player,
         BehaviorTree* aiTree, VisionRange visionRange, int hp,cocos2d::Layer& myLayer);
     ~Cultist();
 
-    static Cultist* CreateCultist(Player& player,
+    static Cultist* CreateCultist(cocos2d::Vec2 pos, Player& player,
         BehaviorTree* aiTree, VisionRange visionRange, int hp,cocos2d::Layer& myLayer);
 
     void Action(void)override;

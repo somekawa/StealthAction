@@ -16,6 +16,37 @@ AnimMng::~AnimMng()
 void AnimMng::addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type,bool isLoop)
 {
 	actorNames_[static_cast<int>(type)] = actorName;
+	std::string name = "";
+	switch (type)
+	{
+	case ActorType::Player:
+		name = "player";
+		break;
+	case ActorType::Imp:
+		name = "imp";
+
+		break;
+	case ActorType::Assassin:
+		name = "assassin";
+
+		break;
+	case ActorType::TwistedCultist:
+		name = "twistedCultist";
+
+		break;
+	case ActorType::Cultist:
+		name = "cultist";
+
+		break;
+	case ActorType::Fireball:
+		name = "fireball";
+
+		break;
+	case ActorType::Max:
+		break;
+	default:
+		break;
+	}
 
 	// アニメーションキャッシュはシングルトン
 	AnimationCache *animationCache = AnimationCache::getInstance();
@@ -34,7 +65,7 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	{
 		auto string = animName + "%d.png";		// plistの中だからパスじゃない
 		auto str = StringUtils::format(string.c_str(), i);
-		SpriteFrame* sprite = cache->getSpriteFrameByName(str);
+		SpriteFrame* sprite = cache->getSpriteFrameByName(name + "_" + str);
 
 		animation->addSpriteFrame(sprite);
 	}
@@ -46,11 +77,11 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	animation->setRestoreOriginalFrame(true);
 
 	// 出来たアニメーションをキャッシュに登録
-	animationCache->addAnimation(animation, animName);
+	animationCache->addAnimation(animation, name + "_" + animName);
 	//animationCache_->addAnimation(animation, actorName + "_" + animName);
 
 	// 1アニメーションのキャッシュデータを格納する処理
-	CacheRegistration(animationCache, type, animName,isLoop);
+	CacheRegistration(animationCache, type,name + "_" + animName,isLoop);
 
 	if (frameNum_[static_cast<int>(type)].find(animName) == frameNum_[static_cast<int>(type)].end())
 	{
@@ -91,16 +122,19 @@ void AnimMng::ChangeAnimation(cocos2d::Sprite& sprite, std::string name, bool lo
 
 void AnimMng::CacheRegistration(cocos2d::AnimationCache* animCache, const ActorType& type, std::string animName,bool isLoop)
 {
-	// キャラのタイプ別のアニメーションキャッシュに1アニメーションデータを格納
-	caches_[static_cast<int>(type)].emplace(animName, animCache->getAnimation(animName));
-	// ｱﾆﾒｰｼｮﾝの文字列格納
-	animations_[static_cast<int>(type)].emplace_back(animName);
-	// 1アニメーションにかかる時間の格納
-	animMaxFrame_[static_cast<int>(type)].emplace(animName, caches_[static_cast<int>(type)][animName]->getDelayPerUnit()*
-		caches_[static_cast<int>(type)][animName]->getFrames().size());
+	if (caches_[static_cast<int>(type)].count(animName) <= 0)
+	{
+		// キャラのタイプ別のアニメーションキャッシュに1アニメーションデータを格納
+		caches_[static_cast<int>(type)].emplace(animName, animCache->getAnimation(animName));
+		// ｱﾆﾒｰｼｮﾝの文字列格納
+		animations_[static_cast<int>(type)].emplace_back(animName);
+		// 1アニメーションにかかる時間の格納
+		animMaxFrame_[static_cast<int>(type)].emplace(animName, caches_[static_cast<int>(type)][animName]->getDelayPerUnit() *
+			caches_[static_cast<int>(type)][animName]->getFrames().size());
 
-	// ループフラグを設定
-	isLoop_[static_cast<int>(type)][animName] = isLoop;
+		// ループフラグを設定
+		isLoop_[static_cast<int>(type)][animName] = isLoop;
+	}
 }
 
 bool AnimMng::IsAnimEnd(const float& delta, ActorType type, std::string animName)

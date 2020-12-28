@@ -8,13 +8,14 @@
 
 USING_NS_CC;
 
-TwistedCultist::TwistedCultist(Player& player,
+TwistedCultist::TwistedCultist(Vec2 pos,Player& player,
 	BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
-	Enemy(player,aiTree,visionRange,hp,myLayer)
+	Enemy(pos,player,aiTree,visionRange,hp,myLayer)
 {
-	pos_ = { 500,500 };
-	this->setPosition(Vec2(pos_.x, pos_.y));
+	//pos_ = { 500,500 };
+	//this->setPosition(Vec2(pos_.x, pos_.y));
 	this->setScale(2.0f);
+	myName_ = "twistedCultist";
 	this->setAnchorPoint(Vec2(0.5f, 0.0f));
 	flipFlag_ = FlipX::create(true);
 	type_ = ActorType::TwistedCultist;
@@ -22,13 +23,13 @@ TwistedCultist::TwistedCultist(Player& player,
 	// アニメーションの登録
 	AnimRegistrator();
 
-	currentAnimation_ = "idle";
-	this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
+	currentAnimation_ = "twistedCultist_idle";
+	//this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
 	direction_ = Direction::Left;
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBoxのLoad
-		lpCol.Load(collider_, anim, "twistedCultist");
+		lpCol.Load(collider_, anim);
 		for (auto col : collider_[anim])
 		{
 			for (int colNum = 0; colNum < col.size(); colNum++)
@@ -43,7 +44,8 @@ TwistedCultist::TwistedCultist(Player& player,
 			}
 		}
 	}
-
+	// 初期アニメーションのセット
+	//lpAnimMng.InitAnimation(*this, ActorType::TwistedCultist, "idle");
 	updater_ = &TwistedCultist::Idle;
 }
 
@@ -51,10 +53,10 @@ TwistedCultist::~TwistedCultist()
 {
 }
 
-TwistedCultist* TwistedCultist::CreateTwistedCultist(Player& player, 
+TwistedCultist* TwistedCultist::CreateTwistedCultist(Vec2 pos,Player& player, 
 	BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer)
 {
-	TwistedCultist* pRet = new(std::nothrow) TwistedCultist(player,aiTree,visionRange,hp,myLayer);
+	TwistedCultist* pRet = new(std::nothrow) TwistedCultist(pos,player,aiTree,visionRange,hp,myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -77,7 +79,7 @@ void TwistedCultist::Action(void)
 void TwistedCultist::update(float delta)
 {
 	// 死んだ判定
-	if (getName() == "death")
+	if (getName() == "twistedCultist_death")
 	{
 		// 自分を親であるGameSceneから削除する
 		removeFromParentAndCleanup(true);
@@ -176,19 +178,8 @@ void TwistedCultist::update(float delta)
 
 void TwistedCultist::AnimRegistrator(void)
 {
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "idle", 6, 0.03f, ActorType::TwistedCultist, true);
-	// run
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "walk", 8, 0.08f, ActorType::TwistedCultist, true);
-	// attack
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "attack", 7, 0.08f, ActorType::TwistedCultist, false);
+	
 
-	// death
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "death", 12, 0.08f, ActorType::TwistedCultist, false);
-
-	// hit 
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "hit", 3, 0.09f, ActorType::TwistedCultist, false);
-	// 初期アニメーションのセット
-	lpAnimMng.InitAnimation(*this, ActorType::TwistedCultist, "idle");
 }
 
 void TwistedCultist::AddAttackObj(const float& angle)
@@ -246,7 +237,7 @@ void TwistedCultist::Patrol(void)
 	default:
 		break;
 	}
-	currentAnimation_ = "walk";
+	currentAnimation_ = "twistedCultist_walk";
 	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x, getPosition().y));
 	//pos_.x += speed_.x;
 	//this->setPosition(Vec2(pos_.x, pos_.y));
@@ -279,7 +270,7 @@ void TwistedCultist::Chase(void)
 	default:
 		break;
 	}
-	currentAnimation_ = "walk";
+	currentAnimation_ = "twistedCultist_walk";
 	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x, getPosition().y));
 	//pos_.x += speed_.x;
 	//this->setPosition(Vec2(pos_.x, pos_.y));

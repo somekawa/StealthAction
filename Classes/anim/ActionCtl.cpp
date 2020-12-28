@@ -142,12 +142,12 @@ void ActionCtl::update(float sp,Sprite& sprite)
 
 			// data.second.action = for文で回してるアクション
 			// GetActionは実際に今行われているアクション
-			if (((Player&)sprite).GetAction() == "Fall" || data.second.actName != "NON"|| ((Player&)sprite).GetAction() == "Jump" || ((Player&)sprite).GetAction() == "Jumping")
+			if (((Player&)sprite).GetAction() == "player_Fall" || data.second.actName != "player_NON"|| ((Player&)sprite).GetAction() == "player_Jump" || ((Player&)sprite).GetAction() == "player_Jumping")
 			{
 				// 現在のアクションがジャンプになっているときもJUMPINGを設定するようにしておく
-				if (((Player&)sprite).GetAction() == "Jumping" || ((Player&)sprite).GetAction() == "Jump")
+				if (((Player&)sprite).GetAction() == "player_Jumping" || ((Player&)sprite).GetAction() == "player_Jump")
 				{
-					((Player&)sprite).SetAction("Jumping");
+					((Player&)sprite).SetAction("player_Jumping");
 				}
 				else 
 				{
@@ -181,7 +181,7 @@ void ActionCtl::update(float sp,Sprite& sprite)
 
 
 			// ここはジャンプの最高点に到達したときとかに関係する処理
-			if (((Player&)sprite).GetAction() == "Jumping" || ((Player&)sprite).GetAction() == "Jump")
+			if (((Player&)sprite).GetAction() == "player_Jumping" || ((Player&)sprite).GetAction() == "player_Jumping")
 			{
 				//actFlg = true;
 				//((Player&)sprite).SetAction(ACTION::JUMPING);
@@ -191,18 +191,18 @@ void ActionCtl::update(float sp,Sprite& sprite)
 				// else ifの部分を付け加えて、ジャンピングを0.1fからにすることで角でジャンプし続けるバグ解消
 				if (_mapFlame["ジャンピング"] >= 0.1f && _mapFlame["ジャンピング"] < 3.0f)
 				{
-					((Player&)sprite).SetAction("Jumping");
+					((Player&)sprite).SetAction("player_Jumping");
 					//continue;
 				}
 				else if (_mapFlame["ジャンプ"] >= 0.1f)
 				{
 					// ジャンプし始めに必要
-					((Player&)sprite).SetAction("Jumping");
+					((Player&)sprite).SetAction("player_Jumping");
 				}
 				else 
 				{
 					// 最高点に到達したら落下に切り替える
-					((Player&)sprite).SetAction("Fall");
+					((Player&)sprite).SetAction("player_Fall");
 				}
 			}
 
@@ -212,9 +212,9 @@ void ActionCtl::update(float sp,Sprite& sprite)
 		{
 			// プレイヤーが落下できなかった(着地している)ときは、IDLEにする
 			// 今まで(書き換えたい情報)がFALLINGの状態だった && 現在の状態がFALLINGであるときIDLEにする
-			if (data.second.actName == "Fall" && ((Player&)sprite).GetAction() == "Fall")
+			if (data.second.actName == "player_Fall" && ((Player&)sprite).GetAction() == "player_Fall")
 			{
-				((Player&)sprite).SetAction("Look_Intro");
+				((Player&)sprite).SetAction("player_Look_Intro");
 			}
 		}
 
@@ -232,6 +232,6 @@ void ActionCtl::update(float sp,Sprite& sprite)
 	// 何もアクションが行われていなければIDOLを設定する
 	if (!actFlg)
 	{
-		((Player&)sprite).SetAction("Look_Intro");
+		((Player&)sprite).SetAction("player_Look_Intro");
 	}
 }

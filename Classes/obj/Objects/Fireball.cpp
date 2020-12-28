@@ -50,7 +50,7 @@ void Fireball::update(float delta)
 		}
 	}
 
-	//UpdateAnimation(delta);
+	UpdateAnimation(delta);
 }
 
 void Fireball::Move(void)
@@ -61,10 +61,7 @@ void Fireball::Move(void)
 
 void Fireball::AnimRegistrator(void)
 {
-	// fireball 
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/Fireball/fireball", "normal", 4, 0.08f, ActorType::Fireball, true);
-	// fireball_impact
-	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/Fireball/fireball", "impact", 5, 0.08f, ActorType::Fireball, false);
+
 
 	lpAnimMng.InitAnimation(*this, ActorType::Fireball, "normal");
 }

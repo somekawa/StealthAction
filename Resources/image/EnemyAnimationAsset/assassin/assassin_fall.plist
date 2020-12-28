@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>fall0.png</key>
+            <key>assassin_fall0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>fall1.png</key>
+            <key>assassin_fall1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>fall2.png</key>
+            <key>assassin_fall2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
