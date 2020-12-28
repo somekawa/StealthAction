@@ -2,15 +2,16 @@
 #include <mutex>
 #include <vector>
 #include <string>
+//
+//struct SkillParam
+//{
+//	std::string name;	//スキル名の保存
+//	bool lock;	//true: lock | false: unlock
+//	bool activation;	//現在発動しているか true: 発動中 | false: 未発動
+//	float ct;	//クールタイム
+//};
 
-struct SkillParam
-{
-	std::string name;	//スキル名の保存
-	bool lock;	//true: lock | false: unlock
-	bool activation;	//現在発動しているか true: 発動中 | false: 未発動
-	float ct;	//クールタイム
-};
-
+struct SkillParam;
 class  SkillMng;
 class SkillBase
 {

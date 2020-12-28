@@ -54,57 +54,52 @@ class GameMap;
 class CameraManager;
 class Player;
 class ProgramState;
-
 class Game : public BaseScene
 {
 public:
     static cocos2d::Scene* createScene();
-
+    ~Game();
     bool init()override;
     void update(float sp)override;
 
-   // Player* plSprite;
+    // Player* plSprite;
     cocos2d::Sprite* enemySprite;
 
     cocos2d::TMXLayer* colLayerRemain;
     std::shared_ptr<CameraManager> cameraManager_;
     std::shared_ptr<GameMap> gameMap_;
-
     int frame = 0;
     float zoom = 1;
 
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
-    
+    // 接続プレイヤー毎にプレイヤーを追加
+    // param@ playerNum: 接続しているプレイヤーの数
+    void AddPlayer(int playerNum);
+    // 敵の生成
+    void AddEnemy(const ActorType& type);
+
     // implement the "static create()" method manually
     CREATE_FUNC(Game);
-
-	// 接続プレイヤー毎にプレイヤーを追加
-	// param@ playerNum: 接続しているプレイヤーの数
-	void AddPlayer(int playerNum);
-	// 敵の生成
-	void AddEnemy(const ActorType& type);
-
 private:
-	// レイヤー
-	std::array<cocos2d::Layer*, static_cast<int>(zOlder::MAX)> layer_;
+    // レイヤー
+    std::array<cocos2d::Layer*, static_cast<int>(zOlder::MAX)> layer_;
 
-	std::array<cocos2d::Sprite*, static_cast<int>(ActorType::Max)> spriteList_;
+    std::array<cocos2d::Sprite*, static_cast<int>(ActorType::Max)> spriteList_;
 
-	//std::list<std::shared_ptr<UIBase>> gameUIs_;
-	// Titleに戻るための処理
-	//void ChangeTitleScene(void);
-	// 敵を生成した回数
-	int generateEnemyNum_;
-	// リスポーンするフラグ
-	bool respawnFlag_;
+    //std::list<std::shared_ptr<UIBase>> gameUIs_;
+    // Titleに戻るための処理
+    //void ChangeTitleScene(void);
+    // 敵を生成した回数
+    int generateEnemyNum_;
+    // リスポーンするフラグ
+    bool respawnFlag_;
 
     BehaviorTree assassinBehavior_;
     BehaviorTree twistedCultistBehavior_;
     BehaviorTree cultistBehavior_;
 
-	std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
-		static_cast<int>(ActorType::Max)> colliderBox_;
+    std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
+        static_cast<int>(ActorType::Max)> colliderBox_;
 };
-
 #endif // __HELLOWORLD_SCENE_H__

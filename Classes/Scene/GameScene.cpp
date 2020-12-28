@@ -36,6 +36,7 @@
 #include "GameMap.h"
 #include "Gate.h"
 #include "renderer/backend/Device.h"
+#include "Effect/EffectMng.h"
 
  // AI関係のinclude
 #include "BehaviorBaseAI/AIActions/NormalAttack.h"
@@ -57,6 +58,10 @@ namespace
 Scene* Game::createScene()
 {
 	return Game::create();
+}
+
+Game::~Game()
+{
 }
 
 // Print useful error message instead of segfaulting when files are not there.
@@ -329,7 +334,7 @@ bool Game::init()
 	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->scheduleUpdate();
 
 	PL_HPgaugeSp->scheduleUpdate();
-
+	// シェーダ
 	auto fileUtiles = FileUtils::getInstance();
 	auto vertexSource = fileUtiles->getStringFromFile("OutLineTest.vert");
 	auto fragmentSource = fileUtiles->getStringFromFile("OutLineTest.frag");
@@ -341,6 +346,8 @@ bool Game::init()
 	auto program2 = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 	programState2 = new backend::ProgramState(program);
 	this->scheduleUpdate();
+
+
 	return true;
 }
 
