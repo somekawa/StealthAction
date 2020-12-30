@@ -39,13 +39,14 @@ public:
 	void SetDir(Direction dir);									// 現在の方向をセットする
 	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
 	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer);
-
 private:
 	//CREATE_FUNC(Player);
 
 	void attackMotion(float sp);								// 攻撃モーションの設定
 	void colliderVisible(void);									// 矩形の描画関連
 	void attackCollider(std::string str, cocos2d::Node* col, float& pos);	// 攻撃矩形のオフセット
+	bool gameOverAction(void);
+	cocos2d::Action* _gameOverAction;							// ゲームオーバー時に再生するものの変数
 
 	// アニメーション関係
 	//std::string actionNow_;
@@ -70,6 +71,11 @@ private:
 
 	// 攻撃時のオフセットテスト
 	float attackColOffset_;
+
+	bool deathFlg_ = false;										// hpが0になったときにフラグを立てる
+	cocos2d::Vec2 deathPos_;
+
+	bool _gameOverFlg = false;
 };
 
 // まずは敵との攻撃矩形とダメージ矩形の当たり判定
