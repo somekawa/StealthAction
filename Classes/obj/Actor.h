@@ -135,6 +135,11 @@ public:
 	{
 		return isFire_;
 	}
+	// ¶‚«‚Ä‚¢‚é‚©‚ÌÌ×¸Şæ“¾
+	virtual bool AliveCheck(void)
+	{
+		return isAlive_;
+	}
 private:
 
 protected:
@@ -191,4 +196,6 @@ protected:
 	cocos2d::Layer* attackLayer_;
 	// UŒ‚µÌŞ¼Şª¸Ä‚ğo‚µ‚Ä‚¢‚é‚©‚ÌÌ×¸Ş
 	bool isFire_;
+	// ¶‚«‚Ä‚¢‚é‚©€‚ñ‚Å‚¢‚é‚©‚ÌÌ×¸Ş
+	bool isAlive_;
 };

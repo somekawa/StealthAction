@@ -48,6 +48,15 @@ const float& Enemy::GetVision(void)
 	return vision_;
 }
 
+void Enemy::DeleteSelfOnFloor(void)
+{
+	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
+	{
+		removeFromParentAndCleanup(true);
+		return;
+	}
+}
+
 void Enemy::ChangeDirection(void)
 {
 	auto playerPos = player_.getPosition();
@@ -217,6 +226,11 @@ const float& Enemy::DistanceCalcurator(void)
 	return abs(playerPos.x - getPosition().x);
 }
 
+void Enemy::SetAlive(bool flg)
+{
+	isAlive_ = flg;
+}
+
 void Enemy::AIRun(void)
 {
 	// ダメージくらい
@@ -322,6 +336,8 @@ void Enemy::Death(void)
 	{
 		// 自身を消去するために自分の名前をdeathにする(仮でこうしている)
 		setName("death");
+		// 生きているﾌﾗｸﾞをfalseに(死んだ事にする)
+		isAlive_ = false;
 	}
 }
 

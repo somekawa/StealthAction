@@ -79,7 +79,7 @@ void TwistedCultist::Action(void)
 void TwistedCultist::update(float delta)
 {
 	// €‚ñ‚¾”»’è
-	if (getName() == "twistedCultist_death")
+	if (getName() == "twistedCultist_death" || getName() == "changeFloor_death")
 	{
 		// ©•ª‚ğe‚Å‚ ‚éGameScene‚©‚çíœ‚·‚é
 		removeFromParentAndCleanup(true);
@@ -174,6 +174,8 @@ void TwistedCultist::update(float delta)
 			hittingToPlayer_ = false;
 		}
 	}
+	// ÌÛ±•ÏX‚ÌÛ‚É©g‚ğÁ‚·
+	//DeleteSelfOnFloor();
 }
 
 void TwistedCultist::AnimRegistrator(void)

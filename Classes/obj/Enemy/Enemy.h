@@ -26,9 +26,9 @@ enum class MoveType
 struct VisionRange
 {
 	// 攻撃範囲
-	const float attack_;
+	float attack_;
 	// 追跡モードになる範囲
-	const float chase_;
+	float chase_;
 	VisionRange():attack_(0.0f),chase_(0.0f) {};
 	VisionRange(float attack, float chase) :attack_(attack), chase_(chase) {};
 };
@@ -46,17 +46,26 @@ public:
 	// 視界に入ったかの計算をし、vision_を返す
 	virtual const float& GetVision(void);
 
+	// 自分自身の名前の取得
+	const std::string& GetMyName(void)
+	{
+		return myName_;
+	}
+
 	// 各視界範囲の取得
 	virtual const VisionRange& GetVisionRange(void)
 	{
 		return visionRange_;
 	}
+	// 今現在のﾌﾛｱに存在する自分自身を消す(ﾌﾛｱ変更の際に使用)
+	virtual void DeleteSelfOnFloor(void);
 
 	virtual void AddAttackObj(const float& angle) = 0;
 
 	virtual void ChangeDirection(void);
 	virtual const float& DistanceCalcurator(void);
-
+	// 生きているかのﾌﾗｸﾞのｾｯﾄ
+	void SetAlive(bool flg);
 	// 自分の行動タイプの取得
 	virtual const MoveType& GetMoveType(void)
 	{

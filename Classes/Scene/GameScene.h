@@ -31,11 +31,13 @@
 #include <list>
 #include <unordered_map>
 #include "cocos2d.h"
+#include "EnemyManager.h"
 #include "anim/AnimMng.h"
 #include "BaseScene.h"
 #include "BehaviorBaseAI/BehaviorTree.h"
 
 class ActionRect;
+class EnemyManager;
 using SharedRect = std::vector<std::shared_ptr<ActionRect>>;
 
 // 単語の綴りが違う
@@ -82,10 +84,6 @@ public:
 	// 接続プレイヤー毎にプレイヤーを追加
 	// param@ playerNum: 接続しているプレイヤーの数
 	void AddPlayer(int playerNum);
-	// 敵の生成
-	void AddEnemy(const ActorType& type);
-
-    void CharaInfoRegistrator(ActorType type);
 private:
 	// レイヤー
 	std::array<cocos2d::Layer*, static_cast<int>(zOlder::MAX)> layer_;
@@ -103,6 +101,8 @@ private:
     BehaviorTree assassinBehavior_;
     BehaviorTree twistedCultistBehavior_;
     BehaviorTree cultistBehavior_;
+    // 敵を統括するﾏﾈｰｼﾞｬｰ
+    std::unique_ptr<EnemyManager> enemyManager_;
 
 	std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
 		static_cast<int>(ActorType::Max)> colliderBox_;

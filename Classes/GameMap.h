@@ -39,6 +39,11 @@ public:
 	void ReplaceMap(Player& player);
 	void update(Player& pos);
 	int GetNextChildID();
+	// ﾌﾛｱ変更のﾌﾗｸﾞ取得
+	const bool ChangeFloor(void)
+	{
+		return isChangeFloor_;
+	}
 	cocos2d::Label* mapName;
 private:
 	// パスからマップ読み込みを行う
@@ -57,7 +62,7 @@ private:
 	std::array<cocos2d::Vec2, static_cast<int>(MapDirection::Max)>nextPosTbl;
 	std::shared_ptr<MapGenerator>mapGenerator_;
 
-	
-
+	// ﾌﾛｱ変更したときにtrueになる
+	bool isChangeFloor_;
 };
 

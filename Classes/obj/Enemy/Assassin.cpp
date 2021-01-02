@@ -104,8 +104,10 @@ void Assassin::Action(void)
 
 void Assassin::update(float delta)
 {
+	// ÌÛ±•ÏX‚ÌÛ‚É©g‚ğÁ‚·
+	//DeleteSelfOnFloor();
 	// €‚ñ‚¾”»’è
-	if (getName() == "assassin_death")
+	if (getName() == "assassin_death" || getName() == "changeFloor_death")
 	{
 		// ©•ª‚ğe‚Å‚ ‚éGameScene‚©‚çíœ‚·‚é
 		removeFromParentAndCleanup(true);
@@ -200,6 +202,7 @@ void Assassin::update(float delta)
 			hittingToPlayer_ = false;
 		}
 	}
+
 }
 
 void Assassin::AnimRegistrator(void)

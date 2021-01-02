@@ -16,6 +16,8 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	auto a = mapGenerator_->GetMSTNode();
 	mapLayer_ = &layer;
 	objLayer_ = Layer::create();
+
+	isChangeFloor_ = false;
 	
 	mapName =  Label::createWithTTF("•”‰®  0", "fonts/HGRGE.ttc", 24);
 	mapName->setPosition(100, 500);
@@ -139,7 +141,6 @@ void GameMap::CreateObject()
 	{
 		objLayer_->addChild(obj);
 	}
-		
 }
 
 cocos2d::TMXTiledMap* GameMap::GetMap()
@@ -160,6 +161,8 @@ cocos2d::TMXTiledMap* GameMap::GetMap()
 
 void GameMap::update(Player& player)
 {
+	// í‚ÉÌÛ±•ÏX‚ÌÌ×¸Þ‚Ífalse‚É
+	isChangeFloor_ = false;
 	for (auto obj : objs_)
 	{
 		obj->Update(player);
@@ -167,6 +170,8 @@ void GameMap::update(Player& player)
 		if(obj->IsHit(player))
 		{
 			nextId = obj->GetGateNum();
+			// ÌßÚ²Ô°‚ª¹Þ°Ä‚ð‚­‚®‚Á‚½Žž‚É‚Ì‚Ýtrue‚É‚·‚é
+			isChangeFloor_ = true;
 			ReplaceMap(player);
 		}
 	}

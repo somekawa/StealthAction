@@ -17,6 +17,8 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	onFloor_ = false;
 	isHitWall_ = false;
 	isFire_ = false;
+	// 生きているかのﾌﾗｸﾞの初期化
+	isAlive_ = true;
 	// 攻撃しているかのフラグの初期化
 	isAttacking_ = false;
 	// ダメージをくらったフラグの初期化
