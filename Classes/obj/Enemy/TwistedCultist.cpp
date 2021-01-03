@@ -82,7 +82,7 @@ void TwistedCultist::update(float delta)
 	if (getName() == "twistedCultist_death" || getName() == "changeFloor_death")
 	{
 		// Ž©•ª‚ðe‚Å‚ ‚éGameScene‚©‚çíœ‚·‚é
-		removeFromParentAndCleanup(true);
+		this->removeFromParentAndCleanup(true);
 	}
 	else
 	{

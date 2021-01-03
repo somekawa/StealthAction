@@ -110,7 +110,7 @@ void Assassin::update(float delta)
 	if (getName() == "assassin_death" || getName() == "changeFloor_death")
 	{
 		// Ž©•ª‚ðe‚Å‚ ‚éGameScene‚©‚çíœ‚·‚é
-		removeFromParentAndCleanup(true);
+		this->removeFromParentAndCleanup(true);
 	}
 	else
 	{

@@ -14,10 +14,12 @@
 #include "BehaviorBaseAI/JudgementTool/MoveJudgement.h"
 #include "BehaviorBaseAI/JudgementTool/SkillAttackJudgement.h"
 
+#include "EnemyHPGauge.h"
+
 USING_NS_CC;
 
-EnemyManager::EnemyManager(cocos2d::Layer& layer,Player& player):
-	layer_(layer),player_(&player)
+EnemyManager::EnemyManager(Layer& layer,Layer& hpLayer,Player& player):
+	layer_(layer),hpLayer_(hpLayer),player_(&player)
 {
 	spawnFlag_ = false;
 }
@@ -43,20 +45,19 @@ void EnemyManager::Update(void)
 
 void EnemyManager::Initialize(void)
 {
+	EnemyHPGauge::LoadSprite();
 	// ¿≤ÃﬂñàÇÃ±∆“∞ºÆ›ÅAbehaviorÇÃìoò^
 	for (auto type : ActorType())
 	{
+		AddAnim(type);
 		// Ãﬂ⁄≤‘∞Ç∆FireballÇÃèÍçáÇÕΩ∑ØÃﬂ
 		if (type == ActorType::Player ||
 			type == ActorType::Fireball)
 		{
 			continue;
 		}
-		AddAnim(type);
 		AddBehavior(type);
 	}
-
-
 }
 
 void EnemyManager::CreateInitialEnemyOnFloor(int initNum)
@@ -214,7 +215,8 @@ void EnemyManager::AddAnim(ActorType type)
 void EnemyManager::CreateEnemy(ActorType type)
 {
 	Enemy* sprite = nullptr;
-	auto spawnPos = Vec2{ 300.0f,200.0f };
+	Sprite* hpSprite = nullptr;
+	auto spawnPos = Vec2{ 30 + float(rand() % 300), 30 + float(rand() % 200) };
 	auto vRange = VisionRange(0.0f, 0.0f);
 
 	switch (type)
@@ -227,19 +229,21 @@ void EnemyManager::CreateEnemy(ActorType type)
 	case ActorType::Assassin:
 		vRange = VisionRange(20.0f, 50.0f);
 
-		sprite = Assassin::CreateAssassin(spawnPos, *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
-
+		sprite = Assassin::CreateAssassin(Vec2(spawnPos.x,spawnPos.y), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
+		hpSprite = EnemyHPGauge::CreateEnemyHPGauge(type,*sprite);
 		break;
 	case ActorType::TwistedCultist:
 		vRange = VisionRange(50.0f, 200.0f);
 
-		sprite = TwistedCultist::CreateTwistedCultist(spawnPos, *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
+		sprite = TwistedCultist::CreateTwistedCultist(Vec2(spawnPos.x, spawnPos.y), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
+		hpSprite = EnemyHPGauge::CreateEnemyHPGauge(type, *sprite);
 
 		break;
 	case ActorType::Cultist:
 		vRange = VisionRange(200.0f, 100.0f);
 
-		sprite = Cultist::CreateCultist(spawnPos, *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
+		sprite = Cultist::CreateCultist(Vec2(spawnPos.x,spawnPos.y), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
+		hpSprite = EnemyHPGauge::CreateEnemyHPGauge(type, *sprite);
 
 		break;
 	case ActorType::Fireball:
@@ -252,11 +256,13 @@ void EnemyManager::CreateEnemy(ActorType type)
 	// ìGÇ…ñºëOÇïtÇØÇÈ
 // éÄÇÒÇæÇÁ"death"Ç∆Ç»ÇÈ
 	sprite->setName("enemy");
-
+	sprite->setTag(101);
 	// ìGÇActorópÉåÉCÉÑÅ[ÇÃéqãüÇ…Ç∑ÇÈ
 	layer_.addChild(sprite);
+	hpLayer_.addChild(hpSprite);
 	// ìGÇÃ±ØÃﬂ√ﬁ∞ƒ
 	sprite->scheduleUpdate();
+	hpSprite->scheduleUpdate();
 	// ΩŒﬂ∞›Ã◊∏ﬁÇê‹ÇÈ
 	spawnFlag_ = true;
 

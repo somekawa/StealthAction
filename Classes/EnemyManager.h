@@ -9,7 +9,7 @@ class Enemy;
 class EnemyManager
 {
 public:
-	EnemyManager(cocos2d::Layer& layer,Player& player);
+	EnemyManager(cocos2d::Layer& layer,cocos2d::Layer& hpLayer,Player& player);
 	~EnemyManager();
 	// XVŠÖ”
 	void Update(void);
@@ -29,6 +29,7 @@ public:
 
 private:
 	cocos2d::Layer& layer_;
+	cocos2d::Layer& hpLayer_;
 	Player* player_;
 	bool spawnFlag_;
 

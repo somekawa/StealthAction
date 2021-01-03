@@ -28,23 +28,12 @@
 #include "CameraManager.h"
 #include "obj/Player.h"
 #include "obj/Enemy/Enemy.h"
-//#include "obj/Enemy/Imp.h"
-//#include "obj/Enemy/Assassin.h"
-//#include "obj/Enemy/TwistedCultist.h"
-//#include "obj/Enemy/Cultist.h"
 #include "PL_HPgauge.h"
 #include "Loader/CollisionLoader.h"
 #include "GameMap.h"
 #include "Gate.h"
 #include "renderer/backend/Device.h"
-
- // AI関係のinclude
-//#include "BehaviorBaseAI/AIActions/NormalAttack.h"
-//#include "BehaviorBaseAI/AIActions/SkillAttackAction.h"
-//#include "BehaviorBaseAI/AIActions/MoveAction.h"
-//#include "BehaviorBaseAI/JudgementTool/AttackJudgement.h"
-//#include "BehaviorBaseAI/JudgementTool/MoveJudgement.h"
-//#include "BehaviorBaseAI/JudgementTool/SkillAttackJudgement.h"
+#include "ENemyHPGauge.h"
 
 USING_NS_CC;
 
@@ -147,14 +136,6 @@ bool Game::init()
 	// bg用レイヤー
 	layer_[(int)zOlder::BG]->setTag((int)zOlder::BG);
 	layer_[(int)zOlder::BG]->setGlobalZOrder((int)zOlder::BG);
-
-
-	// colliderBoxのロード(一括で全てのcolliderをロードしておいた方がいいのでここに書く)
-	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Look_Intro", "player");
-	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Run", "player");
-	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Fall", "player");
-	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "Jump", "player");
-	//lpCol.Load(colliderBox_[static_cast<int>(ActorType::Player)], "AttackA", "player");
 
 	// playerList_にplayer追加
 	// 引数に接続しているプレイヤー数を記述
@@ -294,11 +275,11 @@ bool Game::init()
 	programState2 = new backend::ProgramState(program);
 
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
-	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *player);
+	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *layer_[static_cast<int>(zOlder::FRONT)], *player);
 
 	// 敵のｱﾆﾒｰｼｮﾝ関係、ﾋﾞﾍｲﾋﾞｱの初期化
 	enemyManager_->Initialize();
-	//enemyManager_->CreateInitialEnemyOnFloor(10);
+	enemyManager_->CreateInitialEnemyOnFloor(3);
 
 	this->scheduleUpdate();
 	return true;
@@ -327,13 +308,25 @@ void Game::update(float sp)
 	if (gameMap_->ChangeFloor())
 	{
 		auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
+		//layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildren();
+		//layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildrenWithCleanup(true);
 		for (auto enemy : layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren())
 		{
 			enemy->setName("changeFloor_death");
 		}
+		for (auto hp : layer_[static_cast<int>(zOlder::FRONT)]->getChildren())
+		{
+			if (hp->getName() == "enemyHP")
+			{
+				hp->setName("delete");
+			}
+		}
+		enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
-		enemyManager_->CreateInitialEnemyOnFloor(10);
+		// ﾌﾛｱ変更後1回だけ初期の敵の数だけｲﾝｽﾀﾝｽ
+		enemyManager_->CreateInitialEnemyOnFloor(3);
 	}
+	auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 	// 敵のｽﾎﾟｰﾝを管理
 	enemyManager_->Update();

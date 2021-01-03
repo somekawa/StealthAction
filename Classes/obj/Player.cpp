@@ -72,6 +72,9 @@ Player::Player(int hp,Layer& myLayer):
 				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
 				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
 				draw->setTag(col[colNum]->GetData().frame_);
+				// ここでsetLocalOrderをやんないといけない
+				// 攻撃矩形だと0に、ﾀﾞﾒｰｼﾞ矩形だと1に
+				// なので、第二引数にcol->GetData().type_みたいなことをやればそれぞれの矩形のZorderになる。
 				this->addChild(draw, 0, anim);
 			}
 		}
