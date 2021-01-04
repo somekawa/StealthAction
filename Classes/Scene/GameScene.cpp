@@ -35,6 +35,7 @@
 #include "renderer/backend/Device.h"
 #include "SoundMng.h"
 #include "ENemyHPGauge.h"
+#include "Effect/EffectManager.h"
 
 USING_NS_CC;
 
@@ -276,7 +277,9 @@ bool Game::init()
 
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *layer_[static_cast<int>(zOlder::FRONT)], *player);
-
+	effectManager_ = std::make_shared<EffectManager>(*layer_[static_cast<int>(zOlder::FRONT)]);
+	effectManager_->Load(EffectType::EnemySpawn, 19, 0.08f);
+	effectManager_->scheduleUpdate();
 	// “G‚Ì±ÆÒ°¼®ÝŠÖŒWAËÞÍ²ËÞ±‚Ì‰Šú‰»
 	enemyManager_->Initialize();
 	enemyManager_->CreateInitialEnemyOnFloor(3);
@@ -298,6 +301,7 @@ void Game::update(float sp)
 
 	if (gameMap_->ChangeFloor())
 	{
+		effectManager_->Play(EffectType::EnemySpawn, Vec2(200.0f, 300.0f));
 		auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 		//layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildren();
 		//layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildrenWithCleanup(true);
