@@ -37,6 +37,7 @@
 #include "BehaviorBaseAI/BehaviorTree.h"
 
 class ActionRect;
+class EffectManager;
 class EnemyManager;
 using SharedRect = std::vector<std::shared_ptr<ActionRect>>;
 
@@ -103,7 +104,8 @@ private:
     BehaviorTree cultistBehavior_;
     // “G‚ğ“Š‡‚·‚éÏÈ°¼Ş¬°
     std::unique_ptr<EnemyManager> enemyManager_;
-
+    // ´Ìª¸Ä‚ğ“Š‡‚·‚éÏÈ°¼Ş¬°
+    std::shared_ptr<EffectManager> effectManager_;
 	std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
 		static_cast<int>(ActorType::Max)> colliderBox_;
 };

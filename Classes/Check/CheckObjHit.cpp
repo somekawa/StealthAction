@@ -12,12 +12,12 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	{
 		return false;
 	}
-	const int chipSize = 48;
+
 	auto plPos = sprite.getPosition();
 	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
 	auto WallSlideData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("slide");
-	auto ColSize = CollisionData->getLayerSize();
-
+	auto& ColSize = CollisionData->getLayerSize();
+	const int chipSize = CollisionData->getMapTileSize().width;
 	// 当たり判定の位置に+module.velをすることで、次回移動値を加算したpointで当たり判定をするようにした
 	// →カメラのブレをなくすため
 	auto plCheckPoint1 = plPos + module.checkPoint1 + module.vel;

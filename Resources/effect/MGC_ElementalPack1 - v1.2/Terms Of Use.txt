@@ -1,0 +1,15 @@
+By downloading this asset:
+
+I.ALLOWED
+-Use in free or commercial projects
+-Use in any engine ( any RPG Maker, Unity, Unreal Engine, ... )
+-Edit for your needs: change sprite size, color, etc. but if it's the case you should precise the original work origin.
+
+II.FORBIDDEN
+-Redistribute or resell this asset
+-Claim it as yours
+
+III.NOT REQUIRED
+-Credit ManuGamingCreations when using the asset
+
+©ManuGamingCreations
