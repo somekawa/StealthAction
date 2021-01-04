@@ -6,9 +6,6 @@
 #include "_Debug/_DebugConOut.h"
 #include "Loader/CollisionLoader.h"
 
-
-// not最新
-
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
 #else
@@ -62,26 +59,26 @@ Player::Player(int hp,Layer& myLayer):
 	bitFlg_.ThirdAttackFlg = false;
 	bitFlg_.TransfromFlg = false;
 
-	for (auto anim : lpAnimMng.GetAnimations(type_))
-	{
-		// colliderBoxのLoad
-		lpCol.Load(collider_, anim);
-		for (auto col : collider_[anim])
-		{
-			for (int colNum = 0; colNum < col.size(); colNum++)
-			{
-				// colliderBoxを自身の子にする
-				auto draw = col[colNum]->create();
-				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
-				draw->setTag(col[colNum]->GetData().frame_);
-				// ここでsetLocalOrderをやんないといけない
-				// 攻撃矩形だと0に、ﾀﾞﾒｰｼﾞ矩形だと1に
-				// なので、第二引数にcol->GetData().type_みたいなことをやればそれぞれの矩形のZorderになる。
-				this->addChild(draw, 0, anim);
-			}
-		}
-	}
+	//for (auto anim : lpAnimMng.GetAnimations(type_))
+	//{
+	//	// colliderBoxのLoad
+	//	lpCol.Load(collider_, anim);
+	//	for (auto col : collider_[anim])
+	//	{
+	//		for (int colNum = 0; colNum < col.size(); colNum++)
+	//		{
+	//			// colliderBoxを自身の子にする
+	//			auto draw = col[colNum]->create();
+	//			draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+	//			draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+	//			draw->setTag(col[colNum]->GetData().frame_);
+	//			// ここでsetLocalOrderをやんないといけない
+	//			// 攻撃矩形だと0に、ﾀﾞﾒｰｼﾞ矩形だと1に
+	//			// なので、第二引数にcol->GetData().type_みたいなことをやればそれぞれの矩形のZorderになる。
+	//			this->addChild(draw, 0, anim);
+	//		}
+	//	}
+	//}
 
 
 	// こう書くとplayerが下の段に移動したときにくっついてくる文字になる
@@ -115,15 +112,6 @@ void Player::update(float delta)
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		return;
-	}
-
-	// 死亡状態の更新と確認(gameOverActionがtrueになったらアップデートをすぐ抜けるようにする)
-	if (deathFlg_)
-	{
-		if (gameOverAction())
-		{
-			return;
-		}
 	}
 
 	// 現在のフレームを整数値で取得
@@ -178,6 +166,11 @@ void Player::update(float delta)
 		}
 	}
 
+	// 死亡状態のテスト
+	if (deathFlg_)
+	{
+		gameOverAction();
+	}
 	//if (deathFlg_)
 	//{
 	//	this->setPosition(deathPos_);	// 死亡した位置で設定しておかないと、おかしくなる
@@ -623,7 +616,7 @@ void Player::AnimRegistrator(void)
 	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Transform", 37, (float)0.05, ActorType::Player, false);
 
 	// death
-	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Death2", 10, (float)0.08, ActorType::Player, false);
+	//lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Death2", 10, (float)0.08, ActorType::Player, false);
 
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "player_NON");
 }

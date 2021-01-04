@@ -26,7 +26,9 @@ public:
 
 	void Load(std::unordered_map<std::string,std::vector<SharedRect>>& colliderBox,
 			  std::string pathName);
-
+	// ‰ü—Ç”Å
+	void ReadData(std::unordered_map<std::string, std::vector<SharedRect>>& colliderBox,
+		std::string pathName);
 private:
 	CollisionLoader();
 	~CollisionLoader();

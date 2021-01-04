@@ -43,7 +43,7 @@ Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange vis
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBox‚ÌLoad
-		lpCol.Load(collider_, anim);
+		lpCol.ReadData(collider_, anim);
 		for (auto col : collider_[anim])
 		{
 			for (int colNum = 0; colNum < col.size(); colNum++)
