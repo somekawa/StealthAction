@@ -83,10 +83,32 @@ void GameMap::AddMap(std::string& mapPath)
 	mapDatas_.push_back(mapArray);
 }
 
+void GameMap::LoadMap(Player& player)
+{
+	auto fade = TransitionFade::create(1.0f, LoadScene::CreateLoadScene(player, *this), Color3B::BLACK);
+	Director::getInstance()->pushScene(fade);
+}
+
 void GameMap::ReplaceMap(Player& player)
 {
-	auto fade = TransitionFade::create(1.0f, LoadScene::CreateLoadScene(player, mapDatas_, mapParentsList_, *this), Color3B::BLACK);
-	Director::getInstance()->pushScene(fade);
+	int childId = nextId;
+	auto mapState_ = mapParentsList_.mapParents[mapParentsList_.nowID];
+	auto selectNextMap = mapDatas_[static_cast<int>(mapState_.child[childId].mapID)];
+	auto nowMap = GetNowMap();
+	if (nowMap != selectNextMap)
+	{
+		selectNextMap->setVisible(true);
+		selectNextMap->setName("MapData");
+		nowMap->setVisible(false);
+		nowMap->setName("");
+	}
+	mapParentsList_.nowID = static_cast<int>(mapState_.child[childId].nextParentID);
+	CreateObject();
+#ifdef _DEBUG
+	auto str = StringUtils::format("部屋　%d", mapParentsList_.nowID);
+	mapName->setString(str);
+#endif // _DEBUG
+	player.setPosition(mapState_.child[childId].nextPos);
 }
 
 void GameMap::CreateObject()
@@ -131,8 +153,7 @@ void GameMap::CreateObject()
 				gate->setCameraMask(static_cast<int>(CameraFlag::USER1));
 				objs_.push_back(gate);
 			}
-		}
-		
+		}	
 	}
 
 	// オブジェクトをセット
@@ -142,7 +163,7 @@ void GameMap::CreateObject()
 	}
 }
 
-cocos2d::TMXTiledMap* GameMap::GetMap()
+cocos2d::TMXTiledMap* GameMap::GetNowMap()
 {
 	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
 	return mapDatas_[static_cast<int>(nowMapParent.mapID)];
@@ -161,7 +182,7 @@ void GameMap::update(Player& player)
 			nextId = obj->GetGateNum();
 			// ﾌﾟﾚｲﾔｰがｹﾞｰﾄをくぐった時にのみtrueにする
 			isChangeFloor_ = true;
-			ReplaceMap(player);
+			LoadMap(player);
 		}
 	}
 	frame_++;

@@ -17,6 +17,6 @@ public:
 private:
 
 protected:
-    const Vector2I visualRange_ = { 200.0f,0.0f };
+    const Vector2I visualRange_ = { 200,0 };
 };
 

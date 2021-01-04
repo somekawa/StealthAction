@@ -30,59 +30,59 @@ void OPRT_touch::update()
 	_keyData._data = _keyData._input;
 }
 
-void OPRT_touch::touchStart(cocos2d::Touch * touch)
-{
-	auto loc = touch->getLocation();
-	touchStartPoint = Point(loc.x, loc.y);
-	touchEndPoint = Point(loc.x, loc.y);
-	swipeRotate = SWIPE_CENTER;
-}
-
-void OPRT_touch::touchMove(cocos2d::Touch * touch)
-{
-	auto startPosOffset = 20;
-	auto loc = touch->getLocation();
-	auto start = touchStartPoint;
-	auto end = touchEndPoint;
-	if (loc.x < start.x - startPosOffset) {
-		swipeRotate = SWIPE_LEFT;		// left
-	}
-	else {
-		if (loc.x > start.x + startPosOffset) {
-			swipeRotate = SWIPE_RIGHT;  // right
-		}
-	}
-	if (swipeRotate == SWIPE_CENTER || (swipeRotate != SWIPE_CENTER && std::abs(loc.x - start.x) < std::abs(loc.y - start.y))) {
-		if (loc.y < start.y - startPosOffset) {
-			swipeRotate = SWIPE_DOWN;	// down
-		}
-		if (loc.y > start.y + startPosOffset) {
-			swipeRotate = SWIPE_UP;		// up
-		}
-	}
-
-	if (swipeRotate == SWIPE_UP) {
-		//_keyData._input[static_cast<int>(BUTTON::UP)] = true;
-	}
-	if (swipeRotate == SWIPE_DOWN) {
-		//_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
-	}
-	if (swipeRotate == SWIPE_LEFT) {
-		_keyData._input[static_cast<int>(BUTTON::LEFT)] = true;
-	}
-	if (swipeRotate == SWIPE_RIGHT) {
-		_keyData._input[static_cast<int>(BUTTON::RIGHT)] = true;
-	}
-}
-
-void OPRT_touch::touchEnd(cocos2d::Touch * touch)
-{
-	touchStartPoint = touchEndPoint = Point(-9999, -9999);
-	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
-	{
-		_keyData._input[key] = false;
-	}
-}
+//void OPRT_touch::touchStart(cocos2d::Touch * touch)
+//{
+//	auto loc = touch->getLocation();
+//	touchStartPoint = Point(loc.x, loc.y);
+//	touchEndPoint = Point(loc.x, loc.y);
+//	swipeRotate = SWIPE_CENTER;
+//}
+//
+//void OPRT_touch::touchMove(cocos2d::Touch * touch)
+//{
+//	auto startPosOffset = 20;
+//	auto loc = touch->getLocation();
+//	auto start = touchStartPoint;
+//	auto end = touchEndPoint;
+//	if (loc.x < start.x - startPosOffset) {
+//		swipeRotate = SWIPE_LEFT;		// left
+//	}
+//	else {
+//		if (loc.x > start.x + startPosOffset) {
+//			swipeRotate = SWIPE_RIGHT;  // right
+//		}
+//	}
+//	if (swipeRotate == SWIPE_CENTER || (swipeRotate != SWIPE_CENTER && std::abs(loc.x - start.x) < std::abs(loc.y - start.y))) {
+//		if (loc.y < start.y - startPosOffset) {
+//			swipeRotate = SWIPE_DOWN;	// down
+//		}
+//		if (loc.y > start.y + startPosOffset) {
+//			swipeRotate = SWIPE_UP;		// up
+//		}
+//	}
+//
+//	if (swipeRotate == SWIPE_UP) {
+//		//_keyData._input[static_cast<int>(BUTTON::UP)] = true;
+//	}
+//	if (swipeRotate == SWIPE_DOWN) {
+//		//_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+//	}
+//	if (swipeRotate == SWIPE_LEFT) {
+//		_keyData._input[static_cast<int>(BUTTON::LEFT)] = true;
+//	}
+//	if (swipeRotate == SWIPE_RIGHT) {
+//		_keyData._input[static_cast<int>(BUTTON::RIGHT)] = true;
+//	}
+//}
+//
+//void OPRT_touch::touchEnd(cocos2d::Touch * touch)
+//{
+//	touchStartPoint = touchEndPoint = Point(-9999, -9999);
+//	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+//	{
+//		_keyData._input[key] = false;
+//	}
+//}
 
 void OPRT_touch::touchesStart(cocos2d::Touch* touch)
 {

@@ -7,11 +7,9 @@
 USING_NS_CC;
 #pragma execution_character_set("utf-8")
 
-Scene* LoadScene::CreateLoadScene(
-	Player& player,MapData& mapData,
-	MapParentList& mpList,GameMap& gameMap)
+Scene* LoadScene::CreateLoadScene(Player& player,GameMap& gameMap)
 {
-	LoadScene* pRet = new(std::nothrow) LoadScene(player, mapData ,mpList, gameMap);
+	LoadScene* pRet = new(std::nothrow) LoadScene(player, gameMap);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -25,14 +23,9 @@ Scene* LoadScene::CreateLoadScene(
 	}
 }
 
-LoadScene::LoadScene(Player& player, 
-	MapData& mapData,
-	MapParentList& mpList,
-	GameMap& gameMap)
-	: player_(player), mapParentList_(mpList), mapData_(mapData), gameMap_(&gameMap)
+LoadScene::LoadScene(Player& player, GameMap& gameMap): player_(player), gameMap_(&gameMap)
 {
 	scene = nullptr;
-	
 }
 
 bool LoadScene::init()
@@ -67,23 +60,7 @@ void LoadScene::update(float delta)
 	{
 		return;
 	}
-	
-	int childId = gameMap_->GetNextChildID();
-	auto mapState_ = mapParentList_.mapParents[mapParentList_.nowID];
-	auto selectNextMap = mapData_[static_cast<int>(mapState_.child[childId].mapID)];
-	auto nowMap = mapData_[static_cast<int>(mapState_.mapID)];
-	if (nowMap != selectNextMap)
-	{
-		selectNextMap->setVisible(true);
-		selectNextMap->setName("MapData");
-		nowMap->setVisible(false);
-		nowMap->setName("");
-	}
-	mapParentList_.nowID = static_cast<int>(mapState_.child[childId].nextParentID);
-	player_.setPosition(mapState_.child[childId].nextPos);
-	gameMap_->CreateObject();
-	auto str = StringUtils::format("•”‰®@%d", mapParentList_.nowID);
-	gameMap_->mapName->setString(str);
+	gameMap_->ReplaceMap(player_);
 	director->popScene();
 }
 

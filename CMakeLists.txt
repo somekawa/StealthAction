@@ -28,9 +28,6 @@ cmake_minimum_required(VERSION 3.6)
 set(APP_NAME cocosTest)
 
 project(${APP_NAME})
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 if(XCODE)
     if(NOT DEFINED CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET)
         SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 8.0)
@@ -44,7 +41,9 @@ if(NOT DEFINED BUILD_ENGINE_DONE) # to test cocosTest into root project
     include(CocosBuildSet)
     add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
 endif()
-
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 # record sources, headers, resources...
 set(GAME_SOURCE)
 set(GAME_HEADER)
@@ -189,8 +188,8 @@ target_include_directories(${APP_NAME}
         PRIVATE Classes
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
-add_subdirectory(Effekseer)
-target_link_libraries(${APP_NAME} EffekseerForCocos2d-x)
+#add_subdirectory(Effekseer)
+#target_link_libraries(${APP_NAME} EffekseerForCocos2d-x)
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})

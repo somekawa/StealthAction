@@ -34,9 +34,9 @@ struct OPRT_touch : OPRT_state
 	cocos2d::Point touchStartPoint;			// タッチの最初の座標
 	cocos2d::Point touchEndPoint;			// タッチの終わりの座標
 	int swipeRotate;						// スワイプの方向
-	void touchStart(cocos2d::Touch* touch);	// スワイプが始まった時
-	void touchMove(cocos2d::Touch* touch);	// スワイプの移動が行われた時
-	void touchEnd(cocos2d::Touch* touch);	// スワイプが終わった時
+	//void touchStart(cocos2d::Touch* touch);	// スワイプが始まった時
+	//void touchMove(cocos2d::Touch* touch);	// スワイプの移動が行われた時
+	//void touchEnd(cocos2d::Touch* touch);	// スワイプが終わった時
 
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetNowData(void);	// 今の情報を返す
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetOldData(void);	// 1フレーム前の情報を返す

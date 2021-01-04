@@ -2,13 +2,13 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <memory>
 #include <mutex>
 #include "Direction/Direction.h"
+#include "Delaunay.h"
 constexpr auto FLOOR = 50;
-//enum class Map
-//{
-//
-//};
+
+
 struct Room_Data
 {
     int area;
