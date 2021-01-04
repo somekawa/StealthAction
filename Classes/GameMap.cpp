@@ -27,7 +27,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	layer.addChild(objLayer_,layer.getLocalZOrder() + 1);	
 
 	// パスをリスト化
-	pathList_.push_back( "image/Environment/gatetest.tmx");
+	pathList_.push_back( "image/Environment/trueMap.tmx");
 
 	nextPosTbl = { Vec2(100, 100),	// E_UP
 			   Vec2(300, 100),	// N_RIGHT

@@ -80,11 +80,11 @@ void Actor::CheckMapObjHit(float delta)
 		return;
 	}
 	auto position = this->getPosition();
-	const int chipSize = 48;
+
 	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
 	// コリジョンレイヤーの縦横
 	auto ColSize = CollisionData->getLayerSize();
-
+	const int chipSize = CollisionData->getMapTileSize().width;
 	auto colSize = Vec2::ZERO;
 
 	for (auto col : currentCol_)
@@ -122,10 +122,10 @@ void Actor::CheckMapObjHit(float delta)
 	auto nextXGrid = Vec2{ nextPos.x,nextPos.y } / chipSize;
 
 	auto gridYPos = Vec2(nextYGrid.x, ColSize.height - nextYGrid.y);
-	auto gridYGid = CollisionData->getTileGIDAt(nextYGrid);
+	auto gridYGid = CollisionData->getTileGIDAt(gridYPos);
 
 	auto gridXPos = Vec2(nextXGrid.x, ColSize.height - nextXGrid.y);
-	auto gridXGid = CollisionData->getTileGIDAt(nextXGrid);
+	auto gridXGid = CollisionData->getTileGIDAt(gridXPos);
 	// 範囲外check
 	if (gridXPos.x > ColSize.width || gridXPos.x < 0 ||
 		gridXPos.y > ColSize.height || gridXPos.y < 0)
