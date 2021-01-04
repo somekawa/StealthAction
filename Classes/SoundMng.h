@@ -29,7 +29,7 @@ public:
 	bool AddSound(std::string soundName, std::string path, SoundType type);	// サウンド追加
 	void PlayBySoundName(std::string soundName, float volume = 1.0f);								// 登録したｻｳﾝﾄﾞを名前から再生する
 	void SetPauseAll(bool pauseF);			// サウンドを全て一時停止
-	void SetPause(std::string soundName);	// サウンドを一時停止
+	void Pause(std::string soundName);	// サウンドを一時停止
 	void Resume(std::string soundName);	// サウンドを再開
 private:
 	SoundMng();
