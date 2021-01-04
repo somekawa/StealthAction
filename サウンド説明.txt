@@ -7,10 +7,22 @@ SoundType説明
  BGM	// ループあり
 
 初期登録
- lpSoundMng.AddSound("bgm", "BGM/BGM_piano.mp3", SoundType::BGM);
+ lpSoundMng.AddSound(std::string "bgm",std::string  "BGM/BGM_piano.mp3", SoundType::BGM);
  - 引数(任意の名前, Resourcesなしのパス, 音の種類)
 
 
 音鳴らすとき
- lpSoundMng.PlayBySoundName("bgm", 1.0f);
+ lpSoundMng.PlayBySoundName(std::string "bgm",float 1.0f);
  - 引数(設定した名前, 音の大きさ(初期値は1.0f))
+
+音一時停止
+ lpSoundMng.Pause(std::string "bgm");
+ - 引数(設定した名前)
+
+音再開
+ lpSoundMng.Resume(std::string "bgm");
+ - 引数(設定した名前)
+
+音全部一時停止orすべて再開
+ lpSoundMng.SetPauseAll(bool pauseFlag);
+ - 引数(止めるかどうか(true : 止める, false : 再開))

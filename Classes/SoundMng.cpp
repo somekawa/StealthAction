@@ -38,11 +38,49 @@ void SoundMng::PlayBySoundName(std::string soundName, float volume)
 	if (soundList_.find(soundName) != soundList_.end())
 	{
 		bool loop = soundList_[soundName].type == SoundType::BGM;
-		AudioEngine::play2d(soundList_[soundName].path, true, 1.0);
+		soundList_[soundName].id = AudioEngine::play2d(soundList_[soundName].path, true, 1.0);
 	}
 	else
 	{
 		log("サウンド初期化できてないよ");
+		assert(true);
+	}
+}
+
+void SoundMng::SetPauseAll(bool pauseF)
+{
+	if (pauseF)
+	{
+		AudioEngine::pauseAll();
+	}
+	else
+	{
+		AudioEngine::resumeAll();
+	}
+}
+
+void SoundMng::Pause(std::string soundName)
+{
+	if (soundList_.find(soundName) != soundList_.end())
+	{
+		AudioEngine::pause(soundList_[soundName].id);
+	}
+	else
+	{
+		log("そんなサウンドはありません");
+		assert(true);
+	}
+}
+
+void SoundMng::Resume(std::string soundName)
+{
+	if (soundList_.find(soundName) != soundList_.end())
+	{
+		AudioEngine::resume(soundList_[soundName].id);
+	}
+	else
+	{
+		log("そんなサウンドはありません");
 		assert(true);
 	}
 }
