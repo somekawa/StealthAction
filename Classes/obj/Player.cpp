@@ -6,6 +6,9 @@
 #include "_Debug/_DebugConOut.h"
 #include "Loader/CollisionLoader.h"
 
+
+// not最新
+
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
 #else
@@ -114,6 +117,15 @@ void Player::update(float delta)
 		return;
 	}
 
+	// 死亡状態の更新と確認(gameOverActionがtrueになったらアップデートをすぐ抜けるようにする)
+	if (deathFlg_)
+	{
+		if (gameOverAction())
+		{
+			return;
+		}
+	}
+
 	// 現在のフレームを整数値で取得
 	animationFrame_int_ = GetAnimationFrameInt();
 	colliderVisible();
@@ -166,11 +178,6 @@ void Player::update(float delta)
 		}
 	}
 
-	// 死亡状態のテスト
-	if (deathFlg_)
-	{
-		gameOverAction();
-	}
 	//if (deathFlg_)
 	//{
 	//	this->setPosition(deathPos_);	// 死亡した位置で設定しておかないと、おかしくなる
@@ -616,7 +623,7 @@ void Player::AnimRegistrator(void)
 	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Transform", 37, (float)0.05, ActorType::Player, false);
 
 	// death
-	//lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Death2", 10, (float)0.08, ActorType::Player, false);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Death2", 10, (float)0.08, ActorType::Player, false);
 
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "player_NON");
 }
