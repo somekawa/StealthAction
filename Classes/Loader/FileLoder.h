@@ -14,8 +14,8 @@ public:
 		return s_Instance;
 	}
 	// File’Tõ—pŠÖ”
-	// •Ô‚è’l‚Æ‚µ‚Ädirectory–¼‚ğkey‚Æ‚µ‚½std::map‚Ìvector‚Å•Ô‚·
-	DataTable Directory(std::list<std::string>);
+	// •Ô‚è’l‚Æ‚µ‚Äˆê”Ô[‚¢directory–¼‚àˆê‚Âã‚ÌŠK‘w‚ğkey‚Æ‚µ‚½std::map‚Ìvector‚Å•Ô‚·
+	DataTable Directory(std::list<std::string>path/*’Tõ‚ğŠJn‚·‚édirectory–¼*/);
 private:
 	FileLoder();
 	~FileLoder();

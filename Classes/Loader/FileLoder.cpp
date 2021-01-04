@@ -1,62 +1,37 @@
-#include <iostream>
-#include <Windows.h>
+#include <cocos2d.h>
+#include <CCFileUtils.h>
 #include "FileLoder.h"
 
 DataTable FileLoder::Directory(std::list<std::string> path)
 {
-	HANDLE h_find;
-	WIN32_FIND_DATAA win32_fd;
-	pathList = path;
-	std::string findPath = pathList.back();
-	std::string Search_name = findPath + "/*";
-	h_find = FindFirstFileA(Search_name.c_str(), &win32_fd);
-	do
+	std::string findPath = path.front();
+	auto fileUtils = cocos2d::FileUtils::getInstance();
+
+	directoryName = fileUtils->listFiles(findPath);
+
+	for (auto itr = directoryName.begin();itr != directoryName.end();itr++)
 	{
-		/*取得したパスがディレクトリであるかどうかの判定*/
-		if (win32_fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		(*itr) = (*itr).substr((*itr).find(findPath));
+		if (fileUtils->isFileExist((*itr)))
 		{
-			if (win32_fd.cFileName[0] == '.')
-			{
-				continue;
-			}
-			std::string fllPath = findPath + win32_fd.cFileName;
-			if (std::find(path.begin(), path.end(), fllPath) == path.end())
-			{
-				// もし一度も取得したことがないフォルダのパスであったなら、
-				// pathListの一番最初のデータとして追加する
-				fllPath = fllPath;
-				mapData_[win32_fd.cFileName];
-				pathList.push_front(fllPath);
-			}
+			(*itr) = (*itr).substr((*itr).find("/")+1);
+			mapData_[(*itr).erase((*itr).find("/"))].push_back((*itr).substr((*itr).find("/") + 1));
 		}
 		else
 		{
-			std::string f_name = win32_fd.cFileName;
-			f_name = f_name.erase(f_name.find("."));
-			std::string key;
-			for (auto data : mapData_)
+			if ((*itr).find("./") != std::string::npos)
 			{
-				if (findPath.find(data.first) != std::string::npos)
-				{
-					// もし一度も追加していないファイル名であれば、keyに追加する
-					key = data.first;
-					break;
-				}
+				continue;
 			}
-			mapData_[key].push_back(f_name);
+			pathList.push_back((*itr));
 		}
-		// ファイルが見つからなくなるまで繰り返す.
-	} while (FindNextFileA(h_find, &win32_fd));
-	// 現在探索している階層に未探索ファイルが無ければ、pathListから削除する
-	// 未探索のpathを前に追加していくため後ろから削除していく
-	pathList.pop_back();
+	}
+	pathList.pop_front();
 	if (pathList.empty() == false)
 	{
-		/* もし未探査のファイルがあるのであればもう一度繰り返す
-		但しその際探索されるのは一度探索済みの階層と一番浅い階層以外になる*/
 		Directory(pathList);
 	}
-	FindClose(h_find);
+	
 	return mapData_;
 }
 
