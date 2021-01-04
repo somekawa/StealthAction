@@ -189,8 +189,8 @@ target_include_directories(${APP_NAME}
         PRIVATE Classes
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
-add_subdirectory(Effekseer)
-target_link_libraries(${APP_NAME} EffekseerForCocos2d-x)
+#add_subdirectory(Effekseer)
+#target_link_libraries(${APP_NAME} EffekseerForCocos2d-x)
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})

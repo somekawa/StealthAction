@@ -35,9 +35,13 @@ public:
 	void AddMap(std::string& mapPath);
 	// オブジェクトレイヤを読み込んで配置
 	void CreateObject();
-	cocos2d::TMXTiledMap* GetMap();
+	// 今のマップを取得
+	cocos2d::TMXTiledMap* GetNowMap();
+	// マップをロード開始
+	void LoadMap(Player& player);
+	// 今のマップをロードした次のマップに切り替え(プレイヤーのポジション)
 	void ReplaceMap(Player& player);
-	void update(Player& pos);
+	void update(Player& player);
 	int GetNextChildID();
 	// ﾌﾛｱ変更のﾌﾗｸﾞ取得
 	const bool ChangeFloor(void)

@@ -37,17 +37,21 @@ void OPRT_key::keyflg(Sprite* sprite)
    auto listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = [&](EventKeyboard::KeyCode keyCode, Event* event)->bool {
 		// ボタンを押したらフラグをONにする
-		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW) {
+		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW) 
+		{
 			_keyData._input[static_cast<int>(BUTTON::UP)] = true;
 		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+		if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) 
+		{
 			_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
 		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+		if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) 
+		{
 			_keyData._input[static_cast<int>(BUTTON::RIGHT)] = true;
 			_keyData._input[static_cast<int>(BUTTON::LEFT)] = false;
 		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
+		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
+		{
 			if (_keyData._input[static_cast<int>(BUTTON::RIGHT)])
 			{
 				_keyData._input[static_cast<int>(BUTTON::LEFT)] = false;
