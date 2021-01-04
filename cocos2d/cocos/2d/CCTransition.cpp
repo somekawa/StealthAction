@@ -36,6 +36,7 @@ THE SOFTWARE.
 #include "2d/CCLayer.h"
 #include "2d/CCRenderTexture.h"
 #include "2d/CCNodeGrid.h"
+#include "2d/CCCamera.h"
 #include "base/CCDirector.h"
 #include "base/CCEventDispatcher.h"
 

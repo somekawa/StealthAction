@@ -50,7 +50,7 @@ void MST::MakeMSTforPrim()
 		//‚»‚µ‚Äv‚ğV‚É‰Á‚¦‚éD
 		V.emplace_back(minVert);
 		//‚»‚µ‚ÄA‚©‚çv‚ğíœ
-		auto& vertItr = remove_if(A.begin(), A.end(), [minVert](const Vec2& vert)
+		auto vertItr = remove_if(A.begin(), A.end(), [minVert](const Vec2& vert)
 			{
 				return vert == minVert;
 			});
