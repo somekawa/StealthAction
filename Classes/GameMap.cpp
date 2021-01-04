@@ -87,7 +87,6 @@ void GameMap::ReplaceMap(Player& player)
 {
 	auto fade = TransitionFade::create(1.0f, LoadScene::CreateLoadScene(player, mapDatas_, mapParentsList_, *this), Color3B::BLACK);
 	Director::getInstance()->pushScene(fade);
-	
 }
 
 void GameMap::CreateObject()
@@ -148,16 +147,6 @@ cocos2d::TMXTiledMap* GameMap::GetMap()
 	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
 	return mapDatas_[static_cast<int>(nowMapParent.mapID)];
 }
-
-//void GameMap::SetMapInfo(MapType mapType)
-//{
-//	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
-//	mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(mapType)]->setVisible(true);
-//	mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(mapType)]->setName("MapData");
-//	mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(mapType) ^ !0]->setVisible(false);
-//	mapDatas_[static_cast<int>(nowMapParent.mapID)][static_cast<int>(mapType) ^ !0]->setName("");
-//	nowMapParent.mapType = mapType;
-//}
 
 void GameMap::update(Player& player)
 {

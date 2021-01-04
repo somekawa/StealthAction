@@ -1,0 +1,16 @@
+インクルード
+#include "SoundMng.h"
+
+SoundType説明
+中見
+ SE	// ループ無し
+ BGM	// ループあり
+
+初期登録
+ lpSoundMng.AddSound("bgm", "BGM/BGM_piano.mp3", SoundType::BGM);
+ - 引数(任意の名前, Resourcesなしのパス, 音の種類)
+
+
+音鳴らすとき
+ lpSoundMng.PlayBySoundName("bgm", 1.0f);
+ - 引数(設定した名前, 音の大きさ(初期値は1.0f))

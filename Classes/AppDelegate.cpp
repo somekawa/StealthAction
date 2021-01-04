@@ -25,7 +25,7 @@
 #include "AppDelegate.h"
 #include "Scene/GameScene.h"
 
- // #define USE_AUDIO_ENGINE 1
+#define USE_AUDIO_ENGINE 1
  // #define USE_SIMPLE_AUDIO_ENGINE 1
 
 #if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
@@ -34,7 +34,6 @@
 
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
 #elif USE_SIMPLE_AUDIO_ENGINE
 #include "audio/include/SimpleAudioEngine.h"
 using namespace CocosDenshion;
@@ -55,11 +54,6 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate()
 {
-#if USE_AUDIO_ENGINE
-    AudioEngine::end();
-#elif USE_SIMPLE_AUDIO_ENGINE
-    SimpleAudioEngine::end();
-#endif
 }
 
 // if you want a different context, modify the value of glContextAttrs

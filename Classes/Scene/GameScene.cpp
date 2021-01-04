@@ -33,6 +33,7 @@
 #include "GameMap.h"
 #include "Gate.h"
 #include "renderer/backend/Device.h"
+#include "SoundMng.h"
 #include "ENemyHPGauge.h"
 
 USING_NS_CC;
@@ -84,6 +85,10 @@ bool Game::init()
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	// サウンド
+	lpSoundMng.AddSound("bgm", "BGM/BGM_piano.mp3", SoundType::BGM);
+	lpSoundMng.PlayBySoundName("bgm");
 
 	// 各敵キャラのAINodeの生成----------------------------------------------------------
 	
@@ -213,12 +218,7 @@ bool Game::init()
 	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
 
 	// map読み込み
-	// つながっているマップも読む
-	// collisionLayerの取得
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
-	/*gameMap_->CreateMap("image/Environment/test.tmx", "image/Environment/uratest.tmx");
-	gameMap_->AddNextMap("image/Environment/map2.tmx", "image/Environment/uratest.tmx");*/
-	//gameMap_->CreateMap(*layer_[(int)zOlder::BG], "image/Environment/map2.tmx", "image/Environment/uratest.tmx");
 
 	// キャラの登録(charLayerはGameSceneに直接ぶら下がり、plSpriteはcharLayerにぶら下がる)
 
@@ -293,15 +293,6 @@ void Game::update(float sp)
 		return;
 	}
 
-	/*if (++frame  == 60)
-	{
-		gameMap_->SetMapInfo(MapType::URA);
-	}
-	if (frame == 120)
-	{
-		gameMap_->SetMapInfo(MapType::OMOTE);
-		frame = 0;
-	}*/
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	gameMap_->update(*player);
 
