@@ -1,31 +1,40 @@
-#include "TwistedCultist.h"
+#include "BigCultist.h"
+#include "Gravity.h"
 #include "_Debug/_DebugConOut.h"
-#include "Loader/CollisionLoader.h"
 #include "ActionRect.h"
+#include "Loader/CollisionLoader.h"
 #include "anim/AnimMng.h"
 #include "obj/Player.h"
-#include "Gravity.h"
+
+#include "BehaviorBaseAI/BehaviorData.h"
+#include "BehaviorBaseAI/NodeBase.h"
 
 USING_NS_CC;
 
-TwistedCultist::TwistedCultist(Vec2 pos,Player& player,
-	BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
-	Enemy(pos,player,aiTree,visionRange,hp,myLayer)
+BigCultist::BigCultist(cocos2d::Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp, cocos2d::Layer& myLayer) :
+	Enemy(pos, player, aiTree, visionRange, hp, myLayer)
 {
-	//pos_ = { 500,500 };
-	//this->setPosition(Vec2(pos_.x, pos_.y));
-	this->setScale(2.0f);
-	myName_ = "twistedCultist";
-	this->setAnchorPoint(Vec2(0.5f, 0.0f));
+	this->setScale(3.0f);
+	myName_ = "bigCultist";
 	flipFlag_ = FlipX::create(true);
-	type_ = ActorType::TwistedCultist;
+	type_ = ActorType::BigCultist;
 
 	// アニメーションの登録
 	AnimRegistrator();
+	// ActModuleの登録
+	//ActModuleRegistrator();
 
-	currentAnimation_ = "twistedCultist_idle";
-	//this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
+	currentAnimation_ = "bigCultist_idle";
+	previousAnimation_ = currentAnimation_;
+
+	//this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_,currentAnimation_)));
+
 	direction_ = Direction::Left;
+
+	//lpCol.Load(collider_, "idle", "assassin");
+	// 攻撃矩形のサイズ設定
+	attackRect_.size_ = Size(30.0f, 30.0f);
+
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBoxのLoad
@@ -35,28 +44,25 @@ TwistedCultist::TwistedCultist(Vec2 pos,Player& player,
 			for (int colNum = 0; colNum < col.size(); colNum++)
 			{
 				// colliderBoxを自身の子にする
-				auto draw = DrawNode::create();
+				auto draw = col[colNum]->create();
 				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
 				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
 
 				draw->setTag(col[colNum]->GetData().frame_);
+
 				this->addChild(draw, col[colNum]->GetData().type_, anim);
 			}
 		}
 	}
-	// 初期アニメーションのセット
-	//lpAnimMng.InitAnimation(*this, ActorType::TwistedCultist, "idle");
-	updater_ = &TwistedCultist::Idle;
 }
 
-TwistedCultist::~TwistedCultist()
+BigCultist::~BigCultist()
 {
 }
 
-TwistedCultist* TwistedCultist::CreateTwistedCultist(Vec2 pos,Player& player, 
-	BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer)
+BigCultist* BigCultist::CreateBigCultist(cocos2d::Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp, cocos2d::Layer& myLayer)
 {
-	TwistedCultist* pRet = new(std::nothrow) TwistedCultist(pos,player,aiTree,visionRange,hp,myLayer);
+	BigCultist* pRet = new(std::nothrow) BigCultist(pos, player, aiTree, visionRange, hp, myLayer);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -70,22 +76,20 @@ TwistedCultist* TwistedCultist::CreateTwistedCultist(Vec2 pos,Player& player,
 	}
 }
 
-void TwistedCultist::Action(void)
+void BigCultist::Action(void)
 {
-	ChangeDirection();
-	(this->*updater_)();
 }
 
-void TwistedCultist::update(float delta)
+void BigCultist::update(float delta)
 {
-	// 死んだ判定
-	if (getName() == "twistedCultist_death" || getName() == "changeFloor_death")
+	if (getName() == "assassin_death" || getName() == "changeFloor_death")
 	{
 		// 自分を親であるGameSceneから削除する
 		this->removeFromParentAndCleanup(true);
 	}
 	else
 	{
+		previousAnimation_ = currentAnimation_;
 		if (!isAttacking_)
 		{
 			// 方向の変更
@@ -93,6 +97,7 @@ void TwistedCultist::update(float delta)
 		}
 		// 現在のフレームを整数値で取得
 		animationFrame_int_ = GetAnimationFrameInt() - 1;
+
 		// 0以下になると0にする
 		if (animationFrame_int_ < 0)
 		{
@@ -174,24 +179,21 @@ void TwistedCultist::update(float delta)
 		}
 
 	}
-	// ﾌﾛｱ変更の際に自身を消す
-	//DeleteSelfOnFloor();
-}
-
-void TwistedCultist::AnimRegistrator(void)
-{
-	
 
 }
 
-void TwistedCultist::AddAttackObj(const float& angle)
+void BigCultist::AnimRegistrator(void)
 {
 }
 
-void TwistedCultist::NormalAttack(void)
+void BigCultist::AddAttackObj(const float& angle)
+{
+}
+
+void BigCultist::NormalAttack(void)
 {
 	isAttacking_ = true;
-	if (animationFrame_int_ < 8)
+	if (animationFrame_int_ < 21)
 	{
 		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	}
@@ -202,11 +204,11 @@ void TwistedCultist::NormalAttack(void)
 	TRACE("direction:%d", direction_);
 }
 
-void TwistedCultist::UseSkill(void)
+void BigCultist::UseSkill(void)
 {
 }
 
-void TwistedCultist::Patrol(void)
+void BigCultist::Patrol(void)
 {
 	if (isMoveComplete_)
 	{
@@ -243,7 +245,7 @@ void TwistedCultist::Patrol(void)
 	default:
 		break;
 	}
-	currentAnimation_ = "twistedCultist_walk";
+	currentAnimation_ = "bigCultist_run";
 	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x, getPosition().y));
 	//pos_.x += speed_.x;
 	//this->setPosition(Vec2(pos_.x, pos_.y));
@@ -252,7 +254,7 @@ void TwistedCultist::Patrol(void)
 	setPosition(Vec2(previousPos + speed_.x, getPosition().y));
 }
 
-void TwistedCultist::Chase(void)
+void BigCultist::Chase(void)
 {
 	auto previousPos = getPosition().x;
 
@@ -276,7 +278,7 @@ void TwistedCultist::Chase(void)
 	default:
 		break;
 	}
-	currentAnimation_ = "twistedCultist_walk";
+	currentAnimation_ = "bigCultist_run";
 	auto move = MoveTo::create(0.0f, Vec2(previousPos + speed_.x, getPosition().y));
 	//pos_.x += speed_.x;
 	//this->setPosition(Vec2(pos_.x, pos_.y));
@@ -285,14 +287,14 @@ void TwistedCultist::Chase(void)
 	setPosition(Vec2(previousPos + speed_.x, getPosition().y));
 }
 
-void TwistedCultist::Run(void)
+void BigCultist::Run(void)
 {
 }
 
-void TwistedCultist::Jump(void)
+void BigCultist::Jump(void)
 {
 }
 
-void TwistedCultist::Fall(void)
+void BigCultist::Fall(void)
 {
 }

@@ -13,15 +13,16 @@ EffectManager::~EffectManager()
 
 void EffectManager::update(float delta)
 {
-	/*if (animate_->isDone())
-	{
-		isAnimEnd_ = true;
-	}*/
+	//if (animate_->isDone())
+	//{
+	//	isAnimEnd_ = true;
+	//}
 }
 
 void EffectManager::Play(const EffectType& eType, cocos2d::Vec2 pos)
 {
 	pos_ = pos;
+	setPosition(pos);
 	type_ = eType;
 	animFrame_ = 0.0f;
 	isAnimEnd_ = false;

@@ -102,7 +102,8 @@ void Cultist::update(float delta)
 			// 方向の変更
 			ChangeDirection();
 		}
-
+		// 現在のフレームを整数値で取得
+		animationFrame_int_ = GetAnimationFrameInt() - 1;
 		// 無条件に通っていたら処理が重くなるので
 		// ﾌﾟﾚｲﾔｰが攻撃態勢で自分が攻撃食らっていなかったら(今のところこうしているが、後で自分がhitﾓｰｼｮﾝが終わったらに変更予定)
 		if (player_.IsAttacking() && !onDamaged_)
@@ -133,16 +134,14 @@ void Cultist::update(float delta)
 				stateTransitioner_ = &Enemy::Hit;
 			}
 		}
-		// 現在のフレームを整数値で取得
-		animationFrame_int_ = GetAnimationFrameInt() - 1;
 		// 0以下になると0にする
 		if (animationFrame_int_ < 0)
 		{
 			animationFrame_int_ = 0;
 		}
+
 		//if (currentAnimation_ == "attack")
 		{
-			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 		}
 
 		//previousAnimation_ = currentAnimation_;
@@ -184,6 +183,7 @@ void Cultist::update(float delta)
 			isFire_ = false;
 			hittingToPlayer_ = false;
 		}
+
 	}
 	// ﾌﾛｱ変更の際に自身を消す
 	//DeleteSelfOnFloor();
@@ -216,6 +216,11 @@ const float Cultist::GetPLAngle(void)
 
 void Cultist::NormalAttack(void)
 {
+	if (animationFrame_int_ < 11)
+	{
+		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+	}
+
 	if (animationFrame_ >= 0.01f)
 	{
 		isFire_ = true;

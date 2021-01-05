@@ -30,7 +30,8 @@ EnemyHPGauge::EnemyHPGauge(ActorType type,Enemy& target):
 		break;
 	}
 	setPosition(target_.getPosition());
-	setName("enemyHP");
+	setTag(101);
+	setName(target_.GetMyName() + "_" + std::to_string(target_.GetID()) + "_HP");
 	// ‰æ‘œ•`‰æ
 	setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("EnemyHPGauge"));
 
@@ -42,7 +43,7 @@ EnemyHPGauge::~EnemyHPGauge()
 
 void EnemyHPGauge::update(float delta)
 {
-	if (getName() == "delete")
+	if (getTag() == 0)
 	{
 		removeFromParentAndCleanup(true);
 		return;
@@ -122,4 +123,9 @@ bool EnemyHPGauge::Init(void)
 	}
 	initHP_ = currentHP_;
 	return true;
+}
+
+void EnemyHPGauge::SetHP(float hp)
+{
+	currentHP_ = hp;
 }

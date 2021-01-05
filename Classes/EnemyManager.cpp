@@ -4,7 +4,9 @@
 #include "obj/Enemy/Cultist.h"
 #include "obj/Enemy/TwistedCultist.h"
 #include "obj/Enemy/Imp.h"
+#include "obj/Enemy/BigCultist.h"
 #include "anim/AnimMng.h"
+#include "Effect/EffectManager.h"
 
 // AI関係のinclude
 #include "BehaviorBaseAI/AIActions/NormalAttack.h"
@@ -29,7 +31,7 @@ EnemyManager::~EnemyManager()
 
 }
 
-void EnemyManager::Update(void)
+void EnemyManager::Update(const std::shared_ptr<EffectManager>& effectMng)
 {
 	for (auto e : enemies_)
 	{
@@ -38,9 +40,12 @@ void EnemyManager::Update(void)
 		if (!spawnFlag_)
 		{
 			auto randomType = static_cast<int>(ActorType::Assassin) + (rand() % static_cast<int>(ActorType::Assassin));
-			CreateEnemy((ActorType)randomType);
+			CreateEnemy((ActorType)randomType,effectMng);
 		}
 	}
+	std::remove_if(enemies_.begin(), enemies_.end(), [&](Enemy* enemy) {
+		return !(enemy->AliveCheck());
+		});
 }
 
 void EnemyManager::Initialize(void)
@@ -60,7 +65,7 @@ void EnemyManager::Initialize(void)
 	}
 }
 
-void EnemyManager::CreateInitialEnemyOnFloor(int initNum)
+void EnemyManager::CreateInitialEnemyOnFloor(int initNum, const std::shared_ptr<EffectManager>& effectMng)
 {
 	// ﾘｽﾄの中身を空にする
 	enemies_.clear();
@@ -68,7 +73,7 @@ void EnemyManager::CreateInitialEnemyOnFloor(int initNum)
 	for (int init = 0; init < initNum; init++)
 	{
 		auto randomType = static_cast<int>(ActorType::Assassin) + (rand() % static_cast<int>(ActorType::Assassin));
-		CreateEnemy((ActorType)randomType);
+		CreateEnemy((ActorType)randomType,effectMng);
 	}
 }
 
@@ -121,6 +126,26 @@ void EnemyManager::AddBehavior(ActorType type)
 			BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
 		break;
 	case ActorType::Cultist:
+		// root node
+		behavior_[static_cast<int>(type)].AddNode("", "Root", 0,
+			BehaviorTree::SelectRule::Priority, NULL, NULL);
+		// attack node
+		behavior_[static_cast<int>(type)].AddNode("Root", "Attack", 1,
+			BehaviorTree::SelectRule::Sequence, AttackJudgement::Instance(), NULL);
+		// move node
+		behavior_[static_cast<int>(type)].AddNode("Root", "Move", 2,
+			BehaviorTree::SelectRule::Sequence, MoveJudgement::Instance(), NULL);
+		// attackの子にNormalAttackをぶら下げる
+		behavior_[static_cast<int>(type)].AddNode("Attack", "NormalAttack", 1,
+			BehaviorTree::SelectRule::Sequence, NULL, NormalAttack::Instance());
+		// attackの子にskillAttackをぶら下げる
+		behavior_[static_cast<int>(type)].AddNode("Attack", "SkillAttack", 2,
+			BehaviorTree::SelectRule::Sequence,
+			SkillAttackJudgement::Instance(), SkillAttackAction::Instance());
+		behavior_[static_cast<int>(type)].AddNode("Move", "moveAction", 1,
+			BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
+		break;
+	case ActorType::BigCultist:
 		// root node
 		behavior_[static_cast<int>(type)].AddNode("", "Root", 0,
 			BehaviorTree::SelectRule::Priority, NULL, NULL);
@@ -198,6 +223,20 @@ void EnemyManager::AddAnim(ActorType type)
 		// hit 
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "hit", 3, 0.09f, ActorType::Cultist, false);
 		break;
+	case ActorType::BigCultist:
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "idle", 8, 0.03f, ActorType::BigCultist, true);
+		// run
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "run", 8, 0.08f, ActorType::BigCultist, true);
+
+		// attack
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "attack", 20, 0.08f, ActorType::BigCultist, false);
+
+		// death
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "death", 12, 0.08f, ActorType::BigCultist, false);
+
+		// hit 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "hit", 3, 0.09f, ActorType::BigCultist, false);
+		break;
 		// 今のところここにfireballをおいている
 	case ActorType::Fireball:
 		// fireball 
@@ -212,13 +251,12 @@ void EnemyManager::AddAnim(ActorType type)
 	}
 }
 
-void EnemyManager::CreateEnemy(ActorType type)
+void EnemyManager::CreateEnemy(ActorType type, const std::shared_ptr<EffectManager>& effectMng)
 {
 	Enemy* sprite = nullptr;
 	Sprite* hpSprite = nullptr;
-	auto spawnPos = Vec2{ 30 + float(rand() % 300), 30 + float(rand() % 200) };
+	auto spawnPos = Vec2{ 150 + float(rand() % 300), 30 + float(rand() % 200) };
 	auto vRange = VisionRange(0.0f, 0.0f);
-
 	switch (type)
 	{
 	case ActorType::Player:
@@ -254,9 +292,9 @@ void EnemyManager::CreateEnemy(ActorType type)
 		break;
 	}
 	// 敵に名前を付ける
-// 死んだら"death"となる
+	// 死んだら"death"となる
 	sprite->setName("enemy");
-	sprite->setTag(101);
+	effectMng->Play(EffectType::EnemySpawn, { sprite->getPosition().x,sprite->getPosition().y });
 	// 敵をActor用レイヤーの子供にする
 	layer_.addChild(sprite);
 	hpLayer_.addChild(hpSprite);
@@ -267,4 +305,26 @@ void EnemyManager::CreateEnemy(ActorType type)
 	spawnFlag_ = true;
 
 	enemies_.emplace(enemies_.end(),sprite);
+}
+
+void EnemyManager::CreateBoss(const std::shared_ptr<EffectManager>& effectMng)
+{
+	Enemy* sprite = nullptr;
+	Sprite* hpSprite = nullptr;
+	auto spawnPos = Vec2{ 400, 50 };
+	auto vRange = VisionRange(50.0f, 100.0f);
+
+	sprite = BigCultist::CreateBigCultist(Vec2(spawnPos.x, spawnPos.y), *player_, &behavior_[static_cast<int>(ActorType::BigCultist)], vRange, 100, layer_);
+	hpSprite = EnemyHPGauge::CreateEnemyHPGauge(ActorType::BigCultist, *sprite);
+
+	// 敵に名前を付ける
+	// 死んだら"death"となる
+	sprite->setName("enemy");
+	effectMng->Play(EffectType::EnemySpawn, { sprite->getPosition().x,sprite->getPosition().y });
+	// 敵をActor用レイヤーの子供にする
+	layer_.addChild(sprite);
+	hpLayer_.addChild(hpSprite);
+	// 敵のｱｯﾌﾟﾃﾞｰﾄ
+	sprite->scheduleUpdate();
+	hpSprite->scheduleUpdate();
 }

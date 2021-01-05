@@ -71,6 +71,11 @@ public:
 	{
 		return mType_;
 	}
+
+	const int& GetID(void)
+	{
+		return id_;
+	}
 	virtual void update(float delta) = 0;
 	// 自分の攻撃がプレイヤーに当たっているかの判定
 	virtual bool OnAttacked(void);
@@ -112,7 +117,7 @@ public:
 	virtual void Death(void);
 	// ----------------------------------
 private:
-
+	static int num_;
 protected:
 
 	// 状態の遷移用関数ﾎﾟｲﾝﾀ
@@ -147,4 +152,6 @@ protected:
 	bool isMoveComplete_;
 	// 自身の名前
 	std::string myName_;
+
+	int id_;
 };

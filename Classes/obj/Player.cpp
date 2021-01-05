@@ -67,7 +67,7 @@ Player::Player(int hp,Layer& myLayer,SkillBase* skillBasePtr):
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBox‚ÌLoad
-		lpCol.Load(collider_, anim);
+		lpCol.ReadData(collider_, anim);
 		for (auto col : collider_[anim])
 		{
 			for (int colNum = 0; colNum < col.size(); colNum++)
@@ -180,21 +180,21 @@ void Player::update(float delta)
 		}
 	}
 
-	//if (deathFlg_)
-	//{
-	//	this->setPosition(deathPos_);	// Ž€–S‚µ‚½ˆÊ’u‚ÅÝ’è‚µ‚Ä‚¨‚©‚È‚¢‚ÆA‚¨‚©‚µ‚­‚È‚é
-	//	currentAnimation_ = "Death2";
-	//	animationFrame_ += delta;
-	//	if (animationFrame_ >= 0.8f)
-	//	{
-	//		animationFrame_ = 0.8f;
-	//		return;
-	//	}
-	//	else
-	//	{
-	//		currentAnimation_ = "Death2";
-	//	}
-	//}
+	if (deathFlg_)
+	{
+		this->setPosition(deathPos_);	// Ž€–S‚µ‚½ˆÊ’u‚ÅÝ’è‚µ‚Ä‚¨‚©‚È‚¢‚ÆA‚¨‚©‚µ‚­‚È‚é
+		currentAnimation_ = "Death2";
+		animationFrame_ += delta;
+		if (animationFrame_ >= 0.8f)
+		{
+			animationFrame_ = 0.8f;
+			return;
+		}
+		else
+		{
+			currentAnimation_ = "Death2";
+		}
+	}
 
 	attackMotion(delta);
 
@@ -336,7 +336,7 @@ void Player::attackMotion(float sp)
 				{
 					auto a = ((Game*)Director::getInstance()->getRunningScene());
 					auto b = (PL_HPgauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-					b->SetHP(b->GetHP() - 100);	// -10‚È‚Ç‚Ìƒ_ƒ[ƒW—Ê‚Í“G‚ÌUŒ‚—Í‚É•Ï‚¦‚ê‚Î‚¢‚¢
+					b->SetHP(b->GetHP() - 10);	// -10‚È‚Ç‚Ìƒ_ƒ[ƒW—Ê‚Í“G‚ÌUŒ‚—Í‚É•Ï‚¦‚ê‚Î‚¢‚¢
 					if (b->GetHP() <= 0)
 					{
 						// Ž€–Só‘Ô‚ÉØ‚è‘Ö‚¦

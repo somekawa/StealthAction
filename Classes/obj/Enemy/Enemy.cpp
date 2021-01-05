@@ -4,6 +4,7 @@
 #include "Gravity.h"
 #include "ActionRect.h"
 #include "obj/Player.h"
+#include "EnemyHPGauge.h"
 #include "BehaviorBaseAI/BehaviorTree.h"
 #include "BehaviorBaseAI/BehaviorData.h"
 #include "BehaviorBaseAI/NodeBase.h"
@@ -11,6 +12,7 @@
 
 USING_NS_CC;
 
+int Enemy::num_ = 0;
 Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
 	Actor(hp,myLayer),player_(player),aiTree_(aiTree),activeNode_(NULL),behaviorData_(NULL),visionRange_(visionRange)
 {
@@ -33,6 +35,9 @@ Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRan
 	oldPos_ = getPosition();
 	// プレイヤーと自分の距離を測ってインスタンス
 	vision_ = abs(player_.getPosition().x - getPosition().x);
+
+	id_ = num_;
+	num_++;
 }
 
 Enemy::~Enemy()
@@ -145,6 +150,10 @@ void Enemy::CheckHitPLAttack(void)
 					if (abs(attackColPos.x - damageColPos.x) <= 50.0 &&
 						abs(attackColPos.y - damageColPos.y) <= 50.0)
 					{
+						// HP減少のテストコード
+						auto a = ((Game*)Director::getInstance()->getRunningScene());
+						auto b = (EnemyHPGauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName(myName_ + "_" + std::to_string(id_) + "_HP");
+						b->SetHP(b->GetHP() - 10);	// -10などのダメージ量は敵の攻撃力に変えればいい
 						// onDamaged_をtrueに
 						OnDamaged();
 					}
@@ -203,7 +212,7 @@ void Enemy::ChangeAnimation(std::string animName)
 	// 現在のアニメーションを変更先のアニメーション名に変更
 	currentAnimation_ = myName_ + "_" + animName;
 	animationFrame_ = 0.0f;
-
+	animationFrame_int_ = 0;
 	// アニメーション終了フラグをfalseに
 	isAnimEnd_ = false;
 	// アニメーションのフレーム数を初期値に戻す

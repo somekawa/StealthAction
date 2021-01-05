@@ -149,7 +149,7 @@ void CollisionLoader::ReadData(std::unordered_map<std::string, std::vector<Share
 				if (readCmp)
 				{
 					colliderBox[pathName][num][boxNum] = 
-						std::make_shared<ActionRect>(data.begin_, data.end_, data.type_, data.frame_);
+						std::make_shared<ActionRect>(data.begin_, data.end_,data.type_, data.frame_);
 					boxNum++;
 				}
 				if (num >= colliderBox[pathName].size()-1 &&

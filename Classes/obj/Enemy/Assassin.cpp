@@ -114,13 +114,15 @@ void Assassin::update(float delta)
 	}
 	else
 	{
+		previousAnimation_ = currentAnimation_;
 		if (!isAttacking_)
 		{
 			// 方向の変更
 			ChangeDirection();
 		}
 		// 現在のフレームを整数値で取得
-		animationFrame_int_ = GetAnimationFrameInt()-1;
+		animationFrame_int_ = GetAnimationFrameInt() - 1;
+
 		// 0以下になると0にする
 		if (animationFrame_int_ < 0)
 		{
@@ -159,7 +161,6 @@ void Assassin::update(float delta)
 
 		//if (currentAnimation_ == "attack")
 		{
-			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 		}
 
 		//previousAnimation_ = currentAnimation_;
@@ -201,6 +202,7 @@ void Assassin::update(float delta)
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
 		}
+
 	}
 
 }
@@ -226,7 +228,10 @@ void Assassin::Fall(void)
 void Assassin::NormalAttack(void)
 {
 	isAttacking_ = true;
-
+	if (animationFrame_int_ < 14)
+	{
+		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+	}
 	if (OnAttacked())
 	{
 		player_.OnDamaged();

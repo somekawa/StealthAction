@@ -38,6 +38,9 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 		name = "cultist";
 
 		break;
+	case ActorType::BigCultist:
+		name = "bigCultist";
+		break;
 	case ActorType::Fireball:
 		name = "fireball";
 

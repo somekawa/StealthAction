@@ -284,8 +284,8 @@ bool Game::init()
 	effectManager_->scheduleUpdate();
 	// “G‚Ì±ÆÒ°¼®ÝŠÖŒWAËÞÍ²ËÞ±‚Ì‰Šú‰»
 	enemyManager_->Initialize();
-	enemyManager_->CreateInitialEnemyOnFloor(3);
-
+	enemyManager_->CreateInitialEnemyOnFloor(3,effectManager_);
+	enemyManager_->CreateBoss(effectManager_);
 	std::list<std::string> path;
 	path.push_back("skill_data");
 	auto fileLoad = lpFileLoder.Directory(path);
@@ -317,30 +317,31 @@ void Game::update(float sp)
 
 	if (gameMap_->ChangeFloor())
 	{
-		effectManager_->Play(EffectType::EnemySpawn, Vec2(200.0f, 300.0f));
+		//effectManager_->Play(EffectType::EnemySpawn, Vec2(200.0f, 300.0f));
 		auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 		//layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildren();
 		//layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildrenWithCleanup(true);
 		for (auto enemy : layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren())
 		{
 			enemy->setName("changeFloor_death");
+			enemy->setVisible(false);
 		}
-		for (auto hp : layer_[static_cast<int>(zOlder::FRONT)]->getChildren())
+		for (auto hp :layer_[static_cast<int>(zOlder::FRONT)]->getChildren())
 		{
-			if (hp->getName() == "enemyHP")
+			if (hp->getTag() == 101)
 			{
-				hp->setName("delete");
+				hp->setTag(0);
 			}
 		}
 		enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 		// ÌÛ±•ÏXŒã1‰ñ‚¾‚¯‰Šú‚Ì“G‚Ì”‚¾‚¯²Ý½ÀÝ½
-		enemyManager_->CreateInitialEnemyOnFloor(3);
+		enemyManager_->CreateInitialEnemyOnFloor(1,effectManager_);
 	}
 	auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 	// “G‚Ì½Îß°Ý‚ðŠÇ—
-	enemyManager_->Update();
+	enemyManager_->Update(effectManager_);
 	
 	// ƒvƒŒƒCƒ„[‚ÌƒJƒƒ‰‚ª‚¤‚Ü‚­‚¢‚©‚È‚¢
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);

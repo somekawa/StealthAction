@@ -18,6 +18,13 @@ public:
 	static bool LoadSprite(void);
 	static cocos2d::Sprite* CreateEnemyHPGauge(ActorType type,Enemy& target);
 	bool Init(void);
+	// HP‚Ì¾¯Ä
+	void SetHP(float hp);
+
+	const float& GetHP(void) const
+	{
+		return currentHP_;
+	}
 
 private:
 	Enemy& target_;

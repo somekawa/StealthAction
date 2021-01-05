@@ -8,6 +8,7 @@ enum class ActorType
 	Assassin,
 	TwistedCultist,
 	Cultist,
+	BigCultist,
 	Fireball,
 	Max
 };
