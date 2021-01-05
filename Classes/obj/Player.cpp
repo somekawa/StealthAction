@@ -39,7 +39,7 @@ Player::Player(int hp,Layer& myLayer):
 
 	actModuleRegistration();
 
-	currentAnimation_ = "player_NON";
+	currentAnimation_ = "player_Non";
 	actionOld_ = "player_Run";
 	direction_ = Direction::Right;
 
@@ -59,26 +59,26 @@ Player::Player(int hp,Layer& myLayer):
 	bitFlg_.ThirdAttackFlg = false;
 	bitFlg_.TransfromFlg = false;
 
-	//for (auto anim : lpAnimMng.GetAnimations(type_))
-	//{
-	//	// colliderBoxのLoad
-	//	lpCol.Load(collider_, anim);
-	//	for (auto col : collider_[anim])
-	//	{
-	//		for (int colNum = 0; colNum < col.size(); colNum++)
-	//		{
-	//			// colliderBoxを自身の子にする
-	//			auto draw = col[colNum]->create();
-	//			draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-	//			draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
-	//			draw->setTag(col[colNum]->GetData().frame_);
-	//			// ここでsetLocalOrderをやんないといけない
-	//			// 攻撃矩形だと0に、ﾀﾞﾒｰｼﾞ矩形だと1に
-	//			// なので、第二引数にcol->GetData().type_みたいなことをやればそれぞれの矩形のZorderになる。
-	//			this->addChild(draw, 0, anim);
-	//		}
-	//	}
-	//}
+	for (auto anim : lpAnimMng.GetAnimations(type_))
+	{
+		// colliderBoxのLoad
+		lpCol.Load(collider_, anim);
+		for (auto col : collider_[anim])
+		{
+			for (int colNum = 0; colNum < col.size(); colNum++)
+			{
+				// colliderBoxを自身の子にする
+				auto draw = col[colNum]->create();
+				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+				draw->setTag(col[colNum]->GetData().frame_);
+				// ここでsetLocalOrderをやんないといけない
+				// 攻撃矩形だと0に、ﾀﾞﾒｰｼﾞ矩形だと1に
+				// なので、第二引数にcol->GetData().type_みたいなことをやればそれぞれの矩形のZorderになる。
+				this->addChild(draw, 0, anim);
+			}
+		}
+	}
 
 
 	// こう書くとplayerが下の段に移動したときにくっついてくる文字になる
@@ -112,6 +112,15 @@ void Player::update(float delta)
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		return;
+	}
+
+	// 死亡状態の更新と確認(gameOverActionがtrueになったらアップデートをすぐ抜けるようにする)
+	if (deathFlg_)
+	{
+		if (gameOverAction())
+		{
+			return;
+		}
 	}
 
 	// 現在のフレームを整数値で取得
@@ -166,11 +175,6 @@ void Player::update(float delta)
 		}
 	}
 
-	// 死亡状態のテスト
-	if (deathFlg_)
-	{
-		gameOverAction();
-	}
 	//if (deathFlg_)
 	//{
 	//	this->setPosition(deathPos_);	// 死亡した位置で設定しておかないと、おかしくなる
@@ -584,7 +588,7 @@ void Player::AnimRegistrator(void)
 {
 	// アニメーションをキャッシュに登録
 	// non
-	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "NON", 6, (float)0.3, ActorType::Player,false);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Non", 6, (float)0.3, ActorType::Player,false);
 
 	// idle
 	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Look_Intro", 6, (float)0.3, ActorType::Player, false);
@@ -616,9 +620,9 @@ void Player::AnimRegistrator(void)
 	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Transform", 37, (float)0.05, ActorType::Player, false);
 
 	// death
-	//lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Death2", 10, (float)0.08, ActorType::Player, false);
+	lpAnimMng.addAnimationCache("image/PlayerAnimationAsset/player/player", "Death2", 10, (float)0.08, ActorType::Player, false);
 
-	lpAnimMng.InitAnimation(*this, ActorType::Player, "player_NON");
+	lpAnimMng.InitAnimation(*this, ActorType::Player, "player_Non");
 }
 
 const AttackRect& Player::GetAttackRect(void)
@@ -692,7 +696,7 @@ void Player::actModuleRegistration(void)
 		ActModule flipAct;
 		flipAct.state = _oprtState;
 		flipAct.flipFlg = false;
-		flipAct.actName = "player_NON";
+		flipAct.actName = "player_Non";
 		flipAct.button = BUTTON::RIGHT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 
@@ -710,7 +714,7 @@ void Player::actModuleRegistration(void)
 		ActModule flipAct;
 		flipAct.state = _oprtState;
 		flipAct.flipFlg = true;
-		flipAct.actName = "player_NON";
+		flipAct.actName = "player_Non";
 		flipAct.button = BUTTON::LEFT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 
@@ -791,7 +795,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_AttackFirst");
 		act.blackList.emplace_back("player_AttackSecond");
 		act.blackList.emplace_back("player_AttackThird");
-		act.blackList.emplace_back("player_NON");
+		act.blackList.emplace_back("player_Non");
 		act.blackList.emplace_back("player_Wall_Slide");
 		act.blackList.emplace_back("player_Transform");
 
@@ -851,7 +855,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_Run");	
 		act.blackList.emplace_back("player_Fall");
 		act.blackList.emplace_back("player_Look_Intro");
-		act.blackList.emplace_back("player_NON");
+		act.blackList.emplace_back("player_Non");
 		act.blackList.emplace_back("player_AttackFirst");
 		act.blackList.emplace_back("player_AttackSecond");
 		act.blackList.emplace_back("player_AttackThird");
@@ -873,7 +877,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_Run");
 		act.blackList.emplace_back("player_Fall");
 		act.blackList.emplace_back("player_Look_Intro");
-		act.blackList.emplace_back("player_NON");
+		act.blackList.emplace_back("player_Non");
 		act.blackList.emplace_back("player_AttackFirst");
 		act.blackList.emplace_back("player_AttackSecond");
 		act.blackList.emplace_back("player_AttackThird");

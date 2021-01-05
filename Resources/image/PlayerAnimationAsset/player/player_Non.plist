@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>player_NON0.png</key>
+            <key>player_Non0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_NON1.png</key>
+            <key>player_Non1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_NON2.png</key>
+            <key>player_Non2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_NON3.png</key>
+            <key>player_Non3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_NON4.png</key>
+            <key>player_Non4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_NON5.png</key>
+            <key>player_Non5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_NON6.png</key>
+            <key>player_Non6.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -119,13 +119,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>player_NON.png</string>
+            <string>player_Non.png</string>
             <key>size</key>
             <string>{15,126}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:231326daf84da7b6a46de625a5362106:5f1c62f375926d203e011f970136a499:15c60c0b1b51f71ae027822af69bb25f$</string>
             <key>textureFileName</key>
-            <string>player_NON.png</string>
+            <string>player_Non.png</string>
         </dict>
     </dict>
 </plist>
