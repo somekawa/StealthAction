@@ -9,6 +9,10 @@ DataTable FileLoder::Directory(std::list<std::string> path)
 
 	directoryName = fileUtils->listFiles(findPath);
 
+	if (pathList.empty() == false)
+	{
+		pathList.pop_front();
+	}
 	for (auto itr = directoryName.begin();itr != directoryName.end();itr++)
 	{
 		(*itr) = (*itr).substr((*itr).find(findPath));
@@ -26,12 +30,10 @@ DataTable FileLoder::Directory(std::list<std::string> path)
 			pathList.push_back((*itr));
 		}
 	}
-	pathList.pop_front();
 	if (pathList.empty() == false)
 	{
 		Directory(pathList);
 	}
-	
 	return mapData_;
 }
 
