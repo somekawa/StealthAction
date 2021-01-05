@@ -10,12 +10,13 @@ SkillMng::~SkillMng()
 {
 }
 
-SkillParam SkillMng::GetSkillData(std::string name)
+SkillParamMng SkillMng::GetSkillData(std::string name)
 {
 	return skillData_[name];
 }
 
-SkillParam SkillMng::ChangeAllData(std::string name, SkillParam param)
+// fileloaderで読み込んで初期化に使う
+SkillParamMng SkillMng::ChangeAllData(std::string name, SkillParamMng param)
 {
 	return skillData_[name] = param;
 }
@@ -35,23 +36,26 @@ bool SkillMng::SkillActivate(std::string name)
 	return skillData_[name].activation = true;
 }
 
-void SkillMng::UpDate(std::string name)
+void SkillMng::UpDate(void)
 {
-	if (skillData_[name].lock == true)
+	for (auto data : skillData_)
 	{
-		return;
-	}
-	if(skillData_[name].activation == true)
-	{
-		if (skillData_[name].ct > 0.0f)
+		if (data.second.lock == true)
 		{
-			skillData_[name].ct--;
+			return;
 		}
-		else
+		if (data.second.activation == true)
 		{
-			//ここでCTをリセットする
-			skillData_[name].ct;
-			SkillInActivate(name);
+			if (data.second.ct > 0.0f)
+			{
+				data.second.ct--;
+			}
+			else
+			{
+				//ここでCTをリセットする
+				data.second.ct;
+				SkillInActivate(data.second.name);
+			}
 		}
 	}
 }

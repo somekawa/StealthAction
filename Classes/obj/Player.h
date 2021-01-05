@@ -21,10 +21,12 @@ struct Bits
 
 #define AttackMove 60
 
+class SkillBase;
+
 class Player : public Actor
 {
 public:
-	Player(int hp,cocos2d::Layer& myLayer);
+	Player(int hp,cocos2d::Layer& myLayer, SkillBase* skillBasePtr);
 
 	~Player();
 
@@ -38,7 +40,7 @@ public:
 	void SetAction(std::string action);							// 現在のアクション状態をセットする
 	void SetDir(Direction dir);									// 現在の方向をセットする
 	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
-	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer);
+	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer, SkillBase* skillBasePtr);
 private:
 	//CREATE_FUNC(Player);
 
@@ -76,6 +78,7 @@ private:
 	cocos2d::Vec2 deathPos_;
 
 	bool _gameOverFlg = false;
+	SkillBase* skillBase_;
 };
 
 // まずは敵との攻撃矩形とダメージ矩形の当たり判定

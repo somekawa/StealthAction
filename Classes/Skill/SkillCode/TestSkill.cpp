@@ -1,9 +1,8 @@
-#include "Skill/SkillMng.h"
 #include "TestSkill.h"
 
-TestSkill::TestSkill(std::shared_ptr<SkillMng> skillMng)
+TestSkill::TestSkill()
 {
-	AddActiveSkill(std::make_shared<TestSkill>(skillMng));
+	AddActiveSkill(std::make_shared<TestSkill>());
 }
 
 TestSkill::~TestSkill()

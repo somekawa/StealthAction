@@ -36,6 +36,8 @@
 #include "SoundMng.h"
 #include "ENemyHPGauge.h"
 #include "Effect/EffectManager.h"
+#include "Skill/SkillBase.h"
+#include "Loader/FileLoder.h"
 
 USING_NS_CC;
 
@@ -284,6 +286,16 @@ bool Game::init()
 	enemyManager_->Initialize();
 	enemyManager_->CreateInitialEnemyOnFloor(3);
 
+	std::list<std::string> path;
+	path.push_back("skill_data");
+	auto fileLoad = lpFileLoder.Directory(path);
+
+	skillSprite = SkillBase::createSkillBase();
+	layer_[(int)zOlder::FRONT]->addChild(skillSprite, 0);
+	skillSprite->setName("skillSprite");
+	skillSprite->setPosition(0,0);
+	//skillSprite->scheduleUpdate();
+
 	this->scheduleUpdate();
 	return true;
 }
@@ -295,6 +307,10 @@ void Game::update(float sp)
 	{
 		return;
 	}
+
+	// SkillBaseåƒÇ‘ÉeÉXÉg
+	auto skillBaseSp = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
+	skillBaseSp->UpDate();
 
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	gameMap_->update(*player);
@@ -374,10 +390,12 @@ void Game::menuCloseCallback(Ref* pSender)
 
 void Game::AddPlayer(int playerNum)
 {
+	auto skillBasePtr = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
+
 	// playerêîresize
 	for (int p = 0; p < playerNum; p++)
 	{
-		auto plSprite = Player::CreatePlayer(100, *layer_[static_cast<int>(zOlder::CHAR_PL)]);
+		auto plSprite = Player::CreatePlayer(100, *layer_[static_cast<int>(zOlder::CHAR_PL)], skillBasePtr);
 		plSprite->setName("player" + std::to_string(p + 1));
 		plSprite->setScale(3.0f);
 		plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));

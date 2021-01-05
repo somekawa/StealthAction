@@ -31,6 +31,9 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	attackLayer_ = Layer::create();
 	// ｼｰﾝのﾚｲﾔｰにattackLayer_をぶら下げる
 	myLayer.addChild(attackLayer_, 2, "attack");
+
+	// ここでSkillMngをインスタンスしてみる
+	skillMng_ = std::make_unique<SkillMng>();
 }
 
 Actor::~Actor()
@@ -40,6 +43,7 @@ Actor::~Actor()
 void Actor::Update(void)
 {
 	Action();
+	skillMng_->UpDate();
 }
 
 std::string Actor::GetAction(void)

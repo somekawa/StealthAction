@@ -5,6 +5,7 @@
 #include "ActionRect.h"
 #include "_Debug/_DebugConOut.h"
 #include "Loader/CollisionLoader.h"
+#include "../Skill/SkillBase.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
@@ -12,13 +13,17 @@
 #include "input/OPRT_touch.h"
 #endif
 
+// skillmngのSkillActivateをタッチ操作したときに呼ぶ
+// testskillクラス:引数はskillBase_
+
 USING_NS_CC;
 
 int Player::no_ = 0;
 
-Player::Player(int hp,Layer& myLayer):
+Player::Player(int hp,Layer& myLayer,SkillBase* skillBasePtr):
 	Actor(hp,myLayer)
 {
+	skillBase_ = skillBasePtr;
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	// this->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
@@ -630,9 +635,9 @@ const AttackRect& Player::GetAttackRect(void)
 	return attackRect_;
 }
 
-Player* Player::CreatePlayer(int hp,Layer& myLayer)
+Player* Player::CreatePlayer(int hp,Layer& myLayer,SkillBase* skillBasePtr)
 {
-	Player* pRet = new(std::nothrow) Player(hp,myLayer);
+	Player* pRet = new(std::nothrow) Player(hp,myLayer,skillBasePtr);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();

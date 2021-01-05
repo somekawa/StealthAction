@@ -1,9 +1,15 @@
-#include "Skill/SkillMng.h"
+//#include "SkillMng.h"
 #include "SkillBase.h"
 
-SkillBase::SkillBase()
+//SkillBase::SkillBase()
+//{
+//	skillMng_ = std::make_shared<SkillMng>();
+//}
+
+cocos2d::Sprite* SkillBase::createSkillBase()
 {
-	skillMng_ = std::make_shared<SkillMng>();
+	SkillBase* pRet = new(std::nothrow)SkillBase();
+	return pRet;
 }
 
 SkillBase::~SkillBase()
@@ -30,10 +36,10 @@ void SkillBase::RemoveActiveSkill(void)
 	}
 }
 
-void SkillBase::UpDate(std::string name)
+void SkillBase::UpDate(void)
 {
 	for (auto data : skillList_)
 	{
-		data->UpDate(name);
+		data->UpDate();
 	}
 }

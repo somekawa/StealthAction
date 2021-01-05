@@ -108,6 +108,8 @@ private:
     std::shared_ptr<EffectManager> effectManager_;
 	std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
 		static_cast<int>(ActorType::Max)> colliderBox_;
+
+	cocos2d::Sprite* skillSprite;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
