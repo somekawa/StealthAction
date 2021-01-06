@@ -79,6 +79,7 @@ private:
 
 	bool _gameOverFlg = false;
 	SkillBase* skillBase_;
+	std::vector<std::string> plfile_;
 };
 
 // まずは敵との攻撃矩形とダメージ矩形の当たり判定

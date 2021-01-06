@@ -2,7 +2,8 @@
 
 TestSkill::TestSkill()
 {
-	AddActiveSkill(std::make_shared<TestSkill>());
+	// add‚Å‚«‚È‚¢
+	AddActiveSkill(this);
 }
 
 TestSkill::~TestSkill()

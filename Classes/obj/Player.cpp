@@ -6,6 +6,8 @@
 #include "_Debug/_DebugConOut.h"
 #include "Loader/CollisionLoader.h"
 #include "../Skill/SkillBase.h"
+#include "../Skill/SkillCode/TestSkill.h"
+#include "../Loader/FileLoder.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
@@ -41,6 +43,10 @@ Player::Player(int hp,Layer& myLayer,SkillBase* skillBasePtr):
 	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setScale(3.0f);
 	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setAnchorPoint(Vec2(0.5f, 0.0f));
 
+	std::list<std::string> path;
+	path.push_back("skill_data");
+	auto fileLoad = lpFileLoder.Directory(path);							// playerとenemyの階層
+	plfile_ = fileLoad["Player"];											// この中に今、スキルの情報が読み込まれている(名前とか)
 
 	actModuleRegistration();
 
@@ -126,6 +132,16 @@ void Player::update(float delta)
 		{
 			return;
 		}
+	}
+
+	// スキルテストコード
+	if (_oprtState->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !_oprtState->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
+	{
+		auto director = Director::getInstance();
+		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
+		TestSkill* skill_t = new TestSkill();
+		a->addChild(skill_t);
+		skillMng_->SkillActivate(plfile_[0]);
 	}
 
 	// 現在のフレームを整数値で取得

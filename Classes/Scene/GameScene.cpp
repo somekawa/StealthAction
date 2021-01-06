@@ -37,7 +37,6 @@
 #include "ENemyHPGauge.h"
 #include "Effect/EffectManager.h"
 #include "Skill/SkillBase.h"
-#include "Loader/FileLoder.h"
 
 USING_NS_CC;
 
@@ -286,9 +285,6 @@ bool Game::init()
 	enemyManager_->Initialize();
 	enemyManager_->CreateInitialEnemyOnFloor(3,effectManager_);
 	enemyManager_->CreateBoss(effectManager_);
-	std::list<std::string> path;
-	path.push_back("skill_data");
-	auto fileLoad = lpFileLoder.Directory(path);
 
 	skillSprite = SkillBase::createSkillBase();
 	layer_[(int)zOlder::FRONT]->addChild(skillSprite, 0);

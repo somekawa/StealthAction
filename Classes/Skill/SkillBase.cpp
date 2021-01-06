@@ -1,5 +1,6 @@
 //#include "SkillMng.h"
 #include "SkillBase.h"
+#include "SkillCode/TestSkill.h"
 
 //SkillBase::SkillBase()
 //{
@@ -16,9 +17,9 @@ SkillBase::~SkillBase()
 {
 }
 
-void SkillBase::AddActiveSkill(std::shared_ptr<SkillBase> ptr)
+void SkillBase::AddActiveSkill(TestSkill* testskill_ptr)
 {
-	skillList_.push_back(ptr);
+	skillList_.push_back(testskill_ptr);
 }
 
 void SkillBase::RemoveActiveSkill(void)

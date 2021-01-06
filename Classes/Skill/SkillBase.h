@@ -12,14 +12,14 @@ struct SkillParam
 	float ct;	//クールタイム
 };
 
-//class SkillMng;
+class TestSkill;
 class SkillBase :public cocos2d::Sprite
 {
 public:
 	static cocos2d::Sprite* createSkillBase();
 	//SkillBase();
 	~SkillBase();
-	void AddActiveSkill(std::shared_ptr<SkillBase> ptr);
+	void AddActiveSkill(TestSkill* testskill_ptr);
 	void RemoveActiveSkill(void);
 	virtual void UpDate(void);
 private:
@@ -28,7 +28,7 @@ private:
 protected:
 	//virtual bool GetActive(void) = 0;
 	
-	std::vector<std::shared_ptr<SkillBase>> skillList_;
+	std::vector<TestSkill*> skillList_;
 	SkillParam param;
 };
 
