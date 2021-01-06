@@ -31,7 +31,6 @@
 #include "PL_HPgauge.h"
 #include "Loader/CollisionLoader.h"
 #include "GameMap.h"
-#include "Gate.h"
 #include "renderer/backend/Device.h"
 #include "SoundMng.h"
 #include "ENemyHPGauge.h"
@@ -43,7 +42,7 @@ USING_NS_CC;
 namespace
 {
 	backend::ProgramState* programState;
-	backend::ProgramState* programState2;
+	backend::Program* program;
 }
 
 Scene* Game::createScene()
@@ -268,13 +267,8 @@ bool Game::init()
 	auto fileUtiles = FileUtils::getInstance();
 	auto vertexSource = fileUtiles->getStringFromFile("OutLineTest.vert");
 	auto fragmentSource = fileUtiles->getStringFromFile("OutLineTest.frag");
-	auto program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
+	program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 	programState = new backend::ProgramState(program);
-	auto fileUtiles2 = FileUtils::getInstance();
-	auto vertexSource2 = fileUtiles2->getStringFromFile("OutLineTest.vert");
-	auto fragmentSource2 = fileUtiles2->getStringFromFile("OutLineTest.frag");
-	auto program2 = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
-	programState2 = new backend::ProgramState(program);
 
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *layer_[static_cast<int>(zOlder::FRONT)], *player);
@@ -343,11 +337,15 @@ void Game::update(float sp)
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
-	/*auto c = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
+	auto c = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
 	for (auto e : c)
 	{
+		
+		//auto program2 = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
+		auto programState2 = new backend::ProgramState(program);
 		e->setProgramState(programState2);
-	}*/
+		programState2->release();
+	}
 	player->setProgramState(programState);
 	//// “–‚½‚è”»’è—p‚Ì˜g‚ðo‚µ‚Ä‚Ý‚é
 	//auto ppos = plSprite->getPosition();
