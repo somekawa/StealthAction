@@ -29,13 +29,13 @@ Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRan
 	isMoveComplete_ = true;
 	// 自分の攻撃が当たったフラグの初期化
 	hittingToPlayer_ = false;
-
+	// 状態遷移の関数ﾎﾟｲﾝﾀの初期化
 	stateTransitioner_ = &Enemy::Idle;
 
 	oldPos_ = getPosition();
 	// プレイヤーと自分の距離を測ってインスタンス
 	vision_ = abs(player_.getPosition().x - getPosition().x);
-
+	// 固有IDの設定
 	id_ = num_;
 	num_++;
 }
@@ -47,8 +47,9 @@ Enemy::~Enemy()
 
 const float& Enemy::GetVision(void)
 {
+	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
 	auto plPos = player_.getPosition();
-
+	// 現在の敵の視覚情報(ﾌﾟﾚｲﾔｰが自分に対してどのくらいの所にいるか)
 	vision_ = abs(plPos.x - getPosition().x);
 	return vision_;
 }
@@ -64,12 +65,14 @@ void Enemy::DeleteSelfOnFloor(void)
 
 void Enemy::ChangeDirection(void)
 {
+	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
 	auto playerPos = player_.getPosition();
-
+	// ﾌﾟﾚｲﾔｰが自身よりも左にいる場合
 	if (getPosition().x > playerPos.x)
 	{
 		direction_ = Direction::Left;
 	}
+	// ﾌﾟﾚｲﾔｰが自身よりも右にいる場合
 	else
 	{
 		direction_ = Direction::Right;
@@ -230,8 +233,9 @@ void Enemy::ChangeAnimation(std::string animName)
 
 const float& Enemy::DistanceCalcurator(void)
 {
+	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
 	auto playerPos = player_.getPosition();
-
+	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝと自身のﾎﾟｼﾞｼｮﾝを引いた数をabsした数字を返す
 	return abs(playerPos.x - getPosition().x);
 }
 
@@ -242,20 +246,13 @@ void Enemy::SetAlive(bool flg)
 
 void Enemy::AIRun(void)
 {
-	// ダメージくらい
-	// ダメージが当たればtrueになる
-	//onDamaged_ = CheckHitAttack(player_.GetAttackRect());
-	// ダメージテスト
-	//if (onDamaged_)
-	//{
-	//	int i = 0;
-	//}
-
+	// activeStateがNULLの場合はbehaviorTreeから推論し、aiTreeに行動を格納
 	if (activeNode_ == NULL)
 	{
 		activeNode_ = aiTree_->Inference(this, behaviorData_);
 	}
-
+	// activeNodeがNULLでない場合は敵の行動として追加したノード
+	// から条件に合致する行動を実行
 	if (activeNode_ != NULL)
 	{
 		activeNode_ = aiTree_->Run(this, activeNode_, behaviorData_);

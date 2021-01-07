@@ -38,10 +38,15 @@ using RectArray = std::array<cocos2d::Vec2, static_cast<int>(RectType::Max)>;
 
 struct RectData
 {
+	// 存在するﾌﾚｰﾑ数
 	int frame_;
+	// 矩形の始点
 	Vector2I begin_;
+	// 矩形の終点
 	Vector2I end_;
+	// 矩形のｻｲｽﾞ
 	Vector2I size_;
+	// 矩形のﾀｲﾌﾟ(攻撃矩形かくらい矩形か)
 	char type_;
 
 	RectData() :begin_({ 0,0 }), end_({ 0,0 }),
@@ -56,16 +61,16 @@ class ActionRect:public cocos2d::DrawNode
 public:
 	ActionRect(Vector2I begin, Vector2I end, char type, int frame);
 	~ActionRect();
-
+	// ｺﾗｲﾀﾞｰの生成
 	ActionRect* CreateCollider(void);
-
+	// ｺﾗｲﾀﾞｰのｾｯﾄ
 	void Set(Vector2I begin, Vector2I end, char type, int frame, std::string actionName);
-
+	// ｺﾗｲﾀﾞｰのﾃﾞｰﾀ取得
 	RectData& GetData(void)
 	{
 		return data_;
 	}
-
+	// ｺﾗｲﾀﾞｰの色取得(攻撃矩形:赤 くらい矩形:青)
 	const cocos2d::Color4F& GetColor(void) const
 	{
 		return boxColor_;
@@ -82,12 +87,17 @@ public:
 		return data_.size_;
 	}
 private:
-
+	// 各ﾃﾞｰﾀ
+	// 始点、終点、ﾌﾚｰﾑ、ﾀｲﾌﾟ、ｻｲｽﾞ
 	RectData data_;
-
+	// 始点
 	Vector2I beginPos_;
+	// 終点
 	Vector2I endPos_;
-
+	// 矩形のﾎﾟｼﾞｼｮﾝ
 	Vector2I pos_;
+	// 矩形の色
+	// 攻撃矩形:赤
+	// くらい矩形:青
 	cocos2d::Color4F boxColor_;
 };

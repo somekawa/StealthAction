@@ -25,19 +25,19 @@ public:
 	{
 	}
 
-	// 名前ゲッター
+	// 名前取得
 	std::string GetName()
 	{
 		return name_;
 	}
 
-	// 親ノードゲッター
+	// 親ノード取得
 	NodeBase* GetParent()
 	{
 		return parent_;
 	}
 
-	// 子ノードゲッター
+	// 子ノード取得
 	NodeBase* GetChild(int idx)
 	{
 		if (child_.size() >= idx)
@@ -47,7 +47,7 @@ public:
 		return child_[idx];
 	}
 
-	// 子ノードゲッター(末尾)
+	// 子ノード取得(末尾)
 	NodeBase* GetLastChild()
 	{
 		if (child_.size() == 0)
@@ -58,7 +58,7 @@ public:
 		return child_[child_.size() - 1];
 	}
 
-	// 子ノードゲッター(先頭)
+	// 子ノード取得(先頭)
 	NodeBase* GetTopChild()
 	{
 		if (child_.size() == 0)
@@ -69,25 +69,25 @@ public:
 		return child_[0];
 	}
 
-	// 兄弟ノードゲッター
+	// 兄弟ノード取得
 	NodeBase* GetSibling(void)
 	{
 		return sibling_;
 	}
 
-	// 階層番号ゲッター
+	// 階層番号取得
 	int GetHirerchyNo()
 	{
 		return hierarchyNo_;
 	}
 
-	// 優先順位ゲッター
+	// 優先順位取得
 	int GetPriority()
 	{
 		return priority_;
 	}
 
-	// 親ノードセッター
+	// 親ノードセット
 	void SetParent(NodeBase* parent)
 	{
 		parent_ = parent;
@@ -99,7 +99,7 @@ public:
 		child_.push_back(child);
 	}
 
-	// 兄弟ノードセッター
+	// 兄弟ノードセット
 	void SetSibling(NodeBase* sibling)
 	{
 		sibling_ = sibling;
@@ -130,14 +130,23 @@ public:
 	State Run(Enemy* enemy);
 
 protected:
-	std::string name_;						// 名前
-	BehaviorTree::SelectRule selectRule_;	// 選択ルール
-	JudgementAIBase* judgement_;				// 判定クラス
-	ActionBase* action_;					// 実行クラス
-	unsigned int priority_;					// 優先順位
-	NodeBase* parent_;						// 親ノード
-	std::vector<NodeBase*> child_;			// 子ノード
-	NodeBase* sibling_;						// 兄弟ノード
+	// 名前
+	std::string name_;		
+	// 選択ルール
+	BehaviorTree::SelectRule selectRule_;
+	// 判定クラス
+	JudgementAIBase* judgement_;	
+	// 実行クラス
+	ActionBase* action_;
+	// 優先順位
+	unsigned int priority_;			
+	// 親ノード
+	NodeBase* parent_;	
+	// 子ノード
+	std::vector<NodeBase*> child_;		
+	// 兄弟ノード
+	NodeBase* sibling_;		
+	// 階層番号
 	int hierarchyNo_;						// 階層番号
 };
 

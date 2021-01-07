@@ -27,13 +27,13 @@ public:
 
 public:
 	BehaviorTree();
-
+	// 実行ノードを推論する
 	NodeBase* Inference(Enemy* enemy, BehaviorData* data);
-
+	// シーケンスノードから推論開始
 	NodeBase* SequenceBack(NodeBase* sequenceNode, Enemy* enemy, BehaviorData* data);
-
+	// ノード追加
 	void AddNode(std::string searchName, std::string entryName, int priority, SelectRule selRule, JudgementAIBase* judgment, ActionBase* action);
-
+	// 実行
 	NodeBase* Run(Enemy* enemy, NodeBase* actionNode, BehaviorData* data);
 
 private:

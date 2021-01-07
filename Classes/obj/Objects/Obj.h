@@ -12,7 +12,7 @@ class Obj :
 public:
 	Obj(Actor& target);
 	~Obj();
-
+	// 更新
 	void update(float delta) = 0;
 	// 動き
 	virtual void Move(void) = 0;
@@ -32,8 +32,13 @@ public:
 private:
 
 protected:
+	// ｱﾆﾒｰｼｮﾝｺﾏ数ｶｳﾝﾄ変数
 	float animationFrame_;
+	// ｱﾆﾒｰｼｮﾝが終了したかのﾌﾗｸﾞ
+	// 終了している:true
+	// 終了していない:false
 	bool isAnimEnd_;
+	// 自身のﾀｲﾌﾟ
 	ActorType type_;
 	std::string currentAnimation_;
 	// 左右反転ﾌﾗｸﾞ
@@ -42,6 +47,5 @@ protected:
 	Actor& target_;
 	// ﾀｰｹﾞｯﾄと当たっているかのﾌﾗｸﾞ
 	bool isHitTarget_;
-	
 };
 

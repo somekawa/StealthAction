@@ -37,10 +37,12 @@ public:
 	virtual void Action(void) = 0;
 	// 更新処理
 	virtual void Update(void);
+	// 更新
 	virtual void update(float delta) = 0;
 
 	// 現在のアニメーションを取得
 	virtual std::string GetAction(void);
+	// currentAnimationのｾｯﾄ
 	virtual void SetAction(std::string actName);
 
 	// 方向変更
@@ -57,7 +59,7 @@ public:
 	{
 		return deleteFlag_;
 	}
-
+	// ﾎﾟｼﾞｼｮﾝ取得
 	virtual const Vector2I& GetPos(void) const
 	{
 		return pos_;
@@ -73,7 +75,7 @@ public:
 	{
 		return animationFrame_;
 	}
-
+	// ﾎﾟｼﾞｼｮﾝｾｯﾄ
 	virtual void SetPos(Vector2I pos);
 	// 方向の取得
 	virtual const Direction& GetDirection(void)

@@ -71,7 +71,7 @@ public:
 	{
 		return mType_;
 	}
-
+	// 自身の固有IDの取得
 	const int& GetID(void)
 	{
 		return id_;
@@ -91,6 +91,18 @@ public:
 	// AI行動のNodeを探索して実行
 	virtual void AIRun(void);
 	// 移動タイプのセット
+	// 上記にenumあり
+	// 行動タイプ
+	//enum class MoveType
+	//{
+	//	// 何も動いていない
+	//	Non,
+	//	// 追跡
+	//	Chase,
+	//	// 巡回
+	//	Patrol,
+	//	Max
+	//};
 	virtual void SetMoveType(MoveType type);
 
 	// 壁や床にぶつかっているかの判定
@@ -117,6 +129,7 @@ public:
 	virtual void Death(void);
 	// ----------------------------------
 private:
+	// 自身固有IDを割り振る際の格納元の変数
 	static int num_;
 protected:
 
@@ -133,10 +146,12 @@ protected:
 	VisionRange visionRange_;
 	// プレイヤーを視認しているかのフラグ
 	bool identifiedPlayer_;
-
-	BehaviorTree* aiTree_;			// ビヘイビアツリー
-	BehaviorData* behaviorData_;	// ビヘイビアデータ
-	NodeBase* activeNode_;			// 実行中ノード
+	// ビヘイビアツリー
+	BehaviorTree* aiTree_;	
+	// ビヘイビアデータ
+	BehaviorData* behaviorData_;	
+	// 実行中ノード
+	NodeBase* activeNode_;			
 
 	// 方向変更フラグ
 	bool isChangeDir_;
@@ -152,6 +167,6 @@ protected:
 	bool isMoveComplete_;
 	// 自身の名前
 	std::string myName_;
-
+	// 自身の固有ID
 	int id_;
 };

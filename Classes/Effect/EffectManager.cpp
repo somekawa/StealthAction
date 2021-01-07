@@ -4,6 +4,7 @@ USING_NS_CC;
 
 EffectManager::EffectManager(Layer& layer)
 {
+	// GameScene‚ÌEffectLayer‚É‚Ô‚ç‰º‚°‚é
 	layer.addChild(this);
 }
 
@@ -21,12 +22,18 @@ void EffectManager::update(float delta)
 
 void EffectManager::Play(const EffectType& eType, cocos2d::Vec2 pos)
 {
+	// Îß¼Þ¼®Ý¾¯Ä
 	pos_ = pos;
 	setPosition(pos);
+	// À²Ìß¾¯Ä
 	type_ = eType;
+	// ±ÆÒ°¼®ÝºÏ”¶³ÝÄ•Ï”‰Šú‰»
 	animFrame_ = 0.0f;
+	// ±ÆÒ°¼®Ý‚ªI—¹‚µ‚½‚©‚ÌÌ×¸Þ‰Šú‰»
 	isAnimEnd_ = false;
+	// Œ»Ý‚Ì´Ìª¸Ä±ÆÒ°¼®ÝÃÞ°À‚ÌŠi”[
 	animate_ = Animate::create(effectAnimation_[eType]);
+	// Œ»Ý‚Ì±ÆÒ°¼®ÝÃÞ°À‚ÅrunAction‚ð‚·‚é
 	auto action = Repeat::create(Animate::create(effectAnimation_[eType]), 1);
 	runAction(action);
 }
@@ -38,12 +45,15 @@ void EffectManager::Load(EffectType eType,int frame,float duration)
 	switch (eType)
 	{
 	case EffectType::PlayerSpawn:
+		// ´Ìª¸Ä‚ª‚ ‚épath–¼
 		effectPath = "";
+		// ´Ìª¸ÄŒÅ—L‚Ì–¼‘O
 		effectName = "playerSpawn";
 		break;
 	case EffectType::EnemySpawn:
+		// ´Ìª¸Ä‚ª‚ ‚épath–¼
 		effectPath = "effect/enemySpawn";
-
+		// ´Ìª¸ÄŒÅ—L‚Ì–¼‘O
 		effectName = "enemySpawn";
 		break;
 	case EffectType::PlayerAttack1:
@@ -90,7 +100,6 @@ void EffectManager::Load(EffectType eType,int frame,float duration)
 
 	// o—ˆ‚½ƒAƒjƒ[ƒVƒ‡ƒ“‚ðƒLƒƒƒbƒVƒ…‚É“o˜^
 	animationCache->addAnimation(animation,effectName);
-	//animationCache_->addAnimation(animation, actorName + "_" + animName);
 	// effectAnimation_‚É“o˜^
 	effectAnimation_.try_emplace(eType, animation);
 }

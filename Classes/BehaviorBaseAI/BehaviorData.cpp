@@ -14,6 +14,7 @@ void BehaviorData::PushSequenceNode(NodeBase* node)
 
 NodeBase* BehaviorData::PopSequenceNode()
 {
+	// 空ならNULL
 	if (!sequenceStack_.empty())
 	{
 		return NULL;
@@ -22,6 +23,7 @@ NodeBase* BehaviorData::PopSequenceNode()
 
 	if (node != NULL)
 	{
+		// 取り出したデータを削除
 		sequenceStack_.pop();
 	}
 
@@ -30,6 +32,7 @@ NodeBase* BehaviorData::PopSequenceNode()
 
 bool BehaviorData::IsNodeUsed(std::string name)
 {
+	// 使用してなかったらfalse
 	if (usedNodeMap_.count(name) == 0)
 	{
 		return false;
