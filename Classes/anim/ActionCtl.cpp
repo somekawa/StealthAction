@@ -1,6 +1,6 @@
 #include "obj/Player.h"
 #include "input/OPRT_state.h"
-#include "move/MOVE_LR.h"
+#include "move/Move_LR.h"
 #include "move/FallFalling.h"
 #include "move/Jump.h"
 #include "move/JumpJumping.h"
@@ -35,7 +35,7 @@ void ActionCtl::ActCtl(std::string actName,ActModule & module)
 		_mapModule[actName].act.emplace_back(CheckKeyList());
 		_mapModule[actName].act.emplace_back(CheckObjHit());
 		_mapModule[actName].act.emplace_back(CheckList());
-		_mapModule[actName].runAction = MOVE_LR();
+		_mapModule[actName].runAction = Move_LR();
 	}
 
 	// 反転
@@ -93,9 +93,6 @@ void ActionCtl::ActCtl(std::string actName,ActModule & module)
 		_mapModule[actName].act.emplace_back(CheckList());
 		_mapModule[actName].runAction = WallSlide();
 	}
-	// jumpingのときは自然と落ちるときとcollisionで当たった時に落下に切り替える
-	// collisionは関数オブジェクトで呼び出す必要がある
-	//  →当たっていたら切り替える
 }
 
 void ActionCtl::update(float sp,Sprite& sprite)
@@ -176,16 +173,9 @@ void ActionCtl::update(float sp,Sprite& sprite)
 				}
 			}
 
-			//TRACE("%f\n", _mapFlame["ジャンプ"]);
-			TRACE("%f\n", _mapFlame["ジャンピング"]);
-
-
 			// ここはジャンプの最高点に到達したときとかに関係する処理
 			if (((Player&)sprite).GetAction() == "player_Jumping" || ((Player&)sprite).GetAction() == "player_Jumping")
 			{
-				//actFlg = true;
-				//((Player&)sprite).SetAction(ACTION::JUMPING);
-
 				// _mapFlame[data.first]にしてしまうと、現在のアクションがジャンプでも
 				// 左右移動とかの加算された値が3.0fを超えていたら落下に切り替わる原因になってた
 				// else ifの部分を付け加えて、ジャンピングを0.1fからにすることで角でジャンプし続けるバグ解消
@@ -218,7 +208,7 @@ void ActionCtl::update(float sp,Sprite& sprite)
 			}
 		}
 
-		// プレイヤー向き変更(アンカーポイントの変更に必要)
+		// プレイヤー向き変更
 		if (actCheck("左向き"))
 		{
 			((Player&)sprite).SetDir(Direction::Left);
