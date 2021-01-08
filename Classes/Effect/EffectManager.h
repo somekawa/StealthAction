@@ -5,6 +5,7 @@
 #include <list>
 
 // ´Ìª¸Ä‚ÌÄ¶À²Ìß
+// •¶š—ñ‚É•ÏX
 enum class EffectType
 {
 	PlayerSpawn,
@@ -14,6 +15,9 @@ enum class EffectType
 	Max
 };
 
+// effectÃŞ°À•Û‘¶—p¸×½
+// ÃŞ°À‚ğadd‚µ‚½‚èÃŞ°À‚ğŠÇ—‚·‚é
+// ŒÄ‚Ño‚·‚Énullchack‚ğ‚·‚é‚æ‚¤‚É‚·‚é
 class EffectManager:
 	public cocos2d::Sprite
 {

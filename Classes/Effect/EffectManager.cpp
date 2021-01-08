@@ -6,12 +6,13 @@ EffectManager::EffectManager(Layer& layer)
 {
 	// GameSceneのEffectLayerにぶら下げる
 	layer.addChild(this);
+
 }
 
 EffectManager::~EffectManager()
 {
 }
-
+// effectManagerはシングルトンで
 void EffectManager::update(float delta)
 {
 	//if (animate_->isDone())
@@ -20,9 +21,11 @@ void EffectManager::update(float delta)
 	//}
 }
 
+// ｴﾌｪｸﾄを再生するoffsetを引数で自由に決める事が可能なように
 void EffectManager::Play(const EffectType& eType, cocos2d::Vec2 pos)
 {
 	// ﾎﾟｼﾞｼｮﾝｾｯﾄ
+	// autoRelease()をいれる可能性あり
 	pos_ = pos;
 	setPosition(pos);
 	// ﾀｲﾌﾟｾｯﾄ

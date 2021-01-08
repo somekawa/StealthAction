@@ -13,6 +13,8 @@ struct SkillParam
 };
 
 class TestSkill;
+// 結局testSkillが呼ばれる際にSkillBaseが呼ばれるので、ここのｺﾝｽﾄﾗｸﾀで名前ﾃﾞｰﾀを格納しそれをskillDataとして使用する。
+
 class SkillBase :public cocos2d::Sprite
 {
 public:
