@@ -139,6 +139,9 @@ bool Game::init()
 	// ui用レイヤー
 	layer_[(int)zOlder::FRONT]->setTag((int)zOlder::FRONT);
 	layer_[(int)zOlder::FRONT]->setGlobalZOrder((int)zOlder::FRONT);
+	// effect用ﾚｲﾔｰ
+	layer_[(int)zOlder::EFFECT]->setTag((int)zOlder::EFFECT);
+	layer_[(int)zOlder::EFFECT]->setGlobalZOrder((int)zOlder::EFFECT);
 	// bg用レイヤー
 	layer_[(int)zOlder::BG]->setTag((int)zOlder::BG);
 	layer_[(int)zOlder::BG]->setGlobalZOrder((int)zOlder::BG);
@@ -271,20 +274,21 @@ bool Game::init()
 	programState = new backend::ProgramState(program);
 
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
+	// 敵の出現や消去等を管理するManagerを生成
 	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *layer_[static_cast<int>(zOlder::FRONT)], *player);
-	effectManager_ = std::make_shared<EffectManager>(*layer_[static_cast<int>(zOlder::FRONT)]);
-	effectManager_->Load(EffectType::EnemySpawn, 19, 0.08f);
-	effectManager_->scheduleUpdate();
+
 	// 敵のｱﾆﾒｰｼｮﾝ関係、ﾋﾞﾍｲﾋﾞｱの初期化
 	enemyManager_->Initialize();
-	enemyManager_->CreateInitialEnemyOnFloor(3,effectManager_);
-	enemyManager_->CreateBoss(effectManager_);
+	//enemyManager_->CreateInitialEnemyOnFloor(3,effectManager_);
+	//enemyManager_->CreateBoss(effectManager_);
 
 	skillSprite = SkillBase::createSkillBase();
 	layer_[(int)zOlder::FRONT]->addChild(skillSprite, 0);
 	skillSprite->setName("skillSprite");
 	skillSprite->setPosition(0,0);
+
 	//skillSprite->scheduleUpdate();
+	lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, *layer_[static_cast<int>(zOlder::EFFECT)]);
 
 	this->scheduleUpdate();
 	return true;
@@ -307,15 +311,13 @@ void Game::update(float sp)
 
 	if (gameMap_->ChangeFloor())
 	{
+		
+		// 敵の生成数のﾘｾｯﾄ(enemyNum_を0にする)
+		enemyManager_->ResetEnemyNum();
 		//effectManager_->Play(EffectType::EnemySpawn, Vec2(200.0f, 300.0f));
 		auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 		//layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildren();
-		//layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildrenWithCleanup(true);
-		for (auto enemy : layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren())
-		{
-			enemy->setName("changeFloor_death");
-			enemy->setVisible(false);
-		}
+		layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->removeAllChildrenWithCleanup(true);
 		for (auto hp :layer_[static_cast<int>(zOlder::FRONT)]->getChildren())
 		{
 			if (hp->getTag() == 101)
@@ -326,12 +328,12 @@ void Game::update(float sp)
 		enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 		// ﾌﾛｱ変更後1回だけ初期の敵の数だけｲﾝｽﾀﾝｽ
-		enemyManager_->CreateInitialEnemyOnFloor(1,effectManager_);
+		//enemyManager_->CreateInitialEnemyOnFloor(1,effectManager_);
 	}
 	auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 	// 敵のｽﾎﾟｰﾝを管理
-	enemyManager_->Update(effectManager_);
+	//enemyManager_->Update(effectManager_);
 	
 	// プレイヤーのカメラがうまくいかない
 	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);

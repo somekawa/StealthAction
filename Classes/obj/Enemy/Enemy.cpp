@@ -12,10 +12,10 @@
 
 USING_NS_CC;
 
-int Enemy::num_ = 0;
 Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
 	Actor(hp,myLayer),player_(player),aiTree_(aiTree),activeNode_(NULL),behaviorData_(NULL),visionRange_(visionRange)
 {
+	retain();
 	// ビヘイビアデータの生成
 	behaviorData_ = new BehaviorData();
 	setPosition(pos);
@@ -35,9 +35,6 @@ Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRan
 	oldPos_ = getPosition();
 	// プレイヤーと自分の距離を測ってインスタンス
 	vision_ = abs(player_.getPosition().x - getPosition().x);
-	// 固有IDの設定
-	id_ = num_;
-	num_++;
 }
 
 Enemy::~Enemy()
@@ -244,6 +241,11 @@ void Enemy::SetAlive(bool flg)
 	isAlive_ = flg;
 }
 
+void Enemy::SetID(int id)
+{
+	id_ = id;
+}
+
 void Enemy::AIRun(void)
 {
 	// activeStateがNULLの場合はbehaviorTreeから推論し、aiTreeに行動を格納
@@ -341,7 +343,7 @@ void Enemy::Death(void)
 	if (isAnimEnd_)
 	{
 		// 自身を消去するために自分の名前をdeathにする(仮でこうしている)
-		setName("death");
+		setName(myName_ + "_death");
 		// 生きているﾌﾗｸﾞをfalseに(死んだ事にする)
 		isAlive_ = false;
 	}

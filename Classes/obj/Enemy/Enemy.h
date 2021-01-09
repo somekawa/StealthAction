@@ -71,6 +71,8 @@ public:
 	{
 		return mType_;
 	}
+	// 自身の固有IDのｾｯﾄ
+	void SetID(int id);
 	// 自身の固有IDの取得
 	const int& GetID(void)
 	{
@@ -129,8 +131,7 @@ public:
 	virtual void Death(void);
 	// ----------------------------------
 private:
-	// 自身固有IDを割り振る際の格納元の変数
-	static int num_;
+
 protected:
 
 	// 状態の遷移用関数ﾎﾟｲﾝﾀ
