@@ -24,6 +24,7 @@ Assassin::Assassin(Vec2 pos, Player& player,
 
 	// アニメーションの登録
 	AnimRegistrator();
+	actModuleRegistration();
 	// ActModuleの登録
 	//ActModuleRegistrator();
 
@@ -104,6 +105,11 @@ void Assassin::Action(void)
 
 void Assassin::update(float delta)
 {
+	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
+	{
+		animationFrame_ = 0.0f;
+		return;
+	}
 	// ﾌﾛｱ変更の際に自身を消す
 	//DeleteSelfOnFloor();
 	// 死んだ判定
@@ -115,11 +121,12 @@ void Assassin::update(float delta)
 	else
 	{
 		previousAnimation_ = currentAnimation_;
-		if (!isAttacking_)
-		{
-			// 方向の変更
-			ChangeDirection();
-		}
+
+		//if (!isAttacking_)
+		//{
+		//	// 方向の変更
+		//	ChangeDirection();
+		//}
 		// 現在のフレームを整数値で取得
 		animationFrame_int_ = GetAnimationFrameInt() - 1;
 
@@ -158,7 +165,7 @@ void Assassin::update(float delta)
 				stateTransitioner_ = &Enemy::Hit;
 			}
 		}
-
+		actCtl_.update(type_, delta, *this);
 		//if (currentAnimation_ == "attack")
 		{
 		}
@@ -168,11 +175,7 @@ void Assassin::update(float delta)
 		TRACE("pos:(%f,%f)", this->getPosition().x, this->getPosition().y);
 
 		TRACE("attackFlag:%d\n", isAttacking_);
-		if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
-		{
-			animationFrame_ = 0.0f;
-			return;
-		}
+
 
 
 		for (auto animationCol = this->getChildren().rbegin();
@@ -193,7 +196,7 @@ void Assassin::update(float delta)
 		// Mapオブジェクトに当たっているかの確認
 		//CheckMapObjHit(delta);
 		// 重力をかける
-		gravity_->ApplyGravityToTarget(delta);
+		//gravity_->ApplyGravityToTarget(delta);
 		// アニメーションの更新
 		UpdateAnimation(delta);
 		// アニメーション終了時に攻撃フラグをfalse
@@ -202,7 +205,6 @@ void Assassin::update(float delta)
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
 		}
-
 	}
 
 }
@@ -211,10 +213,94 @@ void Assassin::AnimRegistrator(void)
 {
 
 
+
 }
 
 void Assassin::AddAttackObj(const float& angle)
 {
+}
+
+void Assassin::actModuleRegistration(void)
+{
+	Vec2 size = { 15.0f * 3.0f,25.0f * 3.0f };
+
+	// 右移動
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.vel = Vec2{ 2,0 };
+		act.actName = "assassin_run";
+		act.checkPoint1 = Vec2{ size.x / 2, size.y / 2 };	// 右上
+		act.checkPoint2 = Vec2{ size.x / 2,  15 };			// 右下
+		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
+
+		//act.whiteList.emplace_back(ACTION::JUMPING);
+		act.blackList.emplace_back("assassin_attack");
+		actCtl_.RunInitializeActCtl(type_,"右移動", act);
+	}
+
+	// 左移動
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.vel = Vec2{ -2,0 };
+		act.actName = "assassin_run";
+		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// 左上
+		act.checkPoint2 = Vec2{ -size.x / 2,  15 };			// 左下
+
+		//act.blackList.emplace_back(ACTION::FALLING);
+
+		//act.whiteList.emplace_back(ACTION::JUMPING);
+		act.blackList.emplace_back("assassin_attack");
+		actCtl_.RunInitializeActCtl(type_,"左移動", act);
+	}
+
+	// 右向き反転
+	{
+		ActModule flipAct;
+		flipAct.state = nullptr;
+		flipAct.flipFlg = true;
+		flipAct.actName = "assassin_idle";
+		//flipAct.blackList.emplace_back(ACTION::FALLING);
+
+		flipAct.blackList.emplace_back("assassin_attack");
+		actCtl_.RunInitializeActCtl(type_,"右向き", flipAct);
+	}
+
+	// 左向き反転
+	{
+		ActModule flipAct;
+		flipAct.state = nullptr;
+		flipAct.flipFlg = false;
+		flipAct.actName = "assassin_idle";
+
+		//flipAct.blackList.emplace_back(ACTION::FALLING);
+
+		flipAct.blackList.emplace_back("assassin_attack");
+		actCtl_.RunInitializeActCtl(type_,"左向き", flipAct);
+	}
+	// 落下
+	{
+		// checkkeylistに離している間の設定もしたけど特に効果なし
+		ActModule act;
+		act.actName = "assassin_fall";
+		act.state = nullptr;
+		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
+		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
+		act.checkPoint1 = Vec2{ 0,0 };				// 左下
+		act.checkPoint2 = Vec2{ 0,0 };				// 右下
+
+		act.checkPoint3 = Vec2{ size.x / 2, size.y / 2 };  // 右上
+		act.checkPoint4 = Vec2{ -size.x / 2, size.y / 2 }; // 左上
+
+		act.gravity = Vec2{ 0.0f,-5.0f };
+		act.blackList.emplace_back("assassin_attack");	// ジャンプ中に落下してほしくない
+		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
+
+		actCtl_.RunInitializeActCtl(type_, "落下", act);
+	}
+	// 更新関数の登録
+	actCtl_.InitUpdater(type_);
 }
 
 void Assassin::Jump(void)

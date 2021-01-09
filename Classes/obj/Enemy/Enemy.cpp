@@ -351,5 +351,5 @@ void Enemy::Death(void)
 
 void Enemy::Idle(void)
 {
-	AIRun();
+	//AIRun();
 }

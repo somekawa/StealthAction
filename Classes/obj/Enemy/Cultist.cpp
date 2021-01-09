@@ -27,6 +27,7 @@ Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange vis
 
 	// アニメーションの登録
 	AnimRegistrator();
+	actModuleRegistration();
 	// ActModuleの登録
 	//ActModuleRegistrator();
 
@@ -89,6 +90,11 @@ void Cultist::Action(void)
 
 void Cultist::update(float delta)
 {
+	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
+	{
+		animationFrame_ = 0.0f;
+		return;
+	}
 	// 死んだ判定
 	if (getName() == "cultist_death" || getName() == "changeFloor_death")
 	{
@@ -102,6 +108,8 @@ void Cultist::update(float delta)
 			// 方向の変更
 			ChangeDirection();
 		}
+		actCtl_.update(type_, delta, *this);
+
 		// 現在のフレームを整数値で取得
 		animationFrame_int_ = GetAnimationFrameInt() - 1;
 		// 無条件に通っていたら処理が重くなるので
@@ -149,11 +157,7 @@ void Cultist::update(float delta)
 		TRACE("pos:(%f,%f)", this->getPosition().x, this->getPosition().y);
 
 		TRACE("attackFlag:%d\n", isAttacking_);
-		if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
-		{
-			animationFrame_ = 0.0f;
-			return;
-		}
+
 
 		for (auto animationCol = this->getChildren().rbegin();
 			animationCol != this->getChildren().rend(); animationCol++)
@@ -173,7 +177,7 @@ void Cultist::update(float delta)
 		// Mapオブジェクトに当たっているかの確認
 		//CheckMapObjHit(delta);
 		// 重力をかける
-		gravity_->ApplyGravityToTarget(delta);
+		//gravity_->ApplyGravityToTarget(delta);
 		// アニメーションの更新
 		UpdateAnimation(delta);
 		// アニメーション終了時に攻撃フラグをfalse
@@ -212,6 +216,89 @@ const float Cultist::GetPLAngle(void)
 	auto angle = atan2(getPosition().y - plPos.y,getPosition().x - plPos.x);
 
 	return angle;
+}
+
+void Cultist::actModuleRegistration(void)
+{
+	Vec2 size = { 15.0f * 3.0f,25.0f * 3.0f };
+
+	// 右移動
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.vel = Vec2{ 2,0 };
+		act.actName = "cultist_walk";
+		act.checkPoint1 = Vec2{ size.x / 2, size.y / 2 };	// 右上
+		act.checkPoint2 = Vec2{ size.x / 2,  15 };			// 右下
+		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
+
+		//act.whiteList.emplace_back(ACTION::JUMPING);
+		act.blackList.emplace_back("cultist_attack");
+		actCtl_.RunInitializeActCtl(type_, "右移動", act);
+	}
+
+	// 左移動
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.vel = Vec2{ -2,0 };
+		act.actName = "cultist_walk";
+		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// 左上
+		act.checkPoint2 = Vec2{ -size.x / 2,  15 };			// 左下
+
+		//act.blackList.emplace_back(ACTION::FALLING);
+
+		//act.whiteList.emplace_back(ACTION::JUMPING);
+		act.blackList.emplace_back("cultist_attack");
+		actCtl_.RunInitializeActCtl(type_, "左移動", act);
+	}
+
+	// 右向き反転
+	{
+		ActModule flipAct;
+		flipAct.state = nullptr;
+		flipAct.flipFlg = true;
+		flipAct.actName = "cultist_idle";
+		//flipAct.blackList.emplace_back(ACTION::FALLING);
+
+		flipAct.blackList.emplace_back("cultist_attack");
+		actCtl_.RunInitializeActCtl(type_, "右向き", flipAct);
+	}
+
+	// 左向き反転
+	{
+		ActModule flipAct;
+		flipAct.state = nullptr;
+		flipAct.flipFlg = false;
+		flipAct.actName = "cultist_idle";
+
+		//flipAct.blackList.emplace_back(ACTION::FALLING);
+
+		flipAct.blackList.emplace_back("cultist_attack");
+		actCtl_.RunInitializeActCtl(type_, "左向き", flipAct);
+	}
+	// 落下
+	{
+		// checkkeylistに離している間の設定もしたけど特に効果なし
+		ActModule act;
+		act.actName = "cultist_fall";
+		act.state = nullptr;
+		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
+		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
+		act.checkPoint1 = Vec2{ 0,0 };				// 左下
+		act.checkPoint2 = Vec2{ 0,0 };				// 右下
+
+		act.checkPoint3 = Vec2{ size.x / 2, size.y / 2 };  // 右上
+		act.checkPoint4 = Vec2{ -size.x / 2, size.y / 2 }; // 左上
+
+		act.gravity = Vec2{ 0.0f,-5.0f };
+		act.blackList.emplace_back("cultist_attack");	// ジャンプ中に落下してほしくない
+		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
+
+		actCtl_.RunInitializeActCtl(type_, "落下", act);
+	}
+	// 更新関数の登録
+	actCtl_.InitUpdater(type_);
 }
 
 void Cultist::NormalAttack(void)

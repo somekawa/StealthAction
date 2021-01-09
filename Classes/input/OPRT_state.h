@@ -12,7 +12,7 @@ enum class TRG_KEY {
 	NON,
 	NOW,
 	OLD,
-	INPUT,
+	INPUT
 };
 
 enum class BUTTON {
@@ -22,6 +22,8 @@ enum class BUTTON {
 	LEFT,
 	ATTACK,
 	Transfrom,
+	// ìGÇ…actModuleÇìoò^Ç∑ÇÈç€Ç…égóp
+	Non,
 	MAX
 };
 

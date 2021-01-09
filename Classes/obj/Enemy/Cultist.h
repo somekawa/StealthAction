@@ -18,6 +18,8 @@ public:
 
     void AddAttackObj(const float& angle);
     const float GetPLAngle(void);
+    void actModuleRegistration(void);
+
 private:
     // ï®óùçUåÇ
     void NormalAttack(void);

@@ -133,6 +133,10 @@ void Imp::AddAttackObj(const float& angle)
 {
 }
 
+void Imp::actModuleRegistration(void)
+{
+}
+
 void Imp::NormalAttack(void)
 {
 }

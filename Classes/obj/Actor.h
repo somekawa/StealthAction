@@ -7,6 +7,9 @@
 #include "Geometory.h"
 #include "Direction/Direction.h"
 #include "ActorType.h"
+#include "anim/ActionCtl.h"
+#include "input/OPRT_state.h"
+#include "module/ActModule.h"
 
 class Input;
 class Collider;
@@ -143,6 +146,9 @@ public:
 	{
 		return isAlive_;
 	}
+
+	virtual  void actModuleRegistration(void) = 0;							// ƒ‚ƒWƒ…[ƒ‹‚Ì“o˜^
+
 private:
 
 protected:
@@ -203,4 +209,6 @@ protected:
 	bool isAlive_;
 
 	std::unique_ptr<SkillMng> skillMng_;
+
+	ActionCtl actCtl_ = ActionCtl();							// ActionCtl‚ğŒÄ‚Ño‚·
 };

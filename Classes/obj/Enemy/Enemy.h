@@ -78,6 +78,7 @@ public:
 	{
 		return id_;
 	}
+
 	virtual void update(float delta) = 0;
 	// 自分の攻撃がプレイヤーに当たっているかの判定
 	virtual bool OnAttacked(void);
@@ -90,6 +91,8 @@ public:
 	virtual void ChangeAnimation(std::string animName);
 
 	virtual void AnimRegistrator(void) = 0;
+	virtual void actModuleRegistration(void) = 0;							// モジュールの登録
+
 	// AI行動のNodeを探索して実行
 	virtual void AIRun(void);
 	// 移動タイプのセット

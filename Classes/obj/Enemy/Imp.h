@@ -17,6 +17,7 @@ public:
 
     void AddAttackObj(const float& angle);
 	//CREATE_FUNC(Imp);
+    void actModuleRegistration(void);
 
 private:
 

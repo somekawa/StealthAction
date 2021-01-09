@@ -42,6 +42,7 @@ Player::Player(int hp,Layer& myLayer,SkillBase* skillBasePtr):
 	auto fileLoad = lpFileLoder.Directory(path);							// playerとenemyの階層
 	plfile_ = fileLoad["Player"];											// この中に今、スキルの情報が読み込まれている(名前とか)
 
+	type_ = ActorType::Player;
 	actModuleRegistration();
 
 	currentAnimation_ = "player_Non";
@@ -143,7 +144,7 @@ void Player::update(float delta)
 	colliderVisible();
 
 	// ActionCtlクラスの更新
-	actCtl_.update(delta,*this);
+	actCtl_.update(type_,delta,*this);
 
 	// 入力情報(keyかtouch)の更新
 	oprtState_->update();	
@@ -616,7 +617,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_AttackSecond");
 		act.blackList.emplace_back("player_AttackThird");
 		act.blackList.emplace_back("player_Wall_Slide");
-		actCtl_.ActCtl("右移動", act);
+		actCtl_.RunInitializeActCtl(type_,"右移動", act);
 	}
 
 	// 左移動
@@ -637,7 +638,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_AttackSecond");
 		act.blackList.emplace_back("player_AttackThird");
 		act.blackList.emplace_back("player_Wall_Slide");
-		actCtl_.ActCtl("左移動", act);
+		actCtl_.RunInitializeActCtl(type_,"左移動", act);
 	}
 
 	// 右向き反転
@@ -655,7 +656,7 @@ void Player::actModuleRegistration(void)
 		flipAct.blackList.emplace_back("player_AttackSecond");
 		flipAct.blackList.emplace_back("player_AttackThird");
 		flipAct.blackList.emplace_back("player_Wall_Slide");
-		actCtl_.ActCtl("右向き", flipAct);
+		actCtl_.RunInitializeActCtl(type_,"右向き", flipAct);
 	}
 
 	// 左向き反転
@@ -673,7 +674,7 @@ void Player::actModuleRegistration(void)
 		flipAct.blackList.emplace_back("player_AttackSecond");
 		flipAct.blackList.emplace_back("player_AttackThird");
 		flipAct.blackList.emplace_back("player_Wall_Slide");
-		actCtl_.ActCtl("左向き", flipAct);
+		actCtl_.RunInitializeActCtl(type_,"左向き", flipAct);
 	}
 
 	// 落下
@@ -697,7 +698,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_Wall_Slide");	
 		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
 
-		actCtl_.ActCtl("落下", act);
+		actCtl_.RunInitializeActCtl(type_,"落下", act);
 	}
 
 	// ジャンプ
@@ -722,7 +723,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_AttackThird");
 		//act.whiteList.emplace_back(ACTION::RUN);
 
-		actCtl_.ActCtl("ジャンプ", act);
+		actCtl_.RunInitializeActCtl(type_,"ジャンプ", act);
 	}
 
 	// ジャンピング
@@ -749,7 +750,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_Transform");
 
 		act.whiteList.emplace_back("player_Jump");
-		actCtl_.ActCtl("ジャンピング", act);
+		actCtl_.RunInitializeActCtl(type_,"ジャンピング", act);
 		//actCtl_.ActCtl("ジャンプ", act);
 	}
 
@@ -764,7 +765,7 @@ void Player::actModuleRegistration(void)
 		//act.checkPoint2 = Vec2{ 0, 0 };
 		//act.blackList.emplace_back("Fall");	// 一時的コメントアウト
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
-		actCtl_.ActCtl("攻撃", act);
+		actCtl_.RunInitializeActCtl(type_,"攻撃", act);
 	}
 
 	// 攻撃2
@@ -775,7 +776,7 @@ void Player::actModuleRegistration(void)
 		act.actName = "player_AttackSecond";
 		act.blackList.emplace_back("player_Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
-		actCtl_.ActCtl("攻撃", act);
+		actCtl_.RunInitializeActCtl(type_,"攻撃", act);
 	}
 
 	// 攻撃3
@@ -786,7 +787,7 @@ void Player::actModuleRegistration(void)
 		act.actName = "player_AttackThird";
 		act.blackList.emplace_back("player_Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
-		actCtl_.ActCtl("攻撃", act);
+		actCtl_.RunInitializeActCtl(type_,"攻撃", act);
 	}
 
 	// 右壁スライド
@@ -808,7 +809,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_AttackFirst");
 		act.blackList.emplace_back("player_AttackSecond");
 		act.blackList.emplace_back("player_AttackThird");
-		actCtl_.ActCtl("右壁スライド", act);
+		actCtl_.RunInitializeActCtl(type_,"右壁スライド", act);
 	}
 
 	// 左壁スライド
@@ -830,8 +831,10 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_AttackFirst");
 		act.blackList.emplace_back("player_AttackSecond");
 		act.blackList.emplace_back("player_AttackThird");
-		actCtl_.ActCtl("左壁スライド", act);
+		actCtl_.RunInitializeActCtl(type_,"左壁スライド", act);
 	}
+	// 更新関数の登録
+	actCtl_.InitUpdater(type_);
 }
 
 bool Player::gameOverAction(void)

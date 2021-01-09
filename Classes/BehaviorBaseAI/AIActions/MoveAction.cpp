@@ -17,5 +17,5 @@ State MoveAction::Run(Enemy* enemy)
 	default:
 		break;
 	}
-    return State::Complete;
+    return State::Run;
 }

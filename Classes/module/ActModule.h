@@ -6,6 +6,7 @@
 #include "input/OPRT_state.h"
 
 struct ActModule;
+class Enemy;
 
 // 関数オブジェクトをlistに登録するための書き方
 using funcActModule = std::function<bool(cocos2d::Sprite&, ActModule&)>;
@@ -34,7 +35,6 @@ struct ActModule {
 
 	funcActModule runAction;
 	std::list<funcActModule>act;
-
 	float flame;												// 落下とジャンプにつかうフレーム数
 	int stopCnt = 0;
 };

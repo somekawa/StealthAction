@@ -6,5 +6,5 @@ State NormalAttack::Run(Enemy* enemy)
 {
     TRACE("NormalAttack");
     enemy->NormalAttack();
-    return State::Complete;
+    return State::Run;
 }

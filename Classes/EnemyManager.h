@@ -13,12 +13,12 @@ public:
 	EnemyManager(cocos2d::Layer& layer,cocos2d::Layer& hpLayer,Player& player);
 	~EnemyManager();
 	// XVŠÖ”
-	void Update(const std::shared_ptr<EffectManager>& effectMng);
+	void Update(void);
 	// “GŠÖŒW‚Ì‰Šú‰»
 	void Initialize(void);
 	// ÌÛ±•ÏX‚µ‚½Û‚É‰‚ß‚É“G‚ğ½Îß°İ‚µ‚Ä‚¨‚­
 	// param@ initNum: ‰‚ß‚Ì“G‚Ì”
-	void CreateInitialEnemyOnFloor(int initNum, const std::shared_ptr<EffectManager>& effectMng);
+	void CreateInitialEnemyOnFloor(int initNum);
 	
 	// À²Ìß•ÊbehaviorTree‚Ì“o˜^
 	void AddBehavior(ActorType type);
@@ -30,7 +30,7 @@ public:
 	void ResetEnemyNum(void);
 	// “G‚ÌÀ²Ìß–ˆ‚É¶¬
 	// ¶¬À²Ğİ¸Ş‚Í“G‚ª€‚ñ‚¾‚ç
-	void CreateEnemy(ActorType type,const std::shared_ptr<EffectManager>& effectMng);
+	void CreateEnemy(ActorType type);
 	// ÎŞ½‚ÌoŒ»ŠÖ”
 	void CreateBoss(const std::shared_ptr<EffectManager>& effectMng);
 private:

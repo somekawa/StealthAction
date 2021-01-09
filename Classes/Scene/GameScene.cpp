@@ -279,7 +279,7 @@ bool Game::init()
 
 	// “G‚Ì±ÆÒ°¼®ÝŠÖŒWAËÞÍ²ËÞ±‚Ì‰Šú‰»
 	enemyManager_->Initialize();
-	//enemyManager_->CreateInitialEnemyOnFloor(3,effectManager_);
+	enemyManager_->CreateInitialEnemyOnFloor(3);
 	//enemyManager_->CreateBoss(effectManager_);
 
 	skillSprite = SkillBase::createSkillBase();
@@ -328,7 +328,7 @@ void Game::update(float sp)
 		enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 		// ÌÛ±•ÏXŒã1‰ñ‚¾‚¯‰Šú‚Ì“G‚Ì”‚¾‚¯²Ý½ÀÝ½
-		//enemyManager_->CreateInitialEnemyOnFloor(1,effectManager_);
+		enemyManager_->CreateInitialEnemyOnFloor(1);
 	}
 	auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 

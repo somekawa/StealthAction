@@ -15,6 +15,8 @@ public:
     void AnimRegistrator(void);
 
     void AddAttackObj(const float& angle);
+    void actModuleRegistration(void);
+
 private:
     // ï®óùçUåÇ
     void NormalAttack(void);

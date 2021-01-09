@@ -4,9 +4,7 @@
 #include "cocos2d.h"
 #include "Direction/Direction.h"
 #include "anim/AnimMng.h"
-#include "anim/ActionCtl.h"
-#include "input/OPRT_state.h"
-#include "module/ActModule.h"
+
 #include "obj/Actor.h"
 
 // ビットフィールド
@@ -44,12 +42,10 @@ private:
 	void colliderVisible(void);									// 矩形の描画関連
 	void attackCollider(std::string str, cocos2d::Node* col, float& pos);	// 攻撃矩形のオフセット
 	bool gameOverAction(void);									// ゲームオーバー時のアニメーション制御(true:再生終了,false:再生中)
-	void actModuleRegistration(void);							// モジュールの登録
-
+	void actModuleRegistration(void);
 	OPRT_state* oprtState_;										// OPRT_stateのものを呼び出す
 
 	std::string actionOld_;										// 1フレーム前のアクション
-	ActionCtl actCtl_ = ActionCtl();							// ActionCtlを呼び出す
 
 	static int no_;												// プレイヤー人数の把握する変数
 	int myNo_;													// 自分の番号を保持する変数

@@ -33,7 +33,7 @@ EnemyManager::~EnemyManager()
 
 }
 
-void EnemyManager::Update(const std::shared_ptr<EffectManager>& effectMng)
+void EnemyManager::Update(void)
 {
 	for (auto e : enemies_)
 	{
@@ -42,7 +42,7 @@ void EnemyManager::Update(const std::shared_ptr<EffectManager>& effectMng)
 		if (!spawnFlag_)
 		{
 			auto randomType = static_cast<int>(ActorType::Assassin) + (rand() % static_cast<int>(ActorType::Assassin));
-			CreateEnemy((ActorType)randomType,effectMng);
+			CreateEnemy((ActorType)randomType);
 		}
 	}
 	std::remove_if(enemies_.begin(), enemies_.end(), [&](Enemy* enemy) {
@@ -67,7 +67,7 @@ void EnemyManager::Initialize(void)
 	}
 }
 
-void EnemyManager::CreateInitialEnemyOnFloor(int initNum, const std::shared_ptr<EffectManager>& effectMng)
+void EnemyManager::CreateInitialEnemyOnFloor(int initNum)
 {
 	// Ø½Ä‚Ì’†g‚ğ‹ó‚É‚·‚é
 	enemies_.clear();
@@ -75,7 +75,7 @@ void EnemyManager::CreateInitialEnemyOnFloor(int initNum, const std::shared_ptr<
 	for (int init = 0; init < initNum; init++)
 	{
 		auto randomType = static_cast<int>(ActorType::Assassin) + (rand() % static_cast<int>(ActorType::Assassin));
-		CreateEnemy((ActorType)randomType,effectMng);
+		CreateEnemy((ActorType)randomType);
 	}
 }
 
@@ -258,7 +258,7 @@ void EnemyManager::ResetEnemyNum(void)
 	enemyNum_ = 0;
 }
 
-void EnemyManager::CreateEnemy(ActorType type, const std::shared_ptr<EffectManager>& effectMng)
+void EnemyManager::CreateEnemy(ActorType type)
 {
 	Enemy* sprite = nullptr;
 	Sprite* hpSprite = nullptr;
