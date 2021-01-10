@@ -91,7 +91,8 @@ public:
 	virtual void ChangeAnimation(std::string animName);
 
 	virtual void AnimRegistrator(void) = 0;
-	virtual void actModuleRegistration(void) = 0;							// ƒ‚ƒWƒ…[ƒ‹‚Ì“o˜^
+	// ƒ‚ƒWƒ…[ƒ‹‚Ì“o˜^
+	virtual void actModuleRegistration(void) = 0;							
 
 	// AIs“®‚ÌNode‚ğ’Tõ‚µ‚ÄÀs
 	virtual void AIRun(void);

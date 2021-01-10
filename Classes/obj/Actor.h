@@ -146,8 +146,8 @@ public:
 	{
 		return isAlive_;
 	}
-
-	virtual  void actModuleRegistration(void) = 0;							// モジュールの登録
+	// モジュールの登録
+	virtual  void actModuleRegistration(void) = 0;							
 
 private:
 
@@ -209,6 +209,6 @@ protected:
 	bool isAlive_;
 
 	std::unique_ptr<SkillMng> skillMng_;
-
-	ActionCtl actCtl_ = ActionCtl();							// ActionCtlを呼び出す
+	// ActionCtlを呼び出す
+	ActionCtl actCtl_ = ActionCtl();							
 };

@@ -250,10 +250,11 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 
 		if (type != ActorType::Player)
 		{
+			// ÌßÚ²Ô°‚¶‚á‚È‚¢‚ÆJudgement‚ğcheck‚ÉŠi”[‚·‚é
 			_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].act.emplace_back(CheckList());
 			_mapModule[actName].act.emplace_back(PatrolJudgement());
-
+			// judgement‚ªtrue‚É‚È‚é‚ÆÀs‚·‚é±¸¼®İ
 			_mapModule[actName].runAction = PatrolAction();
 		}
 		else
@@ -272,9 +273,10 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 		_mapModule.emplace(actName, std::move(module));
 		if (type != ActorType::Player)
 		{
+			// ÌßÚ²Ô°‚¶‚á‚È‚¢‚ÆJudgement‚ğcheck‚ÉŠi”[‚·‚é
 			_mapModule[actName].act.emplace_back(FlipJudgement());
 			_mapModule[actName].act.emplace_back(CheckList());
-
+			// judgement‚ªtrue‚É‚È‚é‚ÆÀs‚·‚é±¸¼®İ
 			_mapModule[actName].runAction = FlipAction();
 		}
 		else
