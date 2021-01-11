@@ -1,6 +1,9 @@
 #pragma once
 #include <map>
 #include <string>
+
+#define lpSkillMng 
+
 struct SkillParamMng
 {
 	std::string name;	//スキル名の保存
@@ -12,9 +15,11 @@ struct SkillParamMng
 class SkillMng
 {
 public:
-	SkillMng();
-	~SkillMng();
-
+	static SkillMng& GetInstance()
+	{
+		static SkillMng s_Instance;
+		return s_Instance;
+	}
 	//skillデータの取得
 	SkillParamMng GetSkillData(std::string name);
 	//全データの変更
@@ -28,6 +33,9 @@ public:
 
 	void UpDate(void);
 private:
+	SkillMng();
+	~SkillMng();
+
 	//スキルデータの保存
 	std::map<std::string, SkillParamMng> skillData_;
 };
