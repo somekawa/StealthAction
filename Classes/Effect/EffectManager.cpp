@@ -55,16 +55,78 @@ void EffectManager::AddEffect(std::string effectName, int frame, float duration,
 		offset_.emplace(effectName, offset);
 	}
 	// ﾚｲﾔｰにｴﾌｪｸﾄのｽﾌﾟﾗｲﾄを追加
-	layer.addChild(effectSprites_[effectName].create());
+	//layer.addChild(effectSprites_[effectName].create());
 	// 動けるかどうかのﾀｸﾞ設定
 	effectSprites_[effectName].setTag(isMove);
 	// ｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝｾｯﾄ
 	effectSprites_[effectName].setPosition({ 100.0f,200.0f });
 	// ﾃｽﾄ再生
-	effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
+	//effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
 
 	// 再生するﾘｽﾄに格納していく
 	//playList_.emplace_back(( effectAnimation_[effectName],isMove ));
+}
+
+cocos2d::Sprite* EffectManager::AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset)
+{
+	// 登録されていなければ、ｱﾆﾒｰｼｮﾝの登録をする
+	if (effectAnimation_.find(effectName) == effectAnimation_.end())
+	{
+		// ｴﾌｪｸﾄの画像ﾊﾟｽ
+		std::string effectPath = "effect/" + effectName;
+
+		// アニメーションキャッシュはシングルトン
+		AnimationCache* animationCache = AnimationCache::getInstance();
+
+		//スプライトシートの準備
+		auto cache = SpriteFrameCache::getInstance();
+
+		// パス指定
+		cache->addSpriteFramesWithFile(effectPath + ".plist");
+		// アニメーション画像追加
+		Animation * animation = Animation::create();
+
+		for (int i = 0; i < frame; i++)
+		{
+			auto string = effectName + "%d.png";		// plistの中だからパスじゃない
+			auto str = StringUtils::format(string.c_str(), i);
+			SpriteFrame* sprite = cache->getSpriteFrameByName(str);
+
+			animation->addSpriteFrame(sprite);
+		}
+
+		// アニメーションの間隔
+		animation->setDelayPerUnit(duration);
+
+		// アニメーション終了後に最初に戻すかどうか
+		animation->setRestoreOriginalFrame(true);
+
+		// 出来たアニメーションをキャッシュに登録
+		animationCache->addAnimation(animation, effectName);
+
+		// ｴﾌｪｸﾄ毎のｱﾆﾒｰｼｮﾝﾃﾞｰﾀの保存
+		effectAnimation_.emplace(effectName, animationCache->getAnimation(effectName));
+		// ｴﾌｪｸﾄ毎のｵﾌｾｯﾄ値の保存
+		offset_.emplace(effectName, offset);
+	}
+	// ﾚｲﾔｰにｴﾌｪｸﾄのｽﾌﾟﾗｲﾄを追加
+	//layer.addChild(effectSprites_[effectName].create());
+	// 動けるかどうかのﾀｸﾞ設定
+	//effectSprites_[effectName].setTag(isMove);
+	// ｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝｾｯﾄ
+	effectSprites_[effectName].setPosition({ 100.0f,200.0f });
+	effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
+	return &effectSprites_[effectName];
+	// ﾃｽﾄ再生
+	//effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
+
+	// 再生するﾘｽﾄに格納していく
+	//playList_.emplace_back(( effectAnimation_[effectName],isMove ));
+}
+
+void EffectManager::runaction(std::string effectName)
+{
+	effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
 }
 
 // ｴﾌｪｸﾄを再生するoffsetを引数で自由に決める事が可能なように

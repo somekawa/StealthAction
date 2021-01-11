@@ -29,6 +29,8 @@ public:
 	//layer: ´Ìª¸Ä‚ğ‚Ô‚ç‰º‚°‚éÚ²Ô°
 	//isMove: ´Ìª¸Ä‚ğ“®‚©‚·‚©
 	void AddEffect(std::string effectName,int frame,float duration,cocos2d::Vec2 offset,cocos2d::Layer& layer,bool isMove = false);
+	cocos2d::Sprite* AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset);
+	void runaction(std::string effectName);
 	// ´Ìª¸Ä‚ÌÄ¶
 	//void Play(const EffectType& eType, cocos2d::Vec2 pos);
 	// ´Ìª¸Ä‚ÌÛ°ÄŞ
