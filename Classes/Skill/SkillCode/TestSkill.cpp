@@ -1,9 +1,9 @@
 #include "TestSkill.h"
 
-TestSkill::TestSkill()
+TestSkill::TestSkill(SkillBase* ptr)
 {
 	// add‚Å‚«‚È‚¢
-	AddActiveSkill(this);
+	ptr->AddActiveSkill(this);
 	// lpEffect.add‚Ý‚½‚¢‚È‚±‚Æ‚ð‚â‚é
 }
 
@@ -24,4 +24,14 @@ void TestSkill::Init()
 bool TestSkill::GetActive(void)
 {
 	return false;
+}
+
+cocos2d::Vec2 TestSkill::GetPlayerPos(void)
+{
+	return cocos2d::Vec2();
+}
+
+cocos2d::Vec2 TestSkill::GetTargetPos(void)
+{
+	return cocos2d::Vec2();
 }

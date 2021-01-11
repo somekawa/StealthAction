@@ -288,7 +288,7 @@ bool Game::init()
 	skillSprite->setPosition(0,0);
 
 	//skillSprite->scheduleUpdate();
-	lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, *layer_[static_cast<int>(zOlder::EFFECT)]);
+	//lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, *layer_[static_cast<int>(zOlder::EFFECT)]);
 
 	this->scheduleUpdate();
 	return true;

@@ -16,7 +16,7 @@ struct Bits
 	unsigned int TransfromFlg    : 1;		// 変身用フラグ
 };
 
-#define AttackMove 60
+#define AttackMove 30
 
 class SkillBase;
 
@@ -63,4 +63,6 @@ private:
 
 	SkillBase* skillBase_;										// SkillBaseクラスのポインタ情報(コンストラクタで最初に取得)
 	std::vector<std::string> plfile_;							// Playerのスキル情報(.txt)を入れるvector
+
+	bool testflg = false;
 };

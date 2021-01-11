@@ -21,16 +21,22 @@ public:
 	static cocos2d::Sprite* createSkillBase();
 	//SkillBase();
 	~SkillBase();
-	void AddActiveSkill(TestSkill* testskill_ptr);
+	void AddActiveSkill(SkillBase* ptr);
 	void RemoveActiveSkill(void);
 	virtual void UpDate(void);
+	virtual cocos2d::Vec2 GetPlayerPos(void);	// プレイヤー座標
+	virtual cocos2d::Vec2 GetTargetPos(void);	// 敵座標(ホーミング系の時にプレイヤーとの距離が一番近い敵の座標を取得したい)
+	void SetPlayerPos(cocos2d::Vec2 playerPos);
+	void SetTargetPos(cocos2d::Vec2 targetPos);
 private:
 	CREATE_FUNC(SkillBase);
+	cocos2d::Vec2 playerPos_;
+	cocos2d::Vec2 targetPos_;
 	//std::shared_ptr<SkillMng> skillMng_;
 protected:
 	//virtual bool GetActive(void) = 0;
 	
-	std::vector<TestSkill*> skillList_;
+	std::vector<SkillBase*> skillList_;
 	SkillParam param;
 };
 

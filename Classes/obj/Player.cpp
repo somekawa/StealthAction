@@ -8,6 +8,7 @@
 #include "../Skill/SkillBase.h"
 #include "../Skill/SkillCode/TestSkill.h"
 #include "../Loader/FileLoder.h"
+#include "../Effect/EffectManager.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
@@ -129,12 +130,23 @@ void Player::update(float delta)
 		return;
 	}
 
-	// スキルテストコード
+	// スキルテストコード&effectテストコード
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
+		if (!testflg)
+		{
+			auto emitter = lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f });
+			Director::getInstance()->getRunningScene()->getChildByTag((int)zOlder::EFFECT)->addChild(emitter);
+			testflg = true;
+		}
+		else
+		{
+			lpEffectMng.runaction("enemySpawn");
+		}
+
 		auto director = Director::getInstance();
 		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
-		TestSkill* skill_t = new TestSkill();
+		TestSkill* skill_t = new TestSkill(a);
 		a->addChild(skill_t);
 		skillMng_->SkillActivate(plfile_[0]);
 	}
