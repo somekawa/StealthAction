@@ -22,7 +22,7 @@ public:
 	}
 
 	// 更新
-	void Update(const cocos2d::Layer& layer);
+	void Update(void);
 	// ｴﾌｪｸﾄの追加
 	// param@ effectName: ｴﾌｪｸﾄ名 
     //frame: ｱﾆﾒｰｼｮﾝﾌﾚｰﾑ数 
@@ -32,7 +32,7 @@ public:
 	//isMove: ｴﾌｪｸﾄを動かすか
 	void AddEffect(std::string effectName,int frame,float duration,cocos2d::Vec2 offset,cocos2d::Layer& layer,bool isMove = false);
 	void AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset);
-	void runaction(std::string effectName);
+	void Play(std::string effectName, cocos2d::Vec2 pos);
 	// ｴﾌｪｸﾄの再生
 	//void Play(const EffectType& eType, cocos2d::Vec2 pos);
 	// ｴﾌｪｸﾄのﾛｰﾄﾞ
@@ -49,7 +49,10 @@ public:
 	}
 	// ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾘﾝｸﾞするためのﾌﾟｰﾙ作成
 	void CreatePools(cocos2d::Layer& layer);
-
+	// 左右反転ﾌﾗｸﾞのｾｯﾄ
+	void SetFlip(bool flg);
+	// 左右反転でｵﾌｾｯﾄのｾｯﾄ
+	cocos2d::Vec2 GetFlipOffset(std::string effectName);
 private:
 	EffectManager() = default;
 	~EffectManager();
@@ -78,5 +81,7 @@ private:
 	cocos2d::Vector<cocos2d::Sprite*>* spritePool_;
 	// 上記のﾌﾟｰﾙの中で何番目のﾌﾟｰﾙを使用するかの番号
 	int poolNo_;
+	// ﾌﾟﾚｲﾔｰ、ｴﾈﾐｰの向きによって反転させるかしないかのﾌﾗｸﾞ
+	bool flipFlag_;
 };
 

@@ -28,10 +28,39 @@ void EffectManager::CreatePools(cocos2d::Layer& layer)
 	}
 }
 
+void EffectManager::SetFlip(bool flg)
+{
+	flipFlag_ = flg;
+}
+
+cocos2d::Vec2 EffectManager::GetFlipOffset(std::string effectName)
+{
+	Vec2 offset = {};
+	// 左右反転している
+	if (flipFlag_)
+	{
+		offset = offset_[effectName];
+	}
+	// 反転していない
+	else
+	{
+		offset = Vec2{ -offset_[effectName].x,offset_[effectName].y };
+	}
+	return offset;
+}
+
 // effectManagerはシングルトンで
-void EffectManager::Update(const Layer& layer)
+void EffectManager::Update(void)
 {
 
+	//for (auto sprite = (*spritePool_).begin(); sprite != (*spritePool_).end(); sprite++)
+	//{
+	//	// isAnimEndの設定を明日する
+	//	if ((*sprite)->)
+	//	{
+
+	//	}
+	//}
 }
 
 void EffectManager::AddEffect(std::string effectName, int frame, float duration, Vec2 offset, Layer& layer, bool isMove)
@@ -121,8 +150,25 @@ void EffectManager::AddEffect(std::string effectName, int frame, float duration,
 		// ｴﾌｪｸﾄ毎のｵﾌｾｯﾄ値の保存
 		offset_.emplace(effectName, offset);
 	}
+
+}
+
+void EffectManager::Play(std::string effectName,Vec2 pos)
+{
 	// ｽﾌﾟﾗｲﾄﾌﾟｰﾙの中の特定の番目のﾎﾟｲﾝﾀを取得
 	auto curEffect = spritePool_->at(poolNo_);
+	// アクションの設定
+	FiniteTimeAction* repeat = Repeat::create(Animate::create(effectAnimation_[effectName]), 1);
+
+	// コールバック
+	auto remove = CallFunc::create([&]() {
+		CCLOG("animation remove");
+		// ｱﾆﾒｰｼｮﾝ終了の判定
+		isAnimEnd_ = true;
+		});
+
+	// アクションとコールバックをシーケンス
+	auto seq = Sequence::create(repeat, remove, nullptr);
 	// ﾌﾟｰﾙの番号を加算
 	poolNo_++;
 	// ﾌﾟｰﾙの番号がｴﾌｪｸﾄの最大数まで達したら0に戻す
@@ -130,18 +176,17 @@ void EffectManager::AddEffect(std::string effectName, int frame, float duration,
 	{
 		poolNo_ = 0;
 	}
+	// 左右反転
+	curEffect->setFlippedX(flipFlag_);
 	// ﾌﾟｰﾙに追加したｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝ設定
-	curEffect->setPosition({ 100.0f + offset.x,200.0f });
+	curEffect->setPosition(Vec2(pos.x + GetFlipOffset(effectName).x,pos.y + GetFlipOffset(effectName).y));
+
 	// ﾌﾟｰﾙに追加したｴﾌｪｸﾄ毎のｱｸｼｮﾝの実行
-	curEffect->runAction(Animate::create(effectAnimation_[effectName]));
+	curEffect->runAction(seq);
 	// ﾌﾟｰﾙに追加したｴﾌｪｸﾄのvisibleをtrueに
 	curEffect->setVisible(true);
 }
 
-void EffectManager::runaction(std::string effectName)
-{
-	effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
-}
 
 // ｴﾌｪｸﾄを再生するoffsetを引数で自由に決める事が可能なように
 //void EffectManager::Play(const EffectType& eType, cocos2d::Vec2 pos)

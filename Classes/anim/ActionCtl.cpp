@@ -13,6 +13,7 @@
 #include "Check/Flip.h"
 #include "ActionCtl.h"
 #include "_Debug/_DebugConOut.h"
+#include "Effect/EffectManager.h"
 
 #include "EnemyAIFunctions/Judgement/ChaseJudgement.h"
 #include "EnemyAIFunctions/Judgement/PatrolJudgement.h"
@@ -479,10 +480,15 @@ void ActionCtl::InitUpdater(ActorType& type)
 				if (actCheck("¶Œü‚«"))
 				{
 					((Player&)sprite).SetDir(Direction::Left);
+					// ´Ìª¸Ä”½“]Ì×¸Ş‚Ì¾¯Ä
+					lpEffectMng.SetFlip(false);
+					
 				}
 				else if (actCheck("‰EŒü‚«"))
 				{
 					((Player&)sprite).SetDir(Direction::Right);
+					// ´Ìª¸Ä”½“]Ì×¸Ş‚Ì¾¯Ä
+					lpEffectMng.SetFlip(true);
 				}
 			}
 

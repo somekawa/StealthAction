@@ -134,8 +134,8 @@ void Player::update(float delta)
 	// スキルテストコード&effectテストコード
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
-		lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 100.0f,200.0f });
-
+		lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f });
+		lpEffectMng.Play("enemySpawn", getPosition());
 		auto director = Director::getInstance();
 		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
 		TestSkill* skill_t = new TestSkill(a);
@@ -200,13 +200,18 @@ void Player::update(float delta)
 
 	attackMotion(delta);
 	transformMotion(delta);
-
+	lpEffectMng.Update();
 	// アニメーションが切り替わるタイミングで呼ばれる再生処理
 	if (currentAnimation_ != actionOld_)
 	{
 		if (currentAnimation_ == "player_AttackFirst" && !bitFlg_.FirstAttackFlg)
 		{
 			bitFlg_.FirstAttackFlg = true;
+			// 攻撃ｴﾌｪｸﾄの追加
+			// ｴﾌｪｸﾄｱﾆﾒｰｼｮﾝに追加済みならば何もしない
+			lpEffectMng.AddEffect("attack", 5, 0.04f, { 55.0f,50.0f });
+			// 攻撃ｴﾌｪｸﾄの再生
+			lpEffectMng.Play("attack", getPosition());
 		}
 		lpAnimMng.ChangeAnimation(*this, currentAnimation_, true, ActorType::Player);
 	}
