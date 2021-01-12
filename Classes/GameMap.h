@@ -18,6 +18,7 @@ struct MapParentState
 {
 	int mapID;	// 親のmapID
 	std::vector<MapChild> child;	// 子供へのアクセス
+	int enemyNum;
 };
 struct MapParentList
 {
@@ -42,7 +43,10 @@ public:
 	// 今のマップをロードした次のマップに切り替え(プレイヤーのポジション)
 	void ReplaceMap(Player& player);
 	void update(Player& player);
+	// 次のマップID取得
 	int GetNextChildID();
+	// エネミーの数
+	int GetEnemyNum();
 	// ﾌﾛｱ変更のﾌﾗｸﾞ取得
 	const bool ChangeFloor(void)
 	{

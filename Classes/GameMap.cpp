@@ -13,7 +13,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 {
 	mapGenerator_ = std::make_shared<MapGenerator>();
 	mapGenerator_->Call();
-	auto a = mapGenerator_->GetMSTNode();
+	auto nodeData = mapGenerator_->GetMSTNode();
 	mapLayer_ = &layer;
 	objLayer_ = Layer::create();
 
@@ -44,10 +44,11 @@ GameMap::GameMap(cocos2d::Layer& layer)
 
 	
 	MapChild mapChild;
-	for (auto& node : a)
+	for (auto& node : nodeData)
 	{
 		MapParentState mapParent;
 		mapParent.mapID = 0;	// ÉTÉCÉYÇ™1ÇæÇ¡ÇΩÇÁIDÇÕ0
+		mapParent.enemyNum = RandomHelper::random_int(3, 7);
 		for (auto& child : node.childData)
 		{
 			mapChild.mapID = 0;
@@ -191,6 +192,11 @@ void GameMap::update(Player& player)
 int GameMap::GetNextChildID()
 {
 	return nextId;
+}
+
+int GameMap::GetEnemyNum()
+{
+	return mapParentsList_.mapParents[mapParentsList_.nowID].enemyNum;
 }
 
 cocos2d::TMXTiledMap* GameMap::createMapFromPath(std::string& mapPath)

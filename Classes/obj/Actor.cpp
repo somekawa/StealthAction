@@ -34,10 +34,10 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	myLayer.addChild(attackLayer_, 2, "attack");
 
 	// ‚±‚±‚ÅSkillMng‚ğƒCƒ“ƒXƒ^ƒ“ƒX‚µ‚Ä‚İ‚é
-	skillMng_ = std::make_unique<SkillMng>();
+	/*skillMng_ = std::make_unique<SkillMng>();
 	std::list<std::string> path;
 	path.push_back("skill_data");
-	auto fileLoad = lpFileLoder.Directory(path);							// player‚Æenemy‚ÌŠK‘w
+	auto fileLoad = lpFileLoder.Directory(path);*/							// player‚Æenemy‚ÌŠK‘w
 	// ‰Šú‰»‚Ì‚½‚ß‚Échangealldata‚ğg—p‚·‚é(param‚Í‚Ç‚¤‚µ‚½‚ç‚¢‚¢‚Ì‚©)
 	//for (auto data : fileLoad)
 	//{
