@@ -3,7 +3,6 @@
 #include <cocos2d.h> 
 #include <memory>
 #include <list>
-#include "Skill/SkillMng.h"
 #include "Geometory.h"
 #include "Direction/Direction.h"
 #include "ActorType.h"
@@ -208,7 +207,6 @@ protected:
 	// ¶‚«‚Ä‚¢‚é‚©€‚ñ‚Å‚¢‚é‚©‚ÌÌ×¸Ş
 	bool isAlive_;
 
-	std::unique_ptr<SkillMng> skillMng_;
 	// ActionCtl‚ğŒÄ‚Ño‚·
 	ActionCtl actCtl_ = ActionCtl();							
 };

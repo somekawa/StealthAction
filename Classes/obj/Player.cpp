@@ -5,6 +5,7 @@
 #include "ActionRect.h"
 #include "_Debug/_DebugConOut.h"
 #include "Loader/CollisionLoader.h"
+#include "../Skill/SkillMng.h"
 #include "../Skill/SkillBase.h"
 #include "../Skill/SkillCode/TestSkill.h"
 #include "../Loader/FileLoder.h"
@@ -148,7 +149,7 @@ void Player::update(float delta)
 		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
 		TestSkill* skill_t = new TestSkill(a);
 		a->addChild(skill_t);
-		skillMng_->SkillActivate(plfile_[0]);
+		lpSkillMng.SkillActivate(plfile_[0]);
 	}
 
 	// Œ»İ‚ÌƒtƒŒ[ƒ€‚ğ®”’l‚Åæ“¾

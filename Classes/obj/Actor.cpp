@@ -3,6 +3,7 @@
 #include "Gravity.h"
 #include "_Debug/_DebugConOut.h"
 #include "ActionRect.h"
+#include "Skill/SkillMng.h"
 #include "../Loader/FileLoder.h"
 
 USING_NS_CC;
@@ -33,16 +34,15 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	// ｼｰﾝのﾚｲﾔｰにattackLayer_をぶら下げる
 	myLayer.addChild(attackLayer_, 2, "attack");
 
-	// ここでSkillMngをインスタンスしてみる
-	skillMng_ = std::make_unique<SkillMng>();
 	std::list<std::string> path;
 	path.push_back("skill_data");
 	auto fileLoad = lpFileLoder.Directory(path);							// playerとenemyの階層
-	// 初期化のためにchangealldataを使用する(paramはどうしたらいいのか)
-	//for (auto data : fileLoad)
-	//{
-	//	skillMng_->ChangeAllData(data.first, param);
-	//}
+	// 初期化のためにchangealldataを使用する
+	for (auto data : fileLoad)
+	{
+		// データのテスト
+		lpSkillMng.ChangeAllData(data.first, { "dataTest",1,0,180 });
+	}
 }
 
 Actor::~Actor()
@@ -52,7 +52,7 @@ Actor::~Actor()
 void Actor::Update(void)
 {
 	Action();
-	skillMng_->UpDate();
+	lpSkillMng.UpDate();
 }
 
 std::string Actor::GetAction(void)

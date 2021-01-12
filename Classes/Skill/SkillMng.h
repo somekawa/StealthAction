@@ -2,7 +2,7 @@
 #include <map>
 #include <string>
 
-#define lpSkillMng 
+#define lpSkillMng SkillMng::GetInstance()
 
 struct SkillParamMng
 {
