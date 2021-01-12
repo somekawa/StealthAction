@@ -5,6 +5,8 @@
 #include <string>
 #include <list>
 
+#define EffectMaxNum 20
+
 #define lpEffectMng EffectManager::GetInstance()
 
 // effectﾃﾞｰﾀ保存用ｸﾗｽ
@@ -29,7 +31,7 @@ public:
 	//layer: ｴﾌｪｸﾄをぶら下げるﾚｲﾔｰ
 	//isMove: ｴﾌｪｸﾄを動かすか
 	void AddEffect(std::string effectName,int frame,float duration,cocos2d::Vec2 offset,cocos2d::Layer& layer,bool isMove = false);
-	cocos2d::Sprite* AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset);
+	void AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset);
 	void runaction(std::string effectName);
 	// ｴﾌｪｸﾄの再生
 	//void Play(const EffectType& eType, cocos2d::Vec2 pos);
@@ -45,6 +47,8 @@ public:
 	{
 		return isAnimEnd_;
 	}
+	// ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾘﾝｸﾞするためのﾌﾟｰﾙ作成
+	void CreatePools(cocos2d::Layer& layer);
 
 private:
 	EffectManager() = default;
@@ -70,7 +74,9 @@ private:
 	std::list<std::pair<cocos2d::Animation*,bool>> playList_;
 	// ｴﾌｪｸﾄを再生するﾎﾟｼﾞｼｮﾝ
 	cocos2d::Vec2 pos_;
-
-
+	// ｽﾌﾟﾗｲﾄをためておくﾌﾟｰﾙ
+	cocos2d::Vector<cocos2d::Sprite*>* spritePool_;
+	// 上記のﾌﾟｰﾙの中で何番目のﾌﾟｰﾙを使用するかの番号
+	int poolNo_;
 };
 

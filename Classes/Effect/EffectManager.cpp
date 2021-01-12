@@ -6,6 +6,28 @@ EffectManager::~EffectManager()
 {
 }
 
+void EffectManager::CreatePools(cocos2d::Layer& layer)
+{
+	// poolNo_‚Ì‰Šú‰»
+	poolNo_ = 0;
+
+	Sprite* sprite;
+	// sprite‚ğˆê’è”‚½‚ß‚Ä‚¨‚­Ìß°Ù‚Ìì¬
+	spritePool_ = new Vector<Sprite*>(EffectMaxNum);
+	// Ìß°Ù‚Ì—e—Ê‚Ü‚Å‰ñ‚·
+	for (int num = 0; num < EffectMaxNum; num++)
+	{
+		// ‹ó‚Ì½Ìß×²Ä‚Ì¶¬
+		sprite = Sprite::create();
+		// ‚Ü‚¸Œ©‚¦‚È‚­‚·‚é
+		sprite->setVisible(false);
+		// ´Ìª¸Ä—pÚ²Ô°‚ÉaddChild
+		layer.addChild(sprite);
+		// ½Ìß×²ÄÌß°Ù‚É‹ó‚Ì½Ìß×²Ä‚ğ“ü‚ê‚é
+		spritePool_->pushBack(sprite);
+	}
+}
+
 // effectManager‚ÍƒVƒ“ƒOƒ‹ƒgƒ“‚Å
 void EffectManager::Update(const Layer& layer)
 {
@@ -54,20 +76,10 @@ void EffectManager::AddEffect(std::string effectName, int frame, float duration,
 		// ´Ìª¸Ä–ˆ‚ÌµÌ¾¯Ä’l‚Ì•Û‘¶
 		offset_.emplace(effectName, offset);
 	}
-	// Ú²Ô°‚É´Ìª¸Ä‚Ì½Ìß×²Ä‚ğ’Ç‰Á
-	//layer.addChild(effectSprites_[effectName].create());
-	// “®‚¯‚é‚©‚Ç‚¤‚©‚ÌÀ¸Şİ’è
-	effectSprites_[effectName].setTag(isMove);
-	// ´Ìª¸Ä‚ÌÎß¼Ş¼®İ¾¯Ä
-	effectSprites_[effectName].setPosition({ 100.0f,200.0f });
-	// Ã½ÄÄ¶
-	//effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
 
-	// Ä¶‚·‚éØ½Ä‚ÉŠi”[‚µ‚Ä‚¢‚­
-	//playList_.emplace_back(( effectAnimation_[effectName],isMove ));
 }
 
-cocos2d::Sprite* EffectManager::AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset)
+void EffectManager::AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset)
 {
 	// “o˜^‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎA±ÆÒ°¼®İ‚Ì“o˜^‚ğ‚·‚é
 	if (effectAnimation_.find(effectName) == effectAnimation_.end())
@@ -109,19 +121,21 @@ cocos2d::Sprite* EffectManager::AddEffect(std::string effectName, int frame, flo
 		// ´Ìª¸Ä–ˆ‚ÌµÌ¾¯Ä’l‚Ì•Û‘¶
 		offset_.emplace(effectName, offset);
 	}
-	// Ú²Ô°‚É´Ìª¸Ä‚Ì½Ìß×²Ä‚ğ’Ç‰Á
-	//layer.addChild(effectSprites_[effectName].create());
-	// “®‚¯‚é‚©‚Ç‚¤‚©‚ÌÀ¸Şİ’è
-	//effectSprites_[effectName].setTag(isMove);
-	// ´Ìª¸Ä‚ÌÎß¼Ş¼®İ¾¯Ä
-	effectSprites_[effectName].setPosition({ 100.0f,200.0f });
-	effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
-	return &effectSprites_[effectName];
-	// Ã½ÄÄ¶
-	//effectSprites_[effectName].runAction(Animate::create(effectAnimation_[effectName]));
-
-	// Ä¶‚·‚éØ½Ä‚ÉŠi”[‚µ‚Ä‚¢‚­
-	//playList_.emplace_back(( effectAnimation_[effectName],isMove ));
+	// ½Ìß×²ÄÌß°Ù‚Ì’†‚Ì“Á’è‚Ì”Ô–Ú‚ÌÎß²İÀ‚ğæ“¾
+	auto curEffect = spritePool_->at(poolNo_);
+	// Ìß°Ù‚Ì”Ô†‚ğ‰ÁZ
+	poolNo_++;
+	// Ìß°Ù‚Ì”Ô†‚ª´Ìª¸Ä‚ÌÅ‘å”‚Ü‚Å’B‚µ‚½‚ç0‚É–ß‚·
+	if (poolNo_ >= EffectMaxNum)
+	{
+		poolNo_ = 0;
+	}
+	// Ìß°Ù‚É’Ç‰Á‚µ‚½´Ìª¸Ä‚ÌÎß¼Ş¼®İİ’è
+	curEffect->setPosition({ 100.0f + offset.x,200.0f });
+	// Ìß°Ù‚É’Ç‰Á‚µ‚½´Ìª¸Ä–ˆ‚Ì±¸¼®İ‚ÌÀs
+	curEffect->runAction(Animate::create(effectAnimation_[effectName]));
+	// Ìß°Ù‚É’Ç‰Á‚µ‚½´Ìª¸Ä‚Ìvisible‚ğtrue‚É
+	curEffect->setVisible(true);
 }
 
 void EffectManager::runaction(std::string effectName)
