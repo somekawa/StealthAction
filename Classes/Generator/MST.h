@@ -45,6 +45,7 @@ public:
 	// 最も短いエッジを返す
 	Edge_List FindShortest(cocos2d::Vec2& v, cocos2d::Vec2& usedvert, float& min_distance, Edge_List& min_edge);
 	std::vector<Node_Status> GetNode();
+	std::vector<Edge_Status> GetEdgeData();
 	std::vector<Edge_Status> edgeData;		//edge情報を保存
 private:
 	// プリム法を用いてMSTを作成

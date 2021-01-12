@@ -36,6 +36,7 @@
 #include "ENemyHPGauge.h"
 #include "Effect/EffectManager.h"
 #include "Skill/SkillBase.h"
+#include "MiniMap.h"
 
 USING_NS_CC;
 
@@ -290,6 +291,24 @@ bool Game::init()
 	// ｴﾌｪｸﾄ用ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾙ作成
 	lpEffectMng.CreatePools(*layer_[static_cast<int>(zOlder::EFFECT)]);
 
+	// ミニマップ
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+	auto listener = cocos2d::EventListenerKeyboard::create();
+	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
+	{
+		if (keyCode == EventKeyboard::KeyCode::KEY_M)
+		{
+			Director::getInstance()->pushScene(MiniMap::CreateMiniMap(gameMap_->GetMapGenerator(), gameMap_->GetNowID()));
+		}
+	};
+#else
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
+	{
+		return true;
+	};
+#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 	this->scheduleUpdate();
 	return true;
 }

@@ -46,6 +46,11 @@ const std::vector<Node_Status> MapGenerator::GetMSTNode(void)
     return mst_->GetNode();
 }
 
+const std::vector<Edge_Status> MapGenerator::GetEdgeData(void)
+{
+    return mst_->GetEdgeData();
+}
+
 const std::list<MapDirection> MapGenerator::FloorDir(void)
 {
     return std::list<MapDirection>();
@@ -164,5 +169,5 @@ bool MapGenerator::CreateRoot(void)
 {
     mst_ = std::make_unique<MST>(delaunay_->TriangletoEdge(),vertex_,areaData_, 0);
     mst_->CreateMST();
-    return false;
+    return true;
 }

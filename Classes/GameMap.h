@@ -44,9 +44,10 @@ public:
 	void ReplaceMap(Player& player);
 	void update(Player& player);
 	// 次のマップID取得
-	int GetNextChildID();
+	int GetNowID();
 	// エネミーの数
 	int GetEnemyNum();
+	MapGenerator& GetMapGenerator();
 	// ﾌﾛｱ変更のﾌﾗｸﾞ取得
 	const bool ChangeFloor(void)
 	{

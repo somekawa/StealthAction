@@ -189,14 +189,19 @@ void GameMap::update(Player& player)
 	frame_++;
 }
 
-int GameMap::GetNextChildID()
+int GameMap::GetNowID()
 {
-	return nextId;
+	return mapParentsList_.nowID;
 }
 
 int GameMap::GetEnemyNum()
 {
 	return mapParentsList_.mapParents[mapParentsList_.nowID].enemyNum;
+}
+
+MapGenerator& GameMap::GetMapGenerator()
+{
+	return *mapGenerator_;
 }
 
 cocos2d::TMXTiledMap* GameMap::createMapFromPath(std::string& mapPath)

@@ -145,12 +145,11 @@ void MST::RevertPartofEdge()
 	std::uniform_int_distribution<>::param_type param_i2(0, 10);
 	dist.param(param_i2);
 
-	// エッジを追加す
-	for (auto edge : edgeData)
+	// エッジを追加する
+	for (auto& edge : edgeData)
 	{		
 		if (edge.used)
-		{
-			
+		{			
 			continue;
 		}
 		for (int i = 0; i < nodeList_.size(); i++)
@@ -167,6 +166,7 @@ void MST::RevertPartofEdge()
 				{
 					continue;
 				}
+				edge.used = true;
 				for (auto& status : nodeList_)
 				{
 					if (status.key == edge.pair_vertex[0])
@@ -247,7 +247,7 @@ Edge_List MST::FindShortest(cocos2d::Vec2& unUsedvert, cocos2d::Vec2& usedvert, 
 	Edge_List tmpEdge = { unUsedvert, usedvert };
 	if (min_distance > distance)
 	{
-		for (auto edge : edgeData)
+		for (auto& edge : edgeData)
 		{
 			//Vに含まれる頂点uと含まれない頂点vを結ぶ重みが最小の辺(u, v)をグラフから選び、Eに加える．
 			if (edge.pair_vertex == tmpEdge)
@@ -264,6 +264,11 @@ Edge_List MST::FindShortest(cocos2d::Vec2& unUsedvert, cocos2d::Vec2& usedvert, 
 std::vector<Node_Status> MST::GetNode()
 {
 	return nodeList_;
+}
+
+std::vector<Edge_Status> MST::GetEdgeData()
+{
+	return edgeData;
 }
 
 bool operator==(const Edge_List& edge, const Edge_List& edge1)

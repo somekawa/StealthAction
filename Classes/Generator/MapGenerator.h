@@ -40,6 +40,7 @@ public:
     const std::vector<Room_Data>& GetRoomData(void);
     const Triangle_Data GetDelaunayData(void);
     const std::vector<Node_Status> GetMSTNode(void);
+    const std::vector<Edge_Status> GetEdgeData(void);
     const std::list<MapDirection> FloorDir(void);
 private:
     //エリアごとに設定されている中心点の周囲にMapのもととなる部屋を作成.
