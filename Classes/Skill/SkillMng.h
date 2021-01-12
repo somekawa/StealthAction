@@ -20,6 +20,7 @@ public:
 		static SkillMng s_Instance;
 		return s_Instance;
 	}
+	~SkillMng();
 	//skillデータの取得
 	SkillParamMng GetSkillData(std::string name);
 	//全データの変更
@@ -34,7 +35,7 @@ public:
 	void UpDate(void);
 private:
 	SkillMng();
-	~SkillMng();
+	
 
 	//スキルデータの保存
 	std::map<std::string, SkillParamMng> skillData_;
