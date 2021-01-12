@@ -60,6 +60,10 @@ void SkillBase::UpDate(void)
 	}
 }
 
+void SkillBase::Render(void)
+{
+}
+
 cocos2d::Vec2 SkillBase::GetPlayerPos(void)
 {
 	return playerPos_;

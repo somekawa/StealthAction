@@ -7,9 +7,10 @@
 struct SkillParamMng
 {
 	std::string name;	//スキル名の保存
-	bool lock;	//true: lock | false: unlock
+	bool lock;			//true: lock | false: unlock
 	bool activation;	//現在発動しているか true: 発動中 | false: 未発動
-	float ct;	//クールタイム
+	int power;			//火力
+	float ct;			//クールタイム
 };
 
 class SkillMng
