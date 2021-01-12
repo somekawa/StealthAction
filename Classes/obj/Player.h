@@ -38,7 +38,8 @@ public:
 	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
 	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer, SkillBase* skillBasePtr);
 private:
-	void attackMotion(float sp);								// 攻撃モーションの設定
+	void attackMotion(float delta);								// 攻撃モーションの設定
+	void transformMotion(float delta);							// トランスフォームの設定
 	void colliderVisible(void);									// 矩形の描画関連
 	void attackCollider(std::string str, cocos2d::Node* col, float& pos);	// 攻撃矩形のオフセット
 	bool gameOverAction(void);									// ゲームオーバー時のアニメーション制御(true:再生終了,false:再生中)

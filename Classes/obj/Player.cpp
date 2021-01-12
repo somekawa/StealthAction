@@ -134,16 +134,7 @@ void Player::update(float delta)
 	// スキルテストコード&effectテストコード
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
-		if (!testflg)
-		{
-			auto emitter = lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f });
-			Director::getInstance()->getRunningScene()->getChildByTag((int)zOlder::EFFECT)->addChild(emitter);
-			testflg = true;
-		}
-		else
-		{
-			lpEffectMng.runaction("enemySpawn");
-		}
+		lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 100.0f,200.0f });
 
 		auto director = Director::getInstance();
 		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
@@ -208,28 +199,7 @@ void Player::update(float delta)
 	}
 
 	attackMotion(delta);
-
-	// トランスフォーム
-	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
-	{
-		this->setPosition(this->getPosition().x, this->getPosition().y - 10);		// 位置補正を入れないと浮いて見える
-		currentAnimation_ = "player_Transform";
-		bitFlg_.TransfromFlg = true;
-	}
-	if (bitFlg_.TransfromFlg)
-	{
-		animationFrame_ += delta;
-		if (animationFrame_ >= 1.85f)
-		{
-			bitFlg_.TransfromFlg = false;
-			animationFrame_ = 0.0f;
-			this->setPosition(this->getPosition().x, this->getPosition().y + 10);	// 位置補正分戻す
-		}
-		else
-		{
-			currentAnimation_ = "player_Transform";
-		}
-	}
+	transformMotion(delta);
 
 	// アニメーションが切り替わるタイミングで呼ばれる再生処理
 	if (currentAnimation_ != actionOld_)
@@ -257,7 +227,7 @@ void Player::ChangeDirection(void)
 	int a = 0;
 }
 
-void Player::attackMotion(float sp)
+void Player::attackMotion(float delta)
 {
 	auto keyLambda = [&](bool flag) {
 		// すでにtrueになってたらtrueで抜ける
@@ -301,7 +271,7 @@ void Player::attackMotion(float sp)
 		bitFlg_.SecondAttackFlg = keyLambda(bitFlg_.SecondAttackFlg);
 
 		// frame計算
-		animationFrame_ += sp;
+		animationFrame_ += delta;
 		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.05 * 100);
 		if (animationFrame_int_ < 10)
 		{
@@ -320,6 +290,7 @@ void Player::attackMotion(float sp)
 			{
 				currentAnimation_ = "player_Look_Intro";
 				this->SetIsAttacking(false);
+				this->setPosition(oldPos_, this->getPosition().y);
 			}
 			else
 			{
@@ -337,7 +308,7 @@ void Player::attackMotion(float sp)
 		bitFlg_.ThirdAttackFlg = keyLambda(bitFlg_.ThirdAttackFlg);
 
 		// frame計算
-		animationFrame_ += sp;
+		animationFrame_ += delta;
 		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.08 * 100);
 		if (animationFrame_int_ < 10)
 		{
@@ -355,6 +326,7 @@ void Player::attackMotion(float sp)
 			if (!bitFlg_.ThirdAttackFlg)
 			{
 				currentAnimation_ = "player_Look_Intro";
+				this->setPosition(oldPos_, this->getPosition().y);
 			}
 			else
 			{
@@ -370,7 +342,7 @@ void Player::attackMotion(float sp)
 	if ((currentAnimation_ == "player_AttackThird" && bitFlg_.ThirdAttackFlg))
 	{
 		// frame計算
-		animationFrame_ += sp;
+		animationFrame_ += delta;
 		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.08 * 100);
 		if (animationFrame_int_ < 11)
 		{
@@ -388,8 +360,42 @@ void Player::attackMotion(float sp)
 			bitFlg_.ThirdAttackFlg = false;
 			isAttacking_ = false;
 			currentAnimation_ = "player_Look_Intro";
+			this->setPosition(oldPos_, this->getPosition().y);
 			animationFrame_ = 0.0f;
 			//oldPosKeepFlg_ = false;
+		}
+	}
+}
+
+void Player::transformMotion(float delta)
+{
+	// トランスフォーム
+	if (bitFlg_.TransfromFlg)
+	{
+		currentAnimation_ = "player_Transform";
+	}
+	if (!bitFlg_.TransfromFlg)
+	{
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
+		{
+			this->setPosition(this->getPosition().x, this->getPosition().y - 10);		// 位置補正を入れないと浮いて見える
+			currentAnimation_ = "player_Transform";
+			bitFlg_.TransfromFlg = true;
+		}
+	}
+	if (bitFlg_.TransfromFlg)
+	{
+		animationFrame_ += delta;
+		if (animationFrame_ >= 1.85f)
+		{
+			bitFlg_.TransfromFlg = false;
+			currentAnimation_ = "player_Look_Intro";
+			animationFrame_ = 0.0f;
+			this->setPosition(this->getPosition().x, this->getPosition().y + 10);	// 位置補正分戻す
+		}
+		else
+		{
+			currentAnimation_ = "player_Transform";
 		}
 	}
 }
