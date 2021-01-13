@@ -36,7 +36,7 @@
 #include "ENemyHPGauge.h"
 #include "Effect/EffectManager.h"
 #include "Skill/SkillBase.h"
-#include "MiniMap.h"
+#include "MapMenu.h"
 
 USING_NS_CC;
 
@@ -298,7 +298,7 @@ bool Game::init()
 	{
 		if (keyCode == EventKeyboard::KeyCode::KEY_M)
 		{
-			Director::getInstance()->pushScene(MiniMap::CreateMiniMap(gameMap_->GetMapGenerator(), gameMap_->GetNowID()));
+			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap_->GetMapGenerator(), gameMap_->GetNowID()));
 		}
 	};
 #else

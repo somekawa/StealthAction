@@ -1,11 +1,11 @@
-#include "MiniMap.h"
+#include "MapMenu.h"
 #include "Generator/MapGenerator.h"
 #include "Scene/GameScene.h"
 #include "Generator/MST.h"
 
 USING_NS_CC;
 
-MiniMap::MiniMap(MapGenerator& mapGen, int nowID)
+MapMenu::MapMenu(MapGenerator& mapGen, int nowID)
 {
 	auto director = Director::getInstance();
 	auto size = director->getVisibleSize();
@@ -69,7 +69,7 @@ MiniMap::MiniMap(MapGenerator& mapGen, int nowID)
 	}
 
 	tex->end();
-	// ミニマップ
+	// 入力系統
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
@@ -90,13 +90,13 @@ MiniMap::MiniMap(MapGenerator& mapGen, int nowID)
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 }
 
-MiniMap::~MiniMap()
+MapMenu::~MapMenu()
 {
 }
 
-cocos2d::Scene* MiniMap::CreateMiniMap(MapGenerator& mapGen, int nowID)
+cocos2d::Scene* MapMenu::CreateMapMenu(MapGenerator& mapGen, int nowID)
 {
-	MiniMap* pRet = new(std::nothrow) MiniMap(mapGen,nowID);
+	MapMenu* pRet = new(std::nothrow) MapMenu(mapGen,nowID);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
