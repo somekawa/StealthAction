@@ -4,10 +4,24 @@
 #include <map>
 #include <string>
 #include <list>
+#include <vector>
 
 #define EffectMaxNum 20
 
 #define lpEffectMng EffectManager::GetInstance()
+
+struct FXStruct
+{
+	cocos2d::Sprite* sprite_;
+	bool isActive_;
+	bool isLoop_;
+	bool isAnimEnd_;
+	float frameCnt_;
+	FXStruct() :sprite_(nullptr), isActive_(false), isLoop_(false), isAnimEnd_(false), frameCnt_(0.0f) {};
+
+	FXStruct(cocos2d::Sprite* sprite, bool active, bool loop,bool animEnd, float frame) :
+		sprite_(sprite), isActive_(active), isLoop_(loop),isAnimEnd_(animEnd), frameCnt_(frame) {};
+};
 
 // effectﾃﾞｰﾀ保存用ｸﾗｽ
 // ﾃﾞｰﾀをaddしたりﾃﾞｰﾀを管理する
@@ -22,16 +36,20 @@ public:
 	}
 
 	// 更新
-	void Update(void);
+	void Update(float delta);
 	// ｴﾌｪｸﾄを動かしたい場合はUpdate関数や、常に回る関数の中で書く
 	// param@ sprite: ｴﾌｪｸﾄの画像ｽﾌﾟﾗｲﾄ speed: ｴﾌｪｸﾄの移動量
 	void Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed);
 	// ｴﾌｪｸﾄ画像の生成と取得
 	// 内部的には、EffectManager内のｽﾌﾟﾗｲﾄﾌﾟｰﾙから作成したｴﾌｪｸﾄ画像を取り出す処理
-	cocos2d::Sprite* createEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset,cocos2d::Vec2 pos);
-	// ｴﾌｪｸﾄの再生
+	const FXStruct& createEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset,cocos2d::Vec2 pos,bool loop = false);
+	// ｴﾌｪｸﾄの再生(1回のみ)
 	// この関数を各ｺﾝｽﾄﾗｸﾀで1回のみ呼び出せばよい
-	void Play(cocos2d::Sprite* sprite,std::string effectName);
+	void PlayWithOnce(FXStruct& fx,std::string effectName);
+	// ｴﾌｪｸﾄ再生(ﾙｰﾌﾟ再生)
+	void PlayWithLoop(FXStruct& fx, std::string effectName);
+
+	bool AnimEndChecker(FXStruct& fx,float delta);
 	// ｱﾆﾒｰｼｮﾝが終了したかのﾌﾗｸﾞ取得
 	// 今のとこ使用していない
 	const bool& GetAnimEnd(void)
@@ -69,7 +87,7 @@ private:
 	// ｴﾌｪｸﾄを再生するﾎﾟｼﾞｼｮﾝ
 	cocos2d::Vec2 pos_;
 	// ｽﾌﾟﾗｲﾄをためておくﾌﾟｰﾙ
-	cocos2d::Vector<cocos2d::Sprite*>* spritePool_;
+	std::vector<FXStruct> spritePool_;
 	// 上記のﾌﾟｰﾙの中で何番目のﾌﾟｰﾙを使用するかの番号
 	int poolNo_;
 	// ﾌﾟﾚｲﾔｰ、ｴﾈﾐｰの向きによって反転させるかしないかのﾌﾗｸﾞ

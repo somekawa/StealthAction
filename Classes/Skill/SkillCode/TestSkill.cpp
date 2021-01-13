@@ -1,4 +1,3 @@
-#include "Effect/EffectManager.h"
 #include "Skill/SkillMng.h"
 #include "TestSkill.h"
 
@@ -10,9 +9,9 @@ TestSkill::TestSkill(SkillBase* ptr)
 	ptr->AddActiveSkill(this);
 	pos_ = ptr->GetPlayerPos();
 	// ｴﾌｪｸﾄを作成して、自身のｴﾌｪｸﾄ画像に格納
-	effectSprite_ = lpEffectMng.createEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, pos_);
+	fx_ = lpEffectMng.createEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, pos_,true);
 	// ｴﾌｪｸﾄの再生
-	lpEffectMng.Play(effectSprite_, "enemySpawn");
+	lpEffectMng.PlayWithLoop(fx_, "enemySpawn");
 }
 
 TestSkill::~TestSkill()
@@ -23,7 +22,7 @@ void TestSkill::UpDate(void)
 {
 	// ｽﾋﾟｰﾄﾞがおかしいので後で直す
 	// ｴﾌｪｸﾄを動かす(動かさないｴﾌｪｸﾄの場合は書く必要なし)
-	lpEffectMng.Move(effectSprite_, Vec2(1, 0));
+	lpEffectMng.Move(fx_.sprite_, Vec2(1, 0));
 	/*この中にSkillの効果や動作を記述してください*/
 	// ここでｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝの移動をやる
 	bool flag = true;
@@ -31,6 +30,7 @@ void TestSkill::UpDate(void)
 	{
 		flag = lpSkillMng.SkillInActivate("skill_01.txt");
 	}
+
 }
 
 void TestSkill::Init()

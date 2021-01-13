@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "Effect/EffectManager.h"
+
 struct SkillParam
 {
 	std::string name;	//スキル名の保存
@@ -29,6 +31,11 @@ public:
 	virtual cocos2d::Vec2 GetTargetPos(void);	// 敵座標(ホーミング系の時にプレイヤーとの距離が一番近い敵の座標を取得したい)
 	void SetPlayerPos(cocos2d::Vec2 playerPos);
 	void SetTargetPos(cocos2d::Vec2 targetPos);
+	// ｽｷﾙｴﾌｪｸﾄ情報取得
+	FXStruct& GetFX(void)
+	{
+		return fx_;
+	}
 private:
 	CREATE_FUNC(SkillBase);
 	cocos2d::Vec2 playerPos_;
@@ -41,5 +48,7 @@ protected:
 	SkillParam param;
 	// 自身のｴﾌｪｸﾄのｽﾌﾟﾗｲﾄ
 	cocos2d::Sprite* effectSprite_;
+
+	FXStruct fx_;
 };
 

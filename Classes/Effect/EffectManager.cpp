@@ -12,8 +12,8 @@ void EffectManager::CreatePools(cocos2d::Layer& layer)
 	poolNo_ = 0;
 
 	Sprite* sprite;
-	// spriteを一定数ためておくﾌﾟｰﾙの作成
-	spritePool_ = new Vector<Sprite*>(EffectMaxNum);
+	//// spriteを一定数ためておくﾌﾟｰﾙの作成
+	//spritePool_ = new std::vector<FXStruct>(EffectMaxNum);
 	// ﾌﾟｰﾙの容量まで回す
 	for (int num = 0; num < EffectMaxNum; num++)
 	{
@@ -24,7 +24,7 @@ void EffectManager::CreatePools(cocos2d::Layer& layer)
 		// ｴﾌｪｸﾄ用ﾚｲﾔｰにaddChild
 		layer.addChild(sprite);
 		// ｽﾌﾟﾗｲﾄﾌﾟｰﾙに空のｽﾌﾟﾗｲﾄを入れる
-		spritePool_->pushBack(sprite);
+		spritePool_.push_back(FXStruct(sprite,false,false,false,0.0f));
 	}
 }
 
@@ -50,9 +50,23 @@ cocos2d::Vec2 EffectManager::GetFlipOffset(std::string effectName)
 }
 
 // effectManagerはシングルトンで
-void EffectManager::Update(void)
+void EffectManager::Update(float delta)
 {
+	/*for (auto fx = spritePool_.begin(); fx != spritePool_.end(); fx++)
+	{
+		if (fx->isActive_ && fx->isLoop_)
+		{
+			fx->frameCnt_ += delta;
 
+			auto duration = effectAnimation_[fx->sprite_->getName()]->getDuration();
+
+			if (fx->frameCnt_ >= duration)
+			{
+				fx->isActive_ = false;
+				fx->sprite_->setVisible(false);
+			}
+		}
+	}*/
 }
 
 void EffectManager::Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed)
@@ -62,7 +76,7 @@ void EffectManager::Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed)
 	sprite->runAction(move);
 }
 
-cocos2d::Sprite* EffectManager::createEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset,cocos2d::Vec2 pos)
+const FXStruct& EffectManager::createEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset,cocos2d::Vec2 pos,bool loop)
 {
 	// 登録されていなければ、ｱﾆﾒｰｼｮﾝの登録をする
 	if (effectAnimation_.find(effectName) == effectAnimation_.end())
@@ -105,7 +119,7 @@ cocos2d::Sprite* EffectManager::createEffect(std::string effectName, int frame, 
 		offset_.emplace(effectName, offset);
 	}
 	// ｽﾌﾟﾗｲﾄﾌﾟｰﾙの中の特定の番目のﾎﾟｲﾝﾀを取得
-	auto curEffect = spritePool_->at(poolNo_);
+	auto curEffect = spritePool_.at(poolNo_);
 
 	// ﾌﾟｰﾙの番号を加算
 	poolNo_++;
@@ -114,16 +128,27 @@ cocos2d::Sprite* EffectManager::createEffect(std::string effectName, int frame, 
 	{
 		poolNo_ = 0;
 	}
+	// ｱﾆﾒｰｼｮﾝ終了ﾌﾗｸﾞの初期化
+	curEffect.isAnimEnd_ = false;
+	// ﾙｰﾌﾟﾌﾗｸﾞの初期化
+	curEffect.isLoop_ = loop;
+	// ｴﾌｪｸﾄｱﾆﾒｰｼｮﾝのﾌﾚｰﾑｶｳﾝﾄ変数の初期化
+	curEffect.frameCnt_ = 0.0f;
+	// ｽﾌﾟﾗｲﾄの名前ｾｯﾄ
+	curEffect.sprite_->setName(effectName);
 	// 左右反転
-	curEffect->setFlippedX(flipFlag_);
+	curEffect.sprite_->setFlippedX(flipFlag_);
 	// ﾌﾟｰﾙに追加したｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝ設定
-	curEffect->setPosition(Vec2(pos.x + GetFlipOffset(effectName).x, pos.y + GetFlipOffset(effectName).y));
+	curEffect.sprite_->setPosition(Vec2(pos.x + GetFlipOffset(effectName).x, pos.y + GetFlipOffset(effectName).y));
 	// ﾌﾟｰﾙに追加したｴﾌｪｸﾄのvisibleをtrueに
-	curEffect->setVisible(true);
+	curEffect.sprite_->setVisible(true);
+	// ｴﾌｪｸﾄのｱｸﾃｨﾌﾞ状態をtrueに
+	curEffect.isActive_ = true;
+
 	return curEffect;
 }
 
-void EffectManager::Play(cocos2d::Sprite* sprite,std::string effectName)
+void EffectManager::PlayWithOnce(FXStruct& fx,std::string effectName)
 {
 	// アクションの設定
 	FiniteTimeAction* repeat = Repeat::create(Animate::create(effectAnimation_[effectName]), 1);
@@ -132,14 +157,39 @@ void EffectManager::Play(cocos2d::Sprite* sprite,std::string effectName)
 	// ｴﾌｪｸﾄが終了したときに走らせる処理
 	auto remove = CallFunc::create([&]() {
 		// ｱﾆﾒｰｼｮﾝ終了の判定
-		// 今のとこなくてもよい気がする.....
-		isAnimEnd_ = true;
+		fx.isAnimEnd_ = true;
 		});
 
 	// アクションとコールバックをシーケンス
 	auto seq = Sequence::create(repeat, remove, nullptr);
 
-	sprite->runAction(seq);
+	fx.sprite_->runAction(seq);
+}
+
+void EffectManager::PlayWithLoop(FXStruct& fx,std::string effectName)
+{
+	// アクションの設定
+	FiniteTimeAction* repeat = RepeatForever::create(Animate::create(effectAnimation_[effectName]));
+
+	fx.sprite_->runAction(repeat);
+}
+
+bool EffectManager::AnimEndChecker(FXStruct& fx,float delta)
+{
+	if (fx.isActive_)
+	{
+		fx.frameCnt_ += delta;
+		auto duration = effectAnimation_[fx.sprite_->getName()]->getDuration();
+
+		if (fx.isLoop_)
+		{
+			if (fx.frameCnt_ >= duration)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 

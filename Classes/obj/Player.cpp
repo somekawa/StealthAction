@@ -9,7 +9,6 @@
 #include "../Skill/SkillBase.h"
 #include "../Skill/SkillCode/TestSkill.h"
 #include "../Loader/FileLoder.h"
-#include "../Effect/EffectManager.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
@@ -202,7 +201,6 @@ void Player::update(float delta)
 
 	attackMotion(delta);
 	transformMotion(delta);
-	lpEffectMng.Update();
 	// アニメーションが切り替わるタイミングで呼ばれる再生処理
 	if (currentAnimation_ != actionOld_)
 	{
@@ -211,7 +209,7 @@ void Player::update(float delta)
 			bitFlg_.FirstAttackFlg = true;
 			// 攻撃ｴﾌｪｸﾄの追加
 			auto attackSprite = lpEffectMng.createEffect("attack", 5, 0.04f, { 55.0f, 50.0f },getPosition());
-			lpEffectMng.Play(attackSprite, "attack");
+			lpEffectMng.PlayWithOnce(attackSprite, "attack");
 			// ｴﾌｪｸﾄｱﾆﾒｰｼｮﾝに追加済みならば何もしない
 			//lpEffectMng.AddEffect("attack", 5, 0.04f, { 55.0f,50.0f });
 			// 攻撃ｴﾌｪｸﾄの再生
