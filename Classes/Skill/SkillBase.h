@@ -39,5 +39,7 @@ protected:
 	cocos2d::Vec2 pos_;
 	std::vector<SkillBase*> skillList_;
 	SkillParam param;
+	// ©g‚Ì´Ìª¸Ä‚Ì½Ìß×²Ä
+	cocos2d::Sprite* effectSprite_;
 };
 

@@ -134,12 +134,14 @@ void Player::update(float delta)
 	// スキルテストコード&effectテストコード
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
-		lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f });
-		lpEffectMng.Play("enemySpawn", getPosition());
+		/*lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f });
+		lpEffectMng.Play("enemySpawn", getPosition());*/
 		auto director = Director::getInstance();
 		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
+		a->SetPlayerPos(getPosition());
 		TestSkill* skill_t = new TestSkill(a);
 		a->addChild(skill_t);
+		
 		lpSkillMng.SkillActivate(plfile_[0]);
 	}
 
@@ -208,10 +210,12 @@ void Player::update(float delta)
 		{
 			bitFlg_.FirstAttackFlg = true;
 			// 攻撃ｴﾌｪｸﾄの追加
+			auto attackSprite = lpEffectMng.createEffect("attack", 5, 0.04f, { 55.0f, 50.0f },getPosition());
+			lpEffectMng.Play(attackSprite, "attack");
 			// ｴﾌｪｸﾄｱﾆﾒｰｼｮﾝに追加済みならば何もしない
-			lpEffectMng.AddEffect("attack", 5, 0.04f, { 55.0f,50.0f });
+			//lpEffectMng.AddEffect("attack", 5, 0.04f, { 55.0f,50.0f });
 			// 攻撃ｴﾌｪｸﾄの再生
-			lpEffectMng.Play("attack", getPosition());
+			//lpEffectMng.Play("attack", getPosition());
 		}
 		lpAnimMng.ChangeAnimation(*this, currentAnimation_, true, ActorType::Player);
 	}

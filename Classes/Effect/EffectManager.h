@@ -23,26 +23,17 @@ public:
 
 	// 更新
 	void Update(void);
-	// ｴﾌｪｸﾄの追加
-	// param@ effectName: ｴﾌｪｸﾄ名 
-    //frame: ｱﾆﾒｰｼｮﾝﾌﾚｰﾑ数 
-    //duration: 1ｺﾏに使用する時間 
-	//offset: ｴﾌｪｸﾄ毎に設定するｵﾌｾｯﾄ値 
-	//layer: ｴﾌｪｸﾄをぶら下げるﾚｲﾔｰ
-	//isMove: ｴﾌｪｸﾄを動かすか
-	void AddEffect(std::string effectName,int frame,float duration,cocos2d::Vec2 offset,cocos2d::Layer& layer,bool isMove = false);
-	void AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset);
-	void Play(std::string effectName, cocos2d::Vec2 pos);
+	// ｴﾌｪｸﾄを動かしたい場合はUpdate関数や、常に回る関数の中で書く
+	// param@ sprite: ｴﾌｪｸﾄの画像ｽﾌﾟﾗｲﾄ speed: ｴﾌｪｸﾄの移動量
+	void Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed);
+	// ｴﾌｪｸﾄ画像の生成と取得
+	// 内部的には、EffectManager内のｽﾌﾟﾗｲﾄﾌﾟｰﾙから作成したｴﾌｪｸﾄ画像を取り出す処理
+	cocos2d::Sprite* createEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset,cocos2d::Vec2 pos);
 	// ｴﾌｪｸﾄの再生
-	//void Play(const EffectType& eType, cocos2d::Vec2 pos);
-	// ｴﾌｪｸﾄのﾛｰﾄﾞ
-	//void Load(EffectType eType,int frame,float duration);
-	// ｴﾌｪｸﾄｱﾆﾒｰｼｮﾝのｷｬｯｼｭの取得
-	/*const cocos2d::Animation* GetAnimation(const EffectType& eType)
-	{
-		return effectAnimation_[eType];
-	}*/
+	// この関数を各ｺﾝｽﾄﾗｸﾀで1回のみ呼び出せばよい
+	void Play(cocos2d::Sprite* sprite,std::string effectName);
 	// ｱﾆﾒｰｼｮﾝが終了したかのﾌﾗｸﾞ取得
+	// 今のとこ使用していない
 	const bool& GetAnimEnd(void)
 	{
 		return isAnimEnd_;

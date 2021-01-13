@@ -53,20 +53,19 @@ cocos2d::Vec2 EffectManager::GetFlipOffset(std::string effectName)
 void EffectManager::Update(void)
 {
 
-	//for (auto sprite = (*spritePool_).begin(); sprite != (*spritePool_).end(); sprite++)
-	//{
-	//	// isAnimEndの設定を明日する
-	//	if ((*sprite)->)
-	//	{
-
-	//	}
-	//}
 }
 
-void EffectManager::AddEffect(std::string effectName, int frame, float duration, Vec2 offset, Layer& layer, bool isMove)
+void EffectManager::Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed)
+{
+	auto move = MoveTo::create(0.0f,sprite->getPosition() + speed);
+
+	sprite->runAction(move);
+}
+
+cocos2d::Sprite* EffectManager::createEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset,cocos2d::Vec2 pos)
 {
 	// 登録されていなければ、ｱﾆﾒｰｼｮﾝの登録をする
-	if(effectAnimation_.find(effectName) == effectAnimation_.end())
+	if (effectAnimation_.find(effectName) == effectAnimation_.end())
 	{
 		// ｴﾌｪｸﾄの画像ﾊﾟｽ
 		std::string effectPath = "effect/" + effectName;
@@ -105,70 +104,9 @@ void EffectManager::AddEffect(std::string effectName, int frame, float duration,
 		// ｴﾌｪｸﾄ毎のｵﾌｾｯﾄ値の保存
 		offset_.emplace(effectName, offset);
 	}
-
-}
-
-void EffectManager::AddEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset)
-{
-	// 登録されていなければ、ｱﾆﾒｰｼｮﾝの登録をする
-	if (effectAnimation_.find(effectName) == effectAnimation_.end())
-	{
-		// ｴﾌｪｸﾄの画像ﾊﾟｽ
-		std::string effectPath = "effect/" + effectName;
-
-		// アニメーションキャッシュはシングルトン
-		AnimationCache* animationCache = AnimationCache::getInstance();
-
-		//スプライトシートの準備
-		auto cache = SpriteFrameCache::getInstance();
-
-		// パス指定
-		cache->addSpriteFramesWithFile(effectPath + ".plist");
-		// アニメーション画像追加
-		Animation * animation = Animation::create();
-
-		for (int i = 0; i < frame; i++)
-		{
-			auto string = effectName + "%d.png";		// plistの中だからパスじゃない
-			auto str = StringUtils::format(string.c_str(), i);
-			SpriteFrame* sprite = cache->getSpriteFrameByName(str);
-
-			animation->addSpriteFrame(sprite);
-		}
-
-		// アニメーションの間隔
-		animation->setDelayPerUnit(duration);
-
-		// アニメーション終了後に最初に戻すかどうか
-		animation->setRestoreOriginalFrame(true);
-
-		// 出来たアニメーションをキャッシュに登録
-		animationCache->addAnimation(animation, effectName);
-
-		// ｴﾌｪｸﾄ毎のｱﾆﾒｰｼｮﾝﾃﾞｰﾀの保存
-		effectAnimation_.emplace(effectName, animationCache->getAnimation(effectName));
-		// ｴﾌｪｸﾄ毎のｵﾌｾｯﾄ値の保存
-		offset_.emplace(effectName, offset);
-	}
-
-}
-
-void EffectManager::Play(std::string effectName,Vec2 pos)
-{
 	// ｽﾌﾟﾗｲﾄﾌﾟｰﾙの中の特定の番目のﾎﾟｲﾝﾀを取得
 	auto curEffect = spritePool_->at(poolNo_);
-	// アクションの設定
-	FiniteTimeAction* repeat = Repeat::create(Animate::create(effectAnimation_[effectName]), 1);
 
-	// コールバック
-	auto remove = CallFunc::create([&]() {
-		CCLOG("animation remove");
-		// ｱﾆﾒｰｼｮﾝ終了の判定
-		isAnimEnd_ = true;
-		});
-
-	// アクションとコールバックをシーケンス
-	auto seq = Sequence::create(repeat, remove, nullptr);
 	// ﾌﾟｰﾙの番号を加算
 	poolNo_++;
 	// ﾌﾟｰﾙの番号がｴﾌｪｸﾄの最大数まで達したら0に戻す
@@ -179,12 +117,29 @@ void EffectManager::Play(std::string effectName,Vec2 pos)
 	// 左右反転
 	curEffect->setFlippedX(flipFlag_);
 	// ﾌﾟｰﾙに追加したｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝ設定
-	curEffect->setPosition(Vec2(pos.x + GetFlipOffset(effectName).x,pos.y + GetFlipOffset(effectName).y));
-
-	// ﾌﾟｰﾙに追加したｴﾌｪｸﾄ毎のｱｸｼｮﾝの実行
-	curEffect->runAction(seq);
+	curEffect->setPosition(Vec2(pos.x + GetFlipOffset(effectName).x, pos.y + GetFlipOffset(effectName).y));
 	// ﾌﾟｰﾙに追加したｴﾌｪｸﾄのvisibleをtrueに
 	curEffect->setVisible(true);
+	return curEffect;
+}
+
+void EffectManager::Play(cocos2d::Sprite* sprite,std::string effectName)
+{
+	// アクションの設定
+	FiniteTimeAction* repeat = Repeat::create(Animate::create(effectAnimation_[effectName]), 1);
+
+	// コールバック
+	// ｴﾌｪｸﾄが終了したときに走らせる処理
+	auto remove = CallFunc::create([&]() {
+		// ｱﾆﾒｰｼｮﾝ終了の判定
+		// 今のとこなくてもよい気がする.....
+		isAnimEnd_ = true;
+		});
+
+	// アクションとコールバックをシーケンス
+	auto seq = Sequence::create(repeat, remove, nullptr);
+
+	sprite->runAction(seq);
 }
 
 
