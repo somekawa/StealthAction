@@ -18,8 +18,6 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	objLayer_ = Layer::create();
 
 	isChangeFloor_ = false;
-	
-
 
 #ifdef _DEBUG
 	mapName_ = Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
@@ -29,22 +27,22 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	// マップレイヤーより前へ
 #endif // _DEBUG
 
-
-	
 	layer.addChild(objLayer_,layer.getLocalZOrder() + 1);	
 
 	// パスをリスト化
 	pathList_.push_back( "image/Environment/trueMap.tmx");
 
-	nextPosTbl = { Vec2(100, 100),	// E_UP
-			   Vec2(300, 100),	// N_RIGHT
-			   Vec2(700, 100),	// N_LEFT
-			   Vec2(900, 100),	// W_UP
-			   Vec2(900, 500),	// W_DOWN
-			   Vec2(700, 500),	// S_LEFT
-			   Vec2(300, 500),	// S_RIGHT
-			   Vec2(700, 500),	// E_DOWN 
+	nextPosTbl = {
+		Vec2(100, 100),	// E_UP
+		Vec2(300, 100),	// N_RIGHT
+		Vec2(700, 100),	// N_LEFT
+		Vec2(900, 100),	// W_UP
+		Vec2(900, 500),	// W_DOWN
+		Vec2(700, 500),	// S_LEFT
+		Vec2(300, 500),	// S_RIGHT
+		Vec2(700, 500),	// E_DOWN 
 	};
+	
 
 	// 最初のマップデータ作成(データ化)
 	AddMap(pathList_[0]);	
@@ -110,6 +108,7 @@ void GameMap::ReplaceMap(Player& player)
 		nowMap->setName("");
 	}
 	mapParentsList_.nowID = static_cast<int>(mapState_.child[childId].nextParentID);
+	mapParentsList_.mapParents[mapParentsList_.nowID].isArrival = true;
 	// オブジェクト作成
 	CreateObject();
 #ifdef _DEBUG
@@ -199,7 +198,12 @@ void GameMap::update(Player& player)
 	frame_++;
 }
 
-int GameMap::GetNowID()
+MapParentList& GameMap::GetMapParentList()
+{
+	return mapParentsList_;
+}
+
+const int GameMap::GetNowID()
 {
 	return mapParentsList_.nowID;
 }

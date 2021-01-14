@@ -25,6 +25,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 
 	// ゲームシーン表示
 	gameScene->visit();
+	// ゲームシーンの表示を半分暗く
 	cocos2d::Rect rect = cocos2d::Rect(0, 0, size.width, size.height);
 	auto bg = Sprite::create();
 	bg->setTextureRect(rect);
@@ -34,27 +35,12 @@ MapMenu::MapMenu(GameMap& gameMap)
 	bg->retain();
 	bg->visit();
 
-	// 部屋表示
+	// 通路表示
+	const auto& mapParentList = gameMap.GetMapParentList();
 	auto& roomData = mapGen.GetMSTNode();
 	auto& roomSize = mapGen.GetRoomData()[0].size;
-	int id = 0; 
 	auto offset = Vec2(size.width / 2 - roomData[nowID].key.x,
-					   size.height / 2 - roomData[nowID].key.y);
-	for (auto room : roomData)
-	{
-		cocos2d::Rect rect = cocos2d::Rect(0,0, roomSize.width, roomSize.height);
-		auto sprite = Sprite::create();
-		sprite->setTextureRect(rect);
-		sprite->setPosition(room.key + offset);
-		sprite->retain();
-		if (id == nowID)
-		{
-			sprite->setColor(Color3B(0.0f, 0.0f, 255.0f));
-		}
-		sprite->visit();
-		id++;
-	}
-	// 通路表示
+		size.height / 2 - roomData[nowID].key.y);
 	auto& lineData = mapGen.GetEdgeData();
 	auto renderer = _director->getRenderer();
 	auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
@@ -70,8 +56,31 @@ MapMenu::MapMenu(GameMap& gameMap)
 		sprite->retain();
 		sprite->visit(renderer, parentTransform, FLAGS_TRANSFORM_DIRTY);
 	}
-
 	tex->end();
+
+	// 部屋表示
+	int id = 0; 
+	for (auto room : roomData)
+	{
+		// 到達部屋のみ表示 現在制作のため
+		/*if (!mapParentList.mapParents[id].isArrival)
+		{
+			id++;
+			continue;
+		}*/
+		cocos2d::Rect rect = cocos2d::Rect(0,0, roomSize.width, roomSize.height);
+		auto sprite = Sprite::create();
+		sprite->setTextureRect(rect);
+		sprite->setPosition(room.key + offset);
+		sprite->retain();
+		if (id == nowID)
+		{
+			sprite->setColor(Color3B(0.0f, 0.0f, 255.0f));
+		}
+		sprite->visit();
+		id++;
+	}
+	
 	// 入力系統
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();

@@ -72,7 +72,7 @@ bool Game::init()
 
 	// サウンド
 	lpSoundMng.AddSound("bgm", "BGM/BGM_piano.mp3", SoundType::BGM);
-	lpSoundMng.PlayBySoundName("bgm");
+	lpSoundMng.PlayBySoundName("bgm", 0.5f);
 
 	// 各敵キャラのAINodeの生成----------------------------------------------------------
 	
@@ -336,7 +336,7 @@ void Game::update(float sp)
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
 	// シェーダセット
-	outlineShader_->SetShader(*player, Vec3(1, 1, 1));
+	outlineShader_->SetShader(*player, Vec3(0, 0, 0));
 	auto enemies = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
 	for (auto& enemy : enemies)
 	{
