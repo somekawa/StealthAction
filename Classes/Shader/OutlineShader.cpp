@@ -20,8 +20,8 @@ void OutlineShader::SetShader(cocos2d::Node& node, cocos2d::Vec3 color)
 {
 	auto programState = new backend::ProgramState(program);
 	auto psLoc = programState->getUniformLocation("u_OutlineColor");
-	auto psValues = Vec3(1, 0, 0);
-	programState->setUniform(psLoc, &psValues, sizeof(psValues));
+	
+	programState->setUniform(psLoc, &color, sizeof(color));
 	node.setProgramState(programState);
 	CC_SAFE_RELEASE(programState);
 }

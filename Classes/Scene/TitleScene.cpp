@@ -31,11 +31,16 @@ bool TitleScene::init()
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	isChanged_ = false;
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
-		this->ChangeScene();
+		if (!isChanged_)
+		{
+			this->ChangeScene();
+		}
 	};
 	auto label = Label::createWithTTF("To Start Press Any Key ", "fonts/PixelMplus12-Regular.ttf", 48);
 	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
@@ -74,6 +79,7 @@ void TitleScene::update(float delta)
 
 void TitleScene::ChangeScene()
 {
+	isChanged_ = true;
 	Scene* scene = Game::createScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));
 }

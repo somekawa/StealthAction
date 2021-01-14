@@ -426,6 +426,10 @@ void Player::colliderVisible(void)
 		animationFrame_int_ = 0;
 	}
 	CCLOG("plHP:%d", hp_);
+	if (collider_[currentAnimation_].size() <= animationFrame_int_)
+	{
+		return;
+	}
 	currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	for (auto collider : this->getChildren())
 	{
