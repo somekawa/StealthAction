@@ -146,7 +146,7 @@ bool Game::init()
 	// 敵が死んだらとりあえずリスポーンするフラグ
 	respawnFlag_ = false;
 
-	auto label = Label::createWithTTF("Action", "fonts/Marker Felt.ttf", 24);
+	/*auto label = Label::createWithTTF("Action", "fonts/Marker Felt.ttf", 24);
 	if (label == nullptr)
 	{
 		problemLoading("'fonts/Marker Felt.ttf'");
@@ -155,7 +155,7 @@ bool Game::init()
 	{
 		label->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y + 250));
 		this->addChild(label, 1);
-	}
+	}*/
 
 	this->setName("GameScene");
 
@@ -176,8 +176,8 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);*/
 
 	// ボタンテスト用
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	// 攻撃ボタン
-	
 	auto attackBtnSp = Sprite::create("image/button1.png");
 	attackBtnSp->setName("attackBtn");
 	attackBtnSp->setAnchorPoint(Vec2(0.5f, 0.0f));
@@ -192,17 +192,20 @@ bool Game::init()
 	jumpBtnSp->setPosition(Vec2(x - jumpBtnSp->getContentSize().width * 2, y));
 	layer_[(int)zOlder::FRONT]->addChild(jumpBtnSp, 0);
 
+	// 移動バーチャルパッド用
+	auto startSp = Sprite::create("CloseNormal.png");
+	startSp->setName("startSp");
+	startSp->setPosition(Vec2(150.0f, 150.0f));
+	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
+#endif
+
 	// HPゲージ描画用
 	auto PL_HPgaugeSp = PL_HPgauge::createPL_HPgauge();
 	layer_[(int)zOlder::FRONT]->addChild(PL_HPgaugeSp, 0);
 	PL_HPgaugeSp->setName("PL_HPgauge");
 	PL_HPgaugeSp->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);
 
-	// 移動バーチャルパッド用
-	auto startSp = Sprite::create("CloseNormal.png");
-	startSp->setName("startSp");
-	startSp->setPosition(Vec2(150.0f,150.0f ));
-	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
+	
 
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
