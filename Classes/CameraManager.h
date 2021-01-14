@@ -20,7 +20,7 @@ public:
 	void AddCamera(cocos2d::Scene& scene,  cocos2d::Size zoomSize, CameraType cameraType, cocos2d::CameraFlag cameraFlag);
 	//カメラをposを中心にズームする
 	void ZoomCamera(cocos2d::Vec2 pos, float scale, CameraType cameraType);	
-	// カメラを移動する
+	// カメラを移動する(通常ステージでは使わなくてボス部屋のみ)
 	void ScrollCamera(cocos2d::Vec2 pos, CameraType cameraType);
 	
 private:

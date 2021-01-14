@@ -19,11 +19,18 @@ GameMap::GameMap(cocos2d::Layer& layer)
 
 	isChangeFloor_ = false;
 	
-	mapName =  Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
-	mapName->setPosition(100, 500);
 
-	objLayer_->addChild(mapName);
+
+#ifdef _DEBUG
+	mapName_ = Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
+	mapName_->setPosition(100, 500);
+
+	objLayer_->addChild(mapName_);
 	// マップレイヤーより前へ
+#endif // _DEBUG
+
+
+	
 	layer.addChild(objLayer_,layer.getLocalZOrder() + 1);	
 
 	// パスをリスト化
@@ -40,9 +47,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	};
 
 	// 最初のマップデータ作成(データ化)
-	AddMap(pathList_[0]);
-
-	
+	AddMap(pathList_[0]);	
 	MapChild mapChild;
 	for (auto& node : nodeData)
 	{
@@ -62,7 +67,6 @@ GameMap::GameMap(cocos2d::Layer& layer)
 		}
 		mapParentsList_.mapParents.push_back(mapParent);
 	}
-
 	mapParentsList_.nowID = 0;
 	mapParentsList_.mapParents[mapParentsList_.nowID].isArrival = true;
 	// 最初のマップのオブジェクトを作る処理
@@ -106,19 +110,20 @@ void GameMap::ReplaceMap(Player& player)
 		nowMap->setName("");
 	}
 	mapParentsList_.nowID = static_cast<int>(mapState_.child[childId].nextParentID);
+	// オブジェクト作成
 	CreateObject();
 #ifdef _DEBUG
 	auto str = StringUtils::format("部屋　%d", mapParentsList_.nowID);
-	mapName->setString(str);
+	mapName_->setString(str);
 #endif // _DEBUG
+	// プレイヤーポジションセット
 	player.setPosition(mapState_.child[childId].nextPos);
 }
 
 void GameMap::CreateObject()
 {
-	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
-	auto nowMap = mapDatas_[static_cast<int>(nowMapParent.mapID)];
-	auto objGroup = nowMap->getObjectGroup("gate");
+
+	auto objGroup = GetNowMap()->getObjectGroup("gate");
 	if (objGroup == nullptr)
 	{
 		return;
@@ -133,8 +138,10 @@ void GameMap::CreateObject()
 		objs_.clear();
 	}
 
-	auto objs = objGroup->getObjects();
-	for (auto obj : objs)
+	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
+	// TMXMapのオブジェクトレイヤーから情報取得
+	auto& objs = objGroup->getObjects();
+	for (auto& obj : objs)
 	{
 		ValueMap prop = obj.asValueMap();
 		auto name = prop["name"].asString();
@@ -143,6 +150,7 @@ void GameMap::CreateObject()
 		auto w = prop["width"].asInt();
 		auto h = prop["height"].asInt();
 		
+		// ゲートだった時(今はこれしか存在しない)
 		if (name == "gate")
 		{
 			auto gateNum = prop["gateNum"].asInt();
@@ -174,7 +182,7 @@ cocos2d::TMXTiledMap* GameMap::GetNowMap()
 
 void GameMap::update(Player& player)
 {
-	// 常にﾌﾛｱ変更のﾌﾗｸﾞはfalseに
+	// 常にフロア変更のフラグはfalseに
 	isChangeFloor_ = false;
 	for (auto obj : objs_)
 	{
@@ -183,7 +191,7 @@ void GameMap::update(Player& player)
 		if(obj->IsHit(player))
 		{
 			nextId_ = obj->GetGateNum();
-			// ﾌﾟﾚｲﾔｰがｹﾞｰﾄをくぐった時にのみtrueにする
+			// プレイヤーがゲートをくぐった時にのみtrueにする
 			isChangeFloor_ = true;
 			LoadMap(player);
 		}
@@ -218,4 +226,9 @@ cocos2d::TMXTiledMap* GameMap::createMapFromPath(std::string& mapPath)
 
 	cocos2d::TMXTiledMap* mapArray = map;
 	return mapArray;
+}
+
+const bool GameMap::ChangeFloor()
+{
+	return isChangeFloor_;
 }

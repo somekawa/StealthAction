@@ -1,6 +1,6 @@
 #include "LoadScene.h"
 #include "GameScene.h"
-#include "GameMap.h"
+#include "Map/GameMap.h"
 #include "obj/Player.h"
 #include <algorithm>
 
@@ -34,16 +34,10 @@ bool LoadScene::init()
 	{
 		return false;
 	}
-	//this->scheduleUpdate();
+
 	if (Director::getInstance()->getRunningScene()->getName() == "GameScene")
 	{
 		auto size = Director::getInstance()->getWinSize();
-	
-		
-		/*auto c = this->getDefaultCamera();
-		auto camera = Camera::createOrthographic(size.width, size.height, c->getNearPlane() - 768, c->getFarPlane());
-		camera->setCameraFlag(CameraFlag::USER1);*/
-		
 		scene = Director::getInstance()->getRunningScene();
 		scene->retain();
 	}

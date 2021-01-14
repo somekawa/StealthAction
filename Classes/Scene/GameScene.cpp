@@ -36,6 +36,7 @@
 #include "ENemyHPGauge.h"
 #include "Skill/SkillBase.h"
 #include "Map/MapMenu.h"
+#include "Shader/OutlineShader.h"
 
 USING_NS_CC;
 
@@ -242,12 +243,9 @@ bool Game::init()
 	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
-	//plSprite->scheduleUpdate();
-	// プレイヤーの更新
-	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->scheduleUpdate();
-
 	PL_HPgaugeSp->scheduleUpdate();
 
+	outlineShader_ = std::make_shared<OutlineShader>();
 	auto fileUtiles = FileUtils::getInstance();
 	auto vertexSource = fileUtiles->getStringFromFile("Shader/OutLineTest.vert");
 	auto fragmentSource = fileUtiles->getStringFromFile("Shader/OutLineTest.frag");
@@ -340,22 +338,17 @@ void Game::update(float sp)
 	// カメラスクロール
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
-	auto c = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
-	for (auto e : c)
+	// シェーダセット
+	outlineShader_->SetShader(*player, Vec3(1, 1, 1));
+	auto enemies = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
+	for (auto& enemy : enemies)
 	{
-		
-		//auto program2 = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
-		auto programState2 = new backend::ProgramState(program);
-		auto psLoc = programState->getUniformLocation("u_OutlineColor");
-		auto psValues = Vec3(1, 0, 0);
-		programState2->setUniform(psLoc, &psValues, sizeof(psValues));
-		e->setProgramState(programState2);
-		programState2->release();
+		outlineShader_->SetShader(*enemy, Vec3(1, 0, 0));
 	}
-	auto psLoc = programState->getUniformLocation("u_OutlineColor");
+	/*auto psLoc = programState->getUniformLocation("u_OutlineColor");
 	auto psValues = Vec3(0, 0, 0);
 	programState->setUniform(psLoc, &psValues, sizeof(psValues));
-	player->setProgramState(programState);
+	player->setProgramState(programState);*/
 
 	//// 当たり判定用の枠を出してみる
 	//auto ppos = plSprite->getPosition();
@@ -379,20 +372,6 @@ void Game::update(float sp)
 	//rect->drawRect(leftPoint /*+ offset*/, rightPoint /*+ offset*/, Color4F::BLUE);
 	//this->addChild(rect);
 }
-
-void Game::menuCloseCallback(Ref* pSender)
-{
-	//Close the cocos2d-x game scene and quit the application
-
-	//Director::getInstance()->end();
-	int a = 0;
-
-	/*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() as given above,instead trigger a custom event created in RootViewController.mm as below*/
-
-	//EventCustom customEndEvent("game_scene_close_event");
-	//_eventDispatcher->dispatchEvent(&customEndEvent);
-}
-
 void Game::AddPlayer(int playerNum)
 {
 	auto skillBasePtr = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");

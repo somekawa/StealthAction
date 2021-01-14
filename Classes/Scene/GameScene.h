@@ -57,8 +57,7 @@ enum class zOlder {
 class GameMap;
 class CameraManager;
 class Player;
-class ProgramState;
-
+class OutlineShader;
 class Game : public BaseScene
 {
 public:
@@ -66,19 +65,6 @@ public:
 
     bool init()override;
     void update(float sp)override;
-
-   // Player* plSprite;
-    cocos2d::Sprite* enemySprite;
-
-    cocos2d::TMXLayer* colLayerRemain;
-    std::shared_ptr<CameraManager> cameraManager_;
-    std::shared_ptr<GameMap> gameMap_;
-
-    int frame = 0;
-    float zoom = 1;
-
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
     
     // implement the "static create()" method manually
     CREATE_FUNC(Game);
@@ -87,6 +73,12 @@ public:
 	// param@ playerNum: 接続しているプレイヤーの数
 	void AddPlayer(int playerNum);
 private:
+    // シェーダ
+    std::shared_ptr<OutlineShader> outlineShader_;
+    // カメラ
+    std::shared_ptr<CameraManager> cameraManager_;
+    // マップ
+    std::shared_ptr<GameMap> gameMap_;
 	// レイヤー
 	std::array<cocos2d::Layer*, static_cast<int>(zOlder::MAX)> layer_;
 

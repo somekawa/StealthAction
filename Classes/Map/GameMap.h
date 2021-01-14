@@ -54,13 +54,11 @@ public:
 	int GetNowID();
 	// エネミーの数
 	int GetEnemyNum();
+	// マップジェネレータ取得
 	MapGenerator& GetMapGenerator();
-	// ﾌﾛｱ変更のﾌﾗｸﾞ取得
-	const bool ChangeFloor(void)
-	{
-		return isChangeFloor_;
-	}
-	cocos2d::Label* mapName;
+	// フロア変更のフラグ取得
+	const bool ChangeFloor(void);
+
 private:
 	// パスからマップ読み込みを行う
 	cocos2d::TMXTiledMap* createMapFromPath(std::string& mapPath);
@@ -72,13 +70,18 @@ private:
 	MapParentList mapParentsList_;
 	
 	MapData mapDatas_;	// 0番が親
-	std::vector<Gate*>objs_;
+	std::vector<Gate*>objs_; // 現在はゲートのみ
 	int nextId_;
 	int frame_;
 	std::array<cocos2d::Vec2, static_cast<int>(MapDirection::Max)>nextPosTbl;
 	std::shared_ptr<MapGenerator>mapGenerator_;
 
-	// ﾌﾛｱ変更したときにtrueになる
+	// デバッグ用
+#ifdef _DEBUG
+	cocos2d::Label* mapName_;
+#endif // _DEBUG
+
+	// フロア変更したときにtrueになる
 	bool isChangeFloor_;
 };
 
