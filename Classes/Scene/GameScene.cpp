@@ -30,12 +30,12 @@
 #include "obj/Enemy/Enemy.h"
 #include "PL_HPgauge.h"
 #include "Loader/CollisionLoader.h"
-#include "GameMap.h"
+#include "Map/GameMap.h"
 #include "renderer/backend/Device.h"
 #include "SoundMng.h"
 #include "ENemyHPGauge.h"
 #include "Skill/SkillBase.h"
-#include "MapMenu.h"
+#include "Map/MapMenu.h"
 
 USING_NS_CC;
 
@@ -56,24 +56,6 @@ static void problemLoading(const char* filename)
 	printf("Error while loading: %s\n", filename);
 	printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in GameScene.cpp\n");
 }
-
-#if CK_PLATFORM_ANDROID
-#ifdef __cplusplus
-extern "C" {
-#endif
-	JNIEXPORT void JNICALL Java_org_cocos2dx_cpp_AppActivity_initCricket(JNIEnv* env, jclass activity, jobject context) {
-		CkConfig config(env, context);
-		CkInit(&config);
-		//CkBank * _bank = CkBank::newBank("SE/se.ckb");
-		//CkSound * _music = CkSound::newBankSound(_bank, 0);
-		CkSound* _music = CkSound::newStreamSound("BGM/pianoSound.cks");
-		_music->setLoopCount(-1);
-		_music->play();
-	}
-#ifdef __cplusplus
-}
-#endif
-#endif
 
 // on "init" you need to initialize your instance
 bool Game::init()
@@ -254,10 +236,9 @@ bool Game::init()
 	cameraManager_->AddCamera(*this, visibleSize,CameraType::PLAYER1, CameraFlag::USER1);
 	cameraManager_->AddCamera(*this, visibleSize, CameraType::UI, CameraFlag::USER2);
 
+	// レイヤーにカメラをセット
 	layer_[static_cast<int>(zOlder::CHAR_PL)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
-
-	//charLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
@@ -356,8 +337,7 @@ void Game::update(float sp)
 	// 敵のｽﾎﾟｰﾝを管理
 	//enemyManager_->Update(effectManager_);
 	
-	// プレイヤーのカメラがうまくいかない
-	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
+	// カメラスクロール
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
 	auto c = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();

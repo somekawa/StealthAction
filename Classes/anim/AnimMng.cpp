@@ -1,5 +1,4 @@
 #include "AnimMng.h"
-#include "renderer/backend/Device.h"
 
 USING_NS_CC;
 
