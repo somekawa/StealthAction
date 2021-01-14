@@ -30,12 +30,12 @@
 #include "obj/Enemy/Enemy.h"
 #include "PL_HPgauge.h"
 #include "Loader/CollisionLoader.h"
-#include "GameMap.h"
+#include "Map/GameMap.h"
 #include "renderer/backend/Device.h"
 #include "SoundMng.h"
 #include "ENemyHPGauge.h"
 #include "Skill/SkillBase.h"
-#include "MapMenu.h"
+#include "Map/MapMenu.h"
 
 USING_NS_CC;
 
@@ -56,24 +56,6 @@ static void problemLoading(const char* filename)
 	printf("Error while loading: %s\n", filename);
 	printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in GameScene.cpp\n");
 }
-
-#if CK_PLATFORM_ANDROID
-#ifdef __cplusplus
-extern "C" {
-#endif
-	JNIEXPORT void JNICALL Java_org_cocos2dx_cpp_AppActivity_initCricket(JNIEnv* env, jclass activity, jobject context) {
-		CkConfig config(env, context);
-		CkInit(&config);
-		//CkBank * _bank = CkBank::newBank("SE/se.ckb");
-		//CkSound * _music = CkSound::newBankSound(_bank, 0);
-		CkSound* _music = CkSound::newStreamSound("BGM/pianoSound.cks");
-		_music->setLoopCount(-1);
-		_music->play();
-	}
-#ifdef __cplusplus
-}
-#endif
-#endif
 
 // on "init" you need to initialize your instance
 bool Game::init()
@@ -254,10 +236,9 @@ bool Game::init()
 	cameraManager_->AddCamera(*this, visibleSize,CameraType::PLAYER1, CameraFlag::USER1);
 	cameraManager_->AddCamera(*this, visibleSize, CameraType::UI, CameraFlag::USER2);
 
+	// レイヤーにカメラをセット
 	layer_[static_cast<int>(zOlder::CHAR_PL)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
-
-	//charLayer->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
@@ -268,8 +249,8 @@ bool Game::init()
 	PL_HPgaugeSp->scheduleUpdate();
 
 	auto fileUtiles = FileUtils::getInstance();
-	auto vertexSource = fileUtiles->getStringFromFile("OutLineTest.vert");
-	auto fragmentSource = fileUtiles->getStringFromFile("OutLineTest.frag");
+	auto vertexSource = fileUtiles->getStringFromFile("Shader/OutLineTest.vert");
+	auto fragmentSource = fileUtiles->getStringFromFile("Shader/OutLineTest.frag");
 	program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 	programState = new backend::ProgramState(program);
 
@@ -294,14 +275,14 @@ bool Game::init()
 	// ｴﾌｪｸﾄ用ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾙ作成
 	lpEffectMng.CreatePools(*layer_[static_cast<int>(zOlder::EFFECT)]);
 
-	// ミニマップ
+	// マップメニュー
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
 		if (keyCode == EventKeyboard::KeyCode::KEY_M)
 		{
-			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap_->GetMapGenerator(), gameMap_->GetNowID()));
+			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(*gameMap_));
 		}
 	};
 #else
@@ -356,8 +337,7 @@ void Game::update(float sp)
 	// 敵のｽﾎﾟｰﾝを管理
 	//enemyManager_->Update(effectManager_);
 	
-	// プレイヤーのカメラがうまくいかない
-	//cameraManager_->ScrollCamera(plSprite->getPosition(), CameraType::PLAYER1);
+	// カメラスクロール
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
 	auto c = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
@@ -366,10 +346,17 @@ void Game::update(float sp)
 		
 		//auto program2 = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 		auto programState2 = new backend::ProgramState(program);
+		auto psLoc = programState->getUniformLocation("u_OutlineColor");
+		auto psValues = Vec3(1, 0, 0);
+		programState2->setUniform(psLoc, &psValues, sizeof(psValues));
 		e->setProgramState(programState2);
 		programState2->release();
 	}
+	auto psLoc = programState->getUniformLocation("u_OutlineColor");
+	auto psValues = Vec3(0, 0, 0);
+	programState->setUniform(psLoc, &psValues, sizeof(psValues));
 	player->setProgramState(programState);
+
 	//// 当たり判定用の枠を出してみる
 	//auto ppos = plSprite->getPosition();
 	//auto psize = plSprite->getContentSize();

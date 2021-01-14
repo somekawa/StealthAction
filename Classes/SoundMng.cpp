@@ -21,7 +21,7 @@ SoundMng::~SoundMng()
 bool SoundMng::AddSound(std::string soundName, std::string path, SoundType type)
 {
 	
-	if (soundList_.find(soundName) != soundList_.end())
+	if (soundList_.find(soundName) == soundList_.end())
 	{
 		soundList_.emplace(soundName, Sound(type, path));
 	}
@@ -38,7 +38,7 @@ void SoundMng::PlayBySoundName(std::string soundName, float volume)
 	if (soundList_.find(soundName) != soundList_.end())
 	{
 		bool loop = soundList_[soundName].type == SoundType::BGM;
-		soundList_[soundName].id = AudioEngine::play2d(soundList_[soundName].path, true, 1.0);
+		soundList_[soundName].id = AudioEngine::play2d(soundList_[soundName].path, loop, volume);
 	}
 	else
 	{
