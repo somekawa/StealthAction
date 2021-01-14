@@ -52,11 +52,11 @@ void SkillBase::RemoveActiveSkill(void)
 	}
 }
 
-void SkillBase::UpDate(void)
+void SkillBase::UpDate(float delta)
 {
 	for (auto data : skillList_)
 	{
-		data->UpDate();
+		data->UpDate(delta);
 	}
 }
 

@@ -5,7 +5,7 @@ class TestSkill : public SkillBase
 public:
 	TestSkill(SkillBase* ptr);
 	~TestSkill();
-	void UpDate(void);
+	void UpDate(float delta);
 	void Init();
 	bool GetActive(void);
 	cocos2d::Vec2 GetPlayerPos(void);

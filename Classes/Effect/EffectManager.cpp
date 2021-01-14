@@ -71,7 +71,18 @@ void EffectManager::Update(float delta)
 
 void EffectManager::Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed)
 {
-	auto move = MoveTo::create(0.0f,sprite->getPosition() + speed);
+	auto sp = Vec2{ 0.0f,0.0f };
+	// 右向きならば+方向に動く
+	if (flipFlag_)
+	{
+		sp = speed;
+	}
+	else
+	{
+		// 左向きならば-方向に動く
+		sp = Vec2{ -speed.x,speed.y };
+	}
+	auto move = MoveTo::create(0.0f,sprite->getPosition() + sp);
 
 	sprite->runAction(move);
 }
@@ -120,7 +131,6 @@ const FXStruct& EffectManager::createEffect(std::string effectName, int frame, f
 	}
 	// ｽﾌﾟﾗｲﾄﾌﾟｰﾙの中の特定の番目のﾎﾟｲﾝﾀを取得
 	auto curEffect = spritePool_.at(poolNo_);
-
 	// ﾌﾟｰﾙの番号を加算
 	poolNo_++;
 	// ﾌﾟｰﾙの番号がｴﾌｪｸﾄの最大数まで達したら0に戻す
@@ -153,17 +163,7 @@ void EffectManager::PlayWithOnce(FXStruct& fx,std::string effectName)
 	// アクションの設定
 	FiniteTimeAction* repeat = Repeat::create(Animate::create(effectAnimation_[effectName]), 1);
 
-	// コールバック
-	// ｴﾌｪｸﾄが終了したときに走らせる処理
-	auto remove = CallFunc::create([&]() {
-		// ｱﾆﾒｰｼｮﾝ終了の判定
-		fx.isAnimEnd_ = true;
-		});
-
-	// アクションとコールバックをシーケンス
-	auto seq = Sequence::create(repeat, remove, nullptr);
-
-	fx.sprite_->runAction(seq);
+	fx.sprite_->runAction(repeat);
 }
 
 void EffectManager::PlayWithLoop(FXStruct& fx,std::string effectName)
@@ -185,6 +185,8 @@ bool EffectManager::AnimEndChecker(FXStruct& fx,float delta)
 		{
 			if (fx.frameCnt_ >= duration)
 			{
+				// ｱｸﾃｨﾌﾞ状態をfalseに
+				fx.isActive_ = false;
 				return true;
 			}
 		}

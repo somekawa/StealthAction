@@ -39,6 +39,7 @@ public:
 	void Update(float delta);
 	// ｴﾌｪｸﾄを動かしたい場合はUpdate関数や、常に回る関数の中で書く
 	// param@ sprite: ｴﾌｪｸﾄの画像ｽﾌﾟﾗｲﾄ speed: ｴﾌｪｸﾄの移動量
+	// speedはこの関数の中で向きごとに - or + を決定しているので、単に移動量を書いてくれれば大丈夫
 	void Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed);
 	// ｴﾌｪｸﾄ画像の生成と取得
 	// 内部的には、EffectManager内のｽﾌﾟﾗｲﾄﾌﾟｰﾙから作成したｴﾌｪｸﾄ画像を取り出す処理
@@ -48,8 +49,10 @@ public:
 	void PlayWithOnce(FXStruct& fx,std::string effectName);
 	// ｴﾌｪｸﾄ再生(ﾙｰﾌﾟ再生)
 	void PlayWithLoop(FXStruct& fx, std::string effectName);
-
+	// ｱﾆﾒｰｼｮﾝが終了したらtrueを返す関数
+	// もしｱﾆﾒｰｼｮﾝが終了したら～をしたい、という時に使用してください。
 	bool AnimEndChecker(FXStruct& fx,float delta);
+
 	// ｱﾆﾒｰｼｮﾝが終了したかのﾌﾗｸﾞ取得
 	// 今のとこ使用していない
 	const bool& GetAnimEnd(void)

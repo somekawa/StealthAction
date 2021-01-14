@@ -266,9 +266,7 @@ bool Game::init()
 	skillSprite->setName("skillSprite");
 	skillSprite->setPosition(0,0);
 
-	// SkillBase呼ぶテスト
-	auto skillBaseSp = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
-	skillBaseSp->scheduleUpdate();
+
 
 	// ｴﾌｪｸﾄ用ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾙ作成
 	lpEffectMng.CreatePools(*layer_[static_cast<int>(zOlder::EFFECT)]);
@@ -302,10 +300,9 @@ void Game::update(float sp)
 	{
 		return;
 	}
-
-	auto skillBase = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
-	lpEffectMng.AnimEndChecker(skillBase->GetFX(), sp);
-	lpEffectMng.Update(sp);
+	// SkillBase呼ぶテスト
+	auto skillBaseSp = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
+	skillBaseSp->UpDate(sp);
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	gameMap_->update(*player);
 

@@ -133,8 +133,6 @@ void Player::update(float delta)
 	// スキルテストコード&effectテストコード
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
-		/*lpEffectMng.AddEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f });
-		lpEffectMng.Play("enemySpawn", getPosition());*/
 		auto director = Director::getInstance();
 		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
 		a->SetPlayerPos(getPosition());

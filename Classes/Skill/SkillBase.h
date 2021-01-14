@@ -25,7 +25,7 @@ public:
 	~SkillBase();
 	void AddActiveSkill(SkillBase* ptr);
 	void RemoveActiveSkill(void);
-	virtual void UpDate(void);
+	virtual void UpDate(float delta);
 	virtual void Render(void);
 	virtual cocos2d::Vec2 GetPlayerPos(void);	// プレイヤー座標
 	virtual cocos2d::Vec2 GetTargetPos(void);	// 敵座標(ホーミング系の時にプレイヤーとの距離が一番近い敵の座標を取得したい)
