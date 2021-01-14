@@ -30,7 +30,6 @@ void TestSkill::UpDate(void)
 	{
 		flag = lpSkillMng.SkillInActivate("skill_01.txt");
 	}
-
 }
 
 void TestSkill::Init()

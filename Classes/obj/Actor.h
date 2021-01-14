@@ -9,6 +9,7 @@
 #include "anim/ActionCtl.h"
 #include "input/OPRT_state.h"
 #include "module/ActModule.h"
+#include "../Loader/FileLoder.h"
 
 class Input;
 class Collider;
@@ -208,5 +209,8 @@ protected:
 	bool isAlive_;
 
 	// ActionCtlを呼び出す
-	ActionCtl actCtl_ = ActionCtl();							
+	ActionCtl actCtl_ = ActionCtl();		
+
+	//読み込んだファイルデータの保存
+	DataTable fileLoad_;
 };

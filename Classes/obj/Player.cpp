@@ -40,8 +40,8 @@ Player::Player(int hp,Layer& myLayer,SkillBase* skillBasePtr):
 
 	std::list<std::string> path;
 	path.push_back("skill_data");
-	auto fileLoad = lpFileLoder.Directory(path);							// playerとenemyの階層
-	plfile_ = fileLoad["Player"];											// この中に今、スキルの情報が読み込まれている(名前とか)
+	//Actor.cppで読み込んだPlayer用のSkillデータの受け取り
+	plfile_ = fileLoad_["Player"];											// この中に今、スキルの情報が読み込まれている(名前とか)
 
 	type_ = ActorType::Player;
 	actModuleRegistration();

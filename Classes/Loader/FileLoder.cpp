@@ -5,20 +5,20 @@
 DataTable FileLoder::Directory(std::list<std::string> path)
 {
 	std::string findPath = path.front();
-	auto fileUtils = cocos2d::FileUtils::getInstance();
-
-	directoryName = fileUtils->listFiles(findPath);
-
 	if (pathList.empty() == false)
 	{
 		pathList.pop_front();
 	}
-	for (auto itr = directoryName.begin();itr != directoryName.end();itr++)
+	auto fileUtils = cocos2d::FileUtils::getInstance();
+
+	directoryName = fileUtils->listFiles(findPath);
+
+	for (auto itr = directoryName.begin(); itr != directoryName.end(); itr++)
 	{
 		(*itr) = (*itr).substr((*itr).find(findPath));
 		if (fileUtils->isFileExist((*itr)))
 		{
-			(*itr) = (*itr).substr((*itr).find("/")+1);
+			(*itr) = (*itr).substr((*itr).find("/") + 1);
 			auto fileName = (*itr).substr((*itr).find("/") + 1);
 			mapData_[(*itr).erase((*itr).find("/"))].push_back(fileName);
 		}

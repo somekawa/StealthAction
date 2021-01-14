@@ -4,7 +4,6 @@
 #include "_Debug/_DebugConOut.h"
 #include "ActionRect.h"
 #include "Skill/SkillMng.h"
-#include "../Loader/FileLoder.h"
 
 USING_NS_CC;
 
@@ -36,9 +35,9 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 
 	std::list<std::string> path;
 	path.push_back("skill_data");
-	auto fileLoad = lpFileLoder.Directory(path);							// playerとenemyの階層
+	fileLoad_ = lpFileLoder.Directory(path);							// playerとenemyの階層
 	// 初期化のためにchangealldataを使用する
-	for (auto data : fileLoad)
+	for (auto data : fileLoad_)
 	{
 		// データのテスト
 		lpSkillMng.ChangeAllData(data.first, { "dataTest",1,0,180 });
