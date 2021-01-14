@@ -34,32 +34,12 @@ MapMenu::MapMenu(GameMap& gameMap)
 	bg->setPosition(size.width / 2, size.height / 2);
 	bg->retain();
 	bg->visit();
-
-	// 通路表示
-	const auto& mapParentList = gameMap.GetMapParentList();
+	// 部屋表示
+	int id = 0; 
 	auto& roomData = mapGen.GetMSTNode();
 	auto& roomSize = mapGen.GetRoomData()[0].size;
 	auto offset = Vec2(size.width / 2 - roomData[nowID].key.x,
 		size.height / 2 - roomData[nowID].key.y);
-	auto& lineData = mapGen.GetEdgeData();
-	auto renderer = _director->getRenderer();
-	auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
-	for (auto line : lineData)
-	{
-		if (!line.used)
-		{
-			continue;
-		}
-		auto sprite = DrawNode::create();
-		sprite->drawSegment(line.pair_vertex[0] + offset,
-			line.pair_vertex[1] + offset, 1.5f, Color4F::RED);
-		sprite->retain();
-		sprite->visit(renderer, parentTransform, FLAGS_TRANSFORM_DIRTY);
-	}
-	tex->end();
-
-	// 部屋表示
-	int id = 0; 
 	for (auto room : roomData)
 	{
 		// 到達部屋のみ表示 現在制作のため
@@ -80,6 +60,27 @@ MapMenu::MapMenu(GameMap& gameMap)
 		sprite->visit();
 		id++;
 	}
+	// 通路表示
+	const auto& mapParentList = gameMap.GetMapParentList();
+	
+	auto& lineData = mapGen.GetEdgeData();
+	auto renderer = _director->getRenderer();
+	auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+	for (auto line : lineData)
+	{
+		if (!line.used)
+		{
+			continue;
+		}
+		auto sprite = DrawNode::create();
+		sprite->drawSegment(line.pair_vertex[0] + offset,
+			line.pair_vertex[1] + offset, 1.5f, Color4F::RED);
+		sprite->retain();
+		sprite->visit(renderer, parentTransform, FLAGS_TRANSFORM_DIRTY);
+	}
+	tex->end();
+
+	
 	
 	// 入力系統
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
