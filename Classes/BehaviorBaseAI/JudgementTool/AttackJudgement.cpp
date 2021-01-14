@@ -5,7 +5,7 @@
 
 bool AttackJudgement::Judgement(Enemy* enemy)
 {
-	if (enemy->DistanceCalcurator() < enemy->GetVisionRange().attack_)
+	if (enemy->GetDistance() < enemy->GetVisionRange().attack_)
 	{
 		if (!enemy->IsAttacking())
 		{

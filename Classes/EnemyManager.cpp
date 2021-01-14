@@ -185,7 +185,7 @@ void EnemyManager::AddAnim(ActorType type)
 	case ActorType::Imp:
 		break;
 	case ActorType::Assassin:
-		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "idle", 8, 0.03f, ActorType::Assassin, true);
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "idle", 8, 0.08f, ActorType::Assassin, true);
 		// run
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "run", 8, 0.08f, ActorType::Assassin, true);
 
@@ -194,12 +194,13 @@ void EnemyManager::AddAnim(ActorType type)
 
 		// death
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "death", 16, 0.08f, ActorType::Assassin, false);
-
+		// fall 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "fall", 3, 0.09f, ActorType::Assassin, false);
 		// hit 
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/assassin/assassin", "hit", 3, 0.09f, ActorType::Assassin, false);
 		break;
 	case ActorType::TwistedCultist:
-		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "idle", 6, 0.03f, ActorType::TwistedCultist, true);
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "idle", 6, 0.08f, ActorType::TwistedCultist, true);
 		// run
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "walk", 8, 0.08f, ActorType::TwistedCultist, true);
 		// attack
@@ -207,7 +208,8 @@ void EnemyManager::AddAnim(ActorType type)
 
 		// death
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "death", 12, 0.08f, ActorType::TwistedCultist, false);
-
+		// fall 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "fall", 3, 0.09f, ActorType::TwistedCultist, false);
 		// hit 
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/twistedCultist/twistedCultist", "hit", 3, 0.09f, ActorType::TwistedCultist, false);
 		break;
@@ -221,7 +223,8 @@ void EnemyManager::AddAnim(ActorType type)
 
 		// death
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "death", 12, 0.08f, ActorType::Cultist, false);
-
+		// fall 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "fall", 3, 0.09f, ActorType::Cultist, false);
 		// hit 
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "hit", 3, 0.09f, ActorType::Cultist, false);
 		break;
@@ -235,7 +238,8 @@ void EnemyManager::AddAnim(ActorType type)
 
 		// death
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "death", 12, 0.08f, ActorType::BigCultist, false);
-
+		// fall 
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "fall", 3, 0.09f, ActorType::BigCultist, false);
 		// hit 
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "hit", 3, 0.09f, ActorType::BigCultist, false);
 		break;
@@ -275,18 +279,25 @@ void EnemyManager::CreateEnemy(ActorType type)
 		vRange = VisionRange(20.0f, 50.0f);
 
 		sprite = Assassin::CreateAssassin(Vec2(spawnPos.x,spawnPos.y), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
+		// 敵に名前を付ける
+		// 死んだら"death"となる
+		sprite->setName("assassin");
 		break;
 	case ActorType::TwistedCultist:
 		vRange = VisionRange(50.0f, 200.0f);
 
 		sprite = TwistedCultist::CreateTwistedCultist(Vec2(spawnPos.x, spawnPos.y), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
-
+		// 敵に名前を付ける
+		// 死んだら"death"となる
+		sprite->setName("twistedCultist");
 		break;
 	case ActorType::Cultist:
 		vRange = VisionRange(200.0f, 100.0f);
 
 		sprite = Cultist::CreateCultist(Vec2(spawnPos.x,spawnPos.y), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
-
+		// 敵に名前を付ける
+		// 死んだら"death"となる
+		sprite->setName("cultist");
 		break;
 	case ActorType::Fireball:
 		break;
@@ -298,10 +309,6 @@ void EnemyManager::CreateEnemy(ActorType type)
 	// 固有IDのｾｯﾄ
 	sprite->SetID(enemyNum_);
 	hpSprite = EnemyHPGauge::CreateEnemyHPGauge(type, *sprite);
-
-	// 敵に名前を付ける
-	// 死んだら"death"となる
-	sprite->setName("enemy");
 
 	// 敵をActor用レイヤーの子供にする
 	layer_.addChild(sprite);

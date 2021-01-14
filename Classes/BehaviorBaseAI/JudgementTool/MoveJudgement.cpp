@@ -14,7 +14,7 @@ bool MoveJudgement::Judgement(Enemy* enemy)
         //if (!enemy->CheckObjHit())
         {
             // プレイヤーが視界に入っていなければPatrol
-            if (enemy->DistanceCalcurator() > enemy->GetVisionRange().chase_)
+            if (enemy->GetDistance() > enemy->GetVisionRange().chase_)
             {
                 if (enemy->GetType() == ActorType::Assassin ||
                     enemy->GetType() == ActorType::BigCultist)
@@ -35,7 +35,7 @@ bool MoveJudgement::Judgement(Enemy* enemy)
                 return true;
             }
             // プレイヤーが視界に入ったらchase
-            else if (enemy->DistanceCalcurator() < enemy->GetVisionRange().chase_)
+            else if (enemy->GetDistance() < enemy->GetVisionRange().chase_)
             {
                 if (enemy->GetType() == ActorType::Assassin ||
                     enemy->GetType() == ActorType::BigCultist)

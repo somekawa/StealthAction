@@ -22,6 +22,7 @@
 #include "EnemyAIFunctions/Actions/ChaseAction.h"
 #include "EnemyAIFunctions/Actions/FlipAction.h"
 #include "EnemyAIFunctions/Actions/PatrolAction.h"
+#include "EnemyAIFunctions/Actions/FallAction.h"
 
 USING_NS_CC;
 
@@ -243,6 +244,27 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 	// blackListに引っかからないときにはwhiteListに追加
 	_mapFlame.emplace(actName, 0.0f);
 
+	// 反転
+	if (actName == "左向き" || actName == "右向き")
+	{
+		_mapModule.emplace(actName, std::move(module));
+		if (type != ActorType::Player)
+		{
+			// ﾌﾟﾚｲﾔｰじゃないとJudgementをcheckに格納する
+			_mapModule[actName].act.emplace_back(FlipJudgement());
+			_mapModule[actName].act.emplace_back(CheckList());
+			// judgementがtrueになると実行するｱｸｼｮﾝ
+			_mapModule[actName].runAction = FlipAction();
+		}
+		else
+		{
+			_mapModule[actName].act.emplace_back(CheckKeyList());
+			_mapModule[actName].act.emplace_back(CheckList());
+			//_mapModule[actName].act.emplace_back(CheckObjHit());
+			_mapModule[actName].runAction = Flip();
+		}
+
+	}
 	// 全ｱｸﾀｰに共通するｱｸｼｮﾝ
 	// 左右移動
 	if (actName == "左移動" || actName == "右移動")
@@ -267,65 +289,27 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 		}
 
 	}
-
-	// 反転
-	if (actName == "左向き" || actName == "右向き")
+	if (actName == "落下")
 	{
-		_mapModule.emplace(actName, std::move(module));
 		if (type != ActorType::Player)
 		{
-			// ﾌﾟﾚｲﾔｰじゃないとJudgementをcheckに格納する
-			_mapModule[actName].act.emplace_back(FlipJudgement());
+			_mapModule.emplace(actName, std::move(module));
+			//_mapModule[actName].act.emplace_back(CheckKeyList());
+			_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].act.emplace_back(CheckList());
-			// judgementがtrueになると実行するｱｸｼｮﾝ
-			_mapModule[actName].runAction = FlipAction();
+			_mapModule[actName].runAction = FallAction();
 		}
 		else
 		{
-			_mapModule[actName].act.emplace_back(CheckKeyList());
+			_mapModule.emplace(actName, std::move(module));
+			//_mapModule[actName].act.emplace_back(CheckKeyList());
+			_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].act.emplace_back(CheckList());
-			//_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].runAction = Flip();
+			_mapModule[actName].runAction = FallFalling();
 		}
-		
+
 	}
 
-	if (actName == "落下")
-	{
-		_mapModule.emplace(actName, std::move(module));
-		//_mapModule[actName].act.emplace_back(CheckKeyList());
-		_mapModule[actName].act.emplace_back(CheckObjHit());
-		_mapModule[actName].act.emplace_back(CheckList());
-		_mapModule[actName].runAction = FallFalling();
-	}
-
-	if (actName == "ジャンプ")
-	{
-		_mapModule.emplace(actName, std::move(module));
-		_mapModule[actName].act.emplace_back(CheckKeyList());
-		_mapModule[actName].act.emplace_back(CheckObjHit());
-		_mapModule[actName].act.emplace_back(CheckList());
-		_mapModule[actName].runAction = Jump();
-	}
-
-	if (actName == "ジャンピング")
-	{
-		_mapModule.emplace(actName, std::move(module));
-		// 長押しにするならコメントアウトはずす
-		//_mapModule[actName].act.emplace_back(CheckKeyList());
-		_mapModule[actName].act.emplace_back(CheckObjHit());
-		_mapModule[actName].act.emplace_back(CheckList());
-		_mapModule[actName].runAction = JumpJumping();
-	}
-
-	if (actName == "攻撃")
-	{
-		_mapModule.emplace(actName, std::move(module));
-		_mapModule[actName].act.emplace_back(CheckKeyList());
-		//_mapModule[actName].act.emplace_back(CheckObjHit());
-		//_mapModule[actName].act.emplace_back(CheckList());
-		_mapModule[actName].runAction = Attack();
-	}
 	// ｱｸﾀｰのﾀｲﾌﾟ毎の固有のｱｸｼｮﾝの登録
 	switch (type)
 	{
@@ -337,6 +321,34 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 			_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].act.emplace_back(CheckList());
 			_mapModule[actName].runAction = WallSlide();
+		}
+
+		if (actName == "ジャンプ")
+		{
+			_mapModule.emplace(actName, std::move(module));
+			_mapModule[actName].act.emplace_back(CheckKeyList());
+			_mapModule[actName].act.emplace_back(CheckObjHit());
+			_mapModule[actName].act.emplace_back(CheckList());
+			_mapModule[actName].runAction = Jump();
+		}
+
+		if (actName == "ジャンピング")
+		{
+			_mapModule.emplace(actName, std::move(module));
+			// 長押しにするならコメントアウトはずす
+			//_mapModule[actName].act.emplace_back(CheckKeyList());
+			_mapModule[actName].act.emplace_back(CheckObjHit());
+			_mapModule[actName].act.emplace_back(CheckList());
+			_mapModule[actName].runAction = JumpJumping();
+		}
+
+		if (actName == "攻撃")
+		{
+			_mapModule.emplace(actName, std::move(module));
+			_mapModule[actName].act.emplace_back(CheckKeyList());
+			//_mapModule[actName].act.emplace_back(CheckObjHit());
+			//_mapModule[actName].act.emplace_back(CheckList());
+			_mapModule[actName].runAction = Attack();
 		}
 		break;
 	case ActorType::Imp:
@@ -530,19 +542,34 @@ void ActionCtl::InitUpdater(ActorType& type)
 
 					// (左右移動とかの)処理が走るところ
 					data.second.runAction(sprite, data.second);
+					actFlg = true;
+				}
+				// フレームの加算(落下とジャンプで使用している)
+				_mapFlame[data.first] += 0.1f;
+				if (_mapFlame[data.first] >= 3.0f)
+				{
+					_mapFlame[data.first] = 3.0f;
+				}
 
-				}
-				// プレイヤー向き変更
-				if (actCheck("左向き"))
+				// 空中での攻撃ボタンで一時静止用
+				if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
 				{
-					dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
+					_mapModule["落下"].stopCnt = 1;
 				}
-				else if (actCheck("右向き"))
+
+				if (_mapModule["落下"].stopCnt == 1)
 				{
-					dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					if (_mapFlame["落下"] >= 3.0f)
+					{
+						_mapModule["落下"].stopCnt = 0;
+					}
 				}
 			}
-
+			// 何もアクションが行われていなければIDOLを設定する
+			if (!actFlg)
+			{
+				dynamic_cast<Enemy&>(sprite).SetAction("assassin_idle");
+			}
 			});
 
 		break;
@@ -579,21 +606,35 @@ void ActionCtl::InitUpdater(ActorType& type)
 
 					// (左右移動とかの)処理が走るところ
 					data.second.runAction(sprite, data.second);
-					// behaviorTreeを使用した敵の動き
-					dynamic_cast<Enemy&>(sprite).AIRun();
+					actFlg = true;
 
 				}
-				// プレイヤー向き変更
-				if (actCheck("左向き"))
+				// フレームの加算(落下とジャンプで使用している)
+				_mapFlame[data.first] += 0.1f;
+				if (_mapFlame[data.first] >= 3.0f)
 				{
-					dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
+					_mapFlame[data.first] = 3.0f;
 				}
-				else if (actCheck("右向き"))
+
+				// 空中での攻撃ボタンで一時静止用
+				if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
 				{
-					dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					_mapModule["落下"].stopCnt = 1;
+				}
+
+				if (_mapModule["落下"].stopCnt == 1)
+				{
+					if (_mapFlame["落下"] >= 3.0f)
+					{
+						_mapModule["落下"].stopCnt = 0;
+					}
 				}
 			}
-
+			// 何もアクションが行われていなければidleを設定する
+			if (!actFlg)
+			{
+				dynamic_cast<Enemy&>(sprite).SetAction("twistedCultist_idle");
+			}
 		});
 		break;
 	case ActorType::Cultist:
@@ -629,21 +670,35 @@ void ActionCtl::InitUpdater(ActorType& type)
 
 					// (左右移動とかの)処理が走るところ
 					data.second.runAction(sprite, data.second);
-					// behaviorTreeを使用した敵の動き
-					dynamic_cast<Enemy&>(sprite).AIRun();
+					actFlg = true;
 
 				}
-				// プレイヤー向き変更
-				if (actCheck("左向き"))
+				// フレームの加算(落下とジャンプで使用している)
+				_mapFlame[data.first] += 0.1f;
+				if (_mapFlame[data.first] >= 3.0f)
 				{
-					dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
+					_mapFlame[data.first] = 3.0f;
 				}
-				else if (actCheck("右向き"))
+
+				// 空中での攻撃ボタンで一時静止用
+				if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
 				{
-					dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					_mapModule["落下"].stopCnt = 1;
+				}
+
+				if (_mapModule["落下"].stopCnt == 1)
+				{
+					if (_mapFlame["落下"] >= 3.0f)
+					{
+						_mapModule["落下"].stopCnt = 0;
+					}
 				}
 			}
-
+			// 何もアクションが行われていなければidleを設定する
+			if (!actFlg)
+			{
+				dynamic_cast<Enemy&>(sprite).SetAction("cultist_idle");
+			}
 		});
 		break;
 	case ActorType::BigCultist:
@@ -679,21 +734,35 @@ void ActionCtl::InitUpdater(ActorType& type)
 
 					// (左右移動とかの)処理が走るところ
 					data.second.runAction(sprite, data.second);
-					// behaviorTreeを使用した敵の動き
-					dynamic_cast<Enemy&>(sprite).AIRun();
+					actFlg = true;
 
 				}
-				// プレイヤー向き変更
-				if (actCheck("左向き"))
+				// フレームの加算(落下とジャンプで使用している)
+				_mapFlame[data.first] += 0.1f;
+				if (_mapFlame[data.first] >= 3.0f)
 				{
-					dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
+					_mapFlame[data.first] = 3.0f;
 				}
-				else if (actCheck("右向き"))
+
+				// 空中での攻撃ボタンで一時静止用
+				if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
 				{
-					dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					_mapModule["落下"].stopCnt = 1;
+				}
+
+				if (_mapModule["落下"].stopCnt == 1)
+				{
+					if (_mapFlame["落下"] >= 3.0f)
+					{
+						_mapModule["落下"].stopCnt = 0;
+					}
 				}
 			}
-
+			// 何もアクションが行われていなければidleを設定する
+			if (!actFlg)
+			{
+				dynamic_cast<Enemy&>(sprite).SetAction("bigCultist_idle");
+			}
 		});
 		break;
 	case ActorType::Fireball:

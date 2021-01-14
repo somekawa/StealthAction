@@ -46,7 +46,7 @@ TwistedCultist::TwistedCultist(Vec2 pos,Player& player,
 		}
 	}
 	// 初期アニメーションのセット
-	//lpAnimMng.InitAnimation(*this, ActorType::TwistedCultist, "idle");
+	lpAnimMng.InitAnimation(*this, ActorType::TwistedCultist, "twistedCultist_idle");
 	updater_ = &TwistedCultist::Idle;
 }
 
@@ -176,7 +176,11 @@ void TwistedCultist::update(float delta)
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
 		}
-
+		if (currentAnimation_ != previousAnimation_)
+		{
+			ChangeAnimation(currentAnimation_);
+		}
+		previousAnimation_ = currentAnimation_;
 	}
 	// ﾌﾛｱ変更の際に自身を消す
 	//DeleteSelfOnFloor();
@@ -194,7 +198,7 @@ void TwistedCultist::AddAttackObj(const float& angle)
 
 void TwistedCultist::actModuleRegistration(void)
 {
-	Vec2 size = { 15.0f * 3.0f,25.0f * 3.0f };
+	Vec2 size = { 45.0f,42.0f };
 
 	// 右移動
 	{
@@ -203,7 +207,7 @@ void TwistedCultist::actModuleRegistration(void)
 		act.vel = Vec2{ 2,0 };
 		act.actName = "twistedCultist_walk";
 		act.checkPoint1 = Vec2{ size.x / 2, size.y / 2 };	// 右上
-		act.checkPoint2 = Vec2{ size.x / 2,  15 };			// 右下
+		act.checkPoint2 = Vec2{ -40,0 };			// 右下
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
@@ -218,7 +222,7 @@ void TwistedCultist::actModuleRegistration(void)
 		act.vel = Vec2{ -2,0 };
 		act.actName = "twistedCultist_walk";
 		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// 左上
-		act.checkPoint2 = Vec2{ -size.x / 2,  15 };			// 左下
+		act.checkPoint2 = Vec2{ -40,-40 };			// 左下
 
 		//act.blackList.emplace_back(ACTION::FALLING);
 
@@ -259,8 +263,8 @@ void TwistedCultist::actModuleRegistration(void)
 		act.state = nullptr;
 		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
 		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
-		act.checkPoint1 = Vec2{ 0,0 };				// 左下
-		act.checkPoint2 = Vec2{ 0,0 };				// 右下
+		act.checkPoint1 = Vec2{ -40,-40 };				// 左下
+		act.checkPoint2 = Vec2{ -40,-40 };				// 右下
 
 		act.checkPoint3 = Vec2{ size.x / 2, size.y / 2 };  // 右上
 		act.checkPoint4 = Vec2{ -size.x / 2, size.y / 2 }; // 左上

@@ -12,8 +12,6 @@ void EffectManager::CreatePools(cocos2d::Layer& layer)
 	poolNo_ = 0;
 
 	Sprite* sprite;
-	//// sprite‚ğˆê’è”‚½‚ß‚Ä‚¨‚­Ìß°Ù‚Ìì¬
-	//spritePool_ = new std::vector<FXStruct>(EffectMaxNum);
 	// Ìß°Ù‚Ì—e—Ê‚Ü‚Å‰ñ‚·
 	for (int num = 0; num < EffectMaxNum; num++)
 	{

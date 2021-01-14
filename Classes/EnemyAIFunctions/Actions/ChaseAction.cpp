@@ -4,6 +4,5 @@
 bool ChaseAction::operator()(cocos2d::Sprite& sprite, ActModule& module)
 {
     TRACE("enemy_Chase\n");
-
     return false;
 }

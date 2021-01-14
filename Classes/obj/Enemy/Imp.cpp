@@ -215,14 +215,14 @@ void Imp::Run(void)
 	this->setPosition(Vec2(pos_.x, pos_.y));
 	this->runAction(flipFlag_);
 
-	if (DistanceCalcurator() <= AttackRange)
+	if (GetDistance() <= AttackRange)
 	{
 		ChangeAnimation("attackFirst");
 		//lpAnimMng.ChangeAnimation(*this, "attackFirst", true,type_);
 		updater_ = &Imp::Attack;
 	}
 
-	if (DistanceCalcurator() >= Sight)
+	if (GetDistance() >= Sight)
 	{
 		ChangeAnimation("walk");
 		//lpAnimMng.ChangeAnimation(*this, "walk", true,type_);

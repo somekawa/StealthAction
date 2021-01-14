@@ -181,7 +181,11 @@ void BigCultist::update(float delta)
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
 		}
-
+		if (currentAnimation_ != previousAnimation_)
+		{
+			ChangeAnimation(currentAnimation_);
+		}
+		previousAnimation_ = currentAnimation_;
 	}
 
 }
@@ -196,7 +200,7 @@ void BigCultist::AddAttackObj(const float& angle)
 
 void BigCultist::actModuleRegistration(void)
 {
-	Vec2 size = { 15.0f * 3.0f,25.0f * 3.0f };
+	Vec2 size = { 108.0f,59.0f };
 
 	// ‰EˆÚ“®
 	{

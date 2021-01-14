@@ -1,6 +1,7 @@
 #include "CheckObjHit.h"
 #include "scene/GameScene.h"
 #include "obj/Player.h"
+#include "obj/Enemy/Enemy.h"
 
 USING_NS_CC;
 

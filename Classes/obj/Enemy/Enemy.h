@@ -63,13 +63,18 @@ public:
 	virtual void AddAttackObj(const float& angle) = 0;
 
 	virtual void ChangeDirection(void);
-	virtual const float& DistanceCalcurator(void);
+	virtual const float& GetDistance(void);
 	// 生きているかのﾌﾗｸﾞのｾｯﾄ
 	void SetAlive(bool flg);
 	// 自分の行動タイプの取得
 	virtual const MoveType& GetMoveType(void)
 	{
 		return mType_;
+	}
+	// 1ﾌﾚｰﾑ前の自身の向いている向きの取得
+	virtual const Direction& GetOldDirection(void)
+	{
+		return oldDirection_;
 	}
 	// 自身の固有IDのｾｯﾄ
 	void SetID(int id);
@@ -143,7 +148,8 @@ protected:
 	Player& player_;
 	// 自分の攻撃が当たったかのフラグ
 	bool hittingToPlayer_;
-
+	// 1ﾌﾚｰﾑ前の自分の向いている方向
+	Direction oldDirection_;
 	// 視界範囲
 	float vision_;
 	cocos2d::Vec2 oldPos_;

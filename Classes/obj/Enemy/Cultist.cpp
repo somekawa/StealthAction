@@ -61,7 +61,7 @@ Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange vis
 		}
 	}
 	// 初期アニメーションのセット
-	//lpAnimMng.InitAnimation(*this, ActorType::Cultist, "idle");
+	lpAnimMng.InitAnimation(*this, ActorType::Cultist, "cultist_idle");
 }
 
 Cultist::~Cultist()
@@ -187,7 +187,11 @@ void Cultist::update(float delta)
 			isFire_ = false;
 			hittingToPlayer_ = false;
 		}
-
+		if (currentAnimation_ != previousAnimation_)
+		{
+			ChangeAnimation(currentAnimation_);
+		}
+		previousAnimation_ = currentAnimation_;
 	}
 	// ﾌﾛｱ変更の際に自身を消す
 	//DeleteSelfOnFloor();
@@ -220,7 +224,7 @@ const float Cultist::GetPLAngle(void)
 
 void Cultist::actModuleRegistration(void)
 {
-	Vec2 size = { 15.0f * 3.0f,25.0f * 3.0f };
+	Vec2 size = { 45.0f,42.0f };
 
 	// 右移動
 	{

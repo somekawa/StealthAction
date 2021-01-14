@@ -64,16 +64,22 @@ void Enemy::ChangeDirection(void)
 {
 	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
 	auto playerPos = player_.getPosition();
+	// 1ﾌﾚｰﾑ前の自身の向いている方向の格納
+	oldDirection_ = direction_;
+	auto flip = false;
 	// ﾌﾟﾚｲﾔｰが自身よりも左にいる場合
 	if (getPosition().x > playerPos.x)
 	{
 		direction_ = Direction::Left;
+		flip = false;
 	}
 	// ﾌﾟﾚｲﾔｰが自身よりも右にいる場合
 	else
 	{
 		direction_ = Direction::Right;
+		flip = true;
 	}
+	runAction(FlipX::create(flip));
 }
 
 bool Enemy::OnAttacked(void)
@@ -205,12 +211,12 @@ void Enemy::ChangeAnimation(std::string animName)
 	this->stopAllActions();
 
 	// 変更したいアニメーションが現在のアニメーションと同じならば何もしない。
-	/*if (currentAnimation_ == animName)
-	{
-		return;
-	}*/
+	//if (currentAnimation_ == animName)
+	//{
+	//	return;
+	//}
 	// 現在のアニメーションを変更先のアニメーション名に変更
-	currentAnimation_ = myName_ + "_" + animName;
+	currentAnimation_ = animName;
 	animationFrame_ = 0.0f;
 	animationFrame_int_ = 0;
 	// アニメーション終了フラグをfalseに
@@ -228,7 +234,7 @@ void Enemy::ChangeAnimation(std::string animName)
 	}
 }
 
-const float& Enemy::DistanceCalcurator(void)
+const float& Enemy::GetDistance(void)
 {
 	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
 	auto playerPos = player_.getPosition();

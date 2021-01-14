@@ -209,7 +209,7 @@ protected:
 	bool isAlive_;
 
 	// ActionCtlを呼び出す
-	ActionCtl actCtl_ = ActionCtl();		
+	ActionCtl actCtl_;		
 
 	//読み込んだファイルデータの保存
 	DataTable fileLoad_;

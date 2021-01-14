@@ -73,7 +73,7 @@ Assassin::Assassin(Vec2 pos, Player& player,
 		}
 	}
 	// 初期アニメーションのセット
-	//lpAnimMng.InitAnimation(*this, ActorType::Assassin, "idle");
+	lpAnimMng.InitAnimation(*this, ActorType::Assassin, "assassin_idle");
 }
 
 Assassin::~Assassin()
@@ -120,13 +120,12 @@ void Assassin::update(float delta)
 	}
 	else
 	{
-		previousAnimation_ = currentAnimation_;
 
-		//if (!isAttacking_)
-		//{
-		//	// 方向の変更
-		//	ChangeDirection();
-		//}
+		if (!isAttacking_)
+		{
+			// 方向の変更
+			ChangeDirection();
+		}
 		// 現在のフレームを整数値で取得
 		animationFrame_int_ = GetAnimationFrameInt() - 1;
 
@@ -176,8 +175,6 @@ void Assassin::update(float delta)
 
 		TRACE("attackFlag:%d\n", isAttacking_);
 
-
-
 		for (auto animationCol = this->getChildren().rbegin();
 			animationCol != this->getChildren().rend(); animationCol++)
 		{
@@ -205,6 +202,12 @@ void Assassin::update(float delta)
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
 		}
+		if (currentAnimation_ != previousAnimation_)
+		{
+			ChangeAnimation(currentAnimation_);
+		}
+		previousAnimation_ = currentAnimation_;
+
 	}
 
 }
@@ -222,7 +225,32 @@ void Assassin::AddAttackObj(const float& angle)
 
 void Assassin::actModuleRegistration(void)
 {
-	Vec2 size = { 15.0f * 3.0f,25.0f * 3.0f };
+	Vec2 size = { 106.0f,76.0f };
+
+	// 右向き反転
+	{
+		ActModule flipAct;
+		flipAct.state = nullptr;
+		flipAct.flipFlg = true;
+		flipAct.actName = "assassin_idle";
+		//flipAct.blackList.emplace_back(ACTION::FALLING);
+
+		flipAct.blackList.emplace_back("assassin_attack");
+		actCtl_.RunInitializeActCtl(type_, "右向き", flipAct);
+	}
+
+	// 左向き反転
+	{
+		ActModule flipAct;
+		flipAct.state = nullptr;
+		flipAct.flipFlg = false;
+		flipAct.actName = "assassin_idle";
+
+		//flipAct.blackList.emplace_back(ACTION::FALLING);
+
+		flipAct.blackList.emplace_back("assassin_attack");
+		actCtl_.RunInitializeActCtl(type_, "左向き", flipAct);
+	}
 
 	// 右移動
 	{
@@ -255,30 +283,7 @@ void Assassin::actModuleRegistration(void)
 		actCtl_.RunInitializeActCtl(type_,"左移動", act);
 	}
 
-	// 右向き反転
-	{
-		ActModule flipAct;
-		flipAct.state = nullptr;
-		flipAct.flipFlg = true;
-		flipAct.actName = "assassin_idle";
-		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
-		flipAct.blackList.emplace_back("assassin_attack");
-		actCtl_.RunInitializeActCtl(type_,"右向き", flipAct);
-	}
-
-	// 左向き反転
-	{
-		ActModule flipAct;
-		flipAct.state = nullptr;
-		flipAct.flipFlg = false;
-		flipAct.actName = "assassin_idle";
-
-		//flipAct.blackList.emplace_back(ACTION::FALLING);
-
-		flipAct.blackList.emplace_back("assassin_attack");
-		actCtl_.RunInitializeActCtl(type_,"左向き", flipAct);
-	}
 	// 落下
 	{
 		// checkkeylistに離している間の設定もしたけど特に効果なし
@@ -287,8 +292,8 @@ void Assassin::actModuleRegistration(void)
 		act.state = nullptr;
 		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
 		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
-		act.checkPoint1 = Vec2{ 0,0 };				// 左下
-		act.checkPoint2 = Vec2{ 0,0 };				// 右下
+		act.checkPoint1 = Vec2{ -60, -60 };				// 左下
+		act.checkPoint2 = Vec2{ -60, -60 };				// 右下
 
 		act.checkPoint3 = Vec2{ size.x / 2, size.y / 2 };  // 右上
 		act.checkPoint4 = Vec2{ -size.x / 2, size.y / 2 }; // 左上
@@ -436,7 +441,7 @@ void Assassin::Run(void)
 
 	// 今のとこ50.0fはマジックナンバー
 	// 後で変更あり
-	if (DistanceCalcurator() < 50.0f)
+	if (GetDistance() < 50.0f)
 	{
 		// アニメーションを変更して
 		ChangeAnimation("assassin_attack");

@@ -4,6 +4,6 @@
 bool FlipAction::operator()(cocos2d::Sprite& sprite, ActModule& module)
 {
     TRACE("enemy_Flip\n");
-
-    return false;
+    sprite.runAction(cocos2d::FlipX::create(module.flipFlg));
+    return true;
 }
