@@ -30,7 +30,7 @@ EnemyHPGauge::EnemyHPGauge(ActorType type,Enemy& target):
 	default:
 		break;
 	}
-	setPosition(target_.getPosition());
+	setPosition(Vec2(target_.getPosition().x + 100.0f,target_.getPosition().y - 200.0f));
 	setTag(101);
 	setName(target_.GetMyName() + "_" + std::to_string(target_.GetID()) + "_HP");
 	// ‰æ‘œ•`‰æ
@@ -55,7 +55,7 @@ void EnemyHPGauge::update(float delta)
 		return;
 	}
 
-	setPosition({target_.getPosition().x - 100.0f,target_.getPosition().y + 100.0f});
+	setPosition({target_.getPosition().x - 50.0f,target_.getPosition().y + 60.0f});
 	if (currentHP_ <= 0.0f)
 	{
 		// 0‚ð‰º‰ñ‚ç‚È‚¢‚æ‚¤‚É
@@ -95,6 +95,8 @@ cocos2d::Sprite* EnemyHPGauge::CreateEnemyHPGauge(ActorType type,Enemy& target)
 
 bool EnemyHPGauge::Init(void)
 {
+	setColor(Color3B(255, 0, 0));
+
 	switch (enemyType_)
 	{
 	case ActorType::Player:
@@ -103,16 +105,13 @@ bool EnemyHPGauge::Init(void)
 		break;
 	case ActorType::Assassin:
 		currentHP_ = 50.0f;
-		setColor(Color3B(255, 0, 0));
 		break;
 	case ActorType::TwistedCultist:
 		currentHP_ = 50.0f;
-		setColor(Color3B(0, 255, 0));
 
 		break;
 	case ActorType::Cultist:
 		currentHP_ = 30.0f;
-		setColor(Color3B(0, 0, 255));
 
 		break;
 	case ActorType::Fireball:

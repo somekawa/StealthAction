@@ -116,40 +116,44 @@ void Assassin::update(float delta)
 			animationFrame_int_ = 0;
 		}
 
-		if (player_.IsAttacking() && !onDamaged_)
+		if (player_.IsAttacking())
 		{
 			// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
 			CheckHitPLAttack();
 		}
-
-		// ﾀﾞﾒｰｼﾞを食らった
-		if (onDamaged_ && stateTransitioner_ != &Enemy::Hit)
+		if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
 		{
-			// hpを削る
-			hp_ -= 10;
-			// hpが0になったら
-			if (hp_ <= 0)
+			actCtl_.update(type_, delta, *this);
+		}
+
+		if (stateTransitioner_ != &Enemy::Death)
+		{
+			// ﾀﾞﾒｰｼﾞを食らった
+			if (onDamaged_)
 			{
-				if (stateTransitioner_ != &Enemy::Death)
+				if (stateTransitioner_ != &Enemy::Hit)
 				{
-					// 死ぬ状態にする
-					ChangeAnimation("assassin_death");
-					stateTransitioner_ = &Enemy::Death;
+
+					//onDamaged_ = false;
+					ChangeAnimation("assassin_hit");
+					//currentAnimation_ = "assassin_hit";
+					// 0ではなかったらhit状態にする
+					//ChangeAnimation("assassin_hit");
+					stateTransitioner_ = &Enemy::Hit;
 				}
 			}
-			else
+		}
+		// hpが0になったら
+		if (hp_ <= 0)
+		{
+			if (stateTransitioner_ != &Enemy::Death)
 			{
-				// 0ではなかったらhit状態にする
-				ChangeAnimation("assassin_hit");
-				stateTransitioner_ = &Enemy::Hit;
+				//currentAnimation_ = "assassin_death";
+				ChangeAnimation("assassin_death");
+				stateTransitioner_ = &Enemy::Death;
 			}
 		}
-		actCtl_.update(type_, delta, *this);
-		//if (currentAnimation_ == "attack")
-		{
-		}
 
-		//previousAnimation_ = currentAnimation_;
 
 		TRACE("pos:(%f,%f)", this->getPosition().x, this->getPosition().y);
 
@@ -168,24 +172,26 @@ void Assassin::update(float delta)
 				(*animationCol)->setVisible(false);
 			}
 		}
-		// 状態の遷移
-		(this->*stateTransitioner_)();
-		// Mapオブジェクトに当たっているかの確認
-		//CheckMapObjHit(delta);
-		// 重力をかける
-		//gravity_->ApplyGravityToTarget(delta);
+
 		// アニメーションの更新
 		UpdateAnimation(delta);
+		// 状態の遷移
+		(this->*stateTransitioner_)();
+
 		// アニメーション終了時に攻撃フラグをfalse
 		if (isAnimEnd_)
 		{
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
+			stateTransitioner_ = &Enemy::Idle;
+			//onDamaged_ = false;
 			currentAnimation_ = "assassin_idle";
 		}
+
 		if (currentAnimation_ != previousAnimation_)
 		{
 			ChangeAnimation(currentAnimation_);
+			//onDamaged_ = false;
 		}
 		previousAnimation_ = currentAnimation_;
 
