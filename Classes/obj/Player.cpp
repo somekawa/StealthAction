@@ -136,6 +136,7 @@ void Player::update(float delta)
 		auto director = Director::getInstance();
 		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
 		a->SetPlayerPos(getPosition());
+		a->SetPlayerDirection(direction_);
 		TestSkill* skill_t = new TestSkill(a);
 		a->addChild(skill_t);
 		
@@ -205,13 +206,20 @@ void Player::update(float delta)
 		if (currentAnimation_ == "player_AttackFirst" && !bitFlg_.FirstAttackFlg)
 		{
 			bitFlg_.FirstAttackFlg = true;
+			// ”½“]Ì×¸Ş‚Ì¾¯Ä
+			auto flip = false;
+			if (direction_ == Direction::Right)
+			{
+				flip = true;
+			}
+			if (direction_ == Direction::Left)
+			{
+				flip = false;
+			}
+
 			// UŒ‚´Ìª¸Ä‚Ì’Ç‰Á
-			auto attackSprite = lpEffectMng.createEffect("attack", 5, 0.04f, { 55.0f, 50.0f },getPosition());
+			auto attackSprite = lpEffectMng.createEffect("attack", 5, 0.04f, { 55.0f, 50.0f },getPosition(),flip);
 			lpEffectMng.PlayWithOnce(attackSprite, "attack");
-			// ´Ìª¸Ä±ÆÒ°¼®İ‚É’Ç‰ÁÏ‚İ‚È‚ç‚Î‰½‚à‚µ‚È‚¢
-			//lpEffectMng.AddEffect("attack", 5, 0.04f, { 55.0f,50.0f });
-			// UŒ‚´Ìª¸Ä‚ÌÄ¶
-			//lpEffectMng.Play("attack", getPosition());
 		}
 		lpAnimMng.ChangeAnimation(*this, currentAnimation_, true, ActorType::Player);
 	}

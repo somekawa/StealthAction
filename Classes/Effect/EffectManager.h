@@ -43,7 +43,10 @@ public:
 	void Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed);
 	// ｴﾌｪｸﾄ画像の生成と取得
 	// 内部的には、EffectManager内のｽﾌﾟﾗｲﾄﾌﾟｰﾙから作成したｴﾌｪｸﾄ画像を取り出す処理
-	const FXStruct& createEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset,cocos2d::Vec2 pos,bool loop = false);
+	const FXStruct& createEffect(std::string effectName,
+								 int frame, float duration,
+								 cocos2d::Vec2 offset,cocos2d::Vec2 pos,
+							     bool flipFlag,bool loop = false);
 	// ｴﾌｪｸﾄの再生(1回のみ)
 	// この関数を各ｺﾝｽﾄﾗｸﾀで1回のみ呼び出せばよい
 	void PlayWithOnce(FXStruct& fx,std::string effectName);

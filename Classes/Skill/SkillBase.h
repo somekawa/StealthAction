@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Effect/EffectManager.h"
+#include "Direction/Direction.h"
 
 struct SkillParam
 {
@@ -28,9 +29,11 @@ public:
 	virtual void UpDate(float delta);
 	virtual void Render(void);
 	virtual cocos2d::Vec2 GetPlayerPos(void);	// プレイヤー座標
+	virtual const Direction& GetPlayerDirection(void); // ﾌﾟﾚｲﾔｰの向き
 	virtual cocos2d::Vec2 GetTargetPos(void);	// 敵座標(ホーミング系の時にプレイヤーとの距離が一番近い敵の座標を取得したい)
 	void SetPlayerPos(cocos2d::Vec2 playerPos);
 	void SetTargetPos(cocos2d::Vec2 targetPos);
+	void SetPlayerDirection(const Direction& direction);
 	// ｽｷﾙｴﾌｪｸﾄ情報取得
 	FXStruct& GetFX(void)
 	{
@@ -40,6 +43,7 @@ private:
 	CREATE_FUNC(SkillBase);
 	cocos2d::Vec2 playerPos_;
 	cocos2d::Vec2 targetPos_;
+	Direction playerDirection_;
 	//std::shared_ptr<SkillMng> skillMng_;
 protected:
 	//virtual bool GetActive(void) = 0;

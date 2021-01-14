@@ -87,7 +87,10 @@ void EffectManager::Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed)
 	sprite->runAction(move);
 }
 
-const FXStruct& EffectManager::createEffect(std::string effectName, int frame, float duration, cocos2d::Vec2 offset,cocos2d::Vec2 pos,bool loop)
+const FXStruct& EffectManager::createEffect(std::string effectName,
+									        int frame, float duration, 
+										    cocos2d::Vec2 offset,cocos2d::Vec2 pos,
+										    bool flipFlag,bool loop)
 {
 	// “o˜^‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎA±ÆÒ°¼®İ‚Ì“o˜^‚ğ‚·‚é
 	if (effectAnimation_.find(effectName) == effectAnimation_.end())
@@ -138,6 +141,8 @@ const FXStruct& EffectManager::createEffect(std::string effectName, int frame, f
 	{
 		poolNo_ = 0;
 	}
+	// ”½“]Ì×¸Ş‚Ì¾¯Ä
+	SetFlip(flipFlag);
 	// ±ÆÒ°¼®İI—¹Ì×¸Ş‚Ì‰Šú‰»
 	curEffect.isAnimEnd_ = false;
 	// Ù°ÌßÌ×¸Ş‚Ì‰Šú‰»

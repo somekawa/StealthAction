@@ -8,6 +8,17 @@ TestSkill::TestSkill(SkillBase* ptr)
 	// add‚Å‚«‚È‚¢
 	ptr->AddActiveSkill(this);
 	pos_ = ptr->GetPlayerPos();
+	// ÌßÚ²Ô°‚Ì•ûŒü‚Ìæ“¾
+	auto direction = ptr->GetPlayerDirection();
+	auto flip = false;
+	if (direction == Direction::Right)
+	{
+		flip = true;
+	}
+	if (direction == Direction::Left)
+	{
+		flip = false;
+	}
 	// ´Ìª¸Ä‚ğì¬‚µ‚ÄA©g‚Ì´Ìª¸Ä‰æ‘œ‚ÉŠi”[
 	fx_ = lpEffectMng.createEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, pos_,true);
 	// ´Ìª¸Ä‚ÌÄ¶

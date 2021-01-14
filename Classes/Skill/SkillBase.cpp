@@ -69,6 +69,11 @@ cocos2d::Vec2 SkillBase::GetPlayerPos(void)
 	return playerPos_;
 }
 
+const Direction& SkillBase::GetPlayerDirection(void)
+{
+	return playerDirection_;
+}
+
 cocos2d::Vec2 SkillBase::GetTargetPos(void)
 {
 	return targetPos_;
@@ -82,4 +87,9 @@ void SkillBase::SetPlayerPos(cocos2d::Vec2 playerPos)
 void SkillBase::SetTargetPos(cocos2d::Vec2 targetPos)
 {
 	targetPos_ = targetPos;
+}
+
+void SkillBase::SetPlayerDirection(const Direction& direction)
+{
+	playerDirection_ = direction;
 }
