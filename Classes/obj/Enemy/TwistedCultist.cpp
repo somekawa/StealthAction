@@ -82,6 +82,7 @@ void TwistedCultist::update(float delta)
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		animationFrame_ = 0.0f;
+		animationFrame_int_ = 0.0f;
 		return;
 	}
 	// 死んだ判定
@@ -97,7 +98,10 @@ void TwistedCultist::update(float delta)
 			// 方向の変更
 			ChangeDirection();
 		}
-		actCtl_.update(type_, delta, *this);
+		if (!onDamaged_)
+		{
+			actCtl_.update(type_, delta, *this);
+		}
 
 		// 現在のフレームを整数値で取得
 		animationFrame_int_ = GetAnimationFrameInt() - 1;
@@ -125,14 +129,14 @@ void TwistedCultist::update(float delta)
 				if (stateTransitioner_ != &Enemy::Death)
 				{
 					// 死ぬ状態にする
-					ChangeAnimation("death");
+					ChangeAnimation("twistedCultist_death");
 					stateTransitioner_ = &Enemy::Death;
 				}
 			}
 			else
 			{
 				// 0ではなかったらhit状態にする
-				ChangeAnimation("hit");
+				ChangeAnimation("twistedCultist_hit");
 				stateTransitioner_ = &Enemy::Hit;
 			}
 		}
@@ -219,7 +223,7 @@ void TwistedCultist::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ -2,0 };
+		act.vel = Vec2{ 2,0 };
 		act.actName = "twistedCultist_walk";
 		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// 左上
 		act.checkPoint2 = Vec2{ -40,-40 };			// 左下
@@ -275,14 +279,21 @@ void TwistedCultist::actModuleRegistration(void)
 
 		actCtl_.RunInitializeActCtl(type_, "落下", act);
 	}
+	// 攻撃
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.actName = "twistedCultist_attack";
+		actCtl_.RunInitializeActCtl(type_, "攻撃", act);
+	}
 	// 更新関数の登録
 	actCtl_.InitUpdater(type_);
 }
 
 void TwistedCultist::NormalAttack(void)
 {
-	isAttacking_ = true;
-	if (animationFrame_int_ < 8)
+	//isAttacking_ = true;
+	if (animationFrame_int_ < 7)
 	{
 		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	}

@@ -21,6 +21,7 @@ Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRan
 	setPosition(pos);
 	// アニメーションが変更されたかのフラグの初期化
 	isChangedAnim_ = false;
+	isAttacking_ = false;
 	// プレイヤーを視認したかのフラグの初期化
 	identifiedPlayer_ = false;
 	// 方向変更フラグの初期化
@@ -107,14 +108,15 @@ bool Enemy::OnAttacked(void)
 						// 方向によって矩形ﾎﾟｼﾞｼｮﾝが変更するので、変更したﾎﾟｼﾞｼｮﾝに応じてbeginを変更
 						attackColData.begin_ = Vector2I(myCol->getPosition().x,myCol->getPosition().y);
 
-						auto attackColPos = Vec2{ getPosition().x + (attackColData.begin_.x + (attackColData.size_.x / 2)),
-												  getPosition().y + (attackColData.begin_.y + (attackColData.size_.y / 2)) };
-						auto damageColPos = Vec2{ player_.getPosition().x + (plDamageCol.begin_.x + (plDamageCol.size_.x / 2)) ,
-												  player_.getPosition().y + (plDamageCol.begin_.y + (plDamageCol.size_.y / 2)) };
+						auto attackColPos = Vec2{ getPosition().x + (attackColData.begin_.x + (attackColData.size_.x/2)),
+												  getPosition().y + (attackColData.begin_.y + (attackColData.size_.y/2)) };
+						auto damageColPos = Vec2{ player_.getPosition().x + (plDamageCol.begin_.x + (plDamageCol.size_.x/2)) ,
+												  player_.getPosition().y + (plDamageCol.begin_.y + (plDamageCol.size_.y/2)) };
 						// 当たり判定実施
-						if (abs(attackColPos.x - damageColPos.x) <= 50.0 &&
-							abs(attackColPos.y - damageColPos.y) <= 50.0)
+						if (abs(attackColPos.x - damageColPos.x) <= visionRange_.attack_ + 10.0f &&
+							abs(attackColPos.y - damageColPos.y) <= 75.0f)
 						{
+							auto t = type_;
 							// 攻撃を当てたtriggerをtrueにする
 							hittingToPlayer_ = true;
 							return true;

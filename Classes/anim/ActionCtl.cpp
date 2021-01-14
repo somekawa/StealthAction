@@ -18,11 +18,13 @@
 #include "EnemyAIFunctions/Judgement/ChaseJudgement.h"
 #include "EnemyAIFunctions/Judgement/PatrolJudgement.h"
 #include "EnemyAIFunctions/Judgement/FlipJudgement.h"
+#include "EnemyAIFunctions/Judgement/PhysicalAttackJudgement.h"
 
 #include "EnemyAIFunctions/Actions/ChaseAction.h"
 #include "EnemyAIFunctions/Actions/FlipAction.h"
 #include "EnemyAIFunctions/Actions/PatrolAction.h"
 #include "EnemyAIFunctions/Actions/FallAction.h"
+#include "EnemyAIFunctions/Actions/PhysicalAttackAction.h"
 
 USING_NS_CC;
 
@@ -309,7 +311,25 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 		}
 
 	}
-
+	if (actName == "攻撃")
+	{
+		if (type != ActorType::Player)
+		{
+			_mapModule.emplace(actName, std::move(module));
+			_mapModule[actName].act.emplace_back(PhysicalAttackJudgement());
+			//_mapModule[actName].act.emplace_back(CheckObjHit());
+			//_mapModule[actName].act.emplace_back(CheckList());
+			_mapModule[actName].runAction = PhysicalAttackAction();
+		}
+		else
+		{
+			_mapModule.emplace(actName, std::move(module));
+			_mapModule[actName].act.emplace_back(CheckKeyList());
+			//_mapModule[actName].act.emplace_back(CheckObjHit());
+			//_mapModule[actName].act.emplace_back(CheckList());
+			_mapModule[actName].runAction = Attack();
+		}
+	}
 	// ｱｸﾀｰのﾀｲﾌﾟ毎の固有のｱｸｼｮﾝの登録
 	switch (type)
 	{
@@ -342,14 +362,7 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 			_mapModule[actName].runAction = JumpJumping();
 		}
 
-		if (actName == "攻撃")
-		{
-			_mapModule.emplace(actName, std::move(module));
-			_mapModule[actName].act.emplace_back(CheckKeyList());
-			//_mapModule[actName].act.emplace_back(CheckObjHit());
-			//_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = Attack();
-		}
+
 		break;
 	case ActorType::Imp:
 		break;
@@ -564,8 +577,9 @@ void ActionCtl::InitUpdater(ActorType& type)
 						_mapModule["落下"].stopCnt = 0;
 					}
 				}
+
 			}
-			// 何もアクションが行われていなければIDOLを設定する
+			// 何もアクションが行われていなければidleを設定する
 			if (!actFlg)
 			{
 				dynamic_cast<Enemy&>(sprite).SetAction("assassin_idle");
@@ -600,7 +614,6 @@ void ActionCtl::InitUpdater(ActorType& type)
 			{
 				if (actCheck(data.first))
 				{
-
 					// フレーム値の更新
 					data.second.flame = _mapFlame[data.first];
 

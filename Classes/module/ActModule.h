@@ -29,6 +29,7 @@ struct ActModule {
 	cocos2d::Vec2 checkPoint4;									// 落下で使うテスト
 
 	TOUCH_TIMMING touch;
+	
 
 	std::list<std::string>blackList;							// ブラックリスト(動いてはいけないやつ)
 	std::list<std::string>whiteList;							// ホワイトリスト(動いていいやつ)

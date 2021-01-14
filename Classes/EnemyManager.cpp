@@ -219,7 +219,7 @@ void EnemyManager::AddAnim(ActorType type)
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "walk", 8, 0.08f, ActorType::Cultist, true);
 
 		// attack
-		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "attack", 10, 0.08f, ActorType::Cultist, false);
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "attack", 10, 0.08f, ActorType::Cultist, true);
 
 		// death
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/cultist/cultist", "death", 12, 0.08f, ActorType::Cultist, false);
@@ -234,7 +234,7 @@ void EnemyManager::AddAnim(ActorType type)
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "run", 8, 0.08f, ActorType::BigCultist, true);
 
 		// attack
-		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "attack", 20, 0.08f, ActorType::BigCultist, false);
+		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "attack", 20, 0.08f, ActorType::BigCultist, true);
 
 		// death
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "death", 12, 0.08f, ActorType::BigCultist, false);
@@ -276,7 +276,7 @@ void EnemyManager::CreateEnemy(ActorType type)
 
 		break;
 	case ActorType::Assassin:
-		vRange = VisionRange(20.0f, 50.0f);
+		vRange = VisionRange(100.0f, 50.0f);
 
 		sprite = Assassin::CreateAssassin(Vec2(spawnPos.x,spawnPos.y), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
 		// “G‚É–¼‘O‚ð•t‚¯‚é

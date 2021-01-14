@@ -245,7 +245,7 @@ void Cultist::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ -2,0 };
+		act.vel = Vec2{ 2,0 };
 		act.actName = "cultist_walk";
 		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// ¶ã
 		act.checkPoint2 = Vec2{ -size.x / 2,  15 };			// ¶‰º
@@ -300,6 +300,13 @@ void Cultist::actModuleRegistration(void)
 		//act.blackList.emplace_back(ACTION::JUMP);	// ƒWƒƒƒ“ƒv’†‚É—‰º‚µ‚Ä‚Ù‚µ‚­‚È‚¢
 
 		actCtl_.RunInitializeActCtl(type_, "—‰º", act);
+	}
+	// UŒ‚
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.actName = "cultist_attack";
+		actCtl_.RunInitializeActCtl(type_, "UŒ‚", act);
 	}
 	// XVŠÖ”‚Ì“o˜^
 	actCtl_.InitUpdater(type_);

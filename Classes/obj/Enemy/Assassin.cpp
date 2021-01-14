@@ -24,34 +24,15 @@ Assassin::Assassin(Vec2 pos, Player& player,
 
 	// アニメーションの登録
 	AnimRegistrator();
-	actModuleRegistration();
 	// ActModuleの登録
-	//ActModuleRegistrator();
+	actModuleRegistration();
 
 	currentAnimation_ = "assassin_idle";
 	previousAnimation_ = currentAnimation_;
-
-	//this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_,currentAnimation_)));
-
 	direction_ = Direction::Left;
 
-	//lpCol.Load(collider_, "idle", "assassin");
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(30.0f, 30.0f);
-	//for (auto col : collider_["idle"])
-	//{
-	//	for (int colNum = 0; colNum < col.size(); colNum++)
-	//	{
-	//		// colliderBoxを自身の子にする
-	//		auto draw = col[colNum]->create();
-	//		// ポジションがおかしい...
-	//		draw->setAnchorPoint(Vec2(0.0f, 0.0f));
-	//		draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-	//		draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
-	//		draw->setTag(col[colNum]->GetData().frame_);
-	//		this->addChild(draw, 0, "idle");
-	//	}
-	//}
 
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
@@ -108,6 +89,7 @@ void Assassin::update(float delta)
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		animationFrame_ = 0.0f;
+		animationFrame_int_ = 0.0f;
 		return;
 	}
 	// ﾌﾛｱ変更の際に自身を消す
@@ -120,7 +102,6 @@ void Assassin::update(float delta)
 	}
 	else
 	{
-
 		if (!isAttacking_)
 		{
 			// 方向の変更
@@ -134,8 +115,7 @@ void Assassin::update(float delta)
 		{
 			animationFrame_int_ = 0;
 		}
-		// 無条件に通っていたら処理が重くなるので
-		// ﾌﾟﾚｲﾔｰが攻撃態勢で自分が攻撃食らっていなかったら(今のところこうしているが、後で自分がhitﾓｰｼｮﾝが終わったらに変更予定)
+
 		if (player_.IsAttacking() && !onDamaged_)
 		{
 			// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
@@ -153,14 +133,14 @@ void Assassin::update(float delta)
 				if (stateTransitioner_ != &Enemy::Death)
 				{
 					// 死ぬ状態にする
-					ChangeAnimation("death");
+					ChangeAnimation("assassin_death");
 					stateTransitioner_ = &Enemy::Death;
 				}
 			}
 			else
 			{
 				// 0ではなかったらhit状態にする
-				ChangeAnimation("hit");
+				ChangeAnimation("assassin_hit");
 				stateTransitioner_ = &Enemy::Hit;
 			}
 		}
@@ -201,6 +181,7 @@ void Assassin::update(float delta)
 		{
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
+			currentAnimation_ = "assassin_idle";
 		}
 		if (currentAnimation_ != previousAnimation_)
 		{
@@ -271,7 +252,7 @@ void Assassin::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ -2,0 };
+		act.vel = Vec2{ 2,0 };
 		act.actName = "assassin_run";
 		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// 左上
 		act.checkPoint2 = Vec2{ -size.x / 2,  15 };			// 左下
@@ -304,6 +285,13 @@ void Assassin::actModuleRegistration(void)
 
 		actCtl_.RunInitializeActCtl(type_, "落下", act);
 	}
+	// 攻撃
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.actName = "assassin_attack";
+		actCtl_.RunInitializeActCtl(type_, "攻撃", act);
+	}
 	// 更新関数の登録
 	actCtl_.InitUpdater(type_);
 }
@@ -318,8 +306,8 @@ void Assassin::Fall(void)
 
 void Assassin::NormalAttack(void)
 {
-	isAttacking_ = true;
-	if (animationFrame_int_ < 14)
+	//isAttacking_ = true;
+	if (animationFrame_int_ < 13)
 	{
 		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	}
