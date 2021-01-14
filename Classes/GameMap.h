@@ -7,6 +7,7 @@
 
 using MapData = std::vector<cocos2d::TMXTiledMap*>;
 
+// 子供ステータス
 struct MapChild
 {
 	int mapID;	// 子供のmapID
@@ -14,12 +15,16 @@ struct MapChild
 	MapDirection gateDir;	// 子供に行くためのゲートの場所
 	cocos2d::Vec2 nextPos;	// 次のプレイヤー座標
 };
+
+// 親のステータス
 struct MapParentState
 {
 	int mapID;	// 親のmapID
 	std::vector<MapChild> child;	// 子供へのアクセス
-	int enemyNum;
+	int enemyNum;	// 敵の数
+	bool isArrival;
 };
+// 親リスト
 struct MapParentList
 {
 	int nowID;	 // 現在の親ID
@@ -36,14 +41,16 @@ public:
 	void AddMap(std::string& mapPath);
 	// オブジェクトレイヤを読み込んで配置
 	void CreateObject();
-	// 今のマップを取得
-	cocos2d::TMXTiledMap* GetNowMap();
+
 	// マップをロード開始
 	void LoadMap(Player& player);
 	// 今のマップをロードした次のマップに切り替え(プレイヤーのポジション)
 	void ReplaceMap(Player& player);
 	void update(Player& player);
-	// 次のマップID取得
+
+	// 今のマップを取得
+	cocos2d::TMXTiledMap* GetNowMap();
+	// 今のマップID取得
 	int GetNowID();
 	// エネミーの数
 	int GetEnemyNum();
@@ -66,7 +73,7 @@ private:
 	
 	MapData mapDatas_;	// 0番が親
 	std::vector<Gate*>objs_;
-	int nextId;
+	int nextId_;
 	int frame_;
 	std::array<cocos2d::Vec2, static_cast<int>(MapDirection::Max)>nextPosTbl;
 	std::shared_ptr<MapGenerator>mapGenerator_;

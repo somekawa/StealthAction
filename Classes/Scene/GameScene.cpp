@@ -268,8 +268,8 @@ bool Game::init()
 	PL_HPgaugeSp->scheduleUpdate();
 
 	auto fileUtiles = FileUtils::getInstance();
-	auto vertexSource = fileUtiles->getStringFromFile("OutLineTest.vert");
-	auto fragmentSource = fileUtiles->getStringFromFile("OutLineTest.frag");
+	auto vertexSource = fileUtiles->getStringFromFile("Shader/OutLineTest.vert");
+	auto fragmentSource = fileUtiles->getStringFromFile("Shader/OutLineTest.frag");
 	program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 	programState = new backend::ProgramState(program);
 
@@ -294,14 +294,14 @@ bool Game::init()
 	// ｴﾌｪｸﾄ用ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾙ作成
 	lpEffectMng.CreatePools(*layer_[static_cast<int>(zOlder::EFFECT)]);
 
-	// ミニマップ
+	// マップメニュー
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
 		if (keyCode == EventKeyboard::KeyCode::KEY_M)
 		{
-			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap_->GetMapGenerator(), gameMap_->GetNowID()));
+			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(*gameMap_));
 		}
 	};
 #else
@@ -366,10 +366,17 @@ void Game::update(float sp)
 		
 		//auto program2 = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 		auto programState2 = new backend::ProgramState(program);
+		auto psLoc = programState->getUniformLocation("u_OutlineColor");
+		auto psValues = Vec3(1, 0, 0);
+		programState2->setUniform(psLoc, &psValues, sizeof(psValues));
 		e->setProgramState(programState2);
 		programState2->release();
 	}
+	auto psLoc = programState->getUniformLocation("u_OutlineColor");
+	auto psValues = Vec3(0, 0, 0);
+	programState->setUniform(psLoc, &psValues, sizeof(psValues));
 	player->setProgramState(programState);
+
 	//// 当たり判定用の枠を出してみる
 	//auto ppos = plSprite->getPosition();
 	//auto psize = plSprite->getContentSize();

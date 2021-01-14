@@ -49,6 +49,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 		MapParentState mapParent;
 		mapParent.mapID = 0;	// サイズが1だったらIDは0
 		mapParent.enemyNum = RandomHelper::random_int(3, 7);
+		mapParent.isArrival = false;
 		for (auto& child : node.childData)
 		{
 			mapChild.mapID = 0;
@@ -63,6 +64,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	}
 
 	mapParentsList_.nowID = 0;
+	mapParentsList_.mapParents[mapParentsList_.nowID].isArrival = true;
 	// 最初のマップのオブジェクトを作る処理
 	CreateObject();
 	// 最初のマップ以外を見えなくする処理
@@ -92,7 +94,7 @@ void GameMap::LoadMap(Player& player)
 
 void GameMap::ReplaceMap(Player& player)
 {
-	int childId = nextId;
+	int childId = nextId_;
 	auto mapState_ = mapParentsList_.mapParents[mapParentsList_.nowID];
 	auto selectNextMap = mapDatas_[static_cast<int>(mapState_.child[childId].mapID)];
 	auto nowMap = GetNowMap();
@@ -180,7 +182,7 @@ void GameMap::update(Player& player)
 		
 		if(obj->IsHit(player))
 		{
-			nextId = obj->GetGateNum();
+			nextId_ = obj->GetGateNum();
 			// ﾌﾟﾚｲﾔｰがｹﾞｰﾄをくぐった時にのみtrueにする
 			isChangeFloor_ = true;
 			LoadMap(player);
@@ -212,8 +214,6 @@ cocos2d::TMXTiledMap* GameMap::createMapFromPath(std::string& mapPath)
 	colLayer->setName("col");
 	wallSlideLayer->setName("slide");
 	mapLayer_->addChild(map);
-	//map->setPosition(map->getPosition());
-
 	map->setName("MapData");
 
 	cocos2d::TMXTiledMap* mapArray = map;

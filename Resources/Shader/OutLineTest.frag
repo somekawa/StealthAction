@@ -29,8 +29,7 @@ precision lowp float;
 varying vec4 v_fragmentColor;
 varying vec2 v_texCoord;
 
-uniform vec4 u_OutlineColor;
-uniform float u_OutlineWidth;
+uniform vec3 u_OutlineColor;
 
 uniform sampler2D u_texture;
 
@@ -44,19 +43,13 @@ void main()
     normal = texture2D(u_texture, center);
     if(normal.a != 0.0f)
     {
-    
-
-
+        // 四方向にずらすことでアウトラインにする
         ret += texture2D(u_texture, vec2(v_texCoord.x, v_texCoord.y - radius));
         ret += texture2D(u_texture, vec2(v_texCoord.x, v_texCoord.y + radius));
         ret += texture2D(u_texture, vec2(v_texCoord.x + radius, v_texCoord.y));
         ret += texture2D(u_texture, vec2(v_texCoord.x - radius, v_texCoord.y));
-        //ret += texture2D(u_texture, vec2(v_texCoord.x - radius, v_texCoord.y ));
-        //ret += texture2D(u_texture, vec2(v_texCoord.x + radius, v_texCoord.y ));
-        //ret += texture2D(u_texture, vec2(v_texCoord.x, v_texCoord.y + radius));
-        //ret += texture2D(u_texture, vec2(v_texCoord.x, v_texCoord.y - radius));
-        ret.rgb =  vec3(0.0f,1.0f,0.0f) * ret.a;
-        ret.a = 0.5f;
+        ret.rgb =  u_OutlineColor * ret.a;
+        ret.a = 1f;
     
         normal = ( ret * (1.0 - normal.a)) + (normal * normal.a);
     }

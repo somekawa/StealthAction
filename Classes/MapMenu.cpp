@@ -2,11 +2,14 @@
 #include "Generator/MapGenerator.h"
 #include "Scene/GameScene.h"
 #include "Generator/MST.h"
+#include "GameMap.h"
 
 USING_NS_CC;
 
-MapMenu::MapMenu(MapGenerator& mapGen, int nowID)
+MapMenu::MapMenu(GameMap& gameMap)
 {
+	auto& mapGen = gameMap.GetMapGenerator();
+	const auto& nowID = gameMap.GetNowID();
 	auto director = Director::getInstance();
 	auto size = director->getVisibleSize();
 	auto tex = RenderTexture::create(size.width, size.height);
@@ -94,9 +97,9 @@ MapMenu::~MapMenu()
 {
 }
 
-cocos2d::Scene* MapMenu::CreateMapMenu(MapGenerator& mapGen, int nowID)
+cocos2d::Scene* MapMenu::CreateMapMenu(GameMap& gameMap)
 {
-	MapMenu* pRet = new(std::nothrow) MapMenu(mapGen,nowID);
+	MapMenu* pRet = new(std::nothrow) MapMenu(gameMap);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
