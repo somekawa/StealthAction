@@ -48,6 +48,7 @@ private:
 protected:
 	//virtual bool GetActive(void) = 0;
 	cocos2d::Vec2 pos_;
+	cocos2d::Vec2 tpos_;
 	std::vector<SkillBase*> skillList_;
 	SkillParam param;
 	// ©g‚Ì´Ìª¸Ä‚Ì½Ìß×²Ä

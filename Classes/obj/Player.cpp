@@ -23,8 +23,8 @@ USING_NS_CC;
 
 int Player::no_ = 0;
 
-Player::Player(int hp,Layer& myLayer,SkillBase* skillBasePtr):
-	Actor(hp,myLayer)
+Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr):
+	Actor(hp,myLayer),enemyList_(enemyLayer)
 {
 	skillBase_ = skillBasePtr;
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -135,11 +135,27 @@ void Player::update(float delta)
 	{
 		auto director = Director::getInstance();
 		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
+		//FLT_MAX : float ‚ÌÅ‘å‚Ì—LŒÀ’l
+		auto ppos = getPosition();
+		auto minpos = Vec2(0,0);
+		auto minlen = FLT_MAX;
+		for (auto enemy : enemyList_.getChildren())
+		{
+			auto epos = enemy->getPosition();
+			auto veccomp = epos - ppos;
+			auto length = sqrt(veccomp.x * veccomp.x + veccomp.y * veccomp.y);
+			if (minlen > length)
+			{
+				minlen = length;
+				minpos = epos;
+			}
+		}
+		a->SetTargetPos(minpos);
 		a->SetPlayerPos(getPosition());
 		a->SetPlayerDirection(direction_);
 		TestSkill* skill_t = new TestSkill(a);
 		a->addChild(skill_t);
-		
+
 		lpSkillMng.SkillActivate(plfile_[0]);
 	}
 
@@ -616,9 +632,9 @@ const AttackRect& Player::GetAttackRect(void)
 	return attackRect_;
 }
 
-Player* Player::CreatePlayer(int hp,Layer& myLayer,SkillBase* skillBasePtr)
+Player* Player::CreatePlayer(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr)
 {
-	Player* pRet = new(std::nothrow) Player(hp,myLayer,skillBasePtr);
+	Player* pRet = new(std::nothrow) Player(hp,myLayer,enemyLayer,skillBasePtr);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();

@@ -375,11 +375,12 @@ void Game::update(float sp)
 void Game::AddPlayer(int playerNum)
 {
 	auto skillBasePtr = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
+	auto enemies = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
 
 	// playerêîresize
 	for (int p = 0; p < playerNum; p++)
 	{
-		auto plSprite = Player::CreatePlayer(100, *layer_[static_cast<int>(zOlder::CHAR_PL)], skillBasePtr);
+		auto plSprite = Player::CreatePlayer(100, *layer_[static_cast<int>(zOlder::CHAR_PL)],*layer_[static_cast<int>(zOlder::CHAR_ENEMY)],skillBasePtr);
 		plSprite->setName("player" + std::to_string(p + 1));
 		plSprite->setScale(3.0f);
 		plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));

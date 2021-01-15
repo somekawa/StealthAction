@@ -23,7 +23,7 @@ class SkillBase;
 class Player : public Actor
 {
 public:
-	Player(int hp,cocos2d::Layer& myLayer, SkillBase* skillBasePtr);
+	Player(int hp,cocos2d::Layer& myLayer, cocos2d::Layer& enemyLayer, SkillBase* skillBasePtr);
 	~Player();
 
 	void Action(void) override;
@@ -36,7 +36,7 @@ public:
 	void SetAction(std::string action);							// 現在のアクション状態をセットする
 	void SetDir(Direction dir);									// 現在の方向をセットする
 	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
-	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer, SkillBase* skillBasePtr);
+	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer, cocos2d::Layer& enemyLayer, SkillBase* skillBasePtr);
 private:
 	void attackMotion(float delta);								// 攻撃モーションの設定
 	void transformMotion(float delta);							// トランスフォームの設定
@@ -64,6 +64,6 @@ private:
 
 	SkillBase* skillBase_;										// SkillBaseクラスのポインタ情報(コンストラクタで最初に取得)
 	std::vector<std::string> plfile_;							// Playerのスキル情報(.txt)を入れるvector
-
+	cocos2d::Layer& enemyList_;
 	bool testflg = false;
 };
