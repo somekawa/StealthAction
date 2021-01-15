@@ -11,7 +11,8 @@ USING_NS_CC;
 
 GameMap::GameMap(cocos2d::Layer& layer)
 {
-	mapGenerator_ = std::make_shared<MapGenerator>();
+	std::random_device engine;
+	mapGenerator_ = std::make_shared<MapGenerator>(engine());
 	mapGenerator_->Call();
 	auto nodeData = mapGenerator_->GetMSTNode();
 	mapLayer_ = &layer;
