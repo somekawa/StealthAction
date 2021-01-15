@@ -177,3 +177,35 @@ void Actor::SetAttackOffset(cocos2d::Vec2 offset)
 {
 	attackRect_.offset_ = offset;
 }
+
+void Actor::SetCollider(void)
+{
+	// 攻撃矩形情報のｾﾞﾛｸﾘ
+	attackCol_ = cocos2d::Rect(0, 0, 0, 0);
+	// ﾀﾞﾒｰｼﾞ矩形情報のｾﾞﾛｸﾘ
+	damageCol_ = cocos2d::Rect(0, 0, 0, 0);
+
+	for (auto col : currentCol_)
+	{
+		// 現在のｺﾘｼﾞｮﾝのﾃﾞｰﾀを格納しておく
+		auto colData = col->GetData();
+		// 攻撃矩形だったら
+		if (colData.type_ == 0)
+		{
+			// 攻撃矩形のﾎﾟｼﾞｼｮﾝ
+			// direction毎に+ or - してやらないといけない
+			attackCol_.origin = getPosition() + Vec2(colData.begin_.x, colData.begin_.y);
+			// 攻撃矩形のｻｲｽﾞ
+			attackCol_.size = Size(colData.size_.x, colData.size_.y);
+		}
+		else
+		{
+			// 攻撃矩形のﾎﾟｼﾞｼｮﾝ
+			// direction毎に+ or - してやらないといけない
+			// ﾀﾞﾒｰｼﾞ矩形のﾎﾟｼﾞｼｮﾝ
+			damageCol_.origin = getPosition() + Vec2(colData.begin_.x, colData.begin_.y);
+			// ﾀﾞﾒｰｼﾞ矩形のｻｲｽﾞ
+			damageCol_.size = Size(colData.size_.x, colData.size_.y);
+		}
+	}
+}

@@ -32,8 +32,11 @@ Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRan
 	hittingToPlayer_ = false;
 	// 状態遷移の関数ﾎﾟｲﾝﾀの初期化
 	stateTransitioner_ = &Enemy::Idle;
-
+	// moveTypeの初期化
+	mType_ = MoveType::Non;
 	oldPos_ = getPosition();
+	// patrol(巡回行動)をしているﾌﾚｰﾑ数の初期化
+	patrolFrame_ = 0.0f;
 	// プレイヤーと自分の距離を測ってインスタンス
 	vision_ = abs(player_.getPosition().x - getPosition().x);
 }
@@ -61,25 +64,55 @@ void Enemy::DeleteSelfOnFloor(void)
 	}
 }
 
-void Enemy::ChangeDirection(void)
+void Enemy::ChangeDirection(float delta)
 {
-	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
-	auto playerPos = player_.getPosition();
-	// 1ﾌﾚｰﾑ前の自身の向いている方向の格納
-	oldDirection_ = direction_;
 	auto flip = false;
-	// ﾌﾟﾚｲﾔｰが自身よりも左にいる場合
-	if (getPosition().x > playerPos.x)
+	if (mType_ == MoveType::Chase)
 	{
-		direction_ = Direction::Left;
+		// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
+		auto playerPos = player_.getPosition();
+		// 1ﾌﾚｰﾑ前の自身の向いている方向の格納
+		oldDirection_ = direction_;
+		// ﾌﾟﾚｲﾔｰが自身よりも左にいる場合
+		if (getPosition().x > playerPos.x)
+		{
+			direction_ = Direction::Left;
+		}
+		// ﾌﾟﾚｲﾔｰが自身よりも右にいる場合
+		else
+		{
+			direction_ = Direction::Right;
+		}
+	}
+	else if(mType_ == MoveType::Patrol)
+	{
+		// 1ﾌﾚｰﾑ前の自身の向いている方向の格納
+		oldDirection_ = direction_;
+		// patrolをしている間のｶｳﾝﾄを加算
+		patrolFrame_ += delta;
+		// patrol(巡回)行動をしているのが一定間隔以上だったら
+		if (patrolFrame_ >= DefPatrolFrame)
+		{
+			patrolFrame_ = 0.0f;
+			// 右か左の方向をﾗﾝﾀﾞﾑで決定する
+			// cocos2d::RandomHelper::random_int(int min,int max);
+			// min(最小)～max(最大)の間でﾗﾝﾀﾞﾑな数値を返す
+			direction_ = (Direction)RandomHelper::random_int((int)Direction::Right, (int)Direction::Left);
+		}
+	}
+	if (direction_ == Direction::Left)
+	{
 		flip = false;
 	}
-	// ﾌﾟﾚｲﾔｰが自身よりも右にいる場合
-	else
+	else if (direction_ == Direction::Right)
 	{
-		direction_ = Direction::Right;
 		flip = true;
 	}
+	// patrol(巡回)行動でない場合はpatrolFrameをｾﾞﾛｸﾘ
+	//if (mType_ != MoveType::Patrol)
+	//{
+	//	patrolFrame_ = 0.0f;
+	//}
 	runAction(FlipX::create(flip));
 }
 
@@ -90,7 +123,7 @@ bool Enemy::OnAttacked(void)
 	if (!hittingToPlayer_)
 	{
 		// ﾌﾟﾚｲﾔｰのｺﾗｲﾀﾞｰﾎﾞｯｸｽの走査
-		for (auto plCol : player_.GetCurrectCol())
+		for (auto plCol : player_.GetCurrentCol())
 		{
 			// ﾀﾞﾒｰｼﾞ判定ｺﾗｲﾀﾞｰﾎﾞｯｸｽだったら
 			if (plCol->GetData().type_ == 1)
@@ -135,7 +168,7 @@ void Enemy::CheckHitPLAttack(void)
 	if (!onDamaged_)
 	{
 		// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀ
-		auto plColData = player_.GetCurrectCol();
+		auto plColData = player_.GetCurrentCol();
 		// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
 		for (auto attackCol : plColData)
 		{

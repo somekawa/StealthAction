@@ -85,7 +85,7 @@ Imp* Imp::CreateImp(Vec2 pos,Player& player, BehaviorTree* aiTree, VisionRange v
 
 void Imp::Action(void)
 {
-	ChangeDirection();
+	//ChangeDirection();
 	//AnimationManager::ChangeAnimation(sprite_, "run");
 	(this->*updater_)();
 }

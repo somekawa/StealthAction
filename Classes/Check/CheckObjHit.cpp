@@ -60,9 +60,13 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 		return false;
 	};
 
+
 	if ((plCheckPoint1GidW != 0 && plCheckPoint2GidW != 0))
 	{
-		((Player&)sprite).SetAction("player_Wall_Slide");
+		if (sprite.getName() == "player1")
+		{
+			((Player&)sprite).SetAction("player_Wall_Slide");
+		}
 		return false;
 	}
 

@@ -49,7 +49,7 @@ public:
 	virtual void SetAction(std::string actName);
 
 	// 方向変更
-	virtual void ChangeDirection(void) = 0;
+	virtual void ChangeDirection(float delta) = 0;
 	// アニメーション登録
 	virtual void AnimRegistrator(void) = 0;
 	// オブジェクトが死んだらdeleteFlagをtrueにする
@@ -122,7 +122,7 @@ public:
 	// 攻撃矩形のｵﾌｾｯﾄを設定
 	virtual void SetAttackOffset(cocos2d::Vec2 offset);
 	// 現在のコライダーボックスの取得
-	const std::vector <std::shared_ptr<ActionRect>>& GetCurrectCol(void)
+	const std::vector <std::shared_ptr<ActionRect>>& GetCurrentCol(void)
 	{
 		return currentCol_;
 	}
@@ -149,6 +149,18 @@ public:
 	// モジュールの登録
 	virtual  void actModuleRegistration(void) = 0;							
 
+	// 攻撃矩形の取得
+	const cocos2d::Rect& GetAttackCol(void)
+	{
+		return attackCol_;
+	}
+	// ﾀﾞﾒｰｼﾞ矩形の取得
+	const cocos2d::Rect& GetDamageCol(void)
+	{
+		return damageCol_;
+	}
+	// 各ｺﾗｲﾀﾞｰ情報の設定
+	virtual void SetCollider(void);
 private:
 
 protected:
@@ -213,4 +225,10 @@ protected:
 
 	//読み込んだファイルデータの保存
 	DataTable fileLoad_;
+
+	// ﾃｽﾄ
+	// 攻撃矩形の格納先
+	cocos2d::Rect attackCol_;
+	// ﾀﾞﾒｰｼﾞ矩形の格納先
+	cocos2d::Rect damageCol_;
 };

@@ -106,7 +106,7 @@ void Cultist::update(float delta)
 		if (!isAttacking_)
 		{
 			// 方向の変更
-			ChangeDirection();
+			ChangeDirection(delta);
 		}
 		// 現在のフレームを整数値で取得
 		animationFrame_int_ = GetAnimationFrameInt() - 1;
@@ -137,7 +137,6 @@ void Cultist::update(float delta)
 			{
 				if (stateTransitioner_ != &Enemy::Hit)
 				{
-
 					//onDamaged_ = false;
 					ChangeAnimation("cultist_hit");
 					//currentAnimation_ = "assassin_hit";
@@ -152,12 +151,10 @@ void Cultist::update(float delta)
 		{
 			if (stateTransitioner_ != &Enemy::Death)
 			{
-				//currentAnimation_ = "assassin_death";
 				ChangeAnimation("cultist_death");
 				stateTransitioner_ = &Enemy::Death;
 			}
 		}
-
 
 		TRACE("pos:(%f,%f)", this->getPosition().x, this->getPosition().y);
 
@@ -236,7 +233,7 @@ void Cultist::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ 2,0 };
+		act.vel = Vec2{ 0.5f,0 };
 		act.actName = "cultist_walk";
 		act.checkPoint1 = Vec2{ size.x / 2, size.y / 2 };	// 右上
 		act.checkPoint2 = Vec2{ size.x / 2,  15 };			// 右下
@@ -251,7 +248,7 @@ void Cultist::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ 2,0 };
+		act.vel = Vec2{ 0.5f,0 };
 		act.actName = "cultist_walk";
 		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// 左上
 		act.checkPoint2 = Vec2{ -size.x / 2,  15 };			// 左下

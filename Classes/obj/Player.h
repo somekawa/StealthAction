@@ -27,7 +27,7 @@ public:
 	~Player();
 
 	void Action(void) override;
-	void ChangeDirection(void) override;
+	void ChangeDirection(float delta) override;
 	void update(float delta) override;
 	void AnimRegistrator(void) override;						// アニメーションの登録
 	const AttackRect& GetAttackRect(void);

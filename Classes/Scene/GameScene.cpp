@@ -309,9 +309,14 @@ void Game::update(float sp)
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	gameMap_->update(*player);
 
+	// skill‚ÌUŒ‚‘ÎÛ‘I•Ê // 
+	// UŒ‚‘ÎÛ‚ªÌßÚ²Ô°‚É“n‚¹‚é‹@”\‚ª—~‚µ‚¢
+	// ÌßÚ²Ô°‚ªUŒ‚‘ÎÛ‚É‚·‚é“G‚ÌÀ°¹Þ¯Ä‚ðÀ¯Ìß‚É‚æ‚èØ‚è‘Ö‚¦‚é
+	// UŒ‚‘ÎÛ‚É‚·‚é“G‚Íˆê”ÔÅ‰‚ÍÚ²Ô°‚É‚¢‚éÅ‰‚Ì“G
+	// ‚»‚êˆÈ~‚ÍÀ¯Ìß‚Å•Ï‚¦‚Ä‚¢‚­(¡‚Ì‚Æ‚±‚ëGameScene‚Å‘‚­‚Ì‚ªˆê”Ô‚¾‚ÆŽv‚¤)
+
 	if (gameMap_->ChangeFloor())
 	{
-		
 		// “G‚Ì¶¬”‚ÌØ¾¯Ä(enemyNum_‚ð0‚É‚·‚é)
 		enemyManager_->ResetEnemyNum();
 		//effectManager_->Play(EffectType::EnemySpawn, Vec2(200.0f, 300.0f));

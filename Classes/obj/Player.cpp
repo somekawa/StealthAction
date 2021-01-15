@@ -240,7 +240,8 @@ void Player::update(float delta)
 		lpAnimMng.ChangeAnimation(*this, currentAnimation_, true, ActorType::Player);
 	}
 	actionOld_ = currentAnimation_;
-
+	// Šeº×²ÀŞ°‚ÌÎß¼Ş¼®İ‚Æ»²½Ş‚Ìİ’è
+	SetCollider();
 	//TRACE("playerPos:(%f,%f)", getPosition().x, getPosition().y);
 }
 
@@ -251,7 +252,7 @@ void Player::Action(void)
 }
 
 // Actor‚É‚ ‚é‚ª–¢g—p
-void Player::ChangeDirection(void)
+void Player::ChangeDirection(float delta)
 {
 	int a = 0;
 }

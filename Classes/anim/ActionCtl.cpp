@@ -25,6 +25,7 @@
 #include "EnemyAIFunctions/Actions/PatrolAction.h"
 #include "EnemyAIFunctions/Actions/FallAction.h"
 #include "EnemyAIFunctions/Actions/PhysicalAttackAction.h"
+#include "EnemyAIFunctions/Actions/MoveLRAction.h"
 
 USING_NS_CC;
 
@@ -265,7 +266,6 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 			//_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].runAction = Flip();
 		}
-
 	}
 	// ‘S±¸À°‚É‹¤’Ê‚·‚é±¸¼®İ
 	// ¶‰EˆÚ“®
@@ -278,9 +278,12 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 			// ÌßÚ²Ô°‚¶‚á‚È‚¢‚ÆJudgement‚ğcheck‚ÉŠi”[‚·‚é
 			_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].act.emplace_back(PatrolJudgement());
+			// patroló‘Ô‚É‚·‚é‚©‚Ç‚¤‚©‚Ì”»’èŠÖ”µÌŞ¼Şª¸Ä
+			//_mapModule[actName].act.emplace_back(PatrolJudgement());
+			// chaseó‘Ô‚É‚·‚é‚©‚Ç‚¤‚©‚Ì”»’èŠÖ”µÌŞ¼Şª¸Ä
+			//_mapModule[actName].act.emplace_back(ChaseJudgement());
 			// judgement‚ªtrue‚É‚È‚é‚ÆÀs‚·‚é±¸¼®İ
-			_mapModule[actName].runAction = PatrolAction();
+			_mapModule[actName].runAction = MoveLRAction();
 		}
 		else
 		{

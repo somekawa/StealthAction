@@ -8,6 +8,9 @@ class Player;
 class BehaviorTree;
 class BehaviorData;
 class NodeBase;
+// patrol(巡回行動)で左右どちらかの方向に動く間隔
+// 100ﾌﾚｰﾑに一回左右どちらかに動くか決定する。
+#define DefPatrolFrame 5.0f
 
 // 行動タイプ
 enum class MoveType
@@ -62,7 +65,7 @@ public:
 
 	virtual void AddAttackObj(const float& angle) = 0;
 
-	virtual void ChangeDirection(void);
+	virtual void ChangeDirection(float delta);
 	virtual const float& GetDistance(void);
 	// 生きているかのﾌﾗｸﾞのｾｯﾄ
 	void SetAlive(bool flg);
@@ -114,6 +117,9 @@ public:
 	//	Patrol,
 	//	Max
 	//};
+
+
+
 	virtual void SetMoveType(MoveType type);
 
 	// 壁や床にぶつかっているかの判定
@@ -172,6 +178,8 @@ protected:
 
 	// 移動の種類(patrol or chase)
 	MoveType mType_;
+	// patrol(巡回行動)をしている間、増え続けるｶｳﾝﾄ変数
+	float patrolFrame_;
 
 	cocos2d::DrawNode* debugCircle_;
 	// 一定距離歩いたらtrueになる

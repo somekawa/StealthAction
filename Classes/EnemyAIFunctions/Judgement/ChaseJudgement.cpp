@@ -1,13 +1,22 @@
 #include "ChaseJudgement.h"
 #include "obj/Enemy/Enemy.h"
+#include "_Debug/_DebugConOut.h"
 
 // true‚ð•Ô‚¹‚Î‚±‚ÌAction‚ð‚·‚é
 bool ChaseJudgement::operator()(cocos2d::Sprite& sprite, ActModule& module)
 {
-	if (dynamic_cast<Enemy&>(sprite).GetDistance() <= 100.0f)
+	// ‚à‚¤Šù‚ÉmoveType‚ª¾¯Ä‚³‚ê‚Ä‚¢‚éŽž‚Ítrue‚Å‚»‚Ì‚Ü‚Ü•Ô‚³‚È‚¢‚Æ
+	// MoveLRAction‚Ìˆ—‚ª‰ñ‚ç‚È‚¢‚Ì‚Å
+	if (dynamic_cast<Enemy&>(sprite).GetMoveType() != MoveType::Non)
 	{
-		
-		//return true;
+		return true;
+	}
+	if (dynamic_cast<Enemy&>(sprite).GetDistance() <= 200.0f)
+	{
+		TRACE("enemy_chase");
+		// enemy‚ÌmoveType‚ðChase‚É‚·‚é
+		dynamic_cast<Enemy&>(sprite).SetMoveType(MoveType::Chase);
+		return true;
 	}
 	return false;
 }

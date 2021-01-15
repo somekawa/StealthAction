@@ -105,7 +105,7 @@ void Assassin::update(float delta)
 		if (!isAttacking_)
 		{
 			// 方向の変更
-			ChangeDirection();
+			ChangeDirection(delta);
 		}
 		// 現在のフレームを整数値で取得
 		animationFrame_int_ = GetAnimationFrameInt() - 1;
@@ -197,7 +197,8 @@ void Assassin::update(float delta)
 			//onDamaged_ = false;
 		}
 		previousAnimation_ = currentAnimation_;
-
+		// 各矩形情報のｾｯﾄ
+		SetCollider();
 	}
 
 }
@@ -246,10 +247,10 @@ void Assassin::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ 2,0 };
+		act.vel = Vec2{ 0.5f,0 };
 		act.actName = "assassin_run";
-		act.checkPoint1 = Vec2{ size.x / 2, size.y / 2 };	// 右上
-		act.checkPoint2 = Vec2{ size.x / 2,  15 };			// 右下
+		act.checkPoint1 = Vec2{ size.x,size.y };	// 右上
+		act.checkPoint2 = Vec2{ size.x,  0 };			// 右下
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
@@ -261,10 +262,10 @@ void Assassin::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ 2,0 };
+		act.vel = Vec2{0.5f,0 };
 		act.actName = "assassin_run";
-		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// 左上
-		act.checkPoint2 = Vec2{ -size.x / 2,  15 };			// 左下
+		act.checkPoint1 = Vec2{ 0, size.y };	// 左上
+		act.checkPoint2 = Vec2{ 0, 0 };			// 左下
 
 		//act.blackList.emplace_back(ACTION::FALLING);
 

@@ -15,6 +15,7 @@ bool PatrolAction::operator()(cocos2d::Sprite& sprite, ActModule& module)
     {
         vel = -module.vel;
     }
+    dynamic_cast<Enemy&>(sprite).SetAction(module.actName);
     sprite.runAction(cocos2d::MoveBy::create(0.0f, vel));
 
     return true;
