@@ -88,21 +88,18 @@ void BigCultist::update(float delta)
 		animationFrame_ = 0.0f;
 		return;
 	}
-	if (getName() == "assassin_death" || getName() == "changeFloor_death")
+	if (getName() == "bigCultist_death" || getName() == "changeFloor_death")
 	{
 		// 自分を親であるGameSceneから削除する
 		this->removeFromParentAndCleanup(true);
 	}
 	else
 	{
-		previousAnimation_ = currentAnimation_;
 		if (!isAttacking_)
 		{
 			// 方向の変更
 			ChangeDirection();
 		}
-		actCtl_.update(type_, delta, *this);
-
 		// 現在のフレームを整数値で取得
 		animationFrame_int_ = GetAnimationFrameInt() - 1;
 
@@ -111,48 +108,52 @@ void BigCultist::update(float delta)
 		{
 			animationFrame_int_ = 0;
 		}
-		// 無条件に通っていたら処理が重くなるので
-		// ﾌﾟﾚｲﾔｰが攻撃態勢で自分が攻撃食らっていなかったら(今のところこうしているが、後で自分がhitﾓｰｼｮﾝが終わったらに変更予定)
-		if (player_.IsAttacking() && !onDamaged_)
+
+		// ﾌﾟﾚｲﾔｰが攻撃状態だと当たり判定処理をする
+		if (player_.IsAttacking())
 		{
 			// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
 			CheckHitPLAttack();
 		}
-
-		// ﾀﾞﾒｰｼﾞを食らった
-		if (onDamaged_ && stateTransitioner_ != &Enemy::Hit)
+		// ﾀﾞﾒｰｼﾞをくらっていない時と死ぬﾓｰｼｮﾝでない場合
+		if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
 		{
-			// hpを削る
-			hp_ -= 10;
-			// hpが0になったら
-			if (hp_ <= 0)
+			// actCtlのｱｯﾌﾟﾃﾞｰﾄを回す
+			actCtl_.update(type_, delta, *this);
+		}
+
+		if (stateTransitioner_ != &Enemy::Death)
+		{
+			// ﾀﾞﾒｰｼﾞを食らった
+			if (onDamaged_)
 			{
-				if (stateTransitioner_ != &Enemy::Death)
+				if (stateTransitioner_ != &Enemy::Hit)
 				{
-					// 死ぬ状態にする
-					ChangeAnimation("death");
-					stateTransitioner_ = &Enemy::Death;
+
+					//onDamaged_ = false;
+					ChangeAnimation("bigCultist_hit");
+					//currentAnimation_ = "assassin_hit";
+					// 0ではなかったらhit状態にする
+					//ChangeAnimation("assassin_hit");
+					stateTransitioner_ = &Enemy::Hit;
 				}
 			}
-			else
+		}
+		// hpが0になったら
+		if (hp_ <= 0)
+		{
+			if (stateTransitioner_ != &Enemy::Death)
 			{
-				// 0ではなかったらhit状態にする
-				ChangeAnimation("hit");
-				stateTransitioner_ = &Enemy::Hit;
+				//currentAnimation_ = "assassin_death";
+				ChangeAnimation("bigCultist_death");
+				stateTransitioner_ = &Enemy::Death;
 			}
 		}
 
-		//if (currentAnimation_ == "attack")
-		{
-		}
-
-		//previousAnimation_ = currentAnimation_;
 
 		TRACE("pos:(%f,%f)", this->getPosition().x, this->getPosition().y);
 
 		TRACE("attackFlag:%d\n", isAttacking_);
-
-
 
 		for (auto animationCol = this->getChildren().rbegin();
 			animationCol != this->getChildren().rend(); animationCol++)
@@ -167,23 +168,26 @@ void BigCultist::update(float delta)
 				(*animationCol)->setVisible(false);
 			}
 		}
-		// 状態の遷移
-		(this->*stateTransitioner_)();
-		// Mapオブジェクトに当たっているかの確認
-		//CheckMapObjHit(delta);
-		// 重力をかける
-		//gravity_->ApplyGravityToTarget(delta);
+
 		// アニメーションの更新
 		UpdateAnimation(delta);
+		// 状態の遷移
+		(this->*stateTransitioner_)();
+
 		// アニメーション終了時に攻撃フラグをfalse
 		if (isAnimEnd_)
 		{
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
+			stateTransitioner_ = &Enemy::Idle;
+			//onDamaged_ = false;
+			currentAnimation_ = "bigCultist_idle";
 		}
+
 		if (currentAnimation_ != previousAnimation_)
 		{
 			ChangeAnimation(currentAnimation_);
+			//onDamaged_ = false;
 		}
 		previousAnimation_ = currentAnimation_;
 	}
