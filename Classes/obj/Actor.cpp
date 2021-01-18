@@ -192,20 +192,97 @@ void Actor::SetCollider(void)
 		// UŒ‚‹éŒ`‚¾‚Á‚½‚ç
 		if (colData.type_ == 0)
 		{
-			// UŒ‚‹éŒ`‚ÌÎß¼Þ¼®Ý
-			// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
-			attackCol_.origin = getPosition() + Vec2(colData.begin_.x, colData.begin_.y);
 			// UŒ‚‹éŒ`‚Ì»²½Þ
-			attackCol_.size = Size(colData.size_.x, colData.size_.y);
+			attackCol_.size = Size(colData.size_.x * getScale(), colData.size_.y * getScale());
+			// ÌßÚ²Ô°‚¾‚Á‚½‚ç
+			if (type_ == ActorType::Player)
+			{
+				// Œü‚¢‚Ä‚¢‚é•ûŒü‚ÅÎß¼Þ¼®Ý‚Ì•ÏX‚ð‚©‚¯‚é
+				if (direction_ == Direction::Right)
+				{
+					// UŒ‚‹éŒ`‚ÌÎß¼Þ¼®Ý
+					// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+					attackCol_.origin = getPosition() + (attackCol_.size/2);
+				}
+				else if (direction_ == Direction::Left)
+				{
+					// UŒ‚‹éŒ`‚ÌÎß¼Þ¼®Ý
+					// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+					attackCol_.origin = Vec2(getPosition().x - (attackCol_.size.width/2/* + 15.0f*/), getPosition().y + attackCol_.size.height);
+				}
+			}
+			else
+			{
+				if (direction_ == Direction::Right)
+				{
+					// UŒ‚‹éŒ`‚ÌÎß¼Þ¼®Ý
+					// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+					attackCol_.origin = getPosition() + attackCol_.size;
+				}
+				else if (direction_ == Direction::Left)
+				{
+					// UŒ‚‹éŒ`‚ÌÎß¼Þ¼®Ý
+					// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+					attackCol_.origin = Vec2(getPosition().x - attackCol_.size.width,getPosition().y + attackCol_.size.height);
+				}
+			}
+			/*auto damagedraw = DrawNode::create();
+			damagedraw->drawRect(attackCol_.origin, attackCol_.origin - attackCol_.size, Color4F::GRAY);
+			addChild(damagedraw);*/
 		}
 		else
 		{
-			// UŒ‚‹éŒ`‚ÌÎß¼Þ¼®Ý
-			// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
-			// ÀÞÒ°¼Þ‹éŒ`‚ÌÎß¼Þ¼®Ý
-			damageCol_.origin = getPosition() + Vec2(colData.begin_.x, colData.begin_.y);
 			// ÀÞÒ°¼Þ‹éŒ`‚Ì»²½Þ
-			damageCol_.size = Size(colData.size_.x, colData.size_.y);
+			damageCol_.size = Size(colData.size_.x * getScale(), colData.size_.y * getScale());
+			if (type_ == ActorType::Player)
+			{
+				// ÀÞÒ°¼Þ‹éŒ`‚ÌÎß¼Þ¼®Ý
+				damageCol_.origin = Vec2(getPosition().x - (damageCol_.size.width / 2), getPosition().y);
+				/*auto damagedraw = DrawNode::create();
+				damagedraw->drawDot(damageCol_.origin,3.0f, Color4F::GRAY);
+				addChild(damagedraw);*/
+			}
+			else
+			{
+				if (direction_ == Direction::Left)
+				{
+					// ÀÞÒ°¼Þ‹éŒ`‚ÌÎß¼Þ¼®Ý
+					damageCol_.origin = Vec2(getPosition().x + (damageCol_.size.width / 4), getPosition().y);
+				}
+				else if (direction_ == Direction::Right)
+				{
+					// ÀÞÒ°¼Þ‹éŒ`‚ÌÎß¼Þ¼®Ý
+					damageCol_.origin = Vec2(getPosition().x - (damageCol_.size.width / 4), getPosition().y);
+				}
+			}
+			
 		}
 	}
+}
+
+bool Actor::OnHit(const cocos2d::Rect& collision)
+{
+	// player->enemy‚ÌUŒ‚”»’è‚ª‚Ü‚¾....
+	auto flg = false;
+
+	if (collision.size.width > 0.0f && collision.size.height > 0.0f)
+	{
+		flg = true;
+	}
+	// ‹éŒ`ŠÔ‚Ì‹——£‚ð‘ª‚é
+	auto distance = Vec2(collision.origin.x - damageCol_.origin.x, collision.origin.y - damageCol_.origin.y);
+	auto sizediff = Vec2((damageCol_.size.width / 2.0f) + (collision.size.width / 2.0f),
+					     (damageCol_.size.height / 2.0f) + (collision.size.height / 2.0f));
+	if (flg)
+	{
+		if (!onDamaged_)
+		{
+			if (abs(distance.x) <= sizediff.x && abs(distance.y) <= sizediff.y)
+			{
+				onDamaged_ = true;
+				return true;
+			}
+		}
+	}
+	return false;
 }

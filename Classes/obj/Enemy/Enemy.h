@@ -10,7 +10,7 @@ class BehaviorData;
 class NodeBase;
 // patrol(巡回行動)で左右どちらかの方向に動く間隔
 // 100ﾌﾚｰﾑに一回左右どちらかに動くか決定する。
-#define DefPatrolFrame 5.0f
+#define DefPatrolFrame 500.0f
 
 // 行動タイプ
 enum class MoveType
@@ -118,8 +118,13 @@ public:
 	//	Max
 	//};
 
-
-
+	// 歩けるかのﾌﾗｸﾞのｾｯﾄ
+	virtual void SetMove(const Direction& dir,bool flg);
+	// 歩けるかのﾌﾗｸﾞの取得
+	const bool& IsMove(const Direction dir)
+	{
+		return isMove_[static_cast<int>(dir)];
+	}
 	virtual void SetMoveType(MoveType type);
 
 	// 壁や床にぶつかっているかの判定
@@ -184,6 +189,9 @@ protected:
 	cocos2d::DrawNode* debugCircle_;
 	// 一定距離歩いたらtrueになる
 	bool isMoveComplete_;
+	// この先歩けるかのﾌﾗｸﾞ
+	// 先が壁ならば、falseにする
+	std::array<bool,static_cast<int>(Direction::Max)> isMove_;
 	// 自身の名前
 	std::string myName_;
 	// 自身の固有ID

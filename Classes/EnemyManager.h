@@ -33,6 +33,12 @@ public:
 	void CreateEnemy(ActorType type);
 	// ÎŞ½‚ÌoŒ»ŠÖ”
 	void CreateBoss(const std::shared_ptr<EffectManager>& effectMng);
+	// “GØ½Ä‚Ìæ“¾
+	std::list<Enemy*>& GetEnemies(void)
+	{
+		return enemies_;
+	}
+	
 private:
 	// ¶¬‚µ‚½“G‚Ì”Ô†(¶¬‚µ‚½‡‚É”Ô†‚ª‘‚¦‚Ä‚¢‚­)
 	// Enemy‘¤‚ÅSetID()‚ÅŒÅ—LID‚É¾¯Ä‚·‚é

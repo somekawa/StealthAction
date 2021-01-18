@@ -161,10 +161,6 @@ void Imp::Walk(void)
 		speed_.x = -3;
 		flipFlag_ = FlipX::create(true);
 		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
 	case Direction::Max:
 		break;
 	default:
@@ -201,10 +197,6 @@ void Imp::Run(void)
 	case Direction::Left:
 		speed_.x = -4;
 		flipFlag_ = FlipX::create(true);
-		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
 		break;
 	case Direction::Max:
 		break;

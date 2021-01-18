@@ -20,9 +20,27 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	const int chipSize = CollisionData->getMapTileSize().width;
 	// 当たり判定の位置に+module.velをすることで、次回移動値を加算したpointで当たり判定をするようにした
 	// →カメラのブレをなくすため
+
 	auto plCheckPoint1 = plPos + module.checkPoint1 + module.vel;
 	auto plCheckPoint2 = plPos + module.checkPoint2 + module.vel;
-	
+	//if (module.commonAction_ == "右移動")
+	//{
+	//	plCheckPoint1 = charColData.origin + charColData.size + module.vel;
+	//	plCheckPoint2 = charColData.origin + Vec2(charColData.size.width, 0.0f) + module.vel;
+	//}
+	//else if (module.commonAction_ == "左移動")
+	//{
+	//	plCheckPoint1 = charColData.origin + module.vel;
+	//	plCheckPoint2 = charColData.origin + Vec2(0.0f,charColData.size.height) + module.vel;
+	//}
+
+	/*auto draw1 = DrawNode::create();
+	draw1->drawDot(plPos - plCheckPoint1, 3.0f, Color4F::ORANGE);
+	sprite.addChild(draw1);*/
+	/*auto draw2 = DrawNode::create();
+	draw2->drawDot(plPos - plCheckPoint2, 3.0f, Color4F::ORANGE);
+	sprite.addChild(draw2);*/
+
 
 	auto plCheckPoint1Chip = Vec2{ plCheckPoint1 } / chipSize;
 	auto plCheckPoint2Chip = Vec2{ plCheckPoint2 } / chipSize;
@@ -36,7 +54,6 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	{
 		return false;
 	}
-
 
 	auto plCheckPoint1Gid = CollisionData->getTileGIDAt(plCheckPoint1Pos);
 	auto plCheckPoint2Gid = CollisionData->getTileGIDAt(plCheckPoint2Pos);
@@ -60,18 +77,58 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 		return false;
 	};
 
-
-	if ((plCheckPoint1GidW != 0 && plCheckPoint2GidW != 0))
+	if (sprite.getName() == "player1")
 	{
-		if (sprite.getName() == "player1")
+		if ((plCheckPoint1GidW != 0 && plCheckPoint2GidW != 0))
 		{
 			((Player&)sprite).SetAction("player_Wall_Slide");
+			return false;
 		}
-		return false;
+	}
+	else
+	{
+		auto direction = dynamic_cast<Enemy&>(sprite).GetDirection();
+		if (direction == Direction::Right)
+		{
+			if (dynamic_cast<Enemy&>(sprite).IsMove(direction))
+			{
+				if (module.commonAction_ == "右移動")
+				{
+					if ((plCheckPoint1GidW != 0 && plCheckPoint2GidW != 0))
+					{
+						dynamic_cast<Enemy&>(sprite).SetMove(direction, false);
+						return false;
+					}
+					/*else
+					{
+						dynamic_cast<Enemy&>(sprite).SetMove(direction, true);
+					}*/
+				}
+			}
+		}
+		else
+		{
+			if (dynamic_cast<Enemy&>(sprite).IsMove(direction))
+			{
+				if (module.commonAction_ == "左移動")
+				{
+					if ((plCheckPoint1GidW != 0 && plCheckPoint2GidW != 0))
+					{
+						dynamic_cast<Enemy&>(sprite).SetMove(direction, false);
+						return false;
+					}
+					/*else
+					{
+						dynamic_cast<Enemy&>(sprite).SetMove(direction, true);
+					}*/
+				}
+			}
+		}
 	}
 
+
 	// 段差落下時の補正処理
-	if (module.actName == "Fall")
+	if (module.actName == "player_Fall")
 	{
 		if (lambda(plPos + module.checkPoint3))
 		{

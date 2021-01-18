@@ -5,8 +5,6 @@ enum class Direction
 {
 	Right,
 	Left,
-	Up,
-	Down,
 	Max
 };
 
@@ -24,3 +22,8 @@ enum class MapDirection
 	Max
 };
 //0,3 : 1, 6 :  2,5 : 4,7
+
+static Direction operator+(Direction& dir, int i)
+{
+	return (Direction)((int)dir + i);
+}

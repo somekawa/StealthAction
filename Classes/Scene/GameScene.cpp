@@ -37,6 +37,7 @@
 #include "Skill/SkillBase.h"
 #include "Map/MapMenu.h"
 #include "Shader/OutlineShader.h"
+#include "Debug/DebugDraw.h"
 
 USING_NS_CC;
 
@@ -128,7 +129,9 @@ bool Game::init()
 	// bg用レイヤー
 	layer_[(int)zOlder::BG]->setTag((int)zOlder::BG);
 	layer_[(int)zOlder::BG]->setGlobalZOrder((int)zOlder::BG);
-
+	// debug用レイヤー
+	layer_[(int)zOlder::DEBUG]->setTag((int)zOlder::DEBUG);
+	layer_[(int)zOlder::DEBUG]->setGlobalZOrder((int)zOlder::DEBUG);
 	// playerList_にplayer追加
 	// 引数に接続しているプレイヤー数を記述
 	AddPlayer(1);
@@ -269,8 +272,6 @@ bool Game::init()
 	skillSprite->setName("skillSprite");
 	skillSprite->setPosition(0,0);
 
-
-
 	// ｴﾌｪｸﾄ用ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾙ作成
 	lpEffectMng.CreatePools(*layer_[static_cast<int>(zOlder::EFFECT)]);
 
@@ -314,6 +315,29 @@ void Game::update(float sp)
 	// ﾌﾟﾚｲﾔｰが攻撃対象にする敵のﾀｰｹﾞｯﾄをﾀｯﾌﾟにより切り替える
 	// 攻撃対象にする敵は一番最初はﾚｲﾔｰにいる最初の敵
 	// それ以降はﾀｯﾌﾟで変えていく(今のところGameSceneで書くのが一番だと思う)
+	for (auto enemy : enemyManager_->GetEnemies())
+	{
+		enemy->OnHit(player->GetAttackCol());
+		player->OnHit(enemy->GetAttackCol());
+		/*auto attackdraw = DrawNode::create();
+		layer_[static_cast<int>(zOlder::DEBUG)]->addChild(attackdraw);
+		attackdraw->drawRect(enemy->GetAttackCol().origin, enemy->GetAttackCol().origin - enemy->GetAttackCol().size, Color4F::MAGENTA);*/
+		//if (enemy->GetType() == ActorType::Assassin)
+		//{
+		//	auto damagedraw = DrawNode::create();
+		//	//damagedraw->drawDot(enemy->GetDamageCol().origin, 3.0f, Color4F::GREEN);
+		//	damagedraw->drawRect(enemy->GetDamageCol().origin, enemy->GetDamageCol().origin + enemy->GetDamageCol().size, Color4F::GRAY);
+		//	layer_[static_cast<int>(zOlder::DEBUG)]->addChild(damagedraw);
+		//}
+	}
+	/*auto plattackdraw = DrawNode::create();
+	plattackdraw->drawRect(player->GetAttackCol().origin, player->GetAttackCol().origin - player->GetAttackCol().size, Color4F::MAGENTA);
+	layer_[static_cast<int>(zOlder::DEBUG)]->addChild(plattackdraw);*/
+
+	/*auto pldamagedraw = DrawNode::create();
+	pldamagedraw->drawDot(player->GetDamageCol().origin, 3.0f, Color4F::BLUE);
+	pldamagedraw->drawRect(player->GetDamageCol().origin, player->GetDamageCol().origin + player->GetDamageCol().size, Color4F::GRAY);
+	layer_[static_cast<int>(zOlder::DEBUG)]->addChild(pldamagedraw);*/
 
 	if (gameMap_->ChangeFloor())
 	{
@@ -335,7 +359,6 @@ void Game::update(float sp)
 		// ﾌﾛｱ変更後1回だけ初期の敵の数だけｲﾝｽﾀﾝｽ
 		enemyManager_->CreateInitialEnemyOnFloor(1);
 	}
-	auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 	// 敵のｽﾎﾟｰﾝを管理
 	//enemyManager_->Update(effectManager_);

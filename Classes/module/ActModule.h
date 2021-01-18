@@ -20,6 +20,8 @@ struct ActModule {
 	cocos2d::Vec2 addGravity;									// 重力に加えていく
 	cocos2d::Vec2 jumpVel;										// ジャンプ速度
 	cocos2d::Vec2 subtraction;									// ジャンプ値を引いていく
+
+	std::string commonAction_;
 	std::string actName;										// プレイヤーのアクション状態(書き込みたい情報)
 	BUTTON button;												// キー押下状態
 

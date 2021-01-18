@@ -337,10 +337,6 @@ void BigCultist::Patrol(void)
 		speed_.x = -1;
 		flipFlag_ = FlipX::create(false);
 		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
 	case Direction::Max:
 		break;
 	default:
@@ -369,10 +365,6 @@ void BigCultist::Chase(void)
 	case Direction::Left:
 		speed_.x = -2;
 		flipFlag_ = FlipX::create(false);
-		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
 		break;
 	case Direction::Max:
 		break;

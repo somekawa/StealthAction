@@ -102,6 +102,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(30.0f, 30.0f);
 	attackColOffset_ = 0.0f;
+
 	this->SetIsAttacking(false);
 }
 
@@ -161,6 +162,8 @@ void Player::update(float delta)
 
 	// 現在のフレームを整数値で取得
 	animationFrame_int_ = GetAnimationFrameInt();
+	//currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+
 	colliderVisible();
 
 	// ActionCtlクラスの更新
@@ -237,6 +240,7 @@ void Player::update(float delta)
 			auto attackSprite = lpEffectMng.createEffect("attack", 5, 0.04f, { 55.0f, 50.0f },getPosition(),flip);
 			lpEffectMng.PlayWithOnce(attackSprite, "attack");
 		}
+		animationFrame_int_ = 0.0f;
 		lpAnimMng.ChangeAnimation(*this, currentAnimation_, true, ActorType::Player);
 	}
 	actionOld_ = currentAnimation_;
@@ -313,6 +317,7 @@ void Player::attackMotion(float delta)
 		if (bitFlg_.FirstAttackFlg && animationFrame_ <= 0.5f)
 		{
 			currentAnimation_ = "player_AttackFirst";
+			isAttacking_ = true;
 		}
 		else
 		{
@@ -350,6 +355,7 @@ void Player::attackMotion(float delta)
 		if (bitFlg_.SecondAttackFlg && animationFrame_ <= 0.8f)
 		{
 			currentAnimation_ = "player_AttackSecond";
+			isAttacking_ = true;
 		}
 		else
 		{
@@ -384,6 +390,7 @@ void Player::attackMotion(float delta)
 		if (bitFlg_.ThirdAttackFlg && animationFrame_ <= 0.8f)
 		{
 			currentAnimation_ = "player_AttackThird";
+			isAttacking_ = true;
 		}
 		else
 		{
@@ -671,6 +678,13 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_AttackThird");
 		act.blackList.emplace_back("player_Wall_Slide");
 		actCtl_.RunInitializeActCtl(type_,"右移動", act);
+
+		auto anchor1 = DrawNode::create();
+		anchor1->drawDot(act.checkPoint1, 3.0f, Color4F::BLUE);
+		this->addChild(anchor1, 5);
+		auto anchor2 = DrawNode::create();
+		anchor2->drawDot(act.checkPoint2, 3.0f, Color4F::BLUE);
+		this->addChild(anchor2, 5);
 	}
 
 	// 左移動
@@ -692,6 +706,12 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("player_AttackThird");
 		act.blackList.emplace_back("player_Wall_Slide");
 		actCtl_.RunInitializeActCtl(type_,"左移動", act);
+		auto anchor3 = DrawNode::create();
+		anchor3->drawDot(act.checkPoint1, 3.0f, Color4F::GREEN);
+		this->addChild(anchor3, 5);
+		auto anchor4 = DrawNode::create();
+		anchor4->drawDot(act.checkPoint2, 3.0f, Color4F::GREEN);
+		this->addChild(anchor4, 5);
 	}
 
 	// 右向き反転

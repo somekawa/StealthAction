@@ -161,6 +161,9 @@ public:
 	}
 	// Šeº×²ÀŞ°î•ñ‚Ìİ’è
 	virtual void SetCollider(void);
+
+	// “–‚½‚è”»’è
+	virtual bool OnHit(const cocos2d::Rect& collision);
 private:
 
 protected:

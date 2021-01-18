@@ -362,10 +362,6 @@ void Cultist::Patrol(void)
 		speed_.x = -1;
 		flipFlag_ = FlipX::create(false);
 		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
 	case Direction::Max:
 		break;
 	default:

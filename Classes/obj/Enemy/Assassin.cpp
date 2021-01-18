@@ -21,7 +21,6 @@ Assassin::Assassin(Vec2 pos, Player& player,
 	myName_ = "assassin";
 	flipFlag_ = FlipX::create(true);
 	type_ = ActorType::Assassin;
-
 	// アニメーションの登録
 	AnimRegistrator();
 	// ActModuleの登録
@@ -38,21 +37,22 @@ Assassin::Assassin(Vec2 pos, Player& player,
 	{
 		// colliderBoxのLoad
 		lpCol.ReadData(collider_, anim);
-		for (auto col : collider_[anim])
-		{
-			for (int colNum = 0; colNum < col.size(); colNum++)
-			{
-				// colliderBoxを自身の子にする
-				auto draw = col[colNum]->create();
-				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+		//for (auto col : collider_[anim])
+		//{
+		//	for (int colNum = 0; colNum < col.size(); colNum++)
+		//	{
+		//		// colliderBoxを自身の子にする
+		//		auto draw = col[colNum]->create();
+		//		draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+		//		draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
 
-				draw->setTag(col[colNum]->GetData().frame_);
+		//		draw->setTag(col[colNum]->GetData().frame_);
 
-				this->addChild(draw,col[colNum]->GetData().type_, anim);
-			}
-		}
+		//		this->addChild(draw,col[colNum]->GetData().type_, anim);
+		//	}
+		//}
 	}
+	
 	// 初期アニメーションのセット
 	lpAnimMng.InitAnimation(*this, ActorType::Assassin, "assassin_idle");
 }
@@ -102,6 +102,7 @@ void Assassin::update(float delta)
 	}
 	else
 	{
+		setAnchorPoint(Vec2(0.5f,0.0f));
 		if (!isAttacking_)
 		{
 			// 方向の変更
@@ -115,13 +116,15 @@ void Assassin::update(float delta)
 		{
 			animationFrame_int_ = 0;
 		}
-		
-		// ﾌﾟﾚｲﾔｰが攻撃状態だと当たり判定処理をする
-		if (player_.IsAttacking())
-		{
-			// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
-			CheckHitPLAttack();
-		}
+
+
+		//// ﾌﾟﾚｲﾔｰが攻撃状態だと当たり判定処理をする
+		//if (player_.IsAttacking())
+		//{
+		//	// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
+		//	CheckHitPLAttack();
+		//}
+
 		// ﾀﾞﾒｰｼﾞをくらっていない時と死ぬﾓｰｼｮﾝでない場合
 		if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
 		{
@@ -162,19 +165,19 @@ void Assassin::update(float delta)
 
 		TRACE("attackFlag:%d\n", isAttacking_);
 
-		for (auto animationCol = this->getChildren().rbegin();
-			animationCol != this->getChildren().rend(); animationCol++)
-		{
-			if (currentAnimation_ == (*animationCol)->getName() &&
-				animationFrame_int_ == (*animationCol)->getTag())
-			{
-				(*animationCol)->setVisible(true);
-			}
-			else
-			{
-				(*animationCol)->setVisible(false);
-			}
-		}
+		//for (auto animationCol = this->getChildren().rbegin();
+		//	animationCol != this->getChildren().rend(); animationCol++)
+		//{
+		//	if (currentAnimation_ == (*animationCol)->getName() &&
+		//		animationFrame_int_ == (*animationCol)->getTag())
+		//	{
+		//		(*animationCol)->setVisible(true);
+		//	}
+		//	else
+		//	{
+		//		(*animationCol)->setVisible(false);
+		//	}
+		//}
 
 		// アニメーションの更新
 		UpdateAnimation(delta);
@@ -218,6 +221,51 @@ void Assassin::actModuleRegistration(void)
 {
 	Vec2 size = { 106.0f,76.0f };
 
+	// 右移動
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.vel = Vec2{ 0.5f,0 };
+		act.actName = "assassin_run";
+		act.checkPoint1 = Vec2{ 50.0f,size.y - 9.0f };	// 右上
+		act.checkPoint2 = Vec2{ 50.0f,  15.0f };			// 右下
+		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
+
+		//act.whiteList.emplace_back(ACTION::JUMPING);
+		act.blackList.emplace_back("assassin_attack");
+		actCtl_.RunInitializeActCtl(type_, "右移動", act);
+		// debug 表示
+		/*auto anchor1 = DrawNode::create();
+		anchor1->drawDot(act.checkPoint1, 3.0f, Color4F::BLUE);
+		this->addChild(anchor1, 3);
+		auto anchor2 = DrawNode::create();
+		anchor2->drawDot(act.checkPoint2, 3.0f, Color4F::BLUE);
+		this->addChild(anchor2, 3);*/
+	}
+
+	// 左移動
+	{
+		ActModule act;
+		act.state = nullptr;
+		act.vel = Vec2{ 0.5f,0 };
+		act.actName = "assassin_run";
+		act.checkPoint1 = Vec2{ -15.0f, size.y - 9.0f };	// 左上
+		act.checkPoint2 = Vec2{ -15.0f, 15.0f };			// 左下
+
+		//act.blackList.emplace_back(ACTION::FALLING);
+
+		//act.whiteList.emplace_back(ACTION::JUMPING);
+		act.blackList.emplace_back("assassin_attack");
+		actCtl_.RunInitializeActCtl(type_, "左移動", act);
+		// debug 表示
+		/*auto anchor3 = DrawNode::create();
+		anchor3->drawDot(act.checkPoint1, 3.0f, Color4F::GREEN);
+		this->addChild(anchor3, 3);
+		auto anchor4 = DrawNode::create();
+		anchor4->drawDot(act.checkPoint2, 3.0f, Color4F::GREEN);
+		this->addChild(anchor4, 3);*/
+	}
+
 	// 右向き反転
 	{
 		ActModule flipAct;
@@ -243,38 +291,6 @@ void Assassin::actModuleRegistration(void)
 		actCtl_.RunInitializeActCtl(type_, "左向き", flipAct);
 	}
 
-	// 右移動
-	{
-		ActModule act;
-		act.state = nullptr;
-		act.vel = Vec2{ 0.5f,0 };
-		act.actName = "assassin_run";
-		act.checkPoint1 = Vec2{ size.x,size.y };	// 右上
-		act.checkPoint2 = Vec2{ size.x,  0 };			// 右下
-		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
-
-		//act.whiteList.emplace_back(ACTION::JUMPING);
-		act.blackList.emplace_back("assassin_attack");
-		actCtl_.RunInitializeActCtl(type_,"右移動", act);
-	}
-
-	// 左移動
-	{
-		ActModule act;
-		act.state = nullptr;
-		act.vel = Vec2{0.5f,0 };
-		act.actName = "assassin_run";
-		act.checkPoint1 = Vec2{ 0, size.y };	// 左上
-		act.checkPoint2 = Vec2{ 0, 0 };			// 左下
-
-		//act.blackList.emplace_back(ACTION::FALLING);
-
-		//act.whiteList.emplace_back(ACTION::JUMPING);
-		act.blackList.emplace_back("assassin_attack");
-		actCtl_.RunInitializeActCtl(type_,"左移動", act);
-	}
-
-
 	// 落下
 	{
 		// checkkeylistに離している間の設定もしたけど特に効果なし
@@ -283,8 +299,8 @@ void Assassin::actModuleRegistration(void)
 		act.state = nullptr;
 		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
 		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
-		act.checkPoint1 = Vec2{ -60, -60 };				// 左下
-		act.checkPoint2 = Vec2{ -60, -60 };				// 右下
+		act.checkPoint1 = Vec2{ 0.0f, 0.0f };				// 左下
+		act.checkPoint2 = Vec2{ 100.0f,0.0f};				// 右下
 
 		act.checkPoint3 = Vec2{ size.x / 2, size.y / 2 };  // 右上
 		act.checkPoint4 = Vec2{ -size.x / 2, size.y / 2 }; // 左上
@@ -321,10 +337,10 @@ void Assassin::NormalAttack(void)
 	{
 		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	}
-	if (OnAttacked())
-	{
-		player_.OnDamaged();
-	}
+	//if (OnAttacked())
+	//{
+	//	player_.OnDamaged();
+	//}
 	TRACE("direction:%d", direction_);
 }
 
@@ -360,10 +376,6 @@ void Assassin::Patrol(void)
 		speed_.x = -1;
 		flipFlag_ = FlipX::create(false);
 		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
 	case Direction::Max:
 		break;
 	default:
@@ -393,10 +405,6 @@ void Assassin::Chase(void)
 		speed_.x = -2;
 		flipFlag_ = FlipX::create(false);
 		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
 	case Direction::Max:
 		break;
 	default:
@@ -422,10 +430,6 @@ void Assassin::Run(void)
 	case Direction::Left:
 		speed_.x = -4;
 		flipFlag_ = FlipX::create(false);
-		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
 		break;
 	case Direction::Max:
 		break;

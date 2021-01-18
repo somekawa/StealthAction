@@ -30,6 +30,11 @@ Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRan
 	isMoveComplete_ = true;
 	// ©•ª‚ÌUŒ‚‚ª“–‚½‚Á‚½ƒtƒ‰ƒO‚Ì‰Šú‰»
 	hittingToPlayer_ = false;
+	// “®‚¯‚é‚©‚ÌÌ×¸Ş‚Ì‰Šú‰»
+	for (auto& flg : isMove_)
+	{
+		flg = true;
+	}
 	// ó‘Ô‘JˆÚ‚ÌŠÖ”Îß²İÀ‚Ì‰Šú‰»
 	stateTransitioner_ = &Enemy::Idle;
 	// moveType‚Ì‰Šú‰»
@@ -67,39 +72,57 @@ void Enemy::DeleteSelfOnFloor(void)
 void Enemy::ChangeDirection(float delta)
 {
 	auto flip = false;
-	if (mType_ == MoveType::Chase)
+	auto flipBit = 0;
+	if (!isMove_[static_cast<int>(direction_)])
 	{
-		// ÌßÚ²Ô°‚ÌÎß¼Ş¼®İ
-		auto playerPos = player_.getPosition();
-		// 1ÌÚ°Ñ‘O‚Ì©g‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚ÌŠi”[
-		oldDirection_ = direction_;
-		// ÌßÚ²Ô°‚ª©g‚æ‚è‚à¶‚É‚¢‚éê‡
-		if (getPosition().x > playerPos.x)
+		if (direction_ == Direction::Right)
 		{
-			direction_ = Direction::Left;
+			flipBit = 1;
 		}
-		// ÌßÚ²Ô°‚ª©g‚æ‚è‚à‰E‚É‚¢‚éê‡
 		else
 		{
-			direction_ = Direction::Right;
+			flipBit = -1;
 		}
+		direction_ = (direction_ + flipBit);
+		isMove_[static_cast<int>(direction_)] = true;
 	}
-	else if(mType_ == MoveType::Patrol)
+	else
 	{
-		// 1ÌÚ°Ñ‘O‚Ì©g‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚ÌŠi”[
-		oldDirection_ = direction_;
-		// patrol‚ğ‚µ‚Ä‚¢‚éŠÔ‚Ì¶³İÄ‚ğ‰ÁZ
-		patrolFrame_ += delta;
-		// patrol(„‰ñ)s“®‚ğ‚µ‚Ä‚¢‚é‚Ì‚ªˆê’èŠÔŠuˆÈã‚¾‚Á‚½‚ç
-		if (patrolFrame_ >= DefPatrolFrame)
+		if (mType_ == MoveType::Chase)
 		{
-			patrolFrame_ = 0.0f;
-			// ‰E‚©¶‚Ì•ûŒü‚ğ×İÀŞÑ‚ÅŒˆ’è‚·‚é
-			// cocos2d::RandomHelper::random_int(int min,int max);
-			// min(Å¬)`max(Å‘å)‚ÌŠÔ‚Å×İÀŞÑ‚È”’l‚ğ•Ô‚·
-			direction_ = (Direction)RandomHelper::random_int((int)Direction::Right, (int)Direction::Left);
+			// ÌßÚ²Ô°‚ÌÎß¼Ş¼®İ
+			auto playerPos = player_.getPosition();
+			// 1ÌÚ°Ñ‘O‚Ì©g‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚ÌŠi”[
+			oldDirection_ = direction_;
+			// ÌßÚ²Ô°‚ª©g‚æ‚è‚à¶‚É‚¢‚éê‡
+			if (getPosition().x > playerPos.x)
+			{
+				direction_ = Direction::Left;
+			}
+			// ÌßÚ²Ô°‚ª©g‚æ‚è‚à‰E‚É‚¢‚éê‡
+			else
+			{
+				direction_ = Direction::Right;
+			}
+		}
+		else if (mType_ == MoveType::Patrol)
+		{
+			// 1ÌÚ°Ñ‘O‚Ì©g‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚ÌŠi”[
+			oldDirection_ = direction_;
+			// patrol‚ğ‚µ‚Ä‚¢‚éŠÔ‚Ì¶³İÄ‚ğ‰ÁZ
+			patrolFrame_ += delta;
+			// patrol(„‰ñ)s“®‚ğ‚µ‚Ä‚¢‚é‚Ì‚ªˆê’èŠÔŠuˆÈã‚¾‚Á‚½‚ç
+			if (patrolFrame_ >= DefPatrolFrame)
+			{
+				patrolFrame_ = 0.0f;
+				// ‰E‚©¶‚Ì•ûŒü‚ğ×İÀŞÑ‚ÅŒˆ’è‚·‚é
+				// cocos2d::RandomHelper::random_int(int min,int max);
+				// min(Å¬)`max(Å‘å)‚ÌŠÔ‚Å×İÀŞÑ‚È”’l‚ğ•Ô‚·
+				direction_ = (Direction)RandomHelper::random_int((int)Direction::Right, (int)Direction::Left);
+			}
 		}
 	}
+
 	if (direction_ == Direction::Left)
 	{
 		flip = false;
@@ -306,6 +329,11 @@ void Enemy::AIRun(void)
 	}
 }
 
+void Enemy::SetMove(const Direction& dir,bool flg)
+{
+	isMove_[static_cast<int>(dir)] = flg;
+}
+
 void Enemy::SetMoveType(MoveType type)
 {
 	mType_ = type;
@@ -335,10 +363,6 @@ bool Enemy::CheckObjHit(void)
 		case Direction::Left:
 			next = { position.x - (this->getContentSize().width / 2) + speed_.x,position.y };
 
-			break;
-		case Direction::Up:
-			break;
-		case Direction::Down:
 			break;
 		case Direction::Max:
 			break;

@@ -251,6 +251,8 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 	if (actName == "左向き" || actName == "右向き")
 	{
 		_mapModule.emplace(actName, std::move(module));
+		_mapModule[actName].commonAction_ = actName;
+
 		if (type != ActorType::Player)
 		{
 			// ﾌﾟﾚｲﾔｰじゃないとJudgementをcheckに格納する
@@ -272,6 +274,7 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 	if (actName == "左移動" || actName == "右移動")
 	{
 		_mapModule.emplace(actName, std::move(module));
+		_mapModule[actName].commonAction_ = actName;
 
 		if (type != ActorType::Player)
 		{
@@ -279,9 +282,9 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 			_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].act.emplace_back(CheckList());
 			// patrol状態にするかどうかの判定関数ｵﾌﾞｼﾞｪｸﾄ
-			//_mapModule[actName].act.emplace_back(PatrolJudgement());
+			_mapModule[actName].act.emplace_back(PatrolJudgement());
 			// chase状態にするかどうかの判定関数ｵﾌﾞｼﾞｪｸﾄ
-			//_mapModule[actName].act.emplace_back(ChaseJudgement());
+			_mapModule[actName].act.emplace_back(ChaseJudgement());
 			// judgementがtrueになると実行するｱｸｼｮﾝ
 			_mapModule[actName].runAction = MoveLRAction();
 		}
@@ -296,9 +299,12 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 	}
 	if (actName == "落下")
 	{
+		_mapModule.emplace(actName, std::move(module));
+
+		_mapModule[actName].commonAction_ = actName;
+
 		if (type != ActorType::Player)
 		{
-			_mapModule.emplace(actName, std::move(module));
 			//_mapModule[actName].act.emplace_back(CheckKeyList());
 			_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].act.emplace_back(CheckList());
@@ -306,7 +312,6 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 		}
 		else
 		{
-			_mapModule.emplace(actName, std::move(module));
 			//_mapModule[actName].act.emplace_back(CheckKeyList());
 			_mapModule[actName].act.emplace_back(CheckObjHit());
 			_mapModule[actName].act.emplace_back(CheckList());
@@ -316,9 +321,10 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 	}
 	if (actName == "攻撃")
 	{
+		_mapModule.emplace(actName, std::move(module));
+
 		if (type != ActorType::Player)
 		{
-			_mapModule.emplace(actName, std::move(module));
 			_mapModule[actName].act.emplace_back(PhysicalAttackJudgement());
 			//_mapModule[actName].act.emplace_back(CheckObjHit());
 			//_mapModule[actName].act.emplace_back(CheckList());
@@ -326,7 +332,6 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 		}
 		else
 		{
-			_mapModule.emplace(actName, std::move(module));
 			_mapModule[actName].act.emplace_back(CheckKeyList());
 			//_mapModule[actName].act.emplace_back(CheckObjHit());
 			//_mapModule[actName].act.emplace_back(CheckList());
@@ -552,7 +557,6 @@ void ActionCtl::InitUpdater(ActorType& type)
 			{
 				if (actCheck(data.first))
 				{
-
 					// フレーム値の更新
 					data.second.flame = _mapFlame[data.first];
 
@@ -580,7 +584,6 @@ void ActionCtl::InitUpdater(ActorType& type)
 						_mapModule["落下"].stopCnt = 0;
 					}
 				}
-
 			}
 			// 何もアクションが行われていなければidleを設定する
 			if (!actFlg)

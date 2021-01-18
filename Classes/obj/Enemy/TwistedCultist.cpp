@@ -16,7 +16,7 @@ TwistedCultist::TwistedCultist(Vec2 pos,Player& player,
 	//this->setPosition(Vec2(pos_.x, pos_.y));
 	this->setScale(2.0f);
 	myName_ = "twistedCultist";
-	this->setAnchorPoint(Vec2(0.5f, 0.0f));
+	//this->setAnchorPoint(Vec2(0.5f, 0.0f));
 	flipFlag_ = FlipX::create(true);
 	type_ = ActorType::TwistedCultist;
 
@@ -93,6 +93,8 @@ void TwistedCultist::update(float delta)
 	}
 	else
 	{
+		setAnchorPoint(Vec2(0.0f, 0.0f));
+
 		if (!isAttacking_)
 		{
 			// •ûŒü‚Ì•ÏX
@@ -106,19 +108,21 @@ void TwistedCultist::update(float delta)
 		{
 			animationFrame_int_ = 0;
 		}
+		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 
-		// ÌßÚ²Ô°‚ªUŒ‚ó‘Ô‚¾‚Æ“–‚½‚è”»’èˆ—‚ğ‚·‚é
-		if (player_.IsAttacking())
-		{
-			// ÌßÚ²Ô°‚Æ‚Ì“–‚½‚è”»’è‚ğ‚Æ‚Á‚Ä‚¢‚é
-			CheckHitPLAttack();
-		}
+		//// ÌßÚ²Ô°‚ªUŒ‚ó‘Ô‚¾‚Æ“–‚½‚è”»’èˆ—‚ğ‚·‚é
+		//if (player_.IsAttacking())
+		//{
+		//	// ÌßÚ²Ô°‚Æ‚Ì“–‚½‚è”»’è‚ğ‚Æ‚Á‚Ä‚¢‚é
+		//	CheckHitPLAttack();
+		//}
+		SetCollider();
 		// ÀŞÒ°¼Ş‚ğ‚­‚ç‚Á‚Ä‚¢‚È‚¢‚Æ€‚ÊÓ°¼®İ‚Å‚È‚¢ê‡
-		if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
-		{
-			// actCtl‚Ì±¯ÌßÃŞ°Ä‚ğ‰ñ‚·
-			actCtl_.update(type_, delta, *this);
-		}
+		//if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
+		//{
+		//	// actCtl‚Ì±¯ÌßÃŞ°Ä‚ğ‰ñ‚·
+		//	actCtl_.update(type_, delta, *this);
+		//}
 
 		if (stateTransitioner_ != &Enemy::Death)
 		{
@@ -188,6 +192,7 @@ void TwistedCultist::update(float delta)
 			//onDamaged_ = false;
 		}
 		previousAnimation_ = currentAnimation_;
+
 	}
 	// ÌÛ±•ÏX‚ÌÛ‚É©g‚ğÁ‚·
 	//DeleteSelfOnFloor();
@@ -339,10 +344,6 @@ void TwistedCultist::Patrol(void)
 		speed_.x = -1;
 		flipFlag_ = FlipX::create(false);
 		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
-		break;
 	case Direction::Max:
 		break;
 	default:
@@ -371,10 +372,6 @@ void TwistedCultist::Chase(void)
 	case Direction::Left:
 		speed_.x = -2;
 		flipFlag_ = FlipX::create(false);
-		break;
-	case Direction::Up:
-		break;
-	case Direction::Down:
 		break;
 	case Direction::Max:
 		break;
