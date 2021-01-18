@@ -11,6 +11,7 @@ TestSkill::TestSkill(SkillBase* ptr)
 	ptr->AddActiveSkill(this);
 	pos_ = ptr->GetPlayerPos();
 	tpos_ = ptr->GetTargetPos();
+	effectData_.size = Size(192,192);
 	// ﾌﾟﾚｲﾔｰの方向の取得
 	auto direction = ptr->GetPlayerDirection();
 	auto flip = false;
@@ -51,6 +52,7 @@ void TestSkill::UpDate(float delta)
 		// この問題はtestskill自体を消したら直る
 		// ｴﾌｪｸﾄを動かす(動かさないｴﾌｪｸﾄの場合は書く必要なし)
 		lpEffectMng.Move(fx_.sprite_, dir);
+		effectData_.origin = fx_.sprite_->getPosition();
 	}
 	/*この中にSkillの効果や動作を記述してください*/
 	// ここでｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝの移動をやる
@@ -82,4 +84,9 @@ cocos2d::Vec2 TestSkill::GetPlayerPos(void)
 cocos2d::Vec2 TestSkill::GetTargetPos(void)
 {
 	return cocos2d::Vec2();
+}
+
+cocos2d::Rect TestSkill::GetEffectData(void)
+{
+	return effectData_;
 }

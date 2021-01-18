@@ -10,9 +10,9 @@
 struct SkillParam
 {
 	std::string name;	//スキル名の保存
-	bool lock;	//true: lock | false: unlock
+	bool lock;			//true: lock | false: unlock
 	bool activation;	//現在発動しているか true: 発動中 | false: 未発動
-	float ct;	//クールタイム
+	float ct;			//クールタイム
 };
 
 class TestSkill;
@@ -28,9 +28,10 @@ public:
 	void RemoveActiveSkill(void);
 	virtual void UpDate(float delta);
 	virtual void Render(void);
-	virtual cocos2d::Vec2 GetPlayerPos(void);	// プレイヤー座標
+	virtual cocos2d::Vec2 GetPlayerPos(void);				// プレイヤー座標
+	virtual cocos2d::Vec2 GetTargetPos(void);				// 敵座標(ホーミング系の時にプレイヤーとの距離が一番近い敵の座標を取得したい)
+	virtual cocos2d::Rect GetEffectData(void) { return cocos2d::Rect(); };			// effectDataの取得
 	virtual const Direction& GetPlayerDirection(void); // ﾌﾟﾚｲﾔｰの向き
-	virtual cocos2d::Vec2 GetTargetPos(void);	// 敵座標(ホーミング系の時にプレイヤーとの距離が一番近い敵の座標を取得したい)
 	void SetPlayerPos(cocos2d::Vec2 playerPos);
 	void SetTargetPos(cocos2d::Vec2 targetPos);
 	void SetPlayerDirection(const Direction& direction);
@@ -55,5 +56,6 @@ protected:
 	cocos2d::Sprite* effectSprite_;
 
 	FXStruct fx_;
+	cocos2d::Rect effectData_;
 };
 

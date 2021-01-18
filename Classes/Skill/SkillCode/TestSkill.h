@@ -10,6 +10,7 @@ public:
 	bool GetActive(void);
 	cocos2d::Vec2 GetPlayerPos(void);
 	cocos2d::Vec2 GetTargetPos(void);
+	cocos2d::Rect GetEffectData(void);
 private:
 protected:
 };
