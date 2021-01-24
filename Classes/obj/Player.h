@@ -66,4 +66,6 @@ private:
 	std::vector<std::string> plfile_;							// Player‚ÌƒXƒLƒ‹î•ñ(.txt)‚ğ“ü‚ê‚évector
 	cocos2d::Layer& enemyList_;
 	bool testflg = false;
+
+	std::string playerColor = "Light_";
 };

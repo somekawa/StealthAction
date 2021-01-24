@@ -19,7 +19,12 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	switch (type)
 	{
 	case ActorType::Player:
-		name = "player";
+		// light‚Ædark‚Åƒtƒ@ƒCƒ‹‚ð•ª‚¯‚é
+		if (actorName == "image/PlayerAnimationAsset/player/Light/player_Light")
+		{
+			//name = "player";
+			name = "player_Light";
+		}
 		break;
 	case ActorType::Imp:
 		name = "imp";

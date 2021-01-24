@@ -81,7 +81,7 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	{
 		if ((plCheckPoint1GidW != 0 && plCheckPoint2GidW != 0))
 		{
-			((Player&)sprite).SetAction("player_Wall_Slide");
+			((Player&)sprite).SetAction("player_Light_Wall_Slide");
 			return false;
 		}
 	}
@@ -128,7 +128,7 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 
 
 	// íiç∑óéâ∫éûÇÃï‚ê≥èàóù
-	if (module.actName == "player_Fall")
+	if (module.actName == "player_Light_Fall")
 	{
 		if (lambda(plPos + module.checkPoint3))
 		{
