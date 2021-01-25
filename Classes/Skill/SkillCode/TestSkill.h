@@ -11,6 +11,7 @@ public:
 	cocos2d::Vec2 GetPlayerPos(void);
 	cocos2d::Vec2 GetTargetPos(void);
 	cocos2d::Rect GetEffectData(void);
+	static SkillBase* CreateTestSkill(SkillBase* ptr);
 private:
 protected:
 };

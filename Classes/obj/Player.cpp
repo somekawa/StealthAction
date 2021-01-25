@@ -130,12 +130,11 @@ void Player::update(float delta)
 		}
 		return;
 	}
-
 	// スキルテストコード&effectテストコード
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
 		auto director = Director::getInstance();
-		auto a = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
+		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
 		//FLT_MAX : float の最大の有限値
 		auto ppos = getPosition();
 		auto minpos = Vec2(0,0);
@@ -151,15 +150,19 @@ void Player::update(float delta)
 				minpos = epos;
 			}
 		}
-		a->SetTargetPos(minpos);
-		a->SetPlayerPos(getPosition());
-		a->SetPlayerDirection(direction_);
-		TestSkill* skill_t = new TestSkill(a);
-		a->addChild(skill_t);
+		skillSprite->SetTargetPos(minpos);
+		skillSprite->SetPlayerPos(getPosition());
+		skillSprite->SetPlayerDirection(direction_);
+		SkillBase* skill_t = TestSkill::CreateTestSkill(skillSprite);
+		skillSprite->AddActiveSkill(skill_t);
+		skillSprite->addChild(skill_t);
 
 		lpSkillMng.SkillActivate(plfile_[0]);
 	}
-
+	if (skillSprite != nullptr)
+	{
+		skillSprite->RemoveActiveSkill();
+	}
 	// 現在のフレームを整数値で取得
 	animationFrame_int_ = GetAnimationFrameInt();
 	//currentCol_ = collider_[currentAnimation_][animationFrame_int_];
