@@ -4,63 +4,93 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>player_Dark_Wall_Slide0.png</key>
+            <key>player_Dark_Non0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{18,31}</string>
+                <string>{23,19}</string>
                 <key>spriteSourceSize</key>
-                <string>{18,31}</string>
+                <string>{23,19}</string>
                 <key>textureRect</key>
-                <string>{{0,0},{18,31}}</string>
+                <string>{{0,0},{23,19}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Dark_Wall_Slide1.png</key>
+            <key>player_Dark_Non1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{18,31}</string>
+                <string>{23,19}</string>
                 <key>spriteSourceSize</key>
-                <string>{18,31}</string>
+                <string>{23,19}</string>
                 <key>textureRect</key>
-                <string>{{18,0},{18,31}}</string>
+                <string>{{0,19},{23,19}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Dark_Wall_Slide2.png</key>
+            <key>player_Dark_Non2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{18,31}</string>
+                <string>{23,19}</string>
                 <key>spriteSourceSize</key>
-                <string>{18,31}</string>
+                <string>{23,19}</string>
                 <key>textureRect</key>
-                <string>{{36,0},{18,31}}</string>
+                <string>{{0,38},{23,19}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Dark_Wall_Slide3.png</key>
+            <key>player_Dark_Non3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{18,31}</string>
+                <string>{23,19}</string>
                 <key>spriteSourceSize</key>
-                <string>{18,31}</string>
+                <string>{23,19}</string>
                 <key>textureRect</key>
-                <string>{{54,0},{18,31}}</string>
+                <string>{{0,57},{23,19}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>player_Dark_Non4.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{23,19}</string>
+                <key>spriteSourceSize</key>
+                <string>{23,19}</string>
+                <key>textureRect</key>
+                <string>{{0,76},{23,19}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>player_Dark_Non5.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{23,19}</string>
+                <key>spriteSourceSize</key>
+                <string>{23,19}</string>
+                <key>textureRect</key>
+                <string>{{0,95},{23,19}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -74,13 +104,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>player_Dark_Wall_Slide.png</string>
+            <string>player_Dark_Non.png</string>
             <key>size</key>
-            <string>{72,31}</string>
+            <string>{23,114}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:5a195330e56e7bda164056babf8d621f:3b331ac1689df59581d4c81d878d159c:79cb1d5ec0b7f58a979581dbfae7962f$</string>
+            <string>$TexturePacker:SmartUpdate:1a9f854dd8e0c4b0e133012fd2de6919:370169219b36ca87d0ea89e74c362d16:4441cdf9e9d63a0b2e5c235943df052f$</string>
             <key>textureFileName</key>
-            <string>player_Dark_Wall_Slide.png</string>
+            <string>player_Dark_Non.png</string>
         </dict>
     </dict>
 </plist>

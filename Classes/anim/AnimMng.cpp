@@ -25,6 +25,10 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 			//name = "player";
 			name = "player_Light";
 		}
+		else
+		{
+			name = "player_Dark";
+		}
 		break;
 	case ActorType::Imp:
 		name = "imp";

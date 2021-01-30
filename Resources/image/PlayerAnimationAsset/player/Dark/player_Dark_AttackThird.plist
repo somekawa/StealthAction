@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>attack3_0.png</key>
+            <key>player_Dark_AttackThird0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_1.png</key>
+            <key>player_Dark_AttackThird1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_10.png</key>
+            <key>player_Dark_AttackThird10.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_2.png</key>
+            <key>player_Dark_AttackThird2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_3.png</key>
+            <key>player_Dark_AttackThird3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_4.png</key>
+            <key>player_Dark_AttackThird4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_5.png</key>
+            <key>player_Dark_AttackThird5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -109,7 +109,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_6.png</key>
+            <key>player_Dark_AttackThird6.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -124,7 +124,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_7.png</key>
+            <key>player_Dark_AttackThird7.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -139,7 +139,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_8.png</key>
+            <key>player_Dark_AttackThird8.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -154,7 +154,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>attack3_9.png</key>
+            <key>player_Dark_AttackThird9.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>

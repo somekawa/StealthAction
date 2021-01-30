@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>look_intro0.png</key>
+            <key>player_Dark_Look_Intro0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>look_intro1.png</key>
+            <key>player_Dark_Look_Intro1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>look_intro2.png</key>
+            <key>player_Dark_Look_Intro2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>look_intro3.png</key>
+            <key>player_Dark_Look_Intro3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>look_intro4.png</key>
+            <key>player_Dark_Look_Intro4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>look_intro5.png</key>
+            <key>player_Dark_Look_Intro5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>

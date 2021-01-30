@@ -46,8 +46,8 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	type_ = ActorType::Player;
 	actModuleRegistration();
 
-	currentAnimation_ = "player_Light_Non";
-	actionOld_ = "player_Light_Run";
+	currentAnimation_ = "Non";
+	actionOld_ = "Run";
 	direction_ = Direction::Right;
 
 	AnimRegistrator();
@@ -57,7 +57,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	myNo_ = no_;
 	no_++;
 	type_ = ActorType::Player;
-	oldPos_ = 0;
+	//oldPos_ = 0;
 
 	oldPosKeepFlg_ = false;
 	bitFlg_.FirstAttackFlg = false;
@@ -130,12 +130,21 @@ void Player::update(float delta)
 		}
 		return;
 	}
+
 	// スキルテストコード&effectテストコード
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
+		if (playerColor == "player_Light_")
+		{
+			playerColor = "player_Dark_";
+		}
+		else
+		{
+			playerColor = "player_Light_";
+		}
+
 		auto director = Director::getInstance();
-		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");
-		//FLT_MAX : float の最大の有限値
+		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
 		auto ppos = getPosition();
 		auto minpos = Vec2(0,0);
 		auto minlen = FLT_MAX;
@@ -164,7 +173,7 @@ void Player::update(float delta)
 		skillSprite->RemoveActiveSkill();
 	}
 	// 現在のフレームを整数値で取得
-	animationFrame_int_ = GetAnimationFrameInt();
+	animationFrame_int_ = GetAnimationFrameInt(playerColor + currentAnimation_);
 	//currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 
 	colliderVisible();
@@ -176,7 +185,7 @@ void Player::update(float delta)
 	oprtState_->update();	
 	
 	// スライド時のみアンカーポイントを移動させる(その他は画像の下中央)
-	if (currentAnimation_ == "player_Light_Wall_Slide")
+	if (currentAnimation_ == "Wall_Slide")
 	{
 		if (direction_ == Direction::Left)
 		{
@@ -196,7 +205,7 @@ void Player::update(float delta)
 	}
 
 	// スライド終了時に左右向きを反転させる
-	if (currentAnimation_ != "player_Light_Wall_Slide" && actionOld_ == "player_Light_Wall_Slide")
+	if (currentAnimation_ != "Wall_Slide" && actionOld_ == "Wall_Slide")
 	{
 		auto dir = direction_;
 		direction_ == Direction::Right ? direction_ = Direction::Left : direction_ = Direction::Right;
@@ -225,7 +234,7 @@ void Player::update(float delta)
 	// アニメーションが切り替わるタイミングで呼ばれる再生処理
 	if (currentAnimation_ != actionOld_)
 	{
-		if (currentAnimation_ == "player_Light_AttackFirst" && !bitFlg_.FirstAttackFlg)
+		if (currentAnimation_ == "AttackFirst" && !bitFlg_.FirstAttackFlg)
 		{
 			bitFlg_.FirstAttackFlg = true;
 			// 反転ﾌﾗｸﾞのｾｯﾄ
@@ -244,7 +253,7 @@ void Player::update(float delta)
 			lpEffectMng.PlayWithOnce(attackSprite, "attack");
 		}
 		animationFrame_int_ = 0.0f;
-		lpAnimMng.ChangeAnimation(*this, currentAnimation_, true, ActorType::Player);
+		lpAnimMng.ChangeAnimation(*this, playerColor + currentAnimation_, true, ActorType::Player);
 	}
 	actionOld_ = currentAnimation_;
 	// 各ｺﾗｲﾀﾞｰのﾎﾟｼﾞｼｮﾝとｻｲｽﾞの設定
@@ -281,23 +290,27 @@ void Player::attackMotion(float delta)
 
 	if (bitFlg_.FirstAttackFlg)
 	{
-		currentAnimation_ = "player_Light_AttackFirst";
+		currentAnimation_ = "AttackFirst";
 		if (!oldPosKeepFlg_)
 		{
-			oldPos_ = this->getPosition().x;
+			if (playerColor == "player_Dark_")
+			{
+				this->setPosition(this->getPosition().x, this->getPosition().y - 15);		// 位置補正を入れないと浮いて見える
+			}
+			//oldPos_ = this->getPosition().x;
 			oldPosKeepFlg_ = true;
 		}
 	}
 	else if (bitFlg_.SecondAttackFlg)
 	{
-		currentAnimation_ = "player_Light_AttackSecond";
+		currentAnimation_ = "AttackSecond";
 	}
 	else if (bitFlg_.ThirdAttackFlg)
 	{
-		currentAnimation_ = "player_Light_AttackThird";
+		currentAnimation_ = "AttackThird";
 	}
 
-	if (currentAnimation_ == "player_Light_AttackFirst" && bitFlg_.FirstAttackFlg)
+	if (currentAnimation_ == "AttackFirst" && bitFlg_.FirstAttackFlg)
 	{
 		// フレーム数の取得テスト
 		//auto a = animationFrame_ * 100;
@@ -313,26 +326,36 @@ void Player::attackMotion(float delta)
 		if (animationFrame_int_ < 10)
 		{
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
-			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+			currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
 			colliderVisible();
 		}
 
 		if (bitFlg_.FirstAttackFlg && animationFrame_ <= 0.5f)
 		{
-			currentAnimation_ = "player_Light_AttackFirst";
+			currentAnimation_ = "AttackFirst";
 			isAttacking_ = true;
 		}
 		else
 		{
 			if (!bitFlg_.SecondAttackFlg)
 			{
-				currentAnimation_ = "player_Light_Look_Intro";
+				currentAnimation_ = "Look_Intro";
 				this->SetIsAttacking(false);
-				this->setPosition(oldPos_, this->getPosition().y);
+
+				// darkとlightで画像サイズが違うからその補正
+				if (playerColor == "player_Dark_")
+				{
+					this->setPosition(this->getPosition().x, this->getPosition().y + 15);		// 位置補正を戻す
+				}
+				else
+				{
+					//this->setPosition(oldPos_, this->getPosition().y);
+					this->setPosition(this->getPosition().x, this->getPosition().y);
+				}
 			}
 			else
 			{
-				currentAnimation_ = "player_Light_AttackSecond";
+				currentAnimation_ = "AttackSecond";
 			}
 			animationFrame_ = 0.0f;
 			bitFlg_.FirstAttackFlg = false;
@@ -341,7 +364,7 @@ void Player::attackMotion(float delta)
 		}
 	}
 
-	if ((currentAnimation_ == "player_Light_AttackSecond" && bitFlg_.SecondAttackFlg))
+	if ((currentAnimation_ == "AttackSecond" && bitFlg_.SecondAttackFlg))
 	{
 		bitFlg_.ThirdAttackFlg = keyLambda(bitFlg_.ThirdAttackFlg);
 
@@ -351,25 +374,34 @@ void Player::attackMotion(float delta)
 		if (animationFrame_int_ < 10)
 		{
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
-			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+			currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
 			colliderVisible();
 		}
 
 		if (bitFlg_.SecondAttackFlg && animationFrame_ <= 0.8f)
 		{
-			currentAnimation_ = "player_Light_AttackSecond";
+			currentAnimation_ = "AttackSecond";
 			isAttacking_ = true;
 		}
 		else
 		{
 			if (!bitFlg_.ThirdAttackFlg)
 			{
-				currentAnimation_ = "player_Light_Look_Intro";
-				this->setPosition(oldPos_, this->getPosition().y);
+				currentAnimation_ = "Look_Intro";
+				// darkとlightで画像サイズが違うからその補正
+				if (playerColor == "player_Dark_")
+				{
+					this->setPosition(this->getPosition().x, this->getPosition().y + 15);		// 位置補正を戻す
+				}
+				else
+				{
+					this->setPosition(this->getPosition().x, this->getPosition().y);
+					//this->setPosition(oldPos_, this->getPosition().y);
+				}
 			}
 			else
 			{
-				currentAnimation_ = "player_Light_AttackThird";
+				currentAnimation_ = "AttackThird";
 			}
 			bitFlg_.SecondAttackFlg = false;
 			isAttacking_ = false;
@@ -378,7 +410,7 @@ void Player::attackMotion(float delta)
 		}
 	}
 
-	if ((currentAnimation_ == "player_Light_AttackThird" && bitFlg_.ThirdAttackFlg))
+	if ((currentAnimation_ == "AttackThird" && bitFlg_.ThirdAttackFlg))
 	{
 		// frame計算
 		animationFrame_ += delta;
@@ -386,21 +418,30 @@ void Player::attackMotion(float delta)
 		if (animationFrame_int_ < 11)
 		{
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
-			currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+			currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
 			colliderVisible();
 		}
 
 		if (bitFlg_.ThirdAttackFlg && animationFrame_ <= 0.8f)
 		{
-			currentAnimation_ = "player_Light_AttackThird";
+			currentAnimation_ = "AttackThird";
 			isAttacking_ = true;
 		}
 		else
 		{
 			bitFlg_.ThirdAttackFlg = false;
 			isAttacking_ = false;
-			currentAnimation_ = "player_Light_Look_Intro";
-			this->setPosition(oldPos_, this->getPosition().y);
+			currentAnimation_ = "Look_Intro";
+			// darkとlightで画像サイズが違うからその補正
+			if (playerColor == "player_Dark_")
+			{
+				this->setPosition(this->getPosition().x, this->getPosition().y + 15);		// 位置補正を戻す
+			}
+			else
+			{
+				this->setPosition(this->getPosition().x, this->getPosition().y);
+				//this->setPosition(oldPos_, this->getPosition().y);
+			}
 			animationFrame_ = 0.0f;
 			//oldPosKeepFlg_ = false;
 		}
@@ -412,14 +453,14 @@ void Player::transformMotion(float delta)
 	// トランスフォーム
 	if (bitFlg_.TransfromFlg)
 	{
-		currentAnimation_ = "player_Light_Transform";
+		currentAnimation_ = "Transform";
 	}
 	if (!bitFlg_.TransfromFlg)
 	{
 		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 		{
 			this->setPosition(this->getPosition().x, this->getPosition().y - 10);		// 位置補正を入れないと浮いて見える
-			currentAnimation_ = "player_Light_Transform";
+			currentAnimation_ = "Transform";
 			bitFlg_.TransfromFlg = true;
 		}
 	}
@@ -429,13 +470,13 @@ void Player::transformMotion(float delta)
 		if (animationFrame_ >= 1.85f)
 		{
 			bitFlg_.TransfromFlg = false;
-			currentAnimation_ = "player_Light_Look_Intro";
+			currentAnimation_ = "Look_Intro";
 			animationFrame_ = 0.0f;
 			this->setPosition(this->getPosition().x, this->getPosition().y + 10);	// 位置補正分戻す
 		}
 		else
 		{
-			currentAnimation_ = "player_Light_Transform";
+			currentAnimation_ = "Transform";
 		}
 	}
 }
@@ -443,7 +484,7 @@ void Player::transformMotion(float delta)
 void Player::colliderVisible(void)
 {
 	// トランスフォームの時はコライダーを無視する
-	if (currentAnimation_ == "player_Light_Transform" || currentAnimation_ == "player_Light_Death2")
+	if (currentAnimation_ == "Transform" || currentAnimation_ == "Death2")
 	{
 		return;
 	}
@@ -453,20 +494,20 @@ void Player::colliderVisible(void)
 		animationFrame_int_ = 0;
 	}
 	CCLOG("plHP:%d", hp_);
-	if (collider_[currentAnimation_].size() <= animationFrame_int_)
+	if (collider_[playerColor + currentAnimation_].size() <= animationFrame_int_)
 	{
 		return;
 	}
-	currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+	currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
 	for (auto collider : this->getChildren())
 	{
-		if (currentAnimation_ == collider->getName() &&
+		if (playerColor + currentAnimation_ == collider->getName() &&
 			animationFrame_int_ == collider->getTag())
 		{
 			// 攻撃の時だけオフセットが必要
-			attackCollider("player_Light_AttackFirst", collider, attackColOffset_);
-			attackCollider("player_Light_AttackSecond", collider, attackColOffset_);
-			attackCollider("player_Light_AttackThird", collider, attackColOffset_);
+			attackCollider("AttackFirst", collider, attackColOffset_);
+			attackCollider("AttackSecond", collider, attackColOffset_);
+			attackCollider("AttackThird", collider, attackColOffset_);
 
 			//if (currentAnimation_ == "AttackFirst")
 			//{
@@ -544,13 +585,15 @@ void Player::attackCollider(std::string str,cocos2d::Node* col,float& pos)
 			if (direction_ == Direction::Right)
 			{
 				this->SetAttackOffset(Vec2(col->getPosition().x + 30.0f, col->getPosition().y));
-				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + AttackMove, this->getPosition().y)));
+				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(this->getPosition().x + AttackMove, this->getPosition().y)));
+				//this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + AttackMove, this->getPosition().y)));
 				this->SetIsAttacking(true);
 			}
 			else
 			{
 				this->SetAttackOffset(cocos2d::Vec2(0.0f, 0.0f));
-				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - AttackMove, this->getPosition().y)));
+				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(this->getPosition().x - AttackMove, this->getPosition().y)));
+				//this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - AttackMove, this->getPosition().y)));
 				this->SetIsAttacking(true);
 			}
 
@@ -599,43 +642,77 @@ void Player::KeyInputClear(void)
 
 void Player::AnimRegistrator(void)
 {
-	std::string path = "image/PlayerAnimationAsset/player/Light/player_Light";
+	std::string path_light = "image/PlayerAnimationAsset/player/Light/player_Light";
+	std::string path_dark = "image/PlayerAnimationAsset/player/Dark/player_Dark";
 
 	// アニメーションをキャッシュに登録
 	// non
-	lpAnimMng.addAnimationCache(path, "Non", 6, (float)0.3, ActorType::Player,false);
+	lpAnimMng.addAnimationCache(path_light, "Non", 6, (float)0.3, ActorType::Player,false);
 
 	// idle
-	lpAnimMng.addAnimationCache(path, "Look_Intro", 6, (float)0.3, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Look_Intro", 6, (float)0.3, ActorType::Player, false);
 
 	// run
-	lpAnimMng.addAnimationCache(path, "Run", 9, (float)0.08, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Run", 9, (float)0.08, ActorType::Player, false);
 
 	// fall
-	lpAnimMng.addAnimationCache(path, "Fall", 3, (float)1.0, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Fall", 3, (float)1.0, ActorType::Player, false);
 
 	// jump
-	lpAnimMng.addAnimationCache(path, "Jump", 3, (float)0.05, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Jump", 3, (float)0.05, ActorType::Player, false);
 
-	lpAnimMng.addAnimationCache(path, "Jumping", 3, (float)0.05, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Jumping", 3, (float)0.05, ActorType::Player, false);
 
 	// AttackFirst
-	lpAnimMng.addAnimationCache(path, "AttackFirst", 9, (float)0.05, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "AttackFirst", 9, (float)0.05, ActorType::Player, false);
 
 	// AttackSecond
-	lpAnimMng.addAnimationCache(path, "AttackSecond", 9, (float)0.08, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "AttackSecond", 9, (float)0.08, ActorType::Player, false);
 
 	// AttackThird
-	lpAnimMng.addAnimationCache(path, "AttackThird", 10, (float)0.08, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "AttackThird", 10, (float)0.08, ActorType::Player, false);
 
 	// wallslide
-	lpAnimMng.addAnimationCache(path, "Wall_Slide", 3, (float)0.3, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Wall_Slide", 3, (float)0.3, ActorType::Player, false);
 
 	// Transform
-	lpAnimMng.addAnimationCache(path, "Transform", 37, (float)0.05, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Transform", 37, (float)0.05, ActorType::Player, false);
 
 	// death
-	lpAnimMng.addAnimationCache(path, "Death2", 10, (float)0.08, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Death2", 10, (float)0.08, ActorType::Player, false);
+
+	// non
+	lpAnimMng.addAnimationCache(path_dark, "Non", 6, (float)0.3, ActorType::Player, false);
+
+	// idle
+	lpAnimMng.addAnimationCache(path_dark, "Look_Intro", 6, (float)0.3, ActorType::Player, false);
+
+	// run
+	lpAnimMng.addAnimationCache(path_dark, "Run", 9, (float)0.08, ActorType::Player, false);
+
+	// fall
+	lpAnimMng.addAnimationCache(path_dark, "Fall", 3, (float)1.0, ActorType::Player, false);
+
+	// jump
+	lpAnimMng.addAnimationCache(path_dark, "Jump", 3, (float)0.05, ActorType::Player, false);
+
+	lpAnimMng.addAnimationCache(path_dark, "Jumping", 3, (float)0.05, ActorType::Player, false);
+
+	// AttackFirst
+	lpAnimMng.addAnimationCache(path_dark, "AttackFirst", 9, (float)0.05, ActorType::Player, false);
+
+	// AttackSecond
+	lpAnimMng.addAnimationCache(path_dark, "AttackSecond", 9, (float)0.08, ActorType::Player, false);
+
+	// AttackThird
+	lpAnimMng.addAnimationCache(path_dark, "AttackThird", 10, (float)0.08, ActorType::Player, false);
+
+	// wallslide
+	lpAnimMng.addAnimationCache(path_dark, "Wall_Slide", 3, (float)0.3, ActorType::Player, false);
+
+	// Transform
+	lpAnimMng.addAnimationCache(path_dark, "Transform", 37, (float)0.05, ActorType::Player, false);
+
 
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "player_Light_Non");
 }
@@ -670,7 +747,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = oprtState_;
 		act.vel = Vec2{ 5,0 };
-		act.actName = "player_Light_Run";
+		act.actName = "Run";
 		act.button = BUTTON::RIGHT;
 		act.checkPoint1 = Vec2{ charSize.x/2, charSize.y/2 };	// 右上
 		act.checkPoint2 = Vec2{ charSize.x/2,  15 };			// 右下
@@ -678,10 +755,10 @@ void Player::actModuleRegistration(void)
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
-		act.blackList.emplace_back("player_Light_AttackFirst");
-		act.blackList.emplace_back("player_Light_AttackSecond");
-		act.blackList.emplace_back("player_Light_AttackThird");
-		act.blackList.emplace_back("player_Light_Wall_Slide");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
+		act.blackList.emplace_back("Wall_Slide");
 		actCtl_.RunInitializeActCtl(type_,"右移動", act);
 
 		auto anchor1 = DrawNode::create();
@@ -697,7 +774,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = oprtState_;
 		act.vel = Vec2{ -5,0 };
-		act.actName = "player_Light_Run";
+		act.actName = "Run";
 		act.button = BUTTON::LEFT;
 		act.checkPoint1 = Vec2{ -charSize.x/2, charSize.y/2 };	// 左上
 		act.checkPoint2 = Vec2{ -charSize.x/2,  15 };			// 左下
@@ -706,10 +783,10 @@ void Player::actModuleRegistration(void)
 		//act.blackList.emplace_back(ACTION::FALLING);
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
-		act.blackList.emplace_back("player_Light_AttackFirst");
-		act.blackList.emplace_back("player_Light_AttackSecond");
-		act.blackList.emplace_back("player_Light_AttackThird");
-		act.blackList.emplace_back("player_Light_Wall_Slide");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
+		act.blackList.emplace_back("Wall_Slide");
 		actCtl_.RunInitializeActCtl(type_,"左移動", act);
 		auto anchor3 = DrawNode::create();
 		anchor3->drawDot(act.checkPoint1, 3.0f, Color4F::GREEN);
@@ -724,16 +801,16 @@ void Player::actModuleRegistration(void)
 		ActModule flipAct;
 		flipAct.state = oprtState_;
 		flipAct.flipFlg = false;
-		flipAct.actName = "player_Light_Non";
+		flipAct.actName = "Non";
 		flipAct.button = BUTTON::RIGHT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
-		flipAct.blackList.emplace_back("player_Light_AttackFirst");
-		flipAct.blackList.emplace_back("player_Light_AttackSecond");
-		flipAct.blackList.emplace_back("player_Light_AttackThird");
-		flipAct.blackList.emplace_back("player_Light_Wall_Slide");
+		flipAct.blackList.emplace_back("AttackFirst");
+		flipAct.blackList.emplace_back("AttackSecond");
+		flipAct.blackList.emplace_back("AttackThird");
+		flipAct.blackList.emplace_back("Wall_Slide");
 		actCtl_.RunInitializeActCtl(type_,"右向き", flipAct);
 	}
 
@@ -742,16 +819,16 @@ void Player::actModuleRegistration(void)
 		ActModule flipAct;
 		flipAct.state = oprtState_;
 		flipAct.flipFlg = true;
-		flipAct.actName = "player_Light_Non";
+		flipAct.actName = "Non";
 		flipAct.button = BUTTON::LEFT;
 		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
 
 		//flipAct.blackList.emplace_back(ACTION::FALLING);
 
-		flipAct.blackList.emplace_back("player_Light_AttackFirst");
-		flipAct.blackList.emplace_back("player_Light_AttackSecond");
-		flipAct.blackList.emplace_back("player_Light_AttackThird");
-		flipAct.blackList.emplace_back("player_Light_Wall_Slide");
+		flipAct.blackList.emplace_back("AttackFirst");
+		flipAct.blackList.emplace_back("AttackSecond");
+		flipAct.blackList.emplace_back("AttackThird");
+		flipAct.blackList.emplace_back("Wall_Slide");
 		actCtl_.RunInitializeActCtl(type_,"左向き", flipAct);
 	}
 
@@ -759,7 +836,7 @@ void Player::actModuleRegistration(void)
 	{
 		// checkkeylistに離している間の設定もしたけど特に効果なし
 		ActModule act;
-		act.actName = "player_Light_Fall";
+		act.actName = "Fall";
 		act.state = oprtState_;
 		act.button = BUTTON::DOWN;
 		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
@@ -772,8 +849,8 @@ void Player::actModuleRegistration(void)
 
 		act.gravity = Vec2{ 0.0f,-5.0f };
 		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
-		act.blackList.emplace_back("player_Light_Jumping");	// ジャンプ中に落下してほしくない
-		act.blackList.emplace_back("player_Light_Wall_Slide");	
+		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
+		act.blackList.emplace_back("Wall_Slide");	
 		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
 
 		actCtl_.RunInitializeActCtl(type_,"落下", act);
@@ -784,7 +861,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = oprtState_;
 		act.button = BUTTON::UP;
-		act.actName = "player_Light_Jump";
+		act.actName = "Jump";
 		act.checkPoint1 = Vec2{ -charSize.x/3 + 5, charSize.y };		// 左上
 		act.checkPoint2 = Vec2{ charSize.x/3 - 5, charSize.y };			// 右上
 		//act.checkPoint1 = Vec2{ -10, 30 };						// 左上
@@ -795,10 +872,10 @@ void Player::actModuleRegistration(void)
 		// これをコメントアウトしていると、左右押しながらのジャンプができる
 		// でも連続でジャンプして上昇し続けるようになる
 		// しかもFALLとJUMPが混ざって高さが出ない
-		act.blackList.emplace_back("player_Light_Fall");	// 落下中にジャンプしてほしくない
-		act.blackList.emplace_back("player_Light_AttackFirst");
-		act.blackList.emplace_back("player_Light_AttackSecond");
-		act.blackList.emplace_back("player_Light_AttackThird");
+		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		//act.whiteList.emplace_back(ACTION::RUN);
 
 		actCtl_.RunInitializeActCtl(type_,"ジャンプ", act);
@@ -809,7 +886,7 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = oprtState_;
 		act.button = BUTTON::UP;
-		act.actName = "player_Light_Jumping";
+		act.actName = "Jumping";
 		act.checkPoint1 = Vec2{ -charSize.x/3 + 5, charSize.y };	// 左上
 		act.checkPoint2 = Vec2{ charSize.x/3 - 5, charSize.y };		// 右上
 		//act.checkPoint1 = Vec2{ -10, 30 };					// 左上
@@ -817,17 +894,17 @@ void Player::actModuleRegistration(void)
 		act.jumpVel = Vec2{ 0.0f,20.0f };
 		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
 
-		act.blackList.emplace_back("player_Light_Fall");	// 落下中にジャンプしてほしくない
-		act.blackList.emplace_back("player_Light_Look_Intro");
-		act.blackList.emplace_back("player_Light_Run");
-		act.blackList.emplace_back("player_Light_AttackFirst");
-		act.blackList.emplace_back("player_Light_AttackSecond");
-		act.blackList.emplace_back("player_Light_AttackThird");
-		act.blackList.emplace_back("player_Light_Non");
-		act.blackList.emplace_back("player_Light_Wall_Slide");
-		act.blackList.emplace_back("player_Light_Transform");
+		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
+		act.blackList.emplace_back("Look_Intro");
+		act.blackList.emplace_back("Run");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
+		act.blackList.emplace_back("Non");
+		act.blackList.emplace_back("Wall_Slide");
+		act.blackList.emplace_back("Transform");
 
-		act.whiteList.emplace_back("player_Light_Jump");
+		act.whiteList.emplace_back("Jump");
 		actCtl_.RunInitializeActCtl(type_,"ジャンピング", act);
 		//actCtl_.ActCtl("ジャンプ", act);
 	}
@@ -838,7 +915,7 @@ void Player::actModuleRegistration(void)
 		act.state = oprtState_;
 		//act.button = BUTTON::ATTACK;
 		act.button = BUTTON::DOWN;
-		act.actName = "player_Light_AttackFirst";
+		act.actName = "AttackFirst";
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };
 		//act.blackList.emplace_back("Fall");	// 一時的コメントアウト
@@ -851,8 +928,8 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = oprtState_;
 		act.button = BUTTON::DOWN;
-		act.actName = "player_Light_AttackSecond";
-		act.blackList.emplace_back("player_Light_Fall");
+		act.actName = "AttackSecond";
+		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		actCtl_.RunInitializeActCtl(type_,"攻撃", act);
 	}
@@ -862,8 +939,8 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.state = oprtState_;
 		act.button = BUTTON::DOWN;
-		act.actName = "player_Light_AttackThird";
-		act.blackList.emplace_back("player_Light_Fall");
+		act.actName = "AttackThird";
+		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
 		actCtl_.RunInitializeActCtl(type_,"攻撃", act);
 	}
@@ -877,16 +954,16 @@ void Player::actModuleRegistration(void)
 		act.checkPoint2 = Vec2{ charSize.x / 2, 0 };				// 右下
 		act.button = BUTTON::RIGHT;
 		act.flipFlg = true;
-		act.actName = "player_Light_Wall_Slide";
+		act.actName = "Wall_Slide";
 		act.touch = TOUCH_TIMMING::TOUCHING;	
-		act.blackList.emplace_back("player_Light_Jumping");	
-		act.blackList.emplace_back("player_Light_Run");	
-		act.blackList.emplace_back("player_Light_Fall");
-		act.blackList.emplace_back("player_Light_Look_Intro");
-		act.blackList.emplace_back("player_Light_Non");
-		act.blackList.emplace_back("player_Light_AttackFirst");
-		act.blackList.emplace_back("player_Light_AttackSecond");
-		act.blackList.emplace_back("player_Light_AttackThird");
+		act.blackList.emplace_back("Jumping");	
+		act.blackList.emplace_back("Run");	
+		act.blackList.emplace_back("Fall");
+		act.blackList.emplace_back("Intro");
+		act.blackList.emplace_back("Non");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		actCtl_.RunInitializeActCtl(type_,"右壁スライド", act);
 	}
 
@@ -899,16 +976,16 @@ void Player::actModuleRegistration(void)
 		act.checkPoint2 = Vec2{-charSize.x / 2, 0 };				// 左下
 		act.button = BUTTON::LEFT;
 		act.flipFlg = false;
-		act.actName = "player_Light_Wall_Slide";
+		act.actName = "Wall_Slide";
 		act.touch = TOUCH_TIMMING::TOUCHING;
-		act.blackList.emplace_back("player_Light_Jumping");	
-		act.blackList.emplace_back("player_Light_Run");
-		act.blackList.emplace_back("player_Light_Fall");
-		act.blackList.emplace_back("player_Light_Look_Intro");
-		act.blackList.emplace_back("player_Light_Non");
-		act.blackList.emplace_back("player_Light_AttackFirst");
-		act.blackList.emplace_back("player_Light_AttackSecond");
-		act.blackList.emplace_back("player_Light_AttackThird");
+		act.blackList.emplace_back("Jumping");
+		act.blackList.emplace_back("Run");
+		act.blackList.emplace_back("Fall");
+		act.blackList.emplace_back("Intro");
+		act.blackList.emplace_back("Non");
+		act.blackList.emplace_back("AttackFirst");
+		act.blackList.emplace_back("AttackSecond");
+		act.blackList.emplace_back("AttackThird");
 		actCtl_.RunInitializeActCtl(type_,"左壁スライド", act);
 	}
 	// 更新関数の登録
@@ -924,7 +1001,7 @@ bool Player::gameOverAction(void)
 
 		this->setPosition(deathPos_);	// 死亡した位置で設定しておかないと、おかしくなる
 		AnimationCache* animationCache = AnimationCache::getInstance();
-		Animation* animation = animationCache->getAnimation("player_Light_Death2");
+		Animation* animation = animationCache->getAnimation("Death2");
 		animation->setRestoreOriginalFrame(false);
 		//アニメーションを実行
 		gameOverAction_ = runAction(

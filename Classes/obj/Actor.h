@@ -91,6 +91,7 @@ public:
 	// これ作る必要あるのか分からないが、皆が使うと思い、作成しました
 	// 整数値で現在のフレーム値を取得
 	virtual const int& GetAnimationFrameInt(void);
+	virtual const int& GetAnimationFrameInt(std::string str);
 
 	virtual void CheckMapObjHit(float delta);
 	// 壁に当たっているか判定
