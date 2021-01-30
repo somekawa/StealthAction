@@ -63,9 +63,8 @@ private:
 	cocos2d::Vec2 deathPos_;									// 死亡時の座標を保持するための変数
 
 	SkillBase* skillBase_;										// SkillBaseクラスのポインタ情報(コンストラクタで最初に取得)
+	SkillBase* skillSprite = nullptr;						// skillSpriteの情報(Skill発動時に更新)
 	std::vector<std::string> plfile_;							// Playerのスキル情報(.txt)を入れるvector
 	cocos2d::Layer& enemyList_;
 	bool testflg = false;
-
-	std::string playerColor = "Light_";
 };

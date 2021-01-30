@@ -25,10 +25,6 @@ cocos2d::Sprite* SkillBase::createSkillBase()
 
 SkillBase::~SkillBase()
 {
-	for (auto data : skillList_)
-	{
-		delete data;
-	}
 }
 
 void SkillBase::AddActiveSkill(SkillBase* ptr)
@@ -42,8 +38,8 @@ void SkillBase::RemoveActiveSkill(void)
 	{
 		if ((*itr)->param.activation == false)
 		{
-			delete (*itr);
-			skillList_.erase(itr);
+			(*itr)->removeFromParent();
+			itr = skillList_.erase(itr);
 		}
 		else
 		{
@@ -58,6 +54,7 @@ void SkillBase::UpDate(float delta)
 	{
 		data->UpDate(delta);
 	}
+	RemoveActiveSkill();
 }
 
 void SkillBase::Render(void)

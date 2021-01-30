@@ -8,7 +8,6 @@ USING_NS_CC;
 TestSkill::TestSkill(SkillBase* ptr)
 {
 	// addできない
-	ptr->AddActiveSkill(this);
 	pos_ = ptr->GetPlayerPos();
 	tpos_ = ptr->GetTargetPos();
 	effectData_.size = Size(192,192);
@@ -24,7 +23,7 @@ TestSkill::TestSkill(SkillBase* ptr)
 		flip = false;
 	}
 	// ｴﾌｪｸﾄを作成して、自身のｴﾌｪｸﾄ画像に格納
-	fx_ = lpEffectMng.createEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, pos_,true);
+	fx_ = lpEffectMng.createEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, pos_,true,true);
 	// ｴﾌｪｸﾄの再生
 	lpEffectMng.PlayWithLoop(fx_, "enemySpawn");
 }
@@ -57,11 +56,12 @@ void TestSkill::UpDate(float delta)
 	/*この中にSkillの効果や動作を記述してください*/
 	// ここでｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝの移動をやる
 	// ｱﾆﾒｰｼｮﾝが終わるとｴﾌｪｸﾄのｱｸﾃｨﾌﾞ状態をfalseにしている
-	lpEffectMng.AnimEndChecker(fx_, delta);
+	;
 
 	bool flag = true;
-	if (lpEffectMng.GetAnimEnd())
+	if (lpEffectMng.AnimEndChecker(fx_, delta))
 	{
+		param.activation = false;
 		flag = lpSkillMng.SkillInActivate("skill_01.txt");
 	}
 
@@ -89,4 +89,20 @@ cocos2d::Vec2 TestSkill::GetTargetPos(void)
 cocos2d::Rect TestSkill::GetEffectData(void)
 {
 	return effectData_;
+}
+
+SkillBase* TestSkill::CreateTestSkill(SkillBase* ptr)
+{
+	SkillBase* pRet = new(std::nothrow)TestSkill(ptr);
+	if (pRet)
+	{
+		pRet->autorelease();
+		return pRet;
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+		return nullptr;
+	}
 }
