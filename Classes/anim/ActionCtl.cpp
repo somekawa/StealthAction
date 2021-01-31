@@ -383,8 +383,6 @@ void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule
 		break;
 	case ActorType::BigCultist:
 		break;
-	case ActorType::Fireball:
-		break;
 	case ActorType::Max:
 		break;
 	default:
@@ -784,8 +782,6 @@ void ActionCtl::InitUpdater(ActorType& type)
 				dynamic_cast<Enemy&>(sprite).SetAction("bigCultist_idle");
 			}
 		});
-		break;
-	case ActorType::Fireball:
 		break;
 	case ActorType::Max:
 		break;

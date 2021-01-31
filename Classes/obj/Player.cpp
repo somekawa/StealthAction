@@ -259,8 +259,7 @@ void Player::update(float delta)
 
 			// UŒ‚´Ìª¸Ä‚Ì’Ç‰Á
 			auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), {0.0f,0.0f}, 5, 0.04f,flip,false);
-			//lpEffectMng.InitializePickedUpEffect("attack", getPosition(), Vec2(0.0f, 0.0f), 5, 0.04f, flip, false);
-			//lpEffectMng.PlayWithOnce(attackSprite, "attack");
+
 		}
 		animationFrame_int_ = 0.0f;
 		lpAnimMng.ChangeAnimation(*this, playerColor + currentAnimation_, true, ActorType::Player);

@@ -12,12 +12,7 @@ bool PhysicalAttackAction::operator()(cocos2d::Sprite& sprite, ActModule& module
     {
 		if (dynamic_cast<Enemy&>(sprite).GetType() == ActorType::Cultist)
 		{
-			/*if (!dynamic_cast<Enemy&>(sprite).GetFire())
-			{
-				auto angle = dynamic_cast<Cultist&>(*enemy).GetPLAngle();
-				enemy->AddAttackObj(angle);
-				enemy->SetIsAttacking(true);
-			}*/
+			dynamic_cast<Enemy&>(sprite).AddAttackObj(0.0f);
 		}
 		else
 		{

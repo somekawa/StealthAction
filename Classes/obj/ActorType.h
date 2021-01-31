@@ -9,7 +9,6 @@ enum class ActorType
 	TwistedCultist,
 	Cultist,
 	BigCultist,
-	Fireball,
 	Max
 };
 

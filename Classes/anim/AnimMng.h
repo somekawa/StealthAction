@@ -24,6 +24,8 @@ public:
 	// param@: frame    :: アニメーションの総フレーム
 	// param@: duration :: アニメーションを再生する間隔
 	void addAnimationCache(std::string actorName, std::string animName, int frame, float duration, ActorType type,bool isLoop);
+	void addAnimationCache(std::string name, std::string animName, int frame, float duration, bool isLoop);
+
 	// アニメーションの初期化と実行
 	void InitAnimation(cocos2d::Sprite& sprite, ActorType type, std::string animName);
 	// アニメーションの実行
@@ -45,7 +47,6 @@ public:
 	{
 		return animations_[static_cast<int>(type)];
 	}
-
 	// アニメーションフレーム数の取得
 	const int& GetFrameNum(const ActorType& type, const std::string& animName)
 	{
@@ -56,10 +57,20 @@ public:
 	{
 		return caches_[static_cast<int>(type)][animationName];
 	}
+	// アニメーションキャッシュ(ｷｬﾗｸﾀｰ以外)の取得
+	cocos2d::Animation* GetAnimationCache(std::string animationName)
+	{
+		return cachesExceptCharacter_[animationName];
+	}
 	// アニメーションループフラグの取得
 	const bool& GetIsLoop(ActorType type, std::string animationName)
 	{
 		return isLoop_[static_cast<int>(type)][animationName];
+	}
+
+	const bool& GetIsLoop(std::string animationName)
+	{
+		return isLoopExceptCharacter_[animationName];
 	}
 private:
 	AnimMng();
@@ -68,9 +79,11 @@ private:
 
 	// キャラ別のアニメーションキャッシュの登録
 	void CacheRegistration(cocos2d::AnimationCache* animCache, const ActorType& type, std::string animName,bool isLoop);
-
+	void CacheRegistration(cocos2d::AnimationCache* animCache,std::string animName, bool isLoop);
 	// キャラクターのタイプ別のアニメーションキャッシュ
 	std::array<std::map<std::string, cocos2d::Animation*>, static_cast<int>(ActorType::Max)> caches_;
+	// ｷｬﾗｸﾀｰ以外のｱﾆﾒｰｼｮﾝｷｬｯｼｭ
+	std::map<std::string, cocos2d::Animation*> cachesExceptCharacter_;
 	// 1キャラの1アニメーションにかかる時間
 	std::array<std::map<std::string, float>, static_cast<int>(ActorType::Max)> animMaxFrame_;
 
@@ -83,6 +96,8 @@ private:
 
 	// アニメーションのループフラグ
 	std::array<std::map< std::string,bool>, static_cast<int>(ActorType::Max)> isLoop_;
+	// ｷｬﾗｸﾀｰ以外のﾙｰﾌﾟﾌﾗｸﾞ
+	std::map<std::string, bool> isLoopExceptCharacter_;
 
 	static std::unique_ptr<AnimMng> s_instance;
 };

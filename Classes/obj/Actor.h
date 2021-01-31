@@ -165,6 +165,7 @@ public:
 
 	// “–‚½‚è”»’è
 	virtual bool OnHit(const cocos2d::Rect& collision);
+	virtual void SetIsHitAttack(bool flg);
 private:
 
 protected:

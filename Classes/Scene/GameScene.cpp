@@ -161,6 +161,10 @@ bool Game::init()
 		this->addChild(label, 1);
 	}*/
 
+	// fireball ‚ÌŠe±ÆÒ°¼®İ‚Ì·¬¯¼­“o˜^
+	lpAnimMng.addAnimationCache("Fireball", "fireball_normal", 4, 0.08f, true);
+	lpAnimMng.addAnimationCache("Fireball", "fireball_impact", 5, 0.08f, false);
+
 	this->setName("GameScene");
 
 	// Scene - Layer - Sprite	// bgLayer‚ÍGameScene‚É’¼Ú‚Ô‚ç‰º‚ª‚é
