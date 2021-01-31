@@ -16,7 +16,7 @@
 #include "BehaviorBaseAI/JudgementTool/MoveJudgement.h"
 #include "BehaviorBaseAI/JudgementTool/SkillAttackJudgement.h"
 
-#include "EnemyHPGauge.h"
+#include "HPGauge.h"
 
 USING_NS_CC;
 
@@ -52,7 +52,6 @@ void EnemyManager::Update(void)
 
 void EnemyManager::Initialize(void)
 {
-	EnemyHPGauge::LoadSprite();
 	// ﾀｲﾌﾟ毎のｱﾆﾒｰｼｮﾝ、behaviorの登録
 	for (auto type : ActorType())
 	{
@@ -71,11 +70,12 @@ void EnemyManager::CreateInitialEnemyOnFloor(int initNum)
 {
 	// ﾘｽﾄの中身を空にする
 	enemies_.clear();
+	CreateEnemy(ActorType::TwistedCultist);
 
 	for (int init = 0; init < initNum; init++)
 	{
-		auto randomType = static_cast<int>(ActorType::Assassin) + (rand() % static_cast<int>(ActorType::Assassin));
-		CreateEnemy((ActorType)randomType);
+		//auto randomType = static_cast<int>(ActorType::Assassin) + (rand() % static_cast<int>(ActorType::Assassin));
+		//CreateEnemy((ActorType)randomType);
 	}
 }
 
@@ -266,7 +266,7 @@ void EnemyManager::CreateEnemy(ActorType type)
 {
 	Enemy* sprite = nullptr;
 	Sprite* hpSprite = nullptr;
-	auto spawnPos = Vec2{ 150 + float(rand() % 300), 30 + float(rand() % 200) };
+	auto spawnPos = Vec2{ 150 + float(rand() % 300), 100 + float(rand() % 200) };
 	auto vRange = VisionRange(0.0f, 0.0f);
 	switch (type)
 	{
@@ -278,7 +278,7 @@ void EnemyManager::CreateEnemy(ActorType type)
 	case ActorType::Assassin:
 		vRange = VisionRange(100.0f, 50.0f);
 
-		sprite = Assassin::CreateAssassin(Vec2(spawnPos.x,spawnPos.y), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
+		sprite = Assassin::CreateAssassin(Vec2(100.0f,100.0f), *player_, &behavior_[static_cast<int>(type)], vRange, 50, layer_);
 		// 敵に名前を付ける
 		// 死んだら"death"となる
 		sprite->setName("assassin");
@@ -308,8 +308,9 @@ void EnemyManager::CreateEnemy(ActorType type)
 	}
 	// 固有IDのｾｯﾄ
 	sprite->SetID(enemyNum_);
-	hpSprite = EnemyHPGauge::CreateEnemyHPGauge(type, *sprite);
-
+	hpSprite = HPGauge::createHPGauge(dynamic_cast<Enemy&>(*sprite),1);
+	hpSprite->setTag(101);
+	hpSprite->setName(sprite->getName() + "_HPgauge" + "_" + std::to_string(sprite->GetID()));
 	// 敵をActor用レイヤーの子供にする
 	layer_.addChild(sprite);
 	hpLayer_.addChild(hpSprite);
@@ -318,7 +319,7 @@ void EnemyManager::CreateEnemy(ActorType type)
 	hpSprite->scheduleUpdate();
 	// ｽﾎﾟｰﾝﾌﾗｸﾞを折る
 	spawnFlag_ = true;
-
+	enemyNum_++;
 	enemies_.emplace(enemies_.end(),sprite);
 }
 
@@ -330,7 +331,7 @@ void EnemyManager::CreateBoss(const std::shared_ptr<EffectManager>& effectMng)
 	auto vRange = VisionRange(50.0f, 100.0f);
 
 	sprite = BigCultist::CreateBigCultist(Vec2(spawnPos.x, spawnPos.y), *player_, &behavior_[static_cast<int>(ActorType::BigCultist)], vRange, 100, layer_);
-	hpSprite = EnemyHPGauge::CreateEnemyHPGauge(ActorType::BigCultist, *sprite);
+	hpSprite = HPGauge::createHPGauge(dynamic_cast<Enemy&>(*sprite), 1);
 
 	// 敵に名前を付ける
 	// 死んだら"death"となる

@@ -4,7 +4,7 @@
 #include "Gravity.h"
 #include "ActionRect.h"
 #include "obj/Player.h"
-#include "EnemyHPGauge.h"
+#include "HPGauge.h"
 #include "BehaviorBaseAI/BehaviorTree.h"
 #include "BehaviorBaseAI/BehaviorData.h"
 #include "BehaviorBaseAI/NodeBase.h"
@@ -218,9 +218,9 @@ void Enemy::CheckHitPLAttack(void)
 						{
 							hp_ -= 10;
 							// HP減少のテストコード
-							auto a = ((Game*)Director::getInstance()->getRunningScene());
-							auto b = (EnemyHPGauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName(myName_ + "_" + std::to_string(id_) + "_HP");
-							b->SetHP(hp_);	// -10などのダメージ量は敵の攻撃力に変えればいい
+							//auto a = ((Game*)Director::getInstance()->getRunningScene());
+							//auto b = (EnemyHPGauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName(myName_ + "_" + std::to_string(id_) + "_HP");
+							//b->SetHP(hp_);	// -10などのダメージ量は敵の攻撃力に変えればいい
 							// onDamaged_をtrueに
 							OnDamaged();
 						}
@@ -395,12 +395,19 @@ bool Enemy::CheckObjHit(void)
 void Enemy::Hit(void)
 {
 	TRACE("Hit!\n");
-
-
-
+	auto director = Director::getInstance();
+	auto scene = director->getRunningScene();
+	auto hpGauge = (HPGauge*)scene->getChildByTag((int)zOlder::FRONT)->getChildByName(getName() + "_HPgauge" + "_" + std::to_string(id_));
+	if (!onDamaged_)
+	{
+		hp_ -= 10.0f;
+		hpGauge->SetHP(hp_);
+		onDamaged_ = true;
+	}
 	if (isAnimEnd_)
 	{
 		onDamaged_ = false;
+		isHitAttack_ = false;
 	}
 }
 
@@ -419,6 +426,10 @@ void Enemy::Death(void)
 
 void Enemy::Idle(void)
 {
+	if (isHitAttack_)
+	{
+		stateTransitioner_ = &Enemy::Hit;
+	}
 	//AIRun();
 	if (isAnimEnd_)
 	{

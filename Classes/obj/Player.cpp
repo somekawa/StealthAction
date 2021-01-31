@@ -1,5 +1,5 @@
 #include "Scene/GameScene.h"
-#include "PL_HPgauge.h"
+#include "HPgauge.h"
 #include "Player.h"
 #include "anim/ActionCtl.h"
 #include "ActionRect.h"
@@ -9,6 +9,7 @@
 #include "../Skill/SkillBase.h"
 #include "../Skill/SkillCode/TestSkill.h"
 #include "../Loader/FileLoder.h"
+#include "HPGauge.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_key.h"
@@ -67,7 +68,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 
 	gameOverFlg_ = false;
 	deathFlg_ = false;
-
+	hp_ = hp;
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBoxのLoad
@@ -212,18 +213,26 @@ void Player::update(float delta)
 		auto tmpdir = direction_;
 	}
 
+	// isHitAttack: 攻撃が当たったらtrueになります。
+	// 攻撃が連続で当たっているようになり、HPの減少が激しい。<- 直さないといけない。
+	onDamaged_ = isHitAttack_;
+
 	// ダメージをくらった際の処理
 	if (onDamaged_)
 	{
 		// HP減少処理
 		auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
-		auto hpGauge = (PL_HPgauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+		auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
 		hpGauge->SetHP(hpGauge->GetHP() - 10);	// -10などのダメージ量は敵の攻撃力に変えればいい
 		onDamaged_ = false;
-
+		isHitAttack_ = false;
 		// 0を下回った時にフラグを切り替える
 		if (hpGauge->GetHP() <= 0)
 		{
+			// 死んだﾌﾗｸﾞ(Actorｸﾗｽに宣言してます)
+			// 正確には生きているかを確認するﾌﾗｸﾞなので
+			// 死んだ: false 生きている:trueとなる
+			isAlive_ = false;
 			deathFlg_ = true;
 			deathPos_ = getPosition();
 		}
@@ -249,8 +258,9 @@ void Player::update(float delta)
 			}
 
 			// 攻撃ｴﾌｪｸﾄの追加
-			auto attackSprite = lpEffectMng.createEffect("attack", 5, 0.04f, { 55.0f, 50.0f },getPosition(),flip);
-			lpEffectMng.PlayWithOnce(attackSprite, "attack");
+			auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), {0.0f,0.0f}, 5, 0.04f,flip,false);
+			//lpEffectMng.InitializePickedUpEffect("attack", getPosition(), Vec2(0.0f, 0.0f), 5, 0.04f, flip, false);
+			//lpEffectMng.PlayWithOnce(attackSprite, "attack");
 		}
 		animationFrame_int_ = 0.0f;
 		lpAnimMng.ChangeAnimation(*this, playerColor + currentAnimation_, true, ActorType::Player);

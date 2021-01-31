@@ -18,6 +18,7 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	onFloor_ = false;
 	isHitWall_ = false;
 	isFire_ = false;
+	isHitAttack_ = false;
 	// ¶‚«‚Ä‚¢‚é‚©‚ÌÌ×¸Þ‚Ì‰Šú‰»
 	isAlive_ = true;
 	// UŒ‚‚µ‚Ä‚¢‚é‚©‚Ìƒtƒ‰ƒO‚Ì‰Šú‰»
@@ -271,7 +272,6 @@ void Actor::SetCollider(void)
 
 bool Actor::OnHit(const cocos2d::Rect& collision)
 {
-	// player->enemy‚ÌUŒ‚”»’è‚ª‚Ü‚¾....
 	auto flg = false;
 
 	if (collision.size.width > 0.0f && collision.size.height > 0.0f)
@@ -284,14 +284,16 @@ bool Actor::OnHit(const cocos2d::Rect& collision)
 					     (damageCol_.size.height / 2.0f) + (collision.size.height / 2.0f));
 	if (flg)
 	{
-		if (!onDamaged_)
+		if (!isHitAttack_)
 		{
 			if (abs(distance.x) <= sizediff.x && abs(distance.y) <= sizediff.y)
 			{
-				onDamaged_ = true;
+				//onDamaged_ = true;
+				isHitAttack_ = true;
 				return true;
 			}
 		}
 	}
 	return false;
 }
+

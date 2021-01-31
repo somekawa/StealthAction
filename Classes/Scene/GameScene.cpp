@@ -38,6 +38,7 @@
 #include "Map/MapMenu.h"
 #include "Shader/OutlineShader.h"
 #include "Debug/DebugDraw.h"
+#include "HPGauge.h"
 
 USING_NS_CC;
 
@@ -203,12 +204,10 @@ bool Game::init()
 #endif
 
 	// HPゲージ描画用
-	auto PL_HPgaugeSp = PL_HPgauge::createPL_HPgauge();
+	/*auto PL_HPgaugeSp = PL_HPgauge::createPL_HPgauge();
 	layer_[(int)zOlder::FRONT]->addChild(PL_HPgaugeSp, 0);
 	PL_HPgaugeSp->setName("PL_HPgauge");
-	PL_HPgaugeSp->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);
-
-	
+	PL_HPgaugeSp->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);*/
 
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
@@ -249,8 +248,6 @@ bool Game::init()
 	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
-	PL_HPgaugeSp->scheduleUpdate();
-
 	outlineShader_ = std::make_shared<OutlineShader>();
 	auto fileUtiles = FileUtils::getInstance();
 	auto vertexSource = fileUtiles->getStringFromFile("Shader/OutLineTest.vert");
@@ -259,6 +256,15 @@ bool Game::init()
 	programState = new backend::ProgramState(program);
 
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
+
+	auto plHPGauge = HPGauge::createHPGauge(*player, 0);
+	layer_[(int)zOlder::FRONT]->addChild(plHPGauge, 0);
+	plHPGauge->setName("PL_HPgauge");
+	plHPGauge->setTag(100);
+	plHPGauge->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);
+
+	plHPGauge->scheduleUpdate();
+
 	// 敵の出現や消去等を管理するManagerを生成
 	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *layer_[static_cast<int>(zOlder::FRONT)], *player);
 
@@ -310,6 +316,7 @@ void Game::update(float sp)
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	gameMap_->update(*player);
 
+
 	// skillの攻撃対象選別 // 
 	// 攻撃対象がﾌﾟﾚｲﾔｰに渡せる機能が欲しい
 	// ﾌﾟﾚｲﾔｰが攻撃対象にする敵のﾀｰｹﾞｯﾄをﾀｯﾌﾟにより切り替える
@@ -319,25 +326,8 @@ void Game::update(float sp)
 	{
 		enemy->OnHit(player->GetAttackCol());
 		player->OnHit(enemy->GetAttackCol());
-		/*auto attackdraw = DrawNode::create();
-		layer_[static_cast<int>(zOlder::DEBUG)]->addChild(attackdraw);
-		attackdraw->drawRect(enemy->GetAttackCol().origin, enemy->GetAttackCol().origin - enemy->GetAttackCol().size, Color4F::MAGENTA);*/
-		//if (enemy->GetType() == ActorType::Assassin)
-		//{
-		//	auto damagedraw = DrawNode::create();
-		//	//damagedraw->drawDot(enemy->GetDamageCol().origin, 3.0f, Color4F::GREEN);
-		//	damagedraw->drawRect(enemy->GetDamageCol().origin, enemy->GetDamageCol().origin + enemy->GetDamageCol().size, Color4F::GRAY);
-		//	layer_[static_cast<int>(zOlder::DEBUG)]->addChild(damagedraw);
-		//}
 	}
-	/*auto plattackdraw = DrawNode::create();
-	plattackdraw->drawRect(player->GetAttackCol().origin, player->GetAttackCol().origin - player->GetAttackCol().size, Color4F::MAGENTA);
-	layer_[static_cast<int>(zOlder::DEBUG)]->addChild(plattackdraw);*/
 
-	/*auto pldamagedraw = DrawNode::create();
-	pldamagedraw->drawDot(player->GetDamageCol().origin, 3.0f, Color4F::BLUE);
-	pldamagedraw->drawRect(player->GetDamageCol().origin, player->GetDamageCol().origin + player->GetDamageCol().size, Color4F::GRAY);
-	layer_[static_cast<int>(zOlder::DEBUG)]->addChild(pldamagedraw);*/
 
 	if (gameMap_->ChangeFloor())
 	{
@@ -412,6 +402,7 @@ void Game::AddPlayer(int playerNum)
 		plSprite->setName("player" + std::to_string(p + 1));
 		plSprite->setScale(3.0f);
 		plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
+
 		// プレイヤーをキャラクター用のレイヤーの子供にする
 		layer_[static_cast<int>(zOlder::CHAR_PL)]
 			->addChild(plSprite, playerNum);

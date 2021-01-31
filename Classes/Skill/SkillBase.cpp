@@ -54,6 +54,7 @@ void SkillBase::UpDate(float delta)
 	{
 		data->UpDate(delta);
 	}
+	lpEffectMng.Update(delta);
 	RemoveActiveSkill();
 }
 
@@ -90,3 +91,4 @@ void SkillBase::SetPlayerDirection(const Direction& direction)
 {
 	playerDirection_ = direction;
 }
+

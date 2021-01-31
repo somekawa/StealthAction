@@ -22,10 +22,22 @@ TestSkill::TestSkill(SkillBase* ptr)
 	{
 		flip = false;
 	}
+
+	auto Pos = Vec2(pos_.x * pos_.x, pos_.y * pos_.y);
+	auto Tpos = Vec2(tpos_.x * tpos_.x, tpos_.y * tpos_.y);
+	auto tvec = Tpos - Pos;
+	auto vec = tpos_ - pos_;
+	auto nvec = Vec2(1, 0);
+	auto nvec2 = tvec / hypot(vec.x, vec.y);
+	auto cos = lpGeometry.Dot(nvec, nvec2);
+	auto sin = lpGeometry.Cross(nvec, nvec2);
+	auto dir = Vec2(cos, sin);
+	dir = dir.getNormalized() * 2;
 	// ｴﾌｪｸﾄを作成して、自身のｴﾌｪｸﾄ画像に格納
-	fx_ = lpEffectMng.createEffect("enemySpawn", 19, 0.08f, Vec2{ 0.0f,0.0f }, pos_,true,true);
+	fx_ = lpEffectMng.PickUp("enemySpawn", Vec2{ 0.0f,0.0f },pos_,dir, 19, 0.08f,flip,true);
+	//lpEffectMng.InitializePickedUpEffect("enemySpawn", pos_, dir, 19, 0.08f, flip, true);
 	// ｴﾌｪｸﾄの再生
-	lpEffectMng.PlayWithLoop(fx_, "enemySpawn");
+	//lpEffectMng.PlayWithLoop(fx_, "enemySpawn");
 }
 
 TestSkill::~TestSkill()
@@ -34,36 +46,23 @@ TestSkill::~TestSkill()
 
 void TestSkill::UpDate(float delta)
 {
-	auto Pos = Vec2(pos_.x * pos_.x, pos_.y * pos_.y);
-	auto Tpos = Vec2(tpos_.x * tpos_.x, tpos_.y * tpos_.y);
-	auto tvec = Tpos - Pos;
-	auto vec = tpos_ - pos_;
-	auto nvec = Vec2(1,0);
-	auto nvec2 = tvec / hypot(vec.x, vec.y);
-	auto cos = lpGeometry.Dot(nvec, nvec2);
-	auto sin = lpGeometry.Cross(nvec, nvec2);
-	auto dir = Vec2(cos,sin);
-	dir = dir.getNormalized() * 2;
+
 	// 今のところｴﾌｪｸﾄがｱｸﾃｨﾌﾞ状態だと動かす
 	if (fx_.isActive_)
 	{
-		// ｽﾋﾟｰﾄﾞがおかしいので後で直す
-		// この問題はtestskill自体を消したら直る
-		// ｴﾌｪｸﾄを動かす(動かさないｴﾌｪｸﾄの場合は書く必要なし)
-		lpEffectMng.Move(fx_.sprite_, dir);
 		effectData_.origin = fx_.sprite_->getPosition();
 	}
+
 	/*この中にSkillの効果や動作を記述してください*/
 	// ここでｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝの移動をやる
 	// ｱﾆﾒｰｼｮﾝが終わるとｴﾌｪｸﾄのｱｸﾃｨﾌﾞ状態をfalseにしている
-	;
 
 	bool flag = true;
-	if (lpEffectMng.AnimEndChecker(fx_, delta))
+	/*if (lpEffectMng.AnimEndChecker(fx_, delta))
 	{
 		param.activation = false;
 		flag = lpSkillMng.SkillInActivate("skill_01.txt");
-	}
+	}*/
 
 }
 

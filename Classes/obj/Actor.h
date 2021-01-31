@@ -213,6 +213,8 @@ protected:
 	bool onDamaged_;
 	// 攻撃しているかのフラグ
 	bool isAttacking_;
+	// 攻撃に当たったかの判定を取る
+	bool isHitAttack_;
 	// 攻撃矩形
 	AttackRect attackRect_;
 	// 自分自身が存在するﾚｲﾔｰ
@@ -230,8 +232,9 @@ protected:
 	//読み込んだファイルデータの保存
 	DataTable fileLoad_;
 
-	// ﾃｽﾄ
 	// 攻撃矩形の格納先
+	// first : 矩形ﾃﾞｰﾀ
+	// second : 攻撃矩形の名前
 	cocos2d::Rect attackCol_;
 	// ﾀﾞﾒｰｼﾞ矩形の格納先
 	cocos2d::Rect damageCol_;

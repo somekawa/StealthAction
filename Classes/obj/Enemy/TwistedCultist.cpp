@@ -31,19 +31,19 @@ TwistedCultist::TwistedCultist(Vec2 pos,Player& player,
 	{
 		// colliderBoxのLoad
 		lpCol.ReadData(collider_, anim);
-		for (auto col : collider_[anim])
-		{
-			for (int colNum = 0; colNum < col.size(); colNum++)
-			{
-				// colliderBoxを自身の子にする
-				auto draw = DrawNode::create();
-				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+		//for (auto col : collider_[anim])
+		//{
+		//	for (int colNum = 0; colNum < col.size(); colNum++)
+		//	{
+		//		// colliderBoxを自身の子にする
+		//		auto draw = DrawNode::create();
+		//		draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+		//		draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
 
-				draw->setTag(col[colNum]->GetData().frame_);
-				this->addChild(draw, col[colNum]->GetData().type_, anim);
-			}
-		}
+		//		draw->setTag(col[colNum]->GetData().frame_);
+		//		this->addChild(draw, col[colNum]->GetData().type_, anim);
+		//	}
+		//}
 	}
 	// 初期アニメーションのセット
 	lpAnimMng.InitAnimation(*this, ActorType::TwistedCultist, "twistedCultist_idle");
@@ -93,8 +93,7 @@ void TwistedCultist::update(float delta)
 	}
 	else
 	{
-		setAnchorPoint(Vec2(0.0f, 0.0f));
-
+		setAnchorPoint(Vec2(0.5f, 0.0f));
 		if (!isAttacking_)
 		{
 			// 方向の変更
@@ -108,7 +107,7 @@ void TwistedCultist::update(float delta)
 		{
 			animationFrame_int_ = 0;
 		}
-		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
+
 
 		//// ﾌﾟﾚｲﾔｰが攻撃状態だと当たり判定処理をする
 		//if (player_.IsAttacking())
@@ -116,22 +115,21 @@ void TwistedCultist::update(float delta)
 		//	// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
 		//	CheckHitPLAttack();
 		//}
-		SetCollider();
+
 		// ﾀﾞﾒｰｼﾞをくらっていない時と死ぬﾓｰｼｮﾝでない場合
-		//if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
-		//{
-		//	// actCtlのｱｯﾌﾟﾃﾞｰﾄを回す
-		//	actCtl_.update(type_, delta, *this);
-		//}
+		if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
+		{
+			// actCtlのｱｯﾌﾟﾃﾞｰﾄを回す
+			actCtl_.update(type_, delta, *this);
+		}
 
 		if (stateTransitioner_ != &Enemy::Death)
 		{
 			// ﾀﾞﾒｰｼﾞを食らった
-			if (onDamaged_)
+			if (isHitAttack_)
 			{
 				if (stateTransitioner_ != &Enemy::Hit)
 				{
-
 					//onDamaged_ = false;
 					ChangeAnimation("twistedCultist_hit");
 					//currentAnimation_ = "assassin_hit";
@@ -157,20 +155,6 @@ void TwistedCultist::update(float delta)
 
 		TRACE("attackFlag:%d\n", isAttacking_);
 
-		for (auto animationCol = this->getChildren().rbegin();
-			animationCol != this->getChildren().rend(); animationCol++)
-		{
-			if (currentAnimation_ == (*animationCol)->getName() &&
-				animationFrame_int_ == (*animationCol)->getTag())
-			{
-				(*animationCol)->setVisible(true);
-			}
-			else
-			{
-				(*animationCol)->setVisible(false);
-			}
-		}
-
 		// アニメーションの更新
 		UpdateAnimation(delta);
 		// 状態の遷移
@@ -189,10 +173,10 @@ void TwistedCultist::update(float delta)
 		if (currentAnimation_ != previousAnimation_)
 		{
 			ChangeAnimation(currentAnimation_);
-			//onDamaged_ = false;
 		}
 		previousAnimation_ = currentAnimation_;
-
+		// 各矩形情報のｾｯﾄ
+		SetCollider();
 	}
 	// ﾌﾛｱ変更の際に自身を消す
 	//DeleteSelfOnFloor();
@@ -219,7 +203,7 @@ void TwistedCultist::actModuleRegistration(void)
 		act.vel = Vec2{ 0.5f,0 };
 		act.actName = "twistedCultist_walk";
 		act.checkPoint1 = Vec2{ size.x / 2, size.y / 2 };	// 右上
-		act.checkPoint2 = Vec2{ -40,0 };			// 右下
+		act.checkPoint2 = Vec2{ size.x / 2,15 };			// 右下
 		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
 
 		//act.whiteList.emplace_back(ACTION::JUMPING);
@@ -234,7 +218,7 @@ void TwistedCultist::actModuleRegistration(void)
 		act.vel = Vec2{ 0.5f,0 };
 		act.actName = "twistedCultist_walk";
 		act.checkPoint1 = Vec2{ -size.x / 2, size.y / 2 };	// 左上
-		act.checkPoint2 = Vec2{ -40,-40 };			// 左下
+		act.checkPoint2 = Vec2{ -size.x / 2,15 };			// 左下
 
 		//act.blackList.emplace_back(ACTION::FALLING);
 
@@ -275,8 +259,8 @@ void TwistedCultist::actModuleRegistration(void)
 		act.state = nullptr;
 		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
 		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
-		act.checkPoint1 = Vec2{ -40,-40 };				// 左下
-		act.checkPoint2 = Vec2{ -40,-40 };				// 右下
+		act.checkPoint1 = Vec2{ 0.0f,0.0f };				// 左下
+		act.checkPoint2 = Vec2{ 0.0f,0.0f };				// 右下
 
 		act.checkPoint3 = Vec2{ size.x / 2, size.y / 2 };  // 右上
 		act.checkPoint4 = Vec2{ -size.x / 2, size.y / 2 }; // 左上

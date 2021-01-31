@@ -45,20 +45,20 @@ Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange vis
 	{
 		// colliderBoxのLoad
 		lpCol.ReadData(collider_, anim);
-		for (auto col : collider_[anim])
-		{
-			for (int colNum = 0; colNum < col.size(); colNum++)
-			{
-				// colliderBoxを自身の子にする
-				auto draw = col[colNum]->create();
-				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+		//for (auto col : collider_[anim])
+		//{
+		//	for (int colNum = 0; colNum < col.size(); colNum++)
+		//	{
+		//		// colliderBoxを自身の子にする
+		//		auto draw = col[colNum]->create();
+		//		draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+		//		draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
 
-				draw->setTag(col[colNum]->GetData().frame_);
+		//		draw->setTag(col[colNum]->GetData().frame_);
 
-				this->addChild(draw, col[colNum]->GetData().type_, anim);
-			}
-		}
+		//		this->addChild(draw, col[colNum]->GetData().type_, anim);
+		//	}
+		//}
 	}
 	// 初期アニメーションのセット
 	lpAnimMng.InitAnimation(*this, ActorType::Cultist, "cultist_idle");
@@ -103,6 +103,7 @@ void Cultist::update(float delta)
 	}
 	else
 	{
+		setAnchorPoint(Vec2(0.5f, 0.0f));
 		if (!isAttacking_)
 		{
 			// 方向の変更
@@ -116,13 +117,6 @@ void Cultist::update(float delta)
 		{
 			animationFrame_int_ = 0;
 		}
-
-		// ﾌﾟﾚｲﾔｰが攻撃状態だと当たり判定処理をする
-		if (player_.IsAttacking())
-		{
-			// ﾌﾟﾚｲﾔｰとの当たり判定をとっている
-			CheckHitPLAttack();
-		}
 		// ﾀﾞﾒｰｼﾞをくらっていない時と死ぬﾓｰｼｮﾝでない場合
 		if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
 		{
@@ -133,15 +127,11 @@ void Cultist::update(float delta)
 		if (stateTransitioner_ != &Enemy::Death)
 		{
 			// ﾀﾞﾒｰｼﾞを食らった
-			if (onDamaged_)
+			if (isHitAttack_)
 			{
 				if (stateTransitioner_ != &Enemy::Hit)
 				{
-					//onDamaged_ = false;
 					ChangeAnimation("cultist_hit");
-					//currentAnimation_ = "assassin_hit";
-					// 0ではなかったらhit状態にする
-					//ChangeAnimation("assassin_hit");
 					stateTransitioner_ = &Enemy::Hit;
 				}
 			}
@@ -151,28 +141,16 @@ void Cultist::update(float delta)
 		{
 			if (stateTransitioner_ != &Enemy::Death)
 			{
+				//currentAnimation_ = "assassin_death";
 				ChangeAnimation("cultist_death");
 				stateTransitioner_ = &Enemy::Death;
 			}
 		}
 
+
 		TRACE("pos:(%f,%f)", this->getPosition().x, this->getPosition().y);
 
 		TRACE("attackFlag:%d\n", isAttacking_);
-
-		for (auto animationCol = this->getChildren().rbegin();
-			animationCol != this->getChildren().rend(); animationCol++)
-		{
-			if (currentAnimation_ == (*animationCol)->getName() &&
-				animationFrame_int_ == (*animationCol)->getTag())
-			{
-				(*animationCol)->setVisible(true);
-			}
-			else
-			{
-				(*animationCol)->setVisible(false);
-			}
-		}
 
 		// アニメーションの更新
 		UpdateAnimation(delta);
@@ -195,9 +173,9 @@ void Cultist::update(float delta)
 			//onDamaged_ = false;
 		}
 		previousAnimation_ = currentAnimation_;
+		// 各矩形情報のｾｯﾄ
+		SetCollider();
 	}
-	// ﾌﾛｱ変更の際に自身を消す
-	//DeleteSelfOnFloor();
 }
 
 void Cultist::AnimRegistrator(void)

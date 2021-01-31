@@ -30,7 +30,7 @@ public:
 	virtual void Render(void);
 	virtual cocos2d::Vec2 GetPlayerPos(void);				// プレイヤー座標
 	virtual cocos2d::Vec2 GetTargetPos(void);				// 敵座標(ホーミング系の時にプレイヤーとの距離が一番近い敵の座標を取得したい)
-	virtual cocos2d::Rect GetEffectData(void) { return cocos2d::Rect(); };			// effectDataの取得
+	virtual cocos2d::Rect GetEffectData(void) { return effectData_; };			// effectDataの取得
 	virtual const Direction& GetPlayerDirection(void); // ﾌﾟﾚｲﾔｰの向き
 	void SetPlayerPos(cocos2d::Vec2 playerPos);
 	void SetTargetPos(cocos2d::Vec2 targetPos);

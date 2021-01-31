@@ -6,21 +6,29 @@
 #include <list>
 #include <vector>
 
-#define EffectMaxNum 20
+#define EffectMaxNum 50
 
 #define lpEffectMng EffectManager::GetInstance()
 
 struct FXStruct
 {
 	cocos2d::Sprite* sprite_;
+	// ｴﾌｪｸﾄの当たり判定矩形のﾎﾟｼﾞｼｮﾝとﾎﾞｯｸｽｻｲｽﾞ格納用変数
+	cocos2d::Rect rect_;
+	// 現在ｱｸﾃｨﾌﾞ状態か
 	bool isActive_;
+	// ﾙｰﾌﾟ再生するか
 	bool isLoop_;
+	// ｱﾆﾒｰｼｮﾝが終了しているか
 	bool isAnimEnd_;
+	// ｱﾆﾒｰｼｮﾝﾌﾚｰﾑｶｳﾝﾄ変数
 	float frameCnt_;
-	FXStruct() :sprite_(nullptr), isActive_(false), isLoop_(false), isAnimEnd_(false), frameCnt_(0.0f) {};
+	// ｴﾌｪｸﾄが移動するｽﾋﾟｰﾄﾞ
+	cocos2d::Vec2 speed_;
+	FXStruct() :sprite_(nullptr), isActive_(false), isLoop_(false), isAnimEnd_(false), frameCnt_(0.0f), speed_({ 0.0f,0.0f }) {};
 
-	FXStruct(cocos2d::Sprite* sprite, bool active, bool loop,bool animEnd, float frame) :
-		sprite_(sprite), isActive_(active), isLoop_(loop),isAnimEnd_(animEnd), frameCnt_(frame) {};
+	FXStruct(cocos2d::Sprite* sprite, bool active, bool loop,bool animEnd,float frame,cocos2d::Vec2 sp) :
+		sprite_(sprite), isActive_(active), isLoop_(loop),isAnimEnd_(animEnd), frameCnt_(frame),speed_(sp) {};
 };
 
 // effectﾃﾞｰﾀ保存用ｸﾗｽ
@@ -34,19 +42,21 @@ public:
 		static EffectManager s_instance;
 		return s_instance;
 	}
+	// ｴﾌｪｸﾄ画像の生成と取得
+	// 内部的には、EffectManager内のｽﾌﾟﾗｲﾄﾌﾟｰﾙから作成したｴﾌｪｸﾄ画像を取り出す処理
+	// param@ effectName: ｴﾌｪｸﾄ名 frame: 総ﾌﾚｰﾑ数
+    //duration: 1ﾙｰﾌﾟにかかる時間 offset: キャラ毎のspriteにかけるｵﾌｾｯﾄ値 pos: 出現させるﾎﾟｼﾞｼｮﾝ
+	// flipFlag: 左右反転させるか loop: ﾙｰﾌﾟ再生させるか
+	const FXStruct& PickUp(std::string effectName,
+						   cocos2d::Vec2 offset, cocos2d::Vec2 pos, cocos2d::Vec2 speed,
+						   int frame, float duration, bool flipFlag, bool loop);
+	void Play(std::string effectName,cocos2d::Sprite* sprite, bool loop);
 
 	// 更新
 	void Update(float delta);
-	// ｴﾌｪｸﾄを動かしたい場合はUpdate関数や、常に回る関数の中で書く
-	// param@ sprite: ｴﾌｪｸﾄの画像ｽﾌﾟﾗｲﾄ speed: ｴﾌｪｸﾄの移動量
-	// speedはこの関数の中で向きごとに - or + を決定しているので、単に移動量を書いてくれれば大丈夫
-	void Move(cocos2d::Sprite* sprite, cocos2d::Vec2 speed);
-	// ｴﾌｪｸﾄ画像の生成と取得
-	// 内部的には、EffectManager内のｽﾌﾟﾗｲﾄﾌﾟｰﾙから作成したｴﾌｪｸﾄ画像を取り出す処理
-	const FXStruct& createEffect(std::string effectName,
-								 int frame, float duration,
-								 cocos2d::Vec2 offset,cocos2d::Vec2 pos,
-							     bool flipFlag,bool loop = false);
+	// ｴﾌｪｸﾄのactive状態がfalseになると共にｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾙの中のやつのactive状態もfalseにする
+	void Reset(const FXStruct& fx);
+
 	// ｴﾌｪｸﾄの再生(1回のみ)
 	// この関数を各ｺﾝｽﾄﾗｸﾀで1回のみ呼び出せばよい
 	void PlayWithOnce(FXStruct& fx,std::string effectName);
@@ -68,6 +78,9 @@ public:
 	void SetFlip(bool flg);
 	// 左右反転でｵﾌｾｯﾄのｾｯﾄ
 	cocos2d::Vec2 GetFlipOffset(std::string effectName);
+
+
+	void Move(FXStruct fx);
 private:
 	EffectManager() = default;
 	~EffectManager();

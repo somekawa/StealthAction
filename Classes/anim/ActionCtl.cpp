@@ -652,6 +652,7 @@ void ActionCtl::InitUpdater(ActorType& type)
 			// 何もアクションが行われていなければidleを設定する
 			if (!actFlg)
 			{
+				TRACE("idle_enemy\n");
 				dynamic_cast<Enemy&>(sprite).SetAction("twistedCultist_idle");
 			}
 		});

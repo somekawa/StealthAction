@@ -135,11 +135,10 @@ void Assassin::update(float delta)
 		if (stateTransitioner_ != &Enemy::Death)
 		{
 			// ÀŞÒ°¼Ş‚ğH‚ç‚Á‚½
-			if (onDamaged_)
+			if (isHitAttack_)
 			{
 				if (stateTransitioner_ != &Enemy::Hit)
 				{
-
 					//onDamaged_ = false;
 					ChangeAnimation("assassin_hit");
 					//currentAnimation_ = "assassin_hit";
