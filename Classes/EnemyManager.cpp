@@ -57,8 +57,7 @@ void EnemyManager::Initialize(void)
 	{
 		AddAnim(type);
 		// ÌßÚ²Ô°‚ÆFireball‚Ìê‡‚Í½·¯Ìß
-		if (type == ActorType::Player ||
-			type == ActorType::Fireball)
+		if (type == ActorType::Player)
 		{
 			continue;
 		}
@@ -70,7 +69,7 @@ void EnemyManager::CreateInitialEnemyOnFloor(int initNum)
 {
 	// Ø½Ä‚Ì’†g‚ğ‹ó‚É‚·‚é
 	enemies_.clear();
-	CreateEnemy(ActorType::TwistedCultist);
+	CreateEnemy(ActorType::Cultist);
 
 	for (int init = 0; init < initNum; init++)
 	{
@@ -167,8 +166,6 @@ void EnemyManager::AddBehavior(ActorType type)
 		behavior_[static_cast<int>(type)].AddNode("Move", "moveAction", 1,
 			BehaviorTree::SelectRule::Non, NULL, MoveAction::Instance());
 		break;
-	case ActorType::Fireball:
-		break;
 	case ActorType::Max:
 		break;
 	default:
@@ -243,13 +240,7 @@ void EnemyManager::AddAnim(ActorType type)
 		// hit 
 		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/bigCultist/bigCultist", "hit", 3, 0.09f, ActorType::BigCultist, false);
 		break;
-		// ¡‚Ì‚Æ‚±‚ë‚±‚±‚Éfireball‚ğ‚¨‚¢‚Ä‚¢‚é
-	case ActorType::Fireball:
-		// fireball 
-		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/Fireball/fireball", "normal", 4, 0.08f, ActorType::Fireball, true);
-		// fireball_impact
-		lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/Fireball/fireball", "impact", 5, 0.08f, ActorType::Fireball, false);
-		break;
+
 	case ActorType::Max:
 		break;
 	default:
@@ -298,8 +289,6 @@ void EnemyManager::CreateEnemy(ActorType type)
 		// “G‚É–¼‘O‚ğ•t‚¯‚é
 		// €‚ñ‚¾‚ç"death"‚Æ‚È‚é
 		sprite->setName("cultist");
-		break;
-	case ActorType::Fireball:
 		break;
 	case ActorType::Max:
 		break;

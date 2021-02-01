@@ -7,9 +7,8 @@ Fireball::Fireball(Vec2 pos,Direction direction,float angle,Actor& target):
 	Obj(target)
 {
 	setPosition(pos);
-	type_ = ActorType::Fireball;
 	AnimRegistrator();
-	currentAnimation_ = "normal";
+	currentAnimation_ = "non";
 
 	if (direction == Direction::Left)
 	{
@@ -21,9 +20,11 @@ Fireball::Fireball(Vec2 pos,Direction direction,float angle,Actor& target):
 		dirFlag_ = true;
 		speed_ = { 2.0f,0.0f };
 	}
-	flipFlag_ = FlipX::create(dirFlag_);
 
-	this->runAction(flipFlag_);
+	this->runAction(FlipX::create(dirFlag_));
+
+	ChangeAnimation("fireball_normal");
+
 }
 
 Fireball::~Fireball()
@@ -32,30 +33,31 @@ Fireball::~Fireball()
 
 void Fireball::update(float delta)
 {
-	Move();
+	if (!isHitTarget_)
+	{
+		Move();
+	}
 
-	if (currentAnimation_ != "impact")
+	if (currentAnimation_ != "fireball_impact")
 	{
 		if (HitToTarget())
 		{
-			ChangeAnimation("impact");
+			ChangeAnimation("fireball_impact");
 		}
 	}
-
+	UpdateAnimation(delta);
 	if (isHitTarget_)
 	{
 		if (isAnimEnd_)
 		{
-			//removeFromParentAndCleanup(true);
+			removeFromParentAndCleanup(true);
 		}
 	}
-
-	UpdateAnimation(delta);
 }
 
 void Fireball::Move(void)
 {
-	auto move = MoveTo::create(0.0f, Vec2(getPosition().x+speed_.x, getPosition().y + speed_.y));
+	auto move = MoveBy::create(0.0f, speed_);
 	this->runAction(move);
 }
 
@@ -63,7 +65,6 @@ void Fireball::AnimRegistrator(void)
 {
 
 
-	lpAnimMng.InitAnimation(*this, ActorType::Fireball, "normal");
 }
 
 Fireball* Fireball::CreateFireball(Vec2 pos,Direction direction,float angle,Actor& target)

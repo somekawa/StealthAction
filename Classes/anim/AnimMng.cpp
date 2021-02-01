@@ -49,10 +49,6 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	case ActorType::BigCultist:
 		name = "bigCultist";
 		break;
-	case ActorType::Fireball:
-		name = "fireball";
-
-		break;
 	case ActorType::Max:
 		break;
 	default:
@@ -100,6 +96,43 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	}
 }
 
+void AnimMng::addAnimationCache(std::string name, std::string animName, int frame, float duration, bool isLoop)
+{
+	std::string fileName = "image/EnemyAnimationAsset/" + name + "/" + animName;
+	// アニメーションキャッシュはシングルトン
+	AnimationCache* animationCache = AnimationCache::getInstance();
+
+	//スプライトシートの準備
+	auto cache = SpriteFrameCache::getInstance();
+
+	cache->addSpriteFramesWithFile(fileName + ".plist");
+
+	// アニメーション画像追加
+	Animation* animation = Animation::create();
+
+	for (int i = 0; i < frame; i++)
+	{
+		std::string string = "%d.png";		// plistの中だからパスじゃない
+		auto str = StringUtils::format(string.c_str(), i);
+		auto s = animName + "_" + str;
+		SpriteFrame* sprite = cache->getSpriteFrameByName(animName + "_" + str);
+
+		animation->addSpriteFrame(sprite);
+	}
+
+	// アニメーションの間隔
+	animation->setDelayPerUnit(duration);
+
+	// アニメーション終了後に最初に戻すかどうか
+	animation->setRestoreOriginalFrame(true);
+
+	// 出来たアニメーションをキャッシュに登録
+	animationCache->addAnimation(animation,animName);
+
+	// 1アニメーションのキャッシュデータを格納する処理
+	CacheRegistration(animationCache,animName, isLoop);
+}
+
 void AnimMng::InitAnimation(cocos2d::Sprite& sprite, ActorType type, std::string animName)
 {
 	Animation* animation = caches_[static_cast<int>(type)][animName];
@@ -145,6 +178,17 @@ void AnimMng::CacheRegistration(cocos2d::AnimationCache* animCache, const ActorT
 
 		// ループフラグを設定
 		isLoop_[static_cast<int>(type)][animName] = isLoop;
+	}
+}
+
+void AnimMng::CacheRegistration(cocos2d::AnimationCache* animCache, std::string animName, bool isLoop)
+{
+	if (cachesExceptCharacter_.count(animName) <= 0)
+	{
+		// キャラのタイプ別のアニメーションキャッシュに1アニメーションデータを格納
+		cachesExceptCharacter_.emplace(animName, animCache->getAnimation(animName));
+		// ループフラグを設定
+		isLoopExceptCharacter_.emplace(animName, isLoop);
 	}
 }
 

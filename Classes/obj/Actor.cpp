@@ -247,7 +247,7 @@ void Actor::SetCollider(void)
 			if (type_ == ActorType::Player)
 			{
 				// ÀÞÒ°¼Þ‹éŒ`‚ÌÎß¼Þ¼®Ý
-				damageCol_.origin = Vec2(getPosition().x - (damageCol_.size.width / 2), getPosition().y);
+				damageCol_.origin = Vec2(getPosition().x, getPosition().y);
 				/*auto damagedraw = DrawNode::create();
 				damagedraw->drawDot(damageCol_.origin,3.0f, Color4F::GRAY);
 				addChild(damagedraw);*/
@@ -265,7 +265,6 @@ void Actor::SetCollider(void)
 					damageCol_.origin = Vec2(getPosition().x - (damageCol_.size.width / 4), getPosition().y);
 				}
 			}
-			
 		}
 	}
 }
@@ -295,5 +294,10 @@ bool Actor::OnHit(const cocos2d::Rect& collision)
 		}
 	}
 	return false;
+}
+
+void Actor::SetIsHitAttack(bool flg)
+{
+	isHitAttack_ = flg;
 }
 

@@ -253,6 +253,7 @@ void Enemy::UpdateAnimation(float delta)
 			//auto action = RepeatForever::create(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
 			//this->runAction(action);
 			animationFrame_ = 0.0f;
+			isAttacking_ = false;
 			//animationFrame_ = 0.0f;
 		}
 		else

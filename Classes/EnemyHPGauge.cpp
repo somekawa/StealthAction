@@ -23,8 +23,6 @@ EnemyHPGauge::EnemyHPGauge(ActorType type,Enemy& target):
 	case ActorType::Cultist:
 		enemyName_ = "cultist";
 		break;
-	case ActorType::Fireball:
-		break;
 	case ActorType::Max:
 		break;
 	default:
@@ -113,8 +111,6 @@ bool EnemyHPGauge::Init(void)
 	case ActorType::Cultist:
 		currentHP_ = 30.0f;
 
-		break;
-	case ActorType::Fireball:
 		break;
 	case ActorType::Max:
 		break;
