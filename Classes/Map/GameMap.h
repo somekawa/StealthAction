@@ -63,6 +63,11 @@ public:
 	// フロア変更のフラグ取得
 	const bool ChangeFloor(void);
 
+	// デバッグ用
+#ifdef _DEBUG
+	void ColisionDebugDraw(bool debug);
+#endif // _DEBUG
+
 private:
 	// パスからマップ読み込みを行う
 	cocos2d::TMXTiledMap* createMapFromPath(std::string& mapPath);
@@ -84,6 +89,8 @@ private:
 	// デバッグ用
 #ifdef _DEBUG
 	cocos2d::Label* mapName_;
+	cocos2d::RenderTexture* tex;
+	bool visible;
 #endif // _DEBUG
 
 	// フロア変更したときにtrueになる

@@ -101,6 +101,8 @@ private:
 		static_cast<int>(ActorType::Max)> colliderBox_;
 
 	cocos2d::Sprite* skillSprite;
+
+    bool debugMode;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

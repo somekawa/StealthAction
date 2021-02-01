@@ -37,7 +37,7 @@
 #include "Skill/SkillBase.h"
 #include "Map/MapMenu.h"
 #include "Shader/OutlineShader.h"
-#include "Debug/DebugDraw.h"
+//#include "Debug/DebugDraw.h"
 #include "HPGauge.h"
 
 USING_NS_CC;
@@ -290,6 +290,17 @@ bool Game::init()
 		{
 			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(*gameMap_));
 		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_F1)
+		{
+			debugMode = true;
+		}
+	};
+	listener->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
+	{
+		if (keyCode == EventKeyboard::KeyCode::KEY_F1)
+		{
+			debugMode = false;
+		}
 	};
 #else
 	auto listener = EventListenerTouchOneByOne::create();
@@ -298,6 +309,7 @@ bool Game::init()
 		return true;
 	};
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+	debugMode = false;
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 	this->scheduleUpdate();
 	return true;
@@ -363,10 +375,11 @@ void Game::update(float sp)
 	{
 		outlineShader_->SetShader(*enemy, Vec3(1, 0, 0));
 	}
-	/*auto psLoc = programState->getUniformLocation("u_OutlineColor");
-	auto psValues = Vec3(0, 0, 0);
-	programState->setUniform(psLoc, &psValues, sizeof(psValues));
-	player->setProgramState(programState);*/
+
+
+	gameMap_->ColisionDebugDraw(debugMode);
+	
+
 
 	//// “–‚½‚è”»’è—p‚Ì˜g‚ðo‚µ‚Ä‚Ý‚é
 	//auto ppos = plSprite->getPosition();

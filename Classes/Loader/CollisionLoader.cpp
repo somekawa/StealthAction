@@ -77,7 +77,6 @@ void CollisionLoader::ReadData(std::unordered_map<std::string, std::vector<Share
 				}
 			} while (!strStream1.eof());
 		}
-
 		auto num = -1;
 		auto boxNum = 0;
 		// attack‚ÌŒãdamage‚ª—ˆ‚é‚Ì‚Åattack‚ª—ˆ‚½‚çnext‚Í1‚É‚È‚é

@@ -11,13 +11,14 @@ USING_NS_CC;
 
 GameMap::GameMap(cocos2d::Layer& layer)
 {
+	
 	std::random_device engine;
 	mapGenerator_ = std::make_shared<MapGenerator>(engine());
 	mapGenerator_->Call();
 	auto nodeData = mapGenerator_->GetMSTNode();
 	mapLayer_ = &layer;
 	objLayer_ = Layer::create();
-
+	
 	isChangeFloor_ = false;
 
 #ifdef _DEBUG
@@ -25,9 +26,11 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	mapName_->setPosition(100, 500);
 
 	objLayer_->addChild(mapName_);
-	// マップレイヤーより前へ
+	tex = nullptr;
+	visible = false;
 #endif // _DEBUG
-
+	// マップレイヤーより前へ
+	
 	layer.addChild(objLayer_,layer.getLocalZOrder() + 1);	
 
 	// パスをリスト化
@@ -81,6 +84,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	}
 
 	frame_ = 0;
+	
 }
 
 void GameMap::AddMap(std::string& mapPath)
@@ -236,4 +240,45 @@ cocos2d::TMXTiledMap* GameMap::createMapFromPath(std::string& mapPath)
 const bool GameMap::ChangeFloor()
 {
 	return isChangeFloor_;
+}
+
+void GameMap::ColisionDebugDraw(bool debug)
+{
+	if (tex == nullptr)
+	{
+		auto director = Director::getInstance();
+		auto size = director->getVisibleSize();
+		tex = RenderTexture::create(size.width, size.height);
+		tex->setPosition(size.width / 2, size.height / 2);
+		mapLayer_->addChild(tex);
+		tex->begin();
+		auto nowMap = GetNowMap();
+		auto colLayer = nowMap->getLayer("Collision");
+		auto mapIdx = nowMap->getMapSize();
+		auto mapTileSize = colLayer->getMapTileSize();
+		for (int y = 0; y < mapIdx.height; ++y)
+		{
+			for (int x = 0; x < mapIdx.width; ++x)
+			{
+				if (colLayer->getTileGIDAt({ static_cast<float>(x),mapIdx.height - static_cast<float>(y + 1) }) != 0)
+				{
+					auto rect = cocos2d::Rect({ 0,0 }, mapTileSize);
+					Sprite* sprite = Sprite::create();
+					sprite->setTextureRect(rect);
+					sprite->setPosition(x * mapTileSize.width, y * mapTileSize.height);
+					sprite->setColor(Color3B(0.0f, 255.0f, 0.0f));
+					sprite->setOpacity(122.0f);
+					sprite->setAnchorPoint({ 0.0f,0.0f });
+					sprite->retain();
+					sprite->visit();
+				}
+			}
+		}
+		tex->end();
+	}
+	else
+	{
+		tex->setVisible(debug);
+	}
+
 }
