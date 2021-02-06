@@ -10,10 +10,11 @@
 // ビットフィールド
 struct Bits
 {
-	unsigned int FirstAttackFlg  : 1;		// 1撃目攻撃モーションフラグ
-	unsigned int SecondAttackFlg : 1;		// 2撃目攻撃モーションフラグ
-	unsigned int ThirdAttackFlg  : 1;		// 3撃目攻撃モーションフラグ
-	unsigned int TransfromFlg    : 1;		// 変身用フラグ
+	bool FirstAttackFlg  : 1;		// 1撃目攻撃モーションフラグ
+	bool SecondAttackFlg : 1;		// 2撃目攻撃モーションフラグ
+	bool ThirdAttackFlg  : 1;		// 3撃目攻撃モーションフラグ
+	bool TransfromFlg    : 1;		// 変身用フラグ
+	bool DashFlg		 : 1;
 };
 
 #define AttackMove 30
@@ -69,4 +70,7 @@ private:
 	bool testflg = false;
 
 	std::string playerColor = "player_Light_";
+
+	//float testnum = -4.0f;
+	float testnum = 0.00f;
 };

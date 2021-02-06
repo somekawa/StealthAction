@@ -238,8 +238,90 @@ void Player::update(float delta)
 		}
 	}
 
+	// これで回避の式はできてる
+	//if (testnum >= -4.0f && testnum <= 4.0f)
+	//{
+	//	// 0のときが最大値(1.0)になる
+	//	auto move = exp(-pow(testnum, 2));
+	//	TRACE("num:%f,pl_move:%f\n", testnum,move);
+	//	testnum+=0.1f;
+	//}
+	//else
+	//{
+	//	int stop = 0;
+	//}
+
+	// 16のときが最大値(1.0)になる?→ならない。0が1.0で最大値になる仕組み
+
+	// 上の式をdashのアニメーションframeで計算した場合の書き方テスト
+	//if (testnum >= 0.00f && testnum <= 0.32f)
+	//{
+	//	auto tmpnum = testnum;
+	//	tmpnum *= 100.0f;
+	//	tmpnum -= 16.0f;
+	//	tmpnum /= 4.0f;
+	//	auto move = exp(-pow(tmpnum, 2));
+	//	TRACE("num:%f,pl_move:%f\n", tmpnum, move);
+	//	testnum+=delta;
+	//}
+	//else
+	//{
+	//	int stop = 0;
+	//}
+
+
 	attackMotion(delta);
 	transformMotion(delta);
+
+	if (bitFlg_.DashFlg)
+	{
+		currentAnimation_ = "Dash";
+	}
+	if (!bitFlg_.DashFlg)
+	{
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Dash)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Dash)])
+		{
+			//this->setPosition(this->getPosition().x + 100, this->getPosition().y);		
+			currentAnimation_ = "Dash";
+			bitFlg_.DashFlg = true;
+		}
+	}
+	if (bitFlg_.DashFlg)
+	{
+		//y = exp(-pow(x,2))
+		// pow…2乗とかできるやつ
+		// exp…ネイピア数
+		auto tmpnum = animationFrame_;
+		tmpnum = ((tmpnum * 100.0f) - 16.0f) / 4.0f;
+		//tmpnum *= 100.0f;
+		//tmpnum -= 16.0f;
+		//tmpnum /= 4.0f;
+		auto move = exp(-pow(tmpnum, 2));
+		if (direction_ == Direction::Right)
+		{
+			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move * 30, 0)));
+		}
+		else
+		{
+			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(-(move * 30), 0)));
+		}
+		TRACE("num:%f,pl_move:%f\n", tmpnum, move * 50);
+
+		animationFrame_ += delta;
+		//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move, 0)));
+		if (animationFrame_ >= 0.32f)
+		{
+			bitFlg_.DashFlg = false;
+			currentAnimation_ = "Look_Intro";
+			animationFrame_ = 0.0f;
+		}
+		else
+		{
+			currentAnimation_ = "Dash";
+		}
+	}
+
+
 	// アニメーションが切り替わるタイミングで呼ばれる再生処理
 	if (currentAnimation_ != actionOld_)
 	{
@@ -502,7 +584,7 @@ void Player::colliderVisible(void)
 	{
 		animationFrame_int_ = 0;
 	}
-	CCLOG("plHP:%d", hp_);
+	//CCLOG("plHP:%d", hp_);
 	if (collider_[playerColor + currentAnimation_].size() <= animationFrame_int_)
 	{
 		return;
@@ -689,6 +771,9 @@ void Player::AnimRegistrator(void)
 
 	// death
 	lpAnimMng.addAnimationCache(path_light, "Death2", 10, (float)0.08, ActorType::Player, false);
+
+	// dash(回避)
+	lpAnimMng.addAnimationCache(path_light, "Dash", 4, (float)0.08, ActorType::Player, false);
 
 	// non
 	lpAnimMng.addAnimationCache(path_dark, "Non", 6, (float)0.3, ActorType::Player, false);
@@ -912,6 +997,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("Non");
 		act.blackList.emplace_back("Wall_Slide");
 		act.blackList.emplace_back("Transform");
+		act.blackList.emplace_back("Dash");
 
 		act.whiteList.emplace_back("Jump");
 		actCtl_.RunInitializeActCtl(type_,"ジャンピング", act);
@@ -997,6 +1083,7 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("AttackThird");
 		actCtl_.RunInitializeActCtl(type_,"左壁スライド", act);
 	}
+
 	// 更新関数の登録
 	actCtl_.InitUpdater(type_);
 }

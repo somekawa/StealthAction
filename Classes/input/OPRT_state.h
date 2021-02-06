@@ -22,6 +22,7 @@ enum class BUTTON {
 	LEFT,
 	ATTACK,
 	Transfrom,
+	Dash,
 	// “G‚ÉactModule‚ğ“o˜^‚·‚éÛ‚Ég—p
 	Non,
 	MAX
