@@ -12,7 +12,7 @@
 #include "HPGauge.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "input/OPRT_key.h"
+#include "input/OPRT_touch.h"
 #else
 #include "input/OPRT_touch.h"
 #endif
@@ -34,7 +34,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	// キー入力かタッチ操作か判断
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// thisの意味
-	oprtState_ = new OPRT_key(this);
+	oprtState_ = new OPRT_touch(this);
 #else
 	oprtState_ = new OPRT_touch(this);
 #endif
@@ -291,7 +291,7 @@ void Player::update(float delta)
 		//y = exp(-pow(x,2))
 		// pow…2乗とかできるやつ
 		// exp…ネイピア数
-		auto tmpnum = animationFrame_;
+		float tmpnum = animationFrame_;
 		tmpnum = ((tmpnum * 100.0f) - 16.0f) / 4.0f;
 		//tmpnum *= 100.0f;
 		//tmpnum -= 16.0f;
@@ -299,6 +299,8 @@ void Player::update(float delta)
 		auto move = exp(-pow(tmpnum, 2));
 		if (direction_ == Direction::Right)
 		{
+			// 等速移動(比較できるようにコメントアウトで置いてるやつ)
+			//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(0.3 * 30, 0)));
 			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move * 30, 0)));
 		}
 		else
@@ -807,6 +809,8 @@ void Player::AnimRegistrator(void)
 	// Transform
 	lpAnimMng.addAnimationCache(path_dark, "Transform", 37, (float)0.05, ActorType::Player, false);
 
+	// dash(回避)
+	lpAnimMng.addAnimationCache(path_dark, "Dash", 4, (float)0.08, ActorType::Player, false);
 
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "player_Light_Non");
 }

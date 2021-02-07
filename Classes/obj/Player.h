@@ -71,6 +71,7 @@ private:
 
 	std::string playerColor = "player_Light_";
 
+	// ダッシュテストで使ってた変数
 	//float testnum = -4.0f;
-	float testnum = 0.00f;
+	//float testnum = 0.00f;
 };

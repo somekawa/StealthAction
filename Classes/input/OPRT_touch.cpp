@@ -136,6 +136,14 @@ void OPRT_touch::touchesMove(cocos2d::Touch* touch)
 
 void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 {
+	// ボタン非押下状態の画像に戻すために使用
+	auto buttonLambda = [&](std::string str, BUTTON button) {
+		auto director = Director::getInstance();
+		auto label1 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName(str);
+		_keyData._input[static_cast<int>(button)] = false;
+		((MenuItemImage*)label1)->unselected();
+	};
+
 	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
 	{
 		if (touchVectors[touch->getID()].isMoveTouch)
@@ -147,8 +155,13 @@ void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 		}
 		else
 		{
-			_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
-			_keyData._input[static_cast<int>(BUTTON::UP)] = false;
+			buttonLambda("attackBtn", BUTTON::DOWN);
+			buttonLambda("jumpBtn", BUTTON::UP);
+			buttonLambda("dashBtn", BUTTON::Dash);
+			buttonLambda("transformBtn", BUTTON::Transfrom);
+
+			//_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
+			//_keyData._input[static_cast<int>(BUTTON::UP)] = false;
 		}
 	}
 }
@@ -170,25 +183,26 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 		{
 			touchVectors[touch->getID()].pos = touch->getLocation();
 			auto director = Director::getInstance();
-			auto label1 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("attackBtn");
-			auto r = label1->getBoundingBox();
 
-			auto label2 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("jumpBtn");
-			auto r2 = label2->getBoundingBox();
-			if (r.containsPoint(touchVectors[touch->getID()].pos)) {
-				// label1がクリック/タッチされた場合の処理
-				_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
-			}
-			else if (r2.containsPoint(touchVectors[touch->getID()].pos))
-			{
-				// label1がクリック/タッチされた場合の処理
-				_keyData._input[static_cast<int>(BUTTON::UP)] = true;
-			}
-			else
+			auto buttonLambda = [&](std::string str,BUTTON button) {
+				auto label1 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName(str);
+				auto r = label1->getBoundingBox();
+				if (r.containsPoint(touchVectors[touch->getID()].pos)) {
+					// label1がクリック/タッチされた場合の処理
+					_keyData._input[static_cast<int>(button)] = true;
+					// ボタン押下状態の画像に変更
+					((MenuItemImage*)label1)->selected();
+					return true;
+				}
+				return false;
+			};
+
+			if (!buttonLambda("attackBtn", BUTTON::DOWN) && !buttonLambda("jumpBtn", BUTTON::UP) &&
+				!buttonLambda("dashBtn", BUTTON::Dash)   && !buttonLambda("transformBtn", BUTTON::Transfrom))
 			{
 				touchesStart(touch);
 				if (!moveFlag)
-				{			
+				{
 					auto startSp = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("startSp");
 					startSp->setPosition(touchVectors[touch->getID()].pos);
 					moveFlag = true;
