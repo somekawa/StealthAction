@@ -41,6 +41,7 @@ public:
 private:
 	void attackMotion(float delta);								// 攻撃モーションの設定
 	void transformMotion(float delta);							// トランスフォームの設定
+	void dashMotion(float delta);								// ダッシュ(回避)の設定
 	void colliderVisible(void);									// 矩形の描画関連
 	void attackCollider(std::string str, cocos2d::Node* col, float& pos);	// 攻撃矩形のオフセット
 	bool gameOverAction(void);									// ゲームオーバー時のアニメーション制御(true:再生終了,false:再生中)

@@ -53,6 +53,7 @@ struct OPRT_touch : OPRT_state
 	void KeyReset(void);						// マップ切替時のキーリセット
 private:
 	KeyData _keyData;
+	std::string trStr = "_toDark";
 };
 
 

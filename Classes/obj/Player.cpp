@@ -238,91 +238,9 @@ void Player::update(float delta)
 		}
 	}
 
-	// これで回避の式はできてる
-	//if (testnum >= -4.0f && testnum <= 4.0f)
-	//{
-	//	// 0のときが最大値(1.0)になる
-	//	auto move = exp(-pow(testnum, 2));
-	//	TRACE("num:%f,pl_move:%f\n", testnum,move);
-	//	testnum+=0.1f;
-	//}
-	//else
-	//{
-	//	int stop = 0;
-	//}
-
-	// 16のときが最大値(1.0)になる?→ならない。0が1.0で最大値になる仕組み
-
-	// 上の式をdashのアニメーションframeで計算した場合の書き方テスト
-	//if (testnum >= 0.00f && testnum <= 0.32f)
-	//{
-	//	auto tmpnum = testnum;
-	//	tmpnum *= 100.0f;
-	//	tmpnum -= 16.0f;
-	//	tmpnum /= 4.0f;
-	//	auto move = exp(-pow(tmpnum, 2));
-	//	TRACE("num:%f,pl_move:%f\n", tmpnum, move);
-	//	testnum+=delta;
-	//}
-	//else
-	//{
-	//	int stop = 0;
-	//}
-
-
 	attackMotion(delta);
 	transformMotion(delta);
-
-	if (bitFlg_.DashFlg)
-	{
-		currentAnimation_ = "Dash";
-	}
-	if (!bitFlg_.DashFlg)
-	{
-		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Dash)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Dash)])
-		{
-			//this->setPosition(this->getPosition().x + 100, this->getPosition().y);		
-			currentAnimation_ = "Dash";
-			bitFlg_.DashFlg = true;
-		}
-	}
-	if (bitFlg_.DashFlg)
-	{
-		//y = exp(-pow(x,2))
-		// pow…2乗とかできるやつ
-		// exp…ネイピア数
-		float tmpnum = animationFrame_;
-		tmpnum = ((tmpnum * 100.0f) - 16.0f) / 4.0f;
-		//tmpnum *= 100.0f;
-		//tmpnum -= 16.0f;
-		//tmpnum /= 4.0f;
-		auto move = exp(-pow(tmpnum, 2));
-		if (direction_ == Direction::Right)
-		{
-			// 等速移動(比較できるようにコメントアウトで置いてるやつ)
-			//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(0.3 * 30, 0)));
-			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move * 30, 0)));
-		}
-		else
-		{
-			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(-(move * 30), 0)));
-		}
-		TRACE("num:%f,pl_move:%f\n", tmpnum, move * 50);
-
-		animationFrame_ += delta;
-		//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move, 0)));
-		if (animationFrame_ >= 0.32f)
-		{
-			bitFlg_.DashFlg = false;
-			currentAnimation_ = "Look_Intro";
-			animationFrame_ = 0.0f;
-		}
-		else
-		{
-			currentAnimation_ = "Dash";
-		}
-	}
-
+	dashMotion(delta);
 
 	// アニメーションが切り替わるタイミングで呼ばれる再生処理
 	if (currentAnimation_ != actionOld_)
@@ -570,6 +488,123 @@ void Player::transformMotion(float delta)
 		else
 		{
 			currentAnimation_ = "Transform";
+		}
+	}
+}
+
+void Player::dashMotion(float delta)
+{
+	// これで回避の式はできてる
+	//if (testnum >= -4.0f && testnum <= 4.0f)
+	//{
+	//	// 0のときが最大値(1.0)になる
+	//	auto move = exp(-pow(testnum, 2));
+	//	TRACE("num:%f,pl_move:%f\n", testnum,move);
+	//	testnum+=0.1f;
+	//}
+	//else
+	//{
+	//	int stop = 0;
+	//}
+	// 16のときが最大値(1.0)になる?→ならない。0が1.0で最大値になる仕組み
+	// 上の式をdashのアニメーションframeで計算した場合の書き方テスト
+	//if (testnum >= 0.00f && testnum <= 0.32f)
+	//{
+	//	auto tmpnum = testnum;
+	//	tmpnum *= 100.0f;
+	//	tmpnum -= 16.0f;
+	//	tmpnum /= 4.0f;
+	//	auto move = exp(-pow(tmpnum, 2));
+	//	TRACE("num:%f,pl_move:%f\n", tmpnum, move);
+	//	testnum+=delta;
+	//}
+	//else
+	//{
+	//	int stop = 0;
+	//}
+
+	// 当たり判定
+	auto lambda = [&](Vec2 move) {
+		auto director = Director::getInstance();
+		auto plPos = this->getPosition();
+		auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
+		auto& ColSize = CollisionData->getLayerSize();
+		const int chipSize = CollisionData->getMapTileSize().width;
+		auto plCheckPoint1 = plPos + move;
+		auto plCheckPoint1Chip = Vec2{ plCheckPoint1 } / chipSize;
+		auto plCheckPoint1Pos = Vec2(plCheckPoint1Chip.x, ColSize.height - plCheckPoint1Chip.y);
+		auto plCheckPoint1Gid = CollisionData->getTileGIDAt(plCheckPoint1Pos);
+		if (plCheckPoint1Gid != 0)
+		{
+			return false;
+		}
+		return true;
+	};
+
+	if (bitFlg_.DashFlg)
+	{
+		currentAnimation_ = "Dash";
+	}
+	if (!bitFlg_.DashFlg)
+	{
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Dash)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Dash)])
+		{
+			//this->setPosition(this->getPosition().x + 100, this->getPosition().y);		
+			currentAnimation_ = "Dash";
+			bitFlg_.DashFlg = true;
+		}
+	}
+	if (bitFlg_.DashFlg)
+	{
+		//y = exp(-pow(x,2))
+		// pow…2乗とかできるやつ
+		// exp…ネイピア数
+		float tmpnum = animationFrame_;
+		tmpnum = ((tmpnum * 100.0f) - 16.0f) / 4.0f;
+		//tmpnum *= 100.0f;
+		//tmpnum -= 16.0f;
+		//tmpnum /= 4.0f;
+		auto move = exp(-pow(tmpnum, 2));
+		if (direction_ == Direction::Right)
+		{
+			// 等速移動(比較できるようにコメントアウトで置いてるやつ)
+			//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(0.3 * 30, 0)));
+			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move * 30, 0)));
+
+			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
+			if (!lambda(Vec2(move * 30 + charSize.x / 2, 0 + charSize.y / 2)))
+			{
+				TRACE("move終了\n");
+				bitFlg_.DashFlg = false;
+				currentAnimation_ = "Look_Intro";
+				animationFrame_ = 0.0f;
+			}
+		}
+		else
+		{
+			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(-(move * 30), 0)));
+			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
+			if (!lambda(Vec2(move * 30 - charSize.x / 2, 0 + charSize.y / 2)))
+			{
+				TRACE("move終了\n");
+				bitFlg_.DashFlg = false;
+				currentAnimation_ = "Look_Intro";
+				animationFrame_ = 0.0f;
+			}
+		}
+		TRACE("num:%f,pl_move:%f\n", tmpnum, move * 50);
+
+		animationFrame_ += delta;
+		//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move, 0)));
+		if (animationFrame_ >= 0.32f)
+		{
+			bitFlg_.DashFlg = false;
+			currentAnimation_ = "Look_Intro";
+			animationFrame_ = 0.0f;
+		}
+		else
+		{
+			currentAnimation_ = "Dash";
 		}
 	}
 }

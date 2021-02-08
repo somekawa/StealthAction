@@ -158,7 +158,8 @@ void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 			buttonLambda("attackBtn", BUTTON::DOWN);
 			buttonLambda("jumpBtn", BUTTON::UP);
 			buttonLambda("dashBtn", BUTTON::Dash);
-			buttonLambda("transformBtn", BUTTON::Transfrom);
+			buttonLambda("transformBtn_toDark", BUTTON::Transfrom);
+			buttonLambda("transformBtn_toLight", BUTTON::Transfrom);
 
 			//_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
 			//_keyData._input[static_cast<int>(BUTTON::UP)] = false;
@@ -192,13 +193,23 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 					_keyData._input[static_cast<int>(button)] = true;
 					// ボタン押下状態の画像に変更
 					((MenuItemImage*)label1)->selected();
+
+					// strがtransfrom関係だったら、visibleを入れ替える
+					if (str == "transformBtn" + trStr)
+					{
+						trStr == "_toDark" ? trStr = "_toLight" : trStr = "_toDark";
+						((MenuItemImage*)label1)->setVisible(false);
+						auto toLight = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("transformBtn"+trStr);
+						((MenuItemImage*)toLight)->setVisible(true);
+					}
+
 					return true;
 				}
 				return false;
 			};
 
 			if (!buttonLambda("attackBtn", BUTTON::DOWN) && !buttonLambda("jumpBtn", BUTTON::UP) &&
-				!buttonLambda("dashBtn", BUTTON::Dash)   && !buttonLambda("transformBtn", BUTTON::Transfrom))
+				!buttonLambda("dashBtn", BUTTON::Dash)   && !buttonLambda("transformBtn"+ trStr, BUTTON::Transfrom))
 			{
 				touchesStart(touch);
 				if (!moveFlag)

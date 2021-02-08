@@ -36,7 +36,7 @@
 #include "ENemyHPGauge.h"
 #include "Skill/SkillBase.h"
 #include "Map/MapMenu.h"
-#include "Shader/OutlineShader.h"
+//#include "Shader/OutlineShader.h"
 //#include "Debug/DebugDraw.h"
 #include "HPGauge.h"
 
@@ -184,21 +184,58 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);*/
 
 	// ボタンテスト用
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// 攻撃ボタン
-	auto attackBtnSp = Sprite::create("image/button1.png");
-	attackBtnSp->setName("attackBtn");
-	attackBtnSp->setAnchorPoint(Vec2(0.5f, 0.0f));
-	float x = origin.x + visibleSize.width - attackBtnSp->getContentSize().width / 2;
-	float y = origin.y + attackBtnSp->getContentSize().height / 2;
-	attackBtnSp->setPosition(Vec2(x, y));
-	layer_[(int)zOlder::FRONT]->addChild(attackBtnSp, 0);
+	// ボタンの押下/非押下はOPRTのほうでselected関数を呼んで管理
+	auto attackBtn = MenuItemImage::create(
+	"image/button1.png",
+	"image/button1_select.png");
+	//auto attackBtnSp = Sprite::create("image/button1.png");
+	attackBtn->setName("attackBtn");
+	attackBtn->setAnchorPoint(Vec2(0.5f, 0.0f));
+	float x = origin.x + visibleSize.width - attackBtn->getContentSize().width / 2 - 20;
+	float y = origin.y + attackBtn->getContentSize().height / 2;
+	attackBtn->setPosition(Vec2(x, y));
+	layer_[(int)zOlder::FRONT]->addChild(attackBtn, 0);
+
 	// ジャンプボタン
-	auto jumpBtnSp = Sprite::create("image/button2.png");
-	jumpBtnSp->setName("jumpBtn");
-	jumpBtnSp->setAnchorPoint(Vec2(0.5f, 0.0f));
-	jumpBtnSp->setPosition(Vec2(x - jumpBtnSp->getContentSize().width * 2, y));
-	layer_[(int)zOlder::FRONT]->addChild(jumpBtnSp, 0);
+	// 押してる最中に画像が消えるのは仕様です
+	auto jumpBtn = MenuItemImage::create(
+		"image/button2.png",
+		"image/button2_select.png");
+	//auto jumpBtnSp = Sprite::create("image/button2.png");
+	jumpBtn->setName("jumpBtn");
+	jumpBtn->setAnchorPoint(Vec2(0.5f, 0.0f));
+	jumpBtn->setPosition(Vec2(x - jumpBtn->getContentSize().width * 2 + 50, y));
+	layer_[(int)zOlder::FRONT]->addChild(jumpBtn, 0);
+
+	// ダッシュ(回避)
+	auto dashBtn = MenuItemImage::create(
+		"image/button3.png",
+		"image/button2_select.png");
+	dashBtn->setName("dashBtn");
+	dashBtn->setAnchorPoint(Vec2(0.5f, 0.0f));
+	dashBtn->setPosition(Vec2(x - dashBtn->getContentSize().width * 2 + 70, y + 90));
+	layer_[(int)zOlder::FRONT]->addChild(dashBtn, 0);
+
+	// トランスフォーム(light->dark)
+	auto transformBtn_toDark = MenuItemImage::create(
+		"image/button4.png",
+		"image/button2_select.png");
+	transformBtn_toDark->setName("transformBtn_toDark");
+	transformBtn_toDark->setAnchorPoint(Vec2(0.5f, 0.0f));
+	transformBtn_toDark->setPosition(Vec2(x - transformBtn_toDark->getContentSize().width * 2 + 160, y + 120));
+	layer_[(int)zOlder::FRONT]->addChild(transformBtn_toDark, 0);
+
+	// トランスフォーム(dark->light)
+	auto transformBtn_toLight = MenuItemImage::create(
+		"image/button5.png",
+		"image/button2_select.png");
+	transformBtn_toLight->setName("transformBtn_toLight");
+	transformBtn_toLight->setAnchorPoint(Vec2(0.5f, 0.0f));
+	transformBtn_toLight->setPosition(Vec2(x - transformBtn_toLight->getContentSize().width * 2 + 160, y + 120));
+	transformBtn_toLight->setVisible(false);	// 初期は見えない
+	layer_[(int)zOlder::FRONT]->addChild(transformBtn_toLight, 0);
 
 	// 移動バーチャルパッド用
 	auto startSp = Sprite::create("CloseNormal.png");
@@ -252,12 +289,12 @@ bool Game::init()
 	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
-	outlineShader_ = std::make_shared<OutlineShader>();
-	auto fileUtiles = FileUtils::getInstance();
-	auto vertexSource = fileUtiles->getStringFromFile("Shader/OutLineTest.vert");
-	auto fragmentSource = fileUtiles->getStringFromFile("Shader/OutLineTest.frag");
-	program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
-	programState = new backend::ProgramState(program);
+	//outlineShader_ = std::make_shared<OutlineShader>();
+	//auto fileUtiles = FileUtils::getInstance();
+	//auto vertexSource = fileUtiles->getStringFromFile("Shader/OutLineTest.vert");
+	//auto fragmentSource = fileUtiles->getStringFromFile("Shader/OutLineTest.frag");
+	//program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
+	//programState = new backend::ProgramState(program);
 
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 
@@ -373,12 +410,12 @@ void Game::update(float sp)
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
 	// シェーダセット
-	outlineShader_->SetShader(*player, Vec3(0, 0, 0));
-	auto enemies = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
-	for (auto& enemy : enemies)
-	{
-		outlineShader_->SetShader(*enemy, Vec3(1, 0, 0));
-	}
+	//outlineShader_->SetShader(*player, Vec3(0, 0, 0));
+	//auto enemies = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
+	//for (auto& enemy : enemies)
+	//{
+	//	outlineShader_->SetShader(*enemy, Vec3(1, 0, 0));
+	//}
 
 
 	gameMap_->ColisionDebugDraw(debugMode);
