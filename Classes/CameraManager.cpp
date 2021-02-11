@@ -13,7 +13,6 @@ void CameraManager::AddCamera(cocos2d::Scene& scene, cocos2d::Size zoomSize, Cam
 	cameras_[static_cast<int>(cameraType)] = camera;
 }
 
-
 void CameraManager::NotOutRangeSetPos(cocos2d::Vec2& pos,CameraType cameraType, float scale)
 {
 	auto director = Director::getInstance();

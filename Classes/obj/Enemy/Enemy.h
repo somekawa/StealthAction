@@ -92,11 +92,6 @@ public:
 	virtual bool OnAttacked(void);
 	// ﾌﾟﾚｲﾔｰの当たり矩形との当たり判定
 	virtual void CheckHitPLAttack(void);
-	// アニメーションの更新
-	virtual void UpdateAnimation(float delta);
-	// アニメーションの変更
-	// param@ animName: 変更先アニメーション名
-	virtual void ChangeAnimation(std::string animName);
 
 	virtual void AnimRegistrator(void) = 0;
 	// モジュールの登録

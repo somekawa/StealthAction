@@ -42,11 +42,17 @@ public:
 	virtual void Update(void);
 	// 更新
 	virtual void update(float delta) = 0;
-
+	// アニメーションの更新
+	virtual void UpdateAnimation(float delta);
+	// アニメーションの変更
+	// param@ animName: 変更先アニメーション名
+	virtual void ChangeAnimation(std::string animName);
 	// 現在のアニメーションを取得
 	virtual std::string GetAction(void);
 	// currentAnimationのｾｯﾄ
 	virtual void SetAction(std::string actName);
+
+
 
 	// 方向変更
 	virtual void ChangeDirection(float delta) = 0;

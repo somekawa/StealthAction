@@ -55,6 +55,55 @@ void Actor::Update(void)
 	lpSkillMng.UpDate();
 }
 
+// アニメーションの更新関数
+void Actor::UpdateAnimation(float delta)
+{
+	// アニメーションカウントを毎フレームdelta値を加算
+	animationFrame_ += delta;
+	// あるアニメーションの終了までの継続時間の格納
+	auto duration = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDuration();
+	// アニメーションカウントが継続時間を超えていれば
+	if (animationFrame_ >= duration)
+	{
+		// ループフラグがtrueの場合はループ再生
+		if (lpAnimMng.GetIsLoop(type_, currentAnimation_))
+		{
+			animationFrame_ = 0.0f;
+			isAttacking_ = false;
+		}
+		else
+		{
+			// falseの場合は1回の再生
+			// 1アニメーションが終了したフラグを立てる
+			isAnimEnd_ = true;
+		}
+	}
+	TRACE("animEndFlag:%d\n", isAnimEnd_);
+}
+
+void Actor::ChangeAnimation(std::string animName)
+{
+	// 今の動きを止める
+	this->stopAllActions();
+
+	// 現在のアニメーションを変更先のアニメーション名に変更
+	currentAnimation_ = animName;
+	animationFrame_ = 0.0f;
+	animationFrame_int_ = 0;
+	// アニメーション終了フラグをfalseに
+	isAnimEnd_ = false;
+
+	if (lpAnimMng.GetIsLoop(type_, currentAnimation_))
+	{
+		auto action = RepeatForever::create(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
+		this->runAction(action);
+	}
+	else
+	{
+		this->runAction(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
+	}
+}
+
 std::string Actor::GetAction(void)
 {
 	return currentAnimation_;

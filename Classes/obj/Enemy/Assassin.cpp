@@ -139,11 +139,7 @@ void Assassin::update(float delta)
 			{
 				if (stateTransitioner_ != &Enemy::Hit)
 				{
-					//onDamaged_ = false;
 					ChangeAnimation("assassin_hit");
-					//currentAnimation_ = "assassin_hit";
-					// 0ではなかったらhit状態にする
-					//ChangeAnimation("assassin_hit");
 					stateTransitioner_ = &Enemy::Hit;
 				}
 			}
@@ -164,20 +160,6 @@ void Assassin::update(float delta)
 
 		TRACE("attackFlag:%d\n", isAttacking_);
 
-		//for (auto animationCol = this->getChildren().rbegin();
-		//	animationCol != this->getChildren().rend(); animationCol++)
-		//{
-		//	if (currentAnimation_ == (*animationCol)->getName() &&
-		//		animationFrame_int_ == (*animationCol)->getTag())
-		//	{
-		//		(*animationCol)->setVisible(true);
-		//	}
-		//	else
-		//	{
-		//		(*animationCol)->setVisible(false);
-		//	}
-		//}
-
 		// アニメーションの更新
 		UpdateAnimation(delta);
 		// 状態の遷移
@@ -189,14 +171,12 @@ void Assassin::update(float delta)
 			isAttacking_ = false;
 			hittingToPlayer_ = false;
 			stateTransitioner_ = &Enemy::Idle;
-			//onDamaged_ = false;
 			currentAnimation_ = "assassin_idle";
 		}
 
 		if (currentAnimation_ != previousAnimation_)
 		{
 			ChangeAnimation(currentAnimation_);
-			//onDamaged_ = false;
 		}
 		previousAnimation_ = currentAnimation_;
 		// 各矩形情報のｾｯﾄ
@@ -284,8 +264,6 @@ void Assassin::actModuleRegistration(void)
 		flipAct.flipFlg = false;
 		flipAct.actName = "assassin_idle";
 
-		//flipAct.blackList.emplace_back(ACTION::FALLING);
-
 		flipAct.blackList.emplace_back("assassin_attack");
 		actCtl_.RunInitializeActCtl(type_, "左向き", flipAct);
 	}
@@ -296,8 +274,6 @@ void Assassin::actModuleRegistration(void)
 		ActModule act;
 		act.actName = "assassin_fall";
 		act.state = nullptr;
-		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
-		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
 		act.checkPoint1 = Vec2{ 0.0f, 0.0f };				// 左下
 		act.checkPoint2 = Vec2{ 100.0f,0.0f};				// 右下
 
@@ -305,9 +281,6 @@ void Assassin::actModuleRegistration(void)
 		act.checkPoint4 = Vec2{ -size.x / 2, size.y / 2 }; // 左上
 
 		act.gravity = Vec2{ 0.0f,-5.0f };
-		act.blackList.emplace_back("assassin_attack");	// ジャンプ中に落下してほしくない
-		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
-
 		actCtl_.RunInitializeActCtl(type_, "落下", act);
 	}
 	// 攻撃
@@ -315,6 +288,9 @@ void Assassin::actModuleRegistration(void)
 		ActModule act;
 		act.state = nullptr;
 		act.actName = "assassin_attack";
+		// 落下中に攻撃してほしくない
+		act.blackList.emplace_back("assassin_fall");
+
 		actCtl_.RunInitializeActCtl(type_, "攻撃", act);
 	}
 	// 更新関数の登録

@@ -286,8 +286,6 @@ void Cultist::actModuleRegistration(void)
 		act.checkPoint4 = Vec2{ -size.x / 2, size.y / 2 }; // 左上
 
 		act.gravity = Vec2{ 0.0f,-5.0f };
-		act.blackList.emplace_back("cultist_attack");	// ジャンプ中に落下してほしくない
-		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
 
 		actCtl_.RunInitializeActCtl(type_, "落下", act);
 	}
@@ -296,6 +294,10 @@ void Cultist::actModuleRegistration(void)
 		ActModule act;
 		act.state = nullptr;
 		act.actName = "cultist_attack";
+		// ｱｸｼｮﾝ毎のﾌﾞﾗｯｸﾘｽﾄ(落下中にﾌﾟﾚｲﾔｰを見つけても攻撃して欲しくないとき)
+		// fall -> attackを見る感じ
+		act.blackList.emplace_back("cultist_fall");
+
 		actCtl_.RunInitializeActCtl(type_, "攻撃", act);
 	}
 	// 更新関数の登録
