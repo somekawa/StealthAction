@@ -6,8 +6,8 @@ USING_NS_CC;
 OutlineShader::OutlineShader()
 {
 	auto fileUtiles = FileUtils::getInstance();
-	auto vertexSource = fileUtiles->getStringFromFile("Shader/OutLineTest.vert");
-	auto fragmentSource = fileUtiles->getStringFromFile("Shader/OutLineTest.frag");
+	auto vertexSource = fileUtiles->getStringFromFile("Shader/Outline.vert");
+	auto fragmentSource = fileUtiles->getStringFromFile("Shader/Outline.frag");
 	program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 }
 

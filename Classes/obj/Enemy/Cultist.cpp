@@ -186,21 +186,21 @@ void Cultist::AnimRegistrator(void)
 
 void Cultist::AddAttackObj(const float& angle)
 {
-	// UŒ‚‚µ‚Ä‚¢‚½‚çfireball‚ð”ò‚Î‚·
-	auto fireball = Fireball::CreateFireball({ getPosition().x,getPosition().y + 30.0f },direction_,angle,player_);
-	if (direction_ == Direction::Left)
-	{
-		fireball->runAction(FlipX::create(false));
-	}
-	else
-	{
-		fireball->runAction(FlipX::create(true));
-	}
-	// UŒ‚Ú²Ô°‚Éfireball‚ð‚Ô‚ç‰º‚°‚é
-	attackLayer_->addChild(fireball,0);
-	attackCnt_++;
-	isAttacking_ = true;
-	fireball->scheduleUpdate();
+	//// UŒ‚‚µ‚Ä‚¢‚½‚çfireball‚ð”ò‚Î‚·
+	//auto fireball = Fireball::CreateFireball({ getPosition().x,getPosition().y + 30.0f },direction_,angle,player_);
+	//if (direction_ == Direction::Left)
+	//{
+	//	fireball->runAction(FlipX::create(false));
+	//}
+	//else
+	//{
+	//	fireball->runAction(FlipX::create(true));
+	//}
+	//// UŒ‚Ú²Ô°‚Éfireball‚ð‚Ô‚ç‰º‚°‚é
+	//attackLayer_->addChild(fireball,0);
+	//attackCnt_++;
+	//isAttacking_ = true;
+	//fireball->scheduleUpdate();
 }
 
 const float Cultist::GetPLAngle(void)
