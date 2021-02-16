@@ -10,6 +10,7 @@
 #include "../Skill/SkillCode/TestSkill.h"
 #include "../Loader/FileLoder.h"
 #include "HPGauge.h"
+#include "ResidualShadow.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_touch.h"
@@ -105,6 +106,11 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	attackColOffset_ = 0.0f;
 
 	this->SetIsAttacking(false);
+
+	// 残像
+	resShadow_ = std::make_shared<ResidualShadow>();
+	resShadow_->CreateResidualShadow(*this, myLayer, 2);
+	
 }
 
 Player::~Player()
@@ -121,7 +127,7 @@ void Player::update(float delta)
 	{
 		return;
 	}
-
+	
 	// 死亡状態の更新と確認(deathFlg_がtrueならアップデートをすぐ抜けるようにする)
 	if (deathFlg_)
 	{
@@ -544,6 +550,8 @@ void Player::dashMotion(float delta)
 	if (bitFlg_.DashFlg)
 	{
 		currentAnimation_ = "Dash";
+		resShadow_->Start(*this);
+		
 	}
 	if (!bitFlg_.DashFlg)
 	{
@@ -565,8 +573,10 @@ void Player::dashMotion(float delta)
 		//tmpnum -= 16.0f;
 		//tmpnum /= 4.0f;
 		auto move = exp(-pow(tmpnum, 2));
+		
 		if (direction_ == Direction::Right)
 		{
+			resShadow_->Move(this->getPosition(), Vec2(move * 30, 0));
 			// 等速移動(比較できるようにコメントアウトで置いてるやつ)
 			//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(0.3 * 30, 0)));
 			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move * 30, 0)));
@@ -574,6 +584,7 @@ void Player::dashMotion(float delta)
 			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
 			if (!lambda(Vec2(move * 30 + charSize.x / 2, 0 + charSize.y / 2)))
 			{
+				resShadow_->End();
 				TRACE("move終了\n");
 				bitFlg_.DashFlg = false;
 				currentAnimation_ = "Look_Intro";
@@ -582,10 +593,12 @@ void Player::dashMotion(float delta)
 		}
 		else
 		{
+			resShadow_->Move(this->getPosition(), Vec2(-(move * 30), 0));
 			runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(-(move * 30), 0)));
 			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
 			if (!lambda(Vec2(move * 30 - charSize.x / 2, 0 + charSize.y / 2)))
 			{
+				resShadow_->End();
 				TRACE("move終了\n");
 				bitFlg_.DashFlg = false;
 				currentAnimation_ = "Look_Intro";
@@ -601,6 +614,7 @@ void Player::dashMotion(float delta)
 			bitFlg_.DashFlg = false;
 			currentAnimation_ = "Look_Intro";
 			animationFrame_ = 0.0f;
+			resShadow_->End();
 		}
 		else
 		{
