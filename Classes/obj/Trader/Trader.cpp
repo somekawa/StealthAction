@@ -52,7 +52,7 @@ std::array<std::string, 3> Trader::Display(const std::vector<std::string>& file)
 	std::default_random_engine engine;
 	std::array<std::string, 3> display = {file[0],file[4],file[5] };
 	std::array<int, 3> num;
-	std::uniform_int<> dist(0, (file.size() - 1));
+	std::uniform_int_distribution<> dist(0, (file.size() - 1));
 	engine.seed(seed());
 	/*for (int n = 0; n < display.size(); n++)
 	{

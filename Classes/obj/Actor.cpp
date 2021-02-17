@@ -19,28 +19,28 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	isHitWall_ = false;
 	isFire_ = false;
 	isHitAttack_ = false;
-	// ¶‚«‚Ä‚¢‚é‚©‚ÌÌ×¸Ş‚Ì‰Šú‰»
+	// ç”Ÿãã¦ã„ã‚‹ã‹ã®ï¾Œï¾—ï½¸ï¾ã®åˆæœŸåŒ–
 	isAlive_ = true;
-	// UŒ‚‚µ‚Ä‚¢‚é‚©‚Ìƒtƒ‰ƒO‚Ì‰Šú‰»
+	// æ”»æ’ƒã—ã¦ã„ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°ã®åˆæœŸåŒ–
 	isAttacking_ = false;
-	// ƒ_ƒ[ƒW‚ğ‚­‚ç‚Á‚½ƒtƒ‰ƒO‚Ì‰Šú‰»
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ãã‚‰ã£ãŸãƒ•ãƒ©ã‚°ã®åˆæœŸåŒ–
 	onDamaged_ = false;
 	animationFrame_ = 0.0f;
-	// ©•ª©g‚ğQÆ‚Å“n‚µA¶¬
+	// è‡ªåˆ†è‡ªèº«ã‚’å‚ç…§ã§æ¸¡ã—ã€ç”Ÿæˆ
 	gravity_ = std::make_unique<Gravity>(*this);
 
-	// UŒ‚‚ÌÛ‚ÉoŒ»‚·‚éµÌŞ¼Şª¸Ä‚ÌÚ²Ô°
+	// æ”»æ’ƒã®éš›ã«å‡ºç¾ã™ã‚‹ï½µï¾Œï¾ï½¼ï¾ï½ªï½¸ï¾„ã®ï¾šï½²ï¾”ï½°
 	attackLayer_ = Layer::create();
-	// ¼°İ‚ÌÚ²Ô°‚ÉattackLayer_‚ğ‚Ô‚ç‰º‚°‚é
+	// ï½¼ï½°ï¾ã®ï¾šï½²ï¾”ï½°ã«attackLayer_ã‚’ã¶ã‚‰ä¸‹ã’ã‚‹
 	myLayer.addChild(attackLayer_, 2, "attack");
 
 	std::list<std::string> path;
 	path.push_back("skill_data");
-	fileLoad_ = lpFileLoder.Directory(path);							// player‚Æenemy‚ÌŠK‘w
-	// ‰Šú‰»‚Ì‚½‚ß‚Échangealldata‚ğg—p‚·‚é
+	fileLoad_ = lpFileLoder.Directory(path);							// playerã¨enemyã®éšå±¤
+	// åˆæœŸåŒ–ã®ãŸã‚ã«changealldataã‚’ä½¿ç”¨ã™ã‚‹
 	for (auto data : fileLoad_)
 	{
-		// ƒf[ƒ^‚ÌƒeƒXƒg
+		// ãƒ‡ãƒ¼ã‚¿ã®ãƒ†ã‚¹ãƒˆ
 		lpSkillMng.ChangeAllData(data.first, { "dataTest",1,0,180 });
 	}
 }
@@ -55,17 +55,17 @@ void Actor::Update(void)
 	lpSkillMng.UpDate();
 }
 
-// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌXVŠÖ”
+// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æ›´æ–°é–¢æ•°
 void Actor::UpdateAnimation(float delta)
 {
-	// ƒAƒjƒ[ƒVƒ‡ƒ“ƒJƒEƒ“ƒg‚ğ–ˆƒtƒŒ[ƒ€delta’l‚ğ‰ÁZ
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚«ã‚¦ãƒ³ãƒˆã‚’æ¯ãƒ•ãƒ¬ãƒ¼ãƒ deltaå€¤ã‚’åŠ ç®—
 	animationFrame_ += delta;
-	// ‚ ‚éƒAƒjƒ[ƒVƒ‡ƒ“‚ÌI—¹‚Ü‚Å‚ÌŒp‘±ŠÔ‚ÌŠi”[
+	// ã‚ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®çµ‚äº†ã¾ã§ã®ç¶™ç¶šæ™‚é–“ã®æ ¼ç´
 	auto duration = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDuration();
-	// ƒAƒjƒ[ƒVƒ‡ƒ“ƒJƒEƒ“ƒg‚ªŒp‘±ŠÔ‚ğ’´‚¦‚Ä‚¢‚ê‚Î
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚«ã‚¦ãƒ³ãƒˆãŒç¶™ç¶šæ™‚é–“ã‚’è¶…ãˆã¦ã„ã‚Œã°
 	if (animationFrame_ >= duration)
 	{
-		// ƒ‹[ƒvƒtƒ‰ƒO‚ªtrue‚Ìê‡‚Íƒ‹[ƒvÄ¶
+		// ãƒ«ãƒ¼ãƒ—ãƒ•ãƒ©ã‚°ãŒtrueã®å ´åˆã¯ãƒ«ãƒ¼ãƒ—å†ç”Ÿ
 		if (lpAnimMng.GetIsLoop(type_, currentAnimation_))
 		{
 			animationFrame_ = 0.0f;
@@ -73,8 +73,8 @@ void Actor::UpdateAnimation(float delta)
 		}
 		else
 		{
-			// false‚Ìê‡‚Í1‰ñ‚ÌÄ¶
-			// 1ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI—¹‚µ‚½ƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// falseã®å ´åˆã¯1å›ã®å†ç”Ÿ
+			// 1ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ãŸãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			isAnimEnd_ = true;
 		}
 	}
@@ -83,14 +83,14 @@ void Actor::UpdateAnimation(float delta)
 
 void Actor::ChangeAnimation(std::string animName)
 {
-	// ¡‚Ì“®‚«‚ğ~‚ß‚é
+	// ä»Šã®å‹•ãã‚’æ­¢ã‚ã‚‹
 	this->stopAllActions();
 
-	// Œ»İ‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğ•ÏXæ‚ÌƒAƒjƒ[ƒVƒ‡ƒ“–¼‚É•ÏX
+	// ç¾åœ¨ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å¤‰æ›´å…ˆã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³åã«å¤‰æ›´
 	currentAnimation_ = animName;
 	animationFrame_ = 0.0f;
 	animationFrame_int_ = 0;
-	// ƒAƒjƒ[ƒVƒ‡ƒ“I—¹ƒtƒ‰ƒO‚ğfalse‚É
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†ãƒ•ãƒ©ã‚°ã‚’falseã«
 	isAnimEnd_ = false;
 
 	if (lpAnimMng.GetIsLoop(type_, currentAnimation_))
@@ -126,17 +126,17 @@ void Actor::SetDirection(Direction dir)
 
 const int& Actor::GetAnimationFrameInt(void)
 {
-	// –ˆƒtƒŒ[ƒ€‰ÁZ‚³‚ê‚é’l(animationFrame)‚É1ƒtƒŒ[ƒ€‚É—v‚·‚éŠÔ(delayPerUnit)‚ğˆø‚«
-	// delayPerUnit‚ÅŠ„‚é‚ÆŒ»İ‚ÌƒtƒŒ[ƒ€’l‚ªint‚Åæ“¾‰Â”\
+	// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ åŠ ç®—ã•ã‚Œã‚‹å€¤(animationFrame)ã«1ãƒ•ãƒ¬ãƒ¼ãƒ ã«è¦ã™ã‚‹æ™‚é–“(delayPerUnit)ã‚’å¼•ã
+	// delayPerUnitã§å‰²ã‚‹ã¨ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ å€¤ãŒintã§å–å¾—å¯èƒ½
 	auto delay = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDelayPerUnit();
-	auto val = (int)(animationFrame_ * 100.0f) / (int)(delay * 100.0f);
+	auto val = static_cast<int>(animationFrame_ * 100.0f) / static_cast<int>(delay * 100.0f);
 	return val;
 }
 
 const int& Actor::GetAnimationFrameInt(std::string str)
 {
-	// –ˆƒtƒŒ[ƒ€‰ÁZ‚³‚ê‚é’l(animationFrame)‚É1ƒtƒŒ[ƒ€‚É—v‚·‚éŠÔ(delayPerUnit)‚ğˆø‚«
-	// delayPerUnit‚ÅŠ„‚é‚ÆŒ»İ‚ÌƒtƒŒ[ƒ€’l‚ªint‚Åæ“¾‰Â”\
+	// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ åŠ ç®—ã•ã‚Œã‚‹å€¤(animationFrame)ã«1ãƒ•ãƒ¬ãƒ¼ãƒ ã«è¦ã™ã‚‹æ™‚é–“(delayPerUnit)ã‚’å¼•ã
+	// delayPerUnitã§å‰²ã‚‹ã¨ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ å€¤ãŒintã§å–å¾—å¯èƒ½
 	auto delay = lpAnimMng.GetAnimationCache(type_, str)->getDelayPerUnit();
 	auto val = (int)(animationFrame_ * 100.0f) / (int)(delay * 100.0f);
 	return val;
@@ -153,7 +153,7 @@ void Actor::CheckMapObjHit(float delta)
 	auto position = this->getPosition();
 
 	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
-	// ƒRƒŠƒWƒ‡ƒ“ƒŒƒCƒ„[‚Ìc‰¡
+	// ã‚³ãƒªã‚¸ãƒ§ãƒ³ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¸¦æ¨ª
 	auto ColSize = CollisionData->getLayerSize();
 	const int chipSize = CollisionData->getMapTileSize().width;
 	auto colSize = Vec2::ZERO;
@@ -166,14 +166,14 @@ void Actor::CheckMapObjHit(float delta)
 		}
 	}
 	this->setAnchorPoint({ 0.5f,0.0f });
-	// ©•ª‚Ì—×‚ª•Ç‚©‚»‚¤‚Å‚È‚¢‚©
+	// è‡ªåˆ†ã®éš£ãŒå£ã‹ãã†ã§ãªã„ã‹
 	auto checkID = [&](Vec2 point) {
 		auto gridPos = Vec2{ point } / chipSize;
 		auto bottom = Vec2(gridPos.x, ColSize.height - gridPos.y);
 		auto posGid = CollisionData->getTileGIDAt(bottom);
 		if (posGid != 0)
 		{
-			// •â³‚ª•K—v‚È‚Æ‚«‚Étrue
+			// è£œæ­£ãŒå¿…è¦ãªã¨ãã«true
 			return true;
 		}
 		else
@@ -182,14 +182,14 @@ void Actor::CheckMapObjHit(float delta)
 		}
 		return false;
 	};
-	// ‘«Œ³‚Ìƒ|ƒWƒVƒ‡ƒ“
+	// è¶³å…ƒã®ãƒã‚¸ã‚·ãƒ§ãƒ³
 	auto bottomPos = Vec2{ position.x,position.y - (0.3f * (delta * 50)) };
-	// ©•ª‚Ì‰¡—×‚Ìƒ|ƒWƒVƒ‡ƒ“
-	// speed_‚Ídir‚É‚æ‚Á‚Ä-‚É‚È‚Á‚½‚è+‚É‚È‚Á‚½‚è‚·‚é‚Ì‚Å•Ï”‚ğŠˆ—p
+	// è‡ªåˆ†ã®æ¨ªéš£ã®ãƒã‚¸ã‚·ãƒ§ãƒ³
+	// speed_ã¯dirã«ã‚ˆã£ã¦-ã«ãªã£ãŸã‚Š+ã«ãªã£ãŸã‚Šã™ã‚‹ã®ã§å¤‰æ•°ã‚’æ´»ç”¨
 	auto nextPos = Vec2{ position.x + speed_.x,position.y };
-	// ‘«Œ³‚Ìƒ|ƒWƒVƒ‡ƒ“‚ğŠî€‚É¡–Ú’PˆÊ‚É’¼‚·
+	// è¶³å…ƒã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’åŸºæº–ã«å‡ç›®å˜ä½ã«ç›´ã™
 	auto nextYGrid = Vec2{ bottomPos.x,bottomPos.y } / chipSize;
-	// ‰¡—×‚Ìƒ|ƒWƒVƒ‡ƒ“‚ğŠî€‚É¡–Ú’PˆÊ‚É’¼‚·
+	// æ¨ªéš£ã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’åŸºæº–ã«å‡ç›®å˜ä½ã«ç›´ã™
 	auto nextXGrid = Vec2{ nextPos.x,nextPos.y } / chipSize;
 
 	auto gridYPos = Vec2(nextYGrid.x, ColSize.height - nextYGrid.y);
@@ -197,13 +197,13 @@ void Actor::CheckMapObjHit(float delta)
 
 	auto gridXPos = Vec2(nextXGrid.x, ColSize.height - nextXGrid.y);
 	auto gridXGid = CollisionData->getTileGIDAt(gridXPos);
-	// ”ÍˆÍŠOcheck
+	// ç¯„å›²å¤–check
 	if (gridXPos.x > ColSize.width || gridXPos.x < 0 ||
 		gridXPos.y > ColSize.height || gridXPos.y < 0)
 	{
 		return;
 	}
-	// ”ÍˆÍŠOcheck
+	// ç¯„å›²å¤–check
 	if (gridYPos.x > ColSize.width || gridYPos.x < 0 ||
 		gridYPos.y > ColSize.height || gridYPos.y < 0)
 	{
@@ -239,34 +239,34 @@ void Actor::SetAttackOffset(cocos2d::Vec2 offset)
 
 void Actor::SetCollider(void)
 {
-	// UŒ‚‹éŒ`î•ñ‚Ì¾ŞÛ¸Ø
+	// æ”»æ’ƒçŸ©å½¢æƒ…å ±ã®ï½¾ï¾ï¾›ï½¸ï¾˜
 	attackCol_ = cocos2d::Rect(0, 0, 0, 0);
-	// ÀŞÒ°¼Ş‹éŒ`î•ñ‚Ì¾ŞÛ¸Ø
+	// ï¾€ï¾ï¾’ï½°ï½¼ï¾çŸ©å½¢æƒ…å ±ã®ï½¾ï¾ï¾›ï½¸ï¾˜
 	damageCol_ = cocos2d::Rect(0, 0, 0, 0);
 
 	for (auto col : currentCol_)
 	{
-		// Œ»İ‚ÌºØ¼Ş®İ‚ÌÃŞ°À‚ğŠi”[‚µ‚Ä‚¨‚­
+		// ç¾åœ¨ã®ï½ºï¾˜ï½¼ï¾ï½®ï¾ã®ï¾ƒï¾ï½°ï¾€ã‚’æ ¼ç´ã—ã¦ãŠã
 		auto colData = col->GetData();
-		// UŒ‚‹éŒ`‚¾‚Á‚½‚ç
+		// æ”»æ’ƒçŸ©å½¢ã ã£ãŸã‚‰
 		if (colData.type_ == 0)
 		{
-			// UŒ‚‹éŒ`‚Ì»²½Ş
+			// æ”»æ’ƒçŸ©å½¢ã®ï½»ï½²ï½½ï¾
 			attackCol_.size = Size(colData.size_.x * getScale(), colData.size_.y * getScale());
-			// ÌßÚ²Ô°‚¾‚Á‚½‚ç
+			// ï¾Œï¾Ÿï¾šï½²ï¾”ï½°ã ã£ãŸã‚‰
 			if (type_ == ActorType::Player)
 			{
-				// Œü‚¢‚Ä‚¢‚é•ûŒü‚ÅÎß¼Ş¼®İ‚Ì•ÏX‚ğ‚©‚¯‚é
+				// å‘ã„ã¦ã„ã‚‹æ–¹å‘ã§ï¾ï¾Ÿï½¼ï¾ï½¼ï½®ï¾ã®å¤‰æ›´ã‚’ã‹ã‘ã‚‹
 				if (direction_ == Direction::Right)
 				{
-					// UŒ‚‹éŒ`‚ÌÎß¼Ş¼®İ
-					// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+					// æ”»æ’ƒçŸ©å½¢ã®ï¾ï¾Ÿï½¼ï¾ï½¼ï½®ï¾
+					// directionæ¯ã«+ or - ã—ã¦ã‚„ã‚‰ãªã„ã¨ã„ã‘ãªã„
 					attackCol_.origin = getPosition() + (attackCol_.size/2);
 				}
 				else if (direction_ == Direction::Left)
 				{
-					// UŒ‚‹éŒ`‚ÌÎß¼Ş¼®İ
-					// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+					// æ”»æ’ƒçŸ©å½¢ã®ï¾ï¾Ÿï½¼ï¾ï½¼ï½®ï¾
+					// directionæ¯ã«+ or - ã—ã¦ã‚„ã‚‰ãªã„ã¨ã„ã‘ãªã„
 					attackCol_.origin = Vec2(getPosition().x - (attackCol_.size.width/2/* + 15.0f*/), getPosition().y + attackCol_.size.height);
 				}
 			}
@@ -274,14 +274,14 @@ void Actor::SetCollider(void)
 			{
 				if (direction_ == Direction::Right)
 				{
-					// UŒ‚‹éŒ`‚ÌÎß¼Ş¼®İ
-					// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+					// æ”»æ’ƒçŸ©å½¢ã®ï¾ï¾Ÿï½¼ï¾ï½¼ï½®ï¾
+					// directionæ¯ã«+ or - ã—ã¦ã‚„ã‚‰ãªã„ã¨ã„ã‘ãªã„
 					attackCol_.origin = getPosition() + attackCol_.size;
 				}
 				else if (direction_ == Direction::Left)
 				{
-					// UŒ‚‹éŒ`‚ÌÎß¼Ş¼®İ
-					// direction–ˆ‚É+ or - ‚µ‚Ä‚â‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+					// æ”»æ’ƒçŸ©å½¢ã®ï¾ï¾Ÿï½¼ï¾ï½¼ï½®ï¾
+					// directionæ¯ã«+ or - ã—ã¦ã‚„ã‚‰ãªã„ã¨ã„ã‘ãªã„
 					attackCol_.origin = Vec2(getPosition().x - attackCol_.size.width,getPosition().y + attackCol_.size.height);
 				}
 			}
@@ -291,11 +291,11 @@ void Actor::SetCollider(void)
 		}
 		else
 		{
-			// ÀŞÒ°¼Ş‹éŒ`‚Ì»²½Ş
+			// ï¾€ï¾ï¾’ï½°ï½¼ï¾çŸ©å½¢ã®ï½»ï½²ï½½ï¾
 			damageCol_.size = Size(colData.size_.x * getScale(), colData.size_.y * getScale());
 			if (type_ == ActorType::Player)
 			{
-				// ÀŞÒ°¼Ş‹éŒ`‚ÌÎß¼Ş¼®İ
+				// ï¾€ï¾ï¾’ï½°ï½¼ï¾çŸ©å½¢ã®ï¾ï¾Ÿï½¼ï¾ï½¼ï½®ï¾
 				damageCol_.origin = Vec2(getPosition().x, getPosition().y);
 				/*auto damagedraw = DrawNode::create();
 				damagedraw->drawDot(damageCol_.origin,3.0f, Color4F::GRAY);
@@ -305,12 +305,12 @@ void Actor::SetCollider(void)
 			{
 				if (direction_ == Direction::Left)
 				{
-					// ÀŞÒ°¼Ş‹éŒ`‚ÌÎß¼Ş¼®İ
+					// ï¾€ï¾ï¾’ï½°ï½¼ï¾çŸ©å½¢ã®ï¾ï¾Ÿï½¼ï¾ï½¼ï½®ï¾
 					damageCol_.origin = Vec2(getPosition().x + (damageCol_.size.width / 4), getPosition().y);
 				}
 				else if (direction_ == Direction::Right)
 				{
-					// ÀŞÒ°¼Ş‹éŒ`‚ÌÎß¼Ş¼®İ
+					// ï¾€ï¾ï¾’ï½°ï½¼ï¾çŸ©å½¢ã®ï¾ï¾Ÿï½¼ï¾ï½¼ï½®ï¾
 					damageCol_.origin = Vec2(getPosition().x - (damageCol_.size.width / 4), getPosition().y);
 				}
 			}
@@ -326,7 +326,7 @@ bool Actor::OnHit(const cocos2d::Rect& collision)
 	{
 		flg = true;
 	}
-	// ‹éŒ`ŠÔ‚Ì‹——£‚ğ‘ª‚é
+	// çŸ©å½¢é–“ã®è·é›¢ã‚’æ¸¬ã‚‹
 	auto distance = Vec2(collision.origin.x - damageCol_.origin.x, collision.origin.y - damageCol_.origin.y);
 	auto sizediff = Vec2((damageCol_.size.width / 2.0f) + (collision.size.width / 2.0f),
 					     (damageCol_.size.height / 2.0f) + (collision.size.height / 2.0f));

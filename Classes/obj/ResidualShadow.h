@@ -10,7 +10,7 @@ public:
 	void CreateResidualShadow(cocos2d::Sprite& sprite,cocos2d::Layer& layer, int num);
 	void Move(cocos2d::Vec2 pos, cocos2d::Vec2 move);
 	void Start(cocos2d::Sprite& sprite);
-	void End();
+	void ResShadowEnd();
 private:
 	std::vector<cocos2d::Sprite*>residualShadows_;
 	std::shared_ptr<ResShadowShader>shader_;

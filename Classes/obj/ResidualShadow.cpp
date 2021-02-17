@@ -1,5 +1,5 @@
 #include "ResidualShadow.h"
-#include "Shader/ResShadowShader.h"
+#include "../Shader/ResShadowShader.h"
 
 USING_NS_CC;
 
@@ -45,7 +45,7 @@ void ResidualShadow::Start(Sprite& sprite)
 	}
 }
 
-void ResidualShadow::End()
+void ResidualShadow::ResShadowEnd()
 {
 	isVisible_ = false;
 	for (auto& res : residualShadows_)
