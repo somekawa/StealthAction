@@ -1,5 +1,7 @@
 #pragma once
 #include <cocos2d.h>
+
+class cocos2d::backend::Program;
 class OutlineShader
 {
 public:

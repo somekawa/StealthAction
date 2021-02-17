@@ -244,7 +244,6 @@ const bool GameMap::ChangeFloor()
 
 void GameMap::ColisionDebugDraw(bool debug)
 {
-#ifdef _DEBUG
 	if (tex == nullptr)
 	{
 		auto director = Director::getInstance();
@@ -281,5 +280,5 @@ void GameMap::ColisionDebugDraw(bool debug)
 	{
 		tex->setVisible(debug);
 	}
-#endif // _DEBUG
+
 }
