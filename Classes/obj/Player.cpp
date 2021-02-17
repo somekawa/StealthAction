@@ -584,7 +584,7 @@ void Player::dashMotion(float delta)
 			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
 			if (!lambda(Vec2(move * 30 + charSize.x / 2, 0 + charSize.y / 2)))
 			{
-				resShadow_->End();
+				resShadow_->ResShadowEnd();
 				TRACE("moveI—¹\n");
 				bitFlg_.DashFlg = false;
 				currentAnimation_ = "Look_Intro";
@@ -598,7 +598,7 @@ void Player::dashMotion(float delta)
 			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
 			if (!lambda(Vec2(move * 30 - charSize.x / 2, 0 + charSize.y / 2)))
 			{
-				resShadow_->End();
+				resShadow_->ResShadowEnd();
 				TRACE("moveI—¹\n");
 				bitFlg_.DashFlg = false;
 				currentAnimation_ = "Look_Intro";
@@ -614,7 +614,7 @@ void Player::dashMotion(float delta)
 			bitFlg_.DashFlg = false;
 			currentAnimation_ = "Look_Intro";
 			animationFrame_ = 0.0f;
-			resShadow_->End();
+			resShadow_->ResShadowEnd();
 		}
 		else
 		{
