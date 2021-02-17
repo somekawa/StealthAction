@@ -60,6 +60,10 @@ void Actor::UpdateAnimation(float delta)
 {
 	// アニメーションカウントを毎フレームdelta値を加算
 	animationFrame_ += delta;
+	if (type_ == ActorType::Player)
+	{
+		return;
+	}
 	// あるアニメーションの終了までの継続時間の格納
 	auto duration = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDuration();
 	// アニメーションカウントが継続時間を超えていれば

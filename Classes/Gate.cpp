@@ -52,12 +52,12 @@ bool Gate::IsHit(Player& player)
 	{
 		return false;
 	}
-	if (player.GetAction() == "player_AttackFirst"
+	/*if (player.GetAction() == "player_AttackFirst"
 		|| player.GetAction() == "player_AttackSecond"
 		|| player.GetAction() == "player_AttackThird")
 	{
 		return false;
-	}
+	}*/
 	auto gRect = own_->getBoundingBox();
 	//auto pRect = player.getBoundingBox();
 	Size charSize = { 15.0f * 3.0f,18.0f * 3.0f };
