@@ -1,5 +1,4 @@
 #include "Scene/GameScene.h"
-#include "HPgauge.h"
 #include "Player.h"
 #include "anim/ActionCtl.h"
 #include "ActionRect.h"
@@ -9,7 +8,7 @@
 #include "../Skill/SkillBase.h"
 #include "../Skill/SkillCode/TestSkill.h"
 #include "../Loader/FileLoder.h"
-#include "HPGauge.h"
+#include "../HPGauge.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "input/OPRT_touch.h"

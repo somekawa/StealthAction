@@ -64,9 +64,7 @@ public:
 	const bool ChangeFloor(void);
 
 	// デバッグ用
-#ifdef _DEBUG
 	void ColisionDebugDraw(bool debug);
-#endif // _DEBUG
 
 private:
 	// パスからマップ読み込みを行う

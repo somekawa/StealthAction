@@ -4,7 +4,7 @@
 #include "Gravity.h"
 #include "ActionRect.h"
 #include "obj/Player.h"
-#include "HPGauge.h"
+#include "../../HPGauge.h"
 #include "BehaviorBaseAI/BehaviorTree.h"
 #include "BehaviorBaseAI/BehaviorData.h"
 #include "BehaviorBaseAI/NodeBase.h"

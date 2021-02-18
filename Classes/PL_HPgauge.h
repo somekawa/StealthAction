@@ -9,9 +9,11 @@ public:
 	void update(float delta);
 	void SetHP(float hp);
 	float GetHP(void);
+	PL_HPgauge() = default;
+	~PL_HPgauge();
 private:
 	CREATE_FUNC(PL_HPgauge);
-	~PL_HPgauge();
+	
 	float initLife_;
 	float nowLife_;
 };

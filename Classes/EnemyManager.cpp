@@ -256,7 +256,7 @@ void EnemyManager::ResetEnemyNum(void)
 void EnemyManager::CreateEnemy(ActorType type)
 {
 	Enemy* sprite = nullptr;
-	Sprite* hpSprite = nullptr;
+	HPGauge* hpSprite = nullptr;
 	auto spawnPos = Vec2{ 150 + float(rand() % 300), 100 + float(rand() % 200) };
 	auto vRange = VisionRange(0.0f, 0.0f);
 	switch (type)

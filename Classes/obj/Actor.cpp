@@ -127,7 +127,7 @@ void Actor::SetDirection(Direction dir)
 const int& Actor::GetAnimationFrameInt(void)
 {
 	// 毎フレーム加算される値(animationFrame)に1フレームに要する時間(delayPerUnit)を引き
-	// delayPerUnitで割ると現在のフレーム値がintで取得可能
+	// delayPerUnitで割ると現在のフレーム値がintで取得可能　
 	auto delay = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDelayPerUnit();
 	auto val = (int)(animationFrame_ * 100.0f) / (int)(delay * 100.0f);
 	return val;
@@ -136,7 +136,7 @@ const int& Actor::GetAnimationFrameInt(void)
 const int& Actor::GetAnimationFrameInt(std::string str)
 {
 	// 毎フレーム加算される値(animationFrame)に1フレームに要する時間(delayPerUnit)を引き
-	// delayPerUnitで割ると現在のフレーム値がintで取得可能
+	// delayPerUnitで割ると現在のフレーム値がintで取得可能　
 	auto delay = lpAnimMng.GetAnimationCache(type_, str)->getDelayPerUnit();
 	auto val = (int)(animationFrame_ * 100.0f) / (int)(delay * 100.0f);
 	return val;

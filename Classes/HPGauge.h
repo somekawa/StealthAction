@@ -3,23 +3,22 @@
 #include <cocos2d.h>
 
 class Actor;
-
 class HPGauge :public cocos2d::Sprite
 {
 public:
+	HPGauge();
 	HPGauge(Actor& target,char moveFlag);
+	~HPGauge();
 
-	static cocos2d::Sprite* createHPGauge(Actor& target, char moveFlag);
-	bool Init(void);
+	static HPGauge* createHPGauge(Actor& target, char moveFlag);
 	void update(float delta);
 	void SetHP(float hp);
 	float GetHP(void);
 private:
-	~HPGauge();
 	float initLife_;
 	float nowLife_;
 
-	Actor& targetActor_;
+	Actor* targetActor_;
 
 	char moveFlag_;
 };

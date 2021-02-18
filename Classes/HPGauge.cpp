@@ -3,10 +3,14 @@
 
 USING_NS_CC;
 
-HPGauge::HPGauge(Actor& target,char moveTag):targetActor_(target)
+HPGauge::HPGauge()
+{
+}
+
+HPGauge::HPGauge(Actor& target,char moveTag):targetActor_(&target)
 {
 	moveFlag_ = moveTag;
-	initLife_ = targetActor_.GetHp();
+	initLife_ = targetActor_->GetHp();
 	nowLife_ = initLife_;
 	if (target.getName() == "player1")
 	{
@@ -18,10 +22,14 @@ HPGauge::HPGauge(Actor& target,char moveTag):targetActor_(target)
 	}
 }
 
-cocos2d::Sprite* HPGauge::createHPGauge(Actor& target, char moveTag)
+HPGauge::~HPGauge()
+{
+}
+
+HPGauge* HPGauge::createHPGauge(Actor& target, char moveTag)
 {
 	HPGauge* pRet = new(std::nothrow)HPGauge(target,moveTag);
-	if (pRet && pRet->Init())
+	if (pRet && pRet->init())
 	{
 		// •K‚¸InitŒã‚É‰æ‘œ“o˜^
 		// “o˜^
@@ -37,12 +45,6 @@ cocos2d::Sprite* HPGauge::createHPGauge(Actor& target, char moveTag)
 		pRet = nullptr;
 	}
 	return pRet;
-}
-
-bool HPGauge::Init(void)
-{
-
-	return true;
 }
 
 void HPGauge::update(float delta)
@@ -68,10 +70,10 @@ void HPGauge::update(float delta)
 	this->setScale(newScale, 1.0);
 	if (moveFlag_ == 1)
 	{
-		setPosition(Vec2(targetActor_.getPosition().x - 30.0f, targetActor_.getPosition().y + 100.0f));
+		setPosition(Vec2(targetActor_->getPosition().x - 30.0f, targetActor_->getPosition().y + 100.0f));
 	}
 
-	if (getTag() == 0 || !targetActor_.AliveCheck())
+	if (getTag() == 0 || !targetActor_->AliveCheck())
 	{
 		removeFromParentAndCleanup(true);
 	}
@@ -87,7 +89,3 @@ float HPGauge::GetHP(void)
 	return nowLife_;
 }
 
-HPGauge::~HPGauge()
-{
-
-}
