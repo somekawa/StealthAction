@@ -20,7 +20,7 @@ struct Bits
 #define AttackMove 30
 
 class SkillBase;
-
+class ResidualShadow;
 class Player : public Actor
 {
 public:
@@ -72,6 +72,8 @@ private:
 
 	std::string playerColor = "player_Light_";
 
+	// 分身
+	std::shared_ptr<ResidualShadow> resShadow_;
 	// ダッシュテストで使ってた変数
 	//float testnum = -4.0f;
 	//float testnum = 0.00f;

@@ -72,7 +72,7 @@ bool Game::init()
 
 	// サウンド
 	lpSoundMng.AddSound("bgm", "BGM/BGM_piano.mp3", SoundType::BGM);
-	lpSoundMng.PlayBySoundName("bgm", 0.5f);
+	//lpSoundMng.PlayBySoundName("bgm", 0.5f);
 
 	// 各敵キャラのAINodeの生成----------------------------------------------------------
 	
