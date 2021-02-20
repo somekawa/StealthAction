@@ -7,12 +7,13 @@
 #include "../Skill/SkillMng.h"
 #include "../Skill/SkillBase.h"
 #include "../Skill/SkillCode/TestSkill.h"
+#include "../Skill/SkillCode/SkillA.h"
 #include "../Loader/FileLoder.h"
 #include "../HPGauge.h"
 #include "ResidualShadow.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "input/OPRT_touch.h"
+#include "input/OPRT_key.h"
 #else
 #include "input/OPRT_touch.h"
 #endif
@@ -34,7 +35,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	// キー入力かタッチ操作か判断
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// thisの意味
-	oprtState_ = new OPRT_touch(this);
+	oprtState_ = new OPRT_key(this);
 #else
 	oprtState_ = new OPRT_touch(this);
 #endif
@@ -108,8 +109,6 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	// 残像
 	resShadow_ = std::make_shared<ResidualShadow>();
 	resShadow_->CreateResidualShadow(*this, myLayer, 2);
-
-
 	this->SetIsAttacking(false);
 }
 
@@ -138,47 +137,23 @@ void Player::update(float delta)
 		return;
 	}
 
-	// スキルテストコード&effectテストコード
+	// バーサーカーモード(攻撃力は上がるが、HPは減少し続ける)
+	if (playerColor == "player_Dark_")
+	{
+		// HP減少処理
+		auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
+		auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+		hpGauge->SetHP(hpGauge->GetHP() - 0.05f);	// HPが減り続けるように設定
+	}
+
+	// キャラクター切替
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
-		if (playerColor == "player_Light_")
-		{
-			playerColor = "player_Dark_";
-		}
-		else
-		{
-			playerColor = "player_Light_";
-		}
-
-		auto director = Director::getInstance();
-		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
-		auto ppos = getPosition();
-		auto minpos = Vec2(0,0);
-		auto minlen = FLT_MAX;
-		for (auto enemy : enemyList_.getChildren())
-		{
-			auto epos = enemy->getPosition();
-			auto veccomp = epos - ppos;
-			auto length = sqrt(veccomp.x * veccomp.x + veccomp.y * veccomp.y);
-			if (minlen > length)
-			{
-				minlen = length;
-				minpos = epos;
-			}
-		}
-		skillSprite->SetTargetPos(minpos);
-		skillSprite->SetPlayerPos(getPosition());
-		skillSprite->SetPlayerDirection(direction_);
-		SkillBase* skill_t = TestSkill::CreateTestSkill(skillSprite);
-		skillSprite->AddActiveSkill(skill_t);
-		skillSprite->addChild(skill_t);
-
-		lpSkillMng.SkillActivate(plfile_[0]);
+		playerColor == "player_Light_" ? playerColor = "player_Dark_" : playerColor = "player_Light_";
 	}
-	if (skillSprite != nullptr)
-	{
-		skillSprite->RemoveActiveSkill();
-	}
+
+	skillAction();
+
 	// 現在のフレームを整数値で取得
 	animationFrame_int_ = GetAnimationFrameInt(playerColor + currentAnimation_);
 	//currentCol_ = collider_[currentAnimation_][animationFrame_int_];
@@ -255,16 +230,8 @@ void Player::update(float delta)
 		{
 			bitFlg_.FirstAttackFlg = true;
 			// 反転ﾌﾗｸﾞのｾｯﾄ
-			auto flip = false;
-			if (direction_ == Direction::Right)
-			{
-				flip = true;
-			}
-			if (direction_ == Direction::Left)
-			{
-				flip = false;
-			}
-
+			bool flip = false;
+			direction_ == Direction::Right ? flip = true : flip = false;
 			// 攻撃ｴﾌｪｸﾄの追加
 			auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), {0.0f,0.0f}, 5, 0.04f,flip,false);
 
@@ -373,6 +340,11 @@ void Player::attackMotion(float delta)
 			else
 			{
 				currentAnimation_ = "AttackSecond";
+				// 反転ﾌﾗｸﾞのｾｯﾄ
+				bool flip = false;
+				direction_ == Direction::Right ? flip = true : flip = false;
+				// 攻撃ｴﾌｪｸﾄの追加
+				auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f, flip, false);
 			}
 			animationFrame_ = 0.0f;
 			bitFlg_.FirstAttackFlg = false;
@@ -419,6 +391,11 @@ void Player::attackMotion(float delta)
 			else
 			{
 				currentAnimation_ = "AttackThird";
+				// 反転ﾌﾗｸﾞのｾｯﾄ
+				bool flip = false;
+				direction_ == Direction::Right ? flip = true : flip = false;
+				// 攻撃ｴﾌｪｸﾄの追加
+				auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f, flip, false);
 			}
 			bitFlg_.SecondAttackFlg = false;
 			isAttacking_ = false;
@@ -584,7 +561,7 @@ void Player::dashMotion(float delta)
 			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
 			if (!lambda(Vec2(move * 30 + charSize.x / 2, 0 + charSize.y / 2)))
 			{
-				resShadow_->ResShadowEnd();
+				//resShadow_->ResShadowEnd();
 				TRACE("move終了\n");
 				bitFlg_.DashFlg = false;
 				currentAnimation_ = "Look_Intro";
@@ -1140,6 +1117,57 @@ void Player::actModuleRegistration(void)
 
 	// 更新関数の登録
 	actCtl_.InitUpdater(type_);
+}
+
+void Player::skillAction(void)
+{
+	// なんかとぶやつ
+	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillA)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillA)])
+	{
+		auto director = Director::getInstance();
+		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
+		skillSprite->SetPlayerPos(getPosition());
+		skillSprite->SetPlayerDirection(direction_);
+		SkillBase* skill_t = SkillA::CreateSkillA(skillSprite);
+		skillSprite->AddActiveSkill(skill_t);
+		skillSprite->addChild(skill_t);
+
+		lpSkillMng.SkillActivate(plfile_[0]);
+	}
+
+	// 炎
+	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillB)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillB)])
+	{
+		auto director = Director::getInstance();
+		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
+		auto ppos = getPosition();
+		auto minpos = Vec2(0, 0);
+		auto minlen = FLT_MAX;
+		for (auto enemy : enemyList_.getChildren())
+		{
+			auto epos = enemy->getPosition();
+			auto veccomp = epos - ppos;
+			auto length = sqrt(veccomp.x * veccomp.x + veccomp.y * veccomp.y);
+			if (minlen > length)
+			{
+				minlen = length;
+				minpos = epos;
+			}
+		}
+		skillSprite->SetTargetPos(minpos);
+		skillSprite->SetPlayerPos(getPosition());
+		skillSprite->SetPlayerDirection(direction_);
+		SkillBase* skill_t = TestSkill::CreateTestSkill(skillSprite);
+		skillSprite->AddActiveSkill(skill_t);
+		skillSprite->addChild(skill_t);
+
+		lpSkillMng.SkillActivate(plfile_[1]);
+	}
+
+	if (skillSprite != nullptr)
+	{
+		skillSprite->RemoveActiveSkill();
+	}
 }
 
 bool Player::gameOverAction(void)

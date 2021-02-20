@@ -23,6 +23,9 @@ enum class BUTTON {
 	ATTACK,
 	Transfrom,
 	Dash,
+	SkillA,
+	SkillB,
+	SkillC,
 	// “G‚ÉactModule‚ğ“o˜^‚·‚éÛ‚Ég—p
 	Non,
 	MAX
