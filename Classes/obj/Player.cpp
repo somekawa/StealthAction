@@ -8,6 +8,7 @@
 #include "../Skill/SkillBase.h"
 #include "../Skill/SkillCode/TestSkill.h"
 #include "../Skill/SkillCode/SkillA.h"
+#include "../Skill/SkillCode/SkillC.h"
 #include "../Loader/FileLoder.h"
 #include "../HPGauge.h"
 #include "ResidualShadow.h"
@@ -553,6 +554,7 @@ void Player::dashMotion(float delta)
 		if (direction_ == Direction::Right)
 		{
 			dashSpeed = Vec2(move * 30, 0);
+
 			resShadow_->Move(this->getPosition(), dashSpeed);
 			// 等速移動(比較できるようにコメントアウトで置いてるやつ)
 			//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(0.3 * 30, 0)));
@@ -571,11 +573,13 @@ void Player::dashMotion(float delta)
 		else
 		{
 			dashSpeed = Vec2(move * -30, 0);
+
 			resShadow_->Move(this->getPosition(), dashSpeed);
 			runAction(cocos2d::MoveBy::create(0.0f, dashSpeed));
 			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
 			if (!lambda(Vec2(move * 30 - charSize.x / 2, 0 + charSize.y / 2)))
 			{
+
 				resShadow_->ResShadowEnd();
 				TRACE("move終了\n");
 				bitFlg_.DashFlg = false;
@@ -589,6 +593,7 @@ void Player::dashMotion(float delta)
 		//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move, 0)));
 		if (animationFrame_ >= 0.32f)
 		{
+
 			resShadow_->ResShadowEnd();
 			bitFlg_.DashFlg = false;
 			currentAnimation_ = "Look_Intro";
@@ -1135,7 +1140,7 @@ void Player::skillAction(void)
 		lpSkillMng.SkillActivate(plfile_[0]);
 	}
 
-	// 炎
+	// 炎(SkillBにする予定のやつ)
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillB)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillB)])
 	{
 		auto director = Director::getInstance();
@@ -1162,6 +1167,31 @@ void Player::skillAction(void)
 		skillSprite->addChild(skill_t);
 
 		lpSkillMng.SkillActivate(plfile_[1]);
+	}
+
+	// HP回復
+	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillC)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillC)])
+	{
+		auto director = Director::getInstance();
+		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
+		skillSprite->SetPlayerPos(getPosition());
+		SkillBase* skill_t = SkillC::CreateSkillC(skillSprite);
+		skillSprite->AddActiveSkill(skill_t);
+		skillSprite->addChild(skill_t);
+
+		lpSkillMng.SkillActivate(plfile_[2]);
+
+		//auto fx_ = lpEffectMng.PickUp("heal", Vec2{ 0.0f,0.0f }, Vec2(this->getPosition().x, this->getPosition().y + 120 / 4), Vec2(0, 0), 9, 0.08f, false, false, true);
+		//BlendFunc func;
+		//func.src = (backend::BlendFactor)GL_SRC_ALPHA;
+		//func.dst = (backend::BlendFactor)GL_ONE;
+		//fx_.sprite_->setBlendFunc(func);
+
+		// 回復処理
+		auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
+		auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+		hpGauge->SetHP(hpGauge->GetHP() + 50);	// とりあえず半回復
+
 	}
 
 	if (skillSprite != nullptr)

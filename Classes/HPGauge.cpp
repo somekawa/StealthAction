@@ -89,6 +89,11 @@ void HPGauge::update(float delta)
 void HPGauge::SetHP(float hp)
 {
 	nowLife_ = hp;
+	// ãŒÀ‚ð’´‚¦‚È‚¢‚æ‚¤‚É
+	if (nowLife_ > 100)
+	{
+		nowLife_ = 100;
+	}
 }
 
 float HPGauge::GetHP(void)

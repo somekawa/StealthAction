@@ -28,6 +28,7 @@ SkillA::SkillA(SkillBase* ptr)
 	}
 	// ´Ìª¸Ä‚ðì¬‚µ‚ÄAŽ©g‚Ì´Ìª¸Ä‰æ‘œ‚ÉŠi”[
 	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_+offset, Vec2(0,0), 4, 0.08f, flip, false,false);
+	fx_.sprite_->setName("magic");
 }
 
 SkillA::~SkillA()
@@ -36,6 +37,12 @@ SkillA::~SkillA()
 
 void SkillA::UpDate(float delta)
 {
+	//if (!fx_.isActive_)
+	//{
+	//	fx_.sprite_->setVisible(false);
+	//	return;
+	//}
+
 	float move = speed_ * 60.0f * delta;
 
 	if (fx_.isActive_)

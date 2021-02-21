@@ -78,6 +78,10 @@ void OPRT_key::keyflg(Sprite* sprite)
 		{
 			_keyData._input[static_cast<int>(BUTTON::SkillB)] = true;
 		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_E)
+		{
+			_keyData._input[static_cast<int>(BUTTON::SkillC)] = true;
+		}
 		return true;
 	};
 
@@ -120,6 +124,10 @@ void OPRT_key::keyflg(Sprite* sprite)
 		if (keyCode == EventKeyboard::KeyCode::KEY_W)
 		{
 			_keyData._input[static_cast<int>(BUTTON::SkillB)] = false;
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_E)
+		{
+			_keyData._input[static_cast<int>(BUTTON::SkillC)] = false;
 		}
 		return true;
 	};
