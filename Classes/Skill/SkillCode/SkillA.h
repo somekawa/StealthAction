@@ -13,5 +13,6 @@ public:
 	cocos2d::Rect GetEffectData(void);
 	static SkillBase* CreateSkillA(SkillBase* ptr);
 private:
+	float speed_;
 protected:
 };

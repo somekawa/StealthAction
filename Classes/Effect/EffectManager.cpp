@@ -55,7 +55,7 @@ void EffectManager::Move(FXStruct fx)
 
 const FXStruct& EffectManager::PickUp(std::string effectName,
 											cocos2d::Vec2 offset,cocos2d::Vec2 pos, cocos2d::Vec2 speed,
-										    int frame, float duration, bool flipFlag, bool loop)
+										    int frame, float duration, bool flipFlag, bool loop,bool animReset)
 {
 	// 登録されていなければ、ｱﾆﾒｰｼｮﾝの登録をする
 	if (effectAnimation_.find(effectName) == effectAnimation_.end())
@@ -87,7 +87,7 @@ const FXStruct& EffectManager::PickUp(std::string effectName,
 		animation->setDelayPerUnit(duration);
 
 		// アニメーション終了後に最初に戻すかどうか
-		animation->setRestoreOriginalFrame(true);
+		animation->setRestoreOriginalFrame(animReset);
 
 		// 出来たアニメーションをキャッシュに登録
 		animationCache->addAnimation(animation, effectName);

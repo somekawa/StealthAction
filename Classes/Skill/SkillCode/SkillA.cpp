@@ -11,24 +11,23 @@ SkillA::SkillA(SkillBase* ptr)
 	effectData_.size = Size(180, 180);
 	// ﾌﾟﾚｲﾔｰの方向の取得
 	auto direction = ptr->GetPlayerDirection();
+
 	Vec2 offset = {0.0f,0.0f};
-	float speed = 0.0f;
 	bool flip = false;
 	if (direction == Direction::Right)
 	{
 		flip = false;
 		offset = Vec2(50.0f, 20.0f);
-		speed = 5.0f;
+		speed_ = 5.0f;
 	}
 	if (direction == Direction::Left)
 	{
 		flip = true;
 		offset = Vec2(-50.0f, 20.0f);
-		speed = -5.0f;
+		speed_ = -5.0f;
 	}
-
 	// ｴﾌｪｸﾄを作成して、自身のｴﾌｪｸﾄ画像に格納
-	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_+offset, Vec2(speed,0), 6, 0.08f, flip, true);
+	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_+offset, Vec2(0,0), 4, 0.08f, flip, false,false);
 }
 
 SkillA::~SkillA()
@@ -37,24 +36,21 @@ SkillA::~SkillA()
 
 void SkillA::UpDate(float delta)
 {
+	float move = speed_ * 60.0f * delta;
 
-	// 今のところｴﾌｪｸﾄがｱｸﾃｨﾌﾞ状態だと動かす
 	if (fx_.isActive_)
 	{
-		effectData_.origin = fx_.sprite_->getPosition();
+		//effectData_.origin = fx_.sprite_->getPosition();
+		fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);
+
+		// 画面端に来たら
+		if (fx_.sprite_->getPosition().x <= 0 || fx_.sprite_->getPosition().x >= Director::getInstance()->getWinSize().width)
+		{
+			// active状態をfalseにしてvisibleを不可視にする
+			fx_.isActive_ = false;
+			fx_.sprite_->setVisible(false);
+		}
 	}
-
-	/*この中にSkillの効果や動作を記述してください*/
-	// ここでｴﾌｪｸﾄのﾎﾟｼﾞｼｮﾝの移動をやる
-	// ｱﾆﾒｰｼｮﾝが終わるとｴﾌｪｸﾄのｱｸﾃｨﾌﾞ状態をfalseにしている
-
-	bool flag = true;
-	/*if (lpEffectMng.AnimEndChecker(fx_, delta))
-	{
-		param.activation = false;
-		flag = lpSkillMng.SkillInActivate("skill_01.txt");
-	}*/
-
 }
 
 void SkillA::Init()

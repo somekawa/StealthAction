@@ -233,7 +233,7 @@ void Player::update(float delta)
 			bool flip = false;
 			direction_ == Direction::Right ? flip = true : flip = false;
 			// UŒ‚´Ìª¸Ä‚Ì’Ç‰Á
-			auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), {0.0f,0.0f}, 5, 0.04f,flip,false);
+			auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), {0.0f,0.0f}, 5, 0.04f,flip,false,true);
 
 		}
 		animationFrame_int_ = 0.0f;
@@ -344,7 +344,7 @@ void Player::attackMotion(float delta)
 				bool flip = false;
 				direction_ == Direction::Right ? flip = true : flip = false;
 				// UŒ‚´Ìª¸Ä‚Ì’Ç‰Á
-				auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f, flip, false);
+				auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f, flip, false,true);
 			}
 			animationFrame_ = 0.0f;
 			bitFlg_.FirstAttackFlg = false;
@@ -395,7 +395,7 @@ void Player::attackMotion(float delta)
 				bool flip = false;
 				direction_ == Direction::Right ? flip = true : flip = false;
 				// UŒ‚´Ìª¸Ä‚Ì’Ç‰Á
-				auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f, flip, false);
+				auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f, flip, false,true);
 			}
 			bitFlg_.SecondAttackFlg = false;
 			isAttacking_ = false;
