@@ -225,6 +225,39 @@ bool Game::init()
 	transformBtn_toLight->setVisible(false);	// 初期は見えない
 	layer_[(int)zOlder::FRONT]->addChild(transformBtn_toLight, 0);
 
+	// とりあえず今はくっつけた感じで表示してます
+	// アイテム(左から1番目)
+	auto itemBtn = MenuItemImage::create(
+		"image/skilltest.png",
+		"image/skilltest.png");
+	itemBtn->setName("itemBtn");
+	itemBtn->setPosition(Vec2(visibleSize.width / 2 - (itemBtn->getContentSize().width + itemBtn->getContentSize().width / 2), itemBtn->getContentSize().height / 2));
+	layer_[(int)zOlder::FRONT]->addChild(itemBtn, 0);
+
+	// スキルA(左から2番目)
+	auto skillABtn = MenuItemImage::create(
+		"image/skilltest.png",
+		"image/skilltest.png");
+	skillABtn->setName("skillABtn");
+	skillABtn->setPosition(Vec2(visibleSize.width / 2 - skillABtn->getContentSize().width / 2, skillABtn->getContentSize().height / 2));
+	layer_[(int)zOlder::FRONT]->addChild(skillABtn, 0);
+
+	// スキルB(左から3番目)
+	auto skillBBtn = MenuItemImage::create(
+		"image/skilltest.png",
+		"image/skilltest.png");
+	skillBBtn->setName("skillBBtn");
+	skillBBtn->setPosition(Vec2(visibleSize.width / 2 + skillBBtn->getContentSize().width / 2, skillBBtn->getContentSize().height / 2));
+	layer_[(int)zOlder::FRONT]->addChild(skillBBtn, 0);
+
+	// スキルC(左から4番目)
+	auto skillCBtn = MenuItemImage::create(
+		"image/skilltest.png",
+		"image/skilltest.png");
+	skillCBtn->setName("skillCBtn");
+	skillCBtn->setPosition(Vec2(visibleSize.width / 2 + (skillCBtn->getContentSize().width + skillCBtn->getContentSize().width / 2), skillCBtn->getContentSize().height / 2));
+	layer_[(int)zOlder::FRONT]->addChild(skillCBtn, 0);
+
 	// 移動バーチャルパッド用
 	auto startSp = Sprite::create("CloseNormal.png");
 	startSp->setName("startSp");

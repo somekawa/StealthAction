@@ -6,8 +6,8 @@
 #include "Loader/CollisionLoader.h"
 #include "../Skill/SkillMng.h"
 #include "../Skill/SkillBase.h"
-#include "../Skill/SkillCode/SkillB.h"
 #include "../Skill/SkillCode/SkillA.h"
+#include "../Skill/SkillCode/SkillB.h"
 #include "../Skill/SkillCode/SkillC.h"
 #include "../Loader/FileLoder.h"
 #include "../HPGauge.h"
@@ -199,7 +199,7 @@ void Player::update(float delta)
 	// 攻撃が連続で当たっているようになり、HPの減少が激しい。<- 直さないといけない。
 	onDamaged_ = isHitAttack_;
 
-	// ダメージをくらった際の処理
+	// ダメージをくらった際の処理(この中にdeath処理を書いてしまうと、バーサーカーモードで死亡したときに対応できない)
 	if (onDamaged_)
 	{
 		// HP減少処理
@@ -208,16 +208,19 @@ void Player::update(float delta)
 		hpGauge->SetHP(hpGauge->GetHP() - 10);	// -10などのダメージ量は敵の攻撃力に変えればいい
 		onDamaged_ = false;
 		isHitAttack_ = false;
-		// 0を下回った時にフラグを切り替える
-		if (hpGauge->GetHP() <= 0)
-		{
-			// 死んだﾌﾗｸﾞ(Actorｸﾗｽに宣言してます)
-			// 正確には生きているかを確認するﾌﾗｸﾞなので
-			// 死んだ: false 生きている:trueとなる
-			isAlive_ = false;
-			deathFlg_ = true;
-			deathPos_ = getPosition();
-		}
+	}
+
+	auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
+	auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+	// 0を下回った時にフラグを切り替える
+	if (hpGauge->GetHP() <= 0)
+	{
+		// 死んだﾌﾗｸﾞ(Actorｸﾗｽに宣言してます)
+		// 正確には生きているかを確認するﾌﾗｸﾞなので
+		// 死んだ: false 生きている:trueとなる
+		isAlive_ = false;
+		deathFlg_ = true;
+		deathPos_ = getPosition();
 	}
 
 	attackMotion(delta);
