@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>transform25.png</key>
+            <key>player_Light_Death0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform26.png</key>
+            <key>player_Light_Death1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform27.png</key>
+            <key>player_Light_Death2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform28.png</key>
+            <key>player_Light_Death3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform29.png</key>
+            <key>player_Light_Death4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform30.png</key>
+            <key>player_Light_Death5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform31.png</key>
+            <key>player_Light_Death6.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -109,7 +109,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform32.png</key>
+            <key>player_Light_Death7.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -124,7 +124,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform33.png</key>
+            <key>player_Light_Death8.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -139,7 +139,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform34.png</key>
+            <key>player_Light_Death9.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -154,7 +154,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform35.png</key>
+            <key>player_Light_Death10.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -169,36 +169,6 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>transform36.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{26,67}</string>
-                <key>spriteSourceSize</key>
-                <string>{26,67}</string>
-                <key>textureRect</key>
-                <string>{{0,737},{26,67}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>transform37.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{26,67}</string>
-                <key>spriteSourceSize</key>
-                <string>{26,67}</string>
-                <key>textureRect</key>
-                <string>{{0,804},{26,67}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -209,13 +179,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>player_Death.png</string>
+            <string>player_Light_Death.png</string>
             <key>size</key>
-            <string>{26,871}</string>
+            <string>{26,737}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:3c17ec326adb22e10566d8cf6a3aadc5:b917e0deb4e5d5e5fb90c823f3db616e:a39e702274c59c409cfcce91d4736bf2$</string>
+            <string>$TexturePacker:SmartUpdate:152a83d131f5d71bf0329792bd1a7d75:735805c823463880e7f8850dcd6cfa4c:e5b50abbbb16c8721b69d7b6cc462498$</string>
             <key>textureFileName</key>
-            <string>player_Death.png</string>
+            <string>player_Light_Death.png</string>
         </dict>
     </dict>
 </plist>

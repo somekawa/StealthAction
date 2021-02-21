@@ -4,168 +4,198 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>player_Light_Death20.png</key>
+            <key>player_Dark_Death0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,0},{26,67}}</string>
+                <string>{{0,0},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death21.png</key>
+            <key>player_Dark_Death1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,67},{26,67}}</string>
+                <string>{{0,63},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death22.png</key>
+            <key>player_Dark_Death10.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,134},{26,67}}</string>
+                <string>{{0,630},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death23.png</key>
+            <key>player_Dark_Death11.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,201},{26,67}}</string>
+                <string>{{0,693},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death24.png</key>
+            <key>player_Dark_Death12.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,268},{26,67}}</string>
+                <string>{{0,756},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death25.png</key>
+            <key>player_Dark_Death2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,335},{26,67}}</string>
+                <string>{{0,126},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death26.png</key>
+            <key>player_Dark_Death3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,402},{26,67}}</string>
+                <string>{{0,189},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death27.png</key>
+            <key>player_Dark_Death4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,469},{26,67}}</string>
+                <string>{{0,252},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death28.png</key>
+            <key>player_Dark_Death5.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,536},{26,67}}</string>
+                <string>{{0,315},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death29.png</key>
+            <key>player_Dark_Death6.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,603},{26,67}}</string>
+                <string>{{0,378},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>player_Light_Death210.png</key>
+            <key>player_Dark_Death7.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>spriteSourceSize</key>
-                <string>{26,67}</string>
+                <string>{23,63}</string>
                 <key>textureRect</key>
-                <string>{{0,670},{26,67}}</string>
+                <string>{{0,441},{23,63}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>player_Dark_Death8.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{23,63}</string>
+                <key>spriteSourceSize</key>
+                <string>{23,63}</string>
+                <key>textureRect</key>
+                <string>{{0,504},{23,63}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>player_Dark_Death9.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{23,63}</string>
+                <key>spriteSourceSize</key>
+                <string>{23,63}</string>
+                <key>textureRect</key>
+                <string>{{0,567},{23,63}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -179,13 +209,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>player_Light_Death2.png</string>
+            <string>player_Dark_Death.png</string>
             <key>size</key>
-            <string>{26,737}</string>
+            <string>{23,819}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:152a83d131f5d71bf0329792bd1a7d75:735805c823463880e7f8850dcd6cfa4c:e5b50abbbb16c8721b69d7b6cc462498$</string>
+            <string>$TexturePacker:SmartUpdate:9ab0b6b08421bab05e8af9016a96f552:ff7acbca9f1e65a36884a1e60fbf575d:aa1dec664e16f0f4810b287662fcedb9$</string>
             <key>textureFileName</key>
-            <string>player_Light_Death2.png</string>
+            <string>player_Dark_Death.png</string>
         </dict>
     </dict>
 </plist>

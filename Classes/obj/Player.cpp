@@ -6,7 +6,7 @@
 #include "Loader/CollisionLoader.h"
 #include "../Skill/SkillMng.h"
 #include "../Skill/SkillBase.h"
-#include "../Skill/SkillCode/TestSkill.h"
+#include "../Skill/SkillCode/SkillB.h"
 #include "../Skill/SkillCode/SkillA.h"
 #include "../Skill/SkillCode/SkillC.h"
 #include "../Loader/FileLoder.h"
@@ -563,7 +563,7 @@ void Player::dashMotion(float delta)
 			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
 			if (!lambda(Vec2(move * 30 + charSize.x / 2, 0 + charSize.y / 2)))
 			{
-				//resShadow_->ResShadowEnd();
+				resShadow_->ResShadowEnd();
 				TRACE("move終了\n");
 				bitFlg_.DashFlg = false;
 				currentAnimation_ = "Look_Intro";
@@ -609,7 +609,7 @@ void Player::dashMotion(float delta)
 void Player::colliderVisible(void)
 {
 	// トランスフォームの時はコライダーを無視する
-	if (currentAnimation_ == "Transform" || currentAnimation_ == "Death2")
+	if (currentAnimation_ == "Transform" || currentAnimation_ == "Death")
 	{
 		return;
 	}
@@ -804,7 +804,7 @@ void Player::AnimRegistrator(void)
 	lpAnimMng.addAnimationCache(path_light, "Transform", 37, (float)0.05, ActorType::Player, false);
 
 	// death
-	lpAnimMng.addAnimationCache(path_light, "Death2", 10, (float)0.08, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Death", 10, (float)0.08, ActorType::Player, false);
 
 	// dash(回避)
 	lpAnimMng.addAnimationCache(path_light, "Dash", 4, (float)0.08, ActorType::Player, false);
@@ -840,6 +840,9 @@ void Player::AnimRegistrator(void)
 
 	// Transform
 	lpAnimMng.addAnimationCache(path_dark, "Transform", 37, (float)0.05, ActorType::Player, false);
+
+	// death
+	lpAnimMng.addAnimationCache(path_dark, "Death", 12, (float)0.08, ActorType::Player, false);
 
 	// dash(回避)
 	lpAnimMng.addAnimationCache(path_dark, "Dash", 4, (float)0.08, ActorType::Player, false);
@@ -1162,7 +1165,7 @@ void Player::skillAction(void)
 		skillSprite->SetTargetPos(minpos);
 		skillSprite->SetPlayerPos(getPosition());
 		skillSprite->SetPlayerDirection(direction_);
-		SkillBase* skill_t = TestSkill::CreateTestSkill(skillSprite);
+		SkillBase* skill_t = SkillB::CreateSkillB(skillSprite);
 		skillSprite->AddActiveSkill(skill_t);
 		skillSprite->addChild(skill_t);
 
@@ -1191,7 +1194,6 @@ void Player::skillAction(void)
 		auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
 		auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
 		hpGauge->SetHP(hpGauge->GetHP() + 50);	// とりあえず半回復
-
 	}
 
 	if (skillSprite != nullptr)
@@ -1209,7 +1211,7 @@ bool Player::gameOverAction(void)
 
 		this->setPosition(deathPos_);	// 死亡した位置で設定しておかないと、おかしくなる
 		AnimationCache* animationCache = AnimationCache::getInstance();
-		Animation* animation = animationCache->getAnimation("Death2");
+		Animation* animation = animationCache->getAnimation(playerColor + "Death");
 		animation->setRestoreOriginalFrame(false);
 		//アニメーションを実行
 		gameOverAction_ = runAction(

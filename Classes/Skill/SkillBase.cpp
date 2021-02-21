@@ -1,6 +1,6 @@
 //#include "SkillMng.h"
 #include "SkillBase.h"
-#include "SkillCode/TestSkill.h"
+#include "SkillCode/SkillB.h"
 
 //SkillBase::SkillBase()
 //{
