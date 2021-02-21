@@ -34,7 +34,8 @@
 #include "SoundMng.h"
 #include "Skill/SkillBase.h"
 #include "Map/MapMenu.h"
-//#include "Shader/OutlineShader.h"
+#include "Shader/PlayerShader.h"
+#include "Shader/ResShadowShader.h"
 //#include "Debug/DebugDraw.h"
 #include "HPGauge.h"
 
@@ -287,7 +288,8 @@ bool Game::init()
 	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
-	//outlineShader_ = std::make_shared<OutlineShader>();
+	playerShader_ = std::make_shared<PlayerShader>();
+	resShadowShader_ = std::make_shared<ResShadowShader>();
 	//auto fileUtiles = FileUtils::getInstance();
 	//auto vertexSource = fileUtiles->getStringFromFile("Shader/OutLineTest.vert");
 	//auto fragmentSource = fileUtiles->getStringFromFile("Shader/OutLineTest.frag");
@@ -408,12 +410,14 @@ void Game::update(float sp)
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
 	// シェーダセット
-	//outlineShader_->SetShader(*player, Vec3(0, 0, 0));
-	//auto enemies = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
-	//for (auto& enemy : enemies)
-	//{
-	//	outlineShader_->SetShader(*enemy, Vec3(1, 0, 0));
-	//}
+	resShadowShader_->SetShader(*player);
+	playerShader_->SetShader(*player, Vec3(0, 0, 0));
+	
+	auto enemies = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
+	for (auto& enemy : enemies)
+	{
+		playerShader_->SetShader(*enemy, Vec3(1, 0, 0));
+	}
 
 
 	gameMap_->ColisionDebugDraw(debugMode);

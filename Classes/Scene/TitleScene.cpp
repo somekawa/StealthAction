@@ -33,6 +33,7 @@ bool TitleScene::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	isChanged_ = false;
+
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)

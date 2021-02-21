@@ -57,7 +57,8 @@ enum class zOlder {
 class GameMap;
 class CameraManager;
 class Player;
-class OutlineShader;
+class PlayerShader;
+class ResShadowShader;
 class Game : public BaseScene
 {
 public:
@@ -74,7 +75,8 @@ public:
 	void AddPlayer(int playerNum);
 private:
     // シェーダ
-    std::shared_ptr<OutlineShader> outlineShader_;
+    std::shared_ptr<PlayerShader> playerShader_;
+    std::shared_ptr<ResShadowShader> resShadowShader_;
     // カメラ
     std::shared_ptr<CameraManager> cameraManager_;
     // マップ
