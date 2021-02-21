@@ -13,5 +13,6 @@ public:
 	cocos2d::Rect GetEffectData(void);
 	static SkillBase* CreateSkillC(SkillBase* ptr);
 private:
+	float test = 0.0f;
 protected:
 };

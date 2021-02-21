@@ -26,10 +26,11 @@ SkillC::~SkillC()
 
 void SkillC::UpDate(float delta)
 {
-	// SkillCを発動させるときに、SkillAのupdateも回っている?
-	if (fx_.isActive_)
+	test += delta;
+	if (test >= 9 * 0.08f)	// アニメーション終了後
 	{
-		int a = 0;
+		// SkillBaseのremoveFromParentの条件を満たすために切り替える
+		param.activation = false;
 	}
 }
 

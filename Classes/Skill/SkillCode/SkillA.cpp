@@ -18,16 +18,16 @@ SkillA::SkillA(SkillBase* ptr)
 	{
 		flip = false;
 		offset = Vec2(50.0f, 20.0f);
-		speed_ = 5.0f;
+		speed_ = 10.0f;
 	}
 	if (direction == Direction::Left)
 	{
 		flip = true;
 		offset = Vec2(-50.0f, 20.0f);
-		speed_ = -5.0f;
+		speed_ = -10.0f;
 	}
 	// ｴﾌｪｸﾄを作成して、自身のｴﾌｪｸﾄ画像に格納
-	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_+offset, Vec2(0,0), 4, 0.08f, flip, false,false);
+	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_+offset, Vec2(0,0), 4, 0.08f, flip, false,true);
 	fx_.sprite_->setName("magic");
 }
 
@@ -49,13 +49,14 @@ void SkillA::UpDate(float delta)
 	{
 		//effectData_.origin = fx_.sprite_->getPosition();
 		fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);
-
 		// 画面端に来たら
 		if (fx_.sprite_->getPosition().x <= 0 || fx_.sprite_->getPosition().x >= Director::getInstance()->getWinSize().width)
 		{
 			// active状態をfalseにしてvisibleを不可視にする
 			fx_.isActive_ = false;
 			fx_.sprite_->setVisible(false);
+			// SkillBaseのremoveFromParentの条件を満たすために切り替える
+			param.activation = false;
 		}
 	}
 }
