@@ -149,17 +149,6 @@ bool Game::init()
 	// 敵が死んだらとりあえずリスポーンするフラグ
 	respawnFlag_ = false;
 
-	/*auto label = Label::createWithTTF("Action", "fonts/Marker Felt.ttf", 24);
-	if (label == nullptr)
-	{
-		problemLoading("'fonts/Marker Felt.ttf'");
-	}
-	else
-	{
-		label->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y + 250));
-		this->addChild(label, 1);
-	}*/
-
 	// fireball の各ｱﾆﾒｰｼｮﾝのｷｬｯｼｭ登録
 	lpAnimMng.addAnimationCache("Fireball", "fireball_normal", 4, 0.08f, true);
 	lpAnimMng.addAnimationCache("Fireball", "fireball_impact", 5, 0.08f, false);
@@ -183,7 +172,7 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);*/
 
 	// ボタンテスト用
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	// 攻撃ボタン
 	// ボタンの押下/非押下はOPRTのほうでselected関数を呼んで管理
 	auto attackBtn = MenuItemImage::create(
@@ -242,39 +231,8 @@ bool Game::init()
 	startSp->setPosition(Vec2(150.0f, 150.0f));
 	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
 #endif
-
-	// HPゲージ描画用
-	/*auto PL_HPgaugeSp = PL_HPgauge::createPL_HPgauge();
-	layer_[(int)zOlder::FRONT]->addChild(PL_HPgaugeSp, 0);
-	PL_HPgaugeSp->setName("PL_HPgauge");
-	PL_HPgaugeSp->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);*/
-
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
-
-	// キャラの登録(charLayerはGameSceneに直接ぶら下がり、plSpriteはcharLayerにぶら下がる)
-
-	//auto plSprite = Player::createPlayer();
-	//plSprite = Player::createPlayer();
-	//charLayer->addChild((Node*)plSprite, (int)zOlder::CHAR_PL);
-	//plSprite->setName("player");
-	//// キャラサイズ3倍
-	//plSprite->setScale(3.0f);
-	//// アンカーポイント下中央
-	//plSprite->setAnchorPoint(Vec2(0.5f, 0.0f));
-
-	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setScale(3.0f);
-	//layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->setAnchorPoint(Vec2(0.5f, 0.0f));
-	/*前面に出したいレイヤーの登録*/
-	//auto frLayer = Layer::create();
-	// auto frSprite = Sprite::create(" ");
-	// plSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	// frLayer->addChild(frSprite,0);
-	//this->addChild(frLayer, (int)zOlder::FRONT);	
-
-	//Sprite* sp;
-	//sp->setName("aa");
-	//_DebugDispOutCC::GetInstance().DrawRect("aa", Vec2(0, 0), Vec2(100, 100), Vec2(200, 200), Color4F::BLUE);
 	
 	// カメラ作成
 	cameraManager_ = std::make_shared<CameraManager>();
@@ -282,11 +240,6 @@ bool Game::init()
 	cameraManager_->AddCamera(*this, visibleSize,CameraType::PLAYER1, CameraFlag::USER1);
 	cameraManager_->AddCamera(*this, visibleSize, CameraType::UI, CameraFlag::USER2);
 
-	// レイヤーにカメラをセット
-	layer_[static_cast<int>(zOlder::CHAR_PL)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
-	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
-	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
-	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
 	playerShader_ = std::make_shared<PlayerShader>();
 	resShadowShader_ = std::make_shared<ResShadowShader>();
@@ -299,12 +252,18 @@ bool Game::init()
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 
 	auto plHPGauge = HPGauge::createHPGauge(*player, 0);
-	layer_[(int)zOlder::FRONT]->addChild(plHPGauge, 0);
+	layer_[(int)zOlder::FRONT]->addChild(plHPGauge, 1);
 	plHPGauge->setName("PL_HPgauge");
 	plHPGauge->setTag(100);
 	plHPGauge->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);
 
 	plHPGauge->scheduleUpdate();
+
+	// プレイヤーのバー背景(ゲージの減少を見やすくする為)
+	auto plHpGaugeBack = Sprite::create("image/HPbar_back.png");
+	plHpGaugeBack->setPosition(plHPGauge->getPosition());
+	plHpGaugeBack->setAnchorPoint(Vec2(0.0f, 0.5f));
+	layer_[(int)zOlder::FRONT]->addChild(plHpGaugeBack, 0);
 
 	// 敵の出現や消去等を管理するManagerを生成
 	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *layer_[static_cast<int>(zOlder::FRONT)], *player);
@@ -318,6 +277,14 @@ bool Game::init()
 	layer_[(int)zOlder::FRONT]->addChild(skillSprite, 0);
 	skillSprite->setName("skillSprite");
 	skillSprite->setPosition(0,0);
+
+	// 地図表示時の背景に設定したいやつ…
+	//auto mapBgSprite = Sprite::create("image/mapBg.png");
+	//layer_[(int)zOlder::FRONT]->addChild(mapBgSprite, 0);
+	//mapBgSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	//mapBgSprite->setVisible(false);
+	//mapBgSprite->setName("mapBgSprite");
+
 
 	// ｴﾌｪｸﾄ用ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾙ作成
 	lpEffectMng.CreatePools(*layer_[static_cast<int>(zOlder::EFFECT)]);
@@ -352,6 +319,13 @@ bool Game::init()
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	debugMode = false;
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+
+	// レイヤーにカメラをセット(layerにsprite等をすべてぶら下げた後にマスクを設定したほうがよい)
+	layer_[static_cast<int>(zOlder::CHAR_PL)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
+	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
+
 	this->scheduleUpdate();
 	return true;
 }
@@ -421,31 +395,8 @@ void Game::update(float sp)
 
 
 	gameMap_->ColisionDebugDraw(debugMode);
-	
-
-
-	//// 当たり判定用の枠を出してみる
-	//auto ppos = plSprite->getPosition();
-	//auto psize = plSprite->getContentSize();
-	// //右の時はoffset+  左はoffset-
-	// //右向きの時
-	//auto offset = Vec2(psize.width * 3.0f, 0.0f);
-	//auto leftPoint = Vec2(ppos.x - (psize.width + psize.width / 2), ppos.y + psize.width) + offset;
-	//auto rightPoint = Vec2(ppos.x - psize.width / 2, ppos.y) + offset;
-	// //左向きの時
-	////auto rightPoint = Vec2(ppos.x + psize.width + psize.width / 2, ppos.y + psize.width);
-	////auto leftPoint = Vec2(ppos.x + psize.width / 2, ppos.y);
-
-	////TRACE("%f\n", leftPoint.x + offset.x);
-
-	//auto rect = DrawNode::create();
-	// //四角消す
-	//this->removeChildByName("box");
-	//rect->setName("box");
-	// //drawRect(開始点の座標、終了点の座標, 枠線の色)
-	//rect->drawRect(leftPoint /*+ offset*/, rightPoint /*+ offset*/, Color4F::BLUE);
-	//this->addChild(rect);
 }
+
 void Game::AddPlayer(int playerNum)
 {
 	auto skillBasePtr = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");

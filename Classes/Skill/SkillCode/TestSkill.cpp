@@ -34,7 +34,7 @@ TestSkill::TestSkill(SkillBase* ptr)
 	auto dir = Vec2(cos, sin);
 	dir = dir.getNormalized() * 2;
 	// ´Ìª¸Ä‚ğì¬‚µ‚ÄA©g‚Ì´Ìª¸Ä‰æ‘œ‚ÉŠi”[
-	fx_ = lpEffectMng.PickUp("enemySpawn", Vec2{ 0.0f,0.0f },pos_,dir, 19, 0.08f,flip,true);
+	fx_ = lpEffectMng.PickUp("enemySpawn", Vec2{ 0.0f,0.0f },pos_,dir, 19, 0.08f,flip,false,false);
 	//lpEffectMng.InitializePickedUpEffect("enemySpawn", pos_, dir, 19, 0.08f, flip, true);
 	// ´Ìª¸Ä‚ÌÄ¶
 	//lpEffectMng.PlayWithLoop(fx_, "enemySpawn");

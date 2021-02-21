@@ -66,10 +66,17 @@ void OPRT_key::keyflg(Sprite* sprite)
 		{
 			_keyData._input[static_cast<int>(BUTTON::Transfrom)] = true;
 		}
-
 		if (keyCode == EventKeyboard::KeyCode::KEY_D)
 		{
 			_keyData._input[static_cast<int>(BUTTON::Dash)] = true;
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_Q)
+		{
+			_keyData._input[static_cast<int>(BUTTON::SkillA)] = true;
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_W)
+		{
+			_keyData._input[static_cast<int>(BUTTON::SkillB)] = true;
 		}
 		return true;
 	};
@@ -105,6 +112,14 @@ void OPRT_key::keyflg(Sprite* sprite)
 		if (keyCode == EventKeyboard::KeyCode::KEY_D)
 		{
 			_keyData._input[static_cast<int>(BUTTON::Dash)] = false;
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_Q)
+		{
+			_keyData._input[static_cast<int>(BUTTON::SkillA)] = false;
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_W)
+		{
+			_keyData._input[static_cast<int>(BUTTON::SkillB)] = false;
 		}
 		return true;
 	};

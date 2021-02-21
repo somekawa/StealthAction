@@ -53,7 +53,7 @@ private:
 	static int no_;												// プレイヤー人数の把握する変数
 	int myNo_;													// 自分の番号を保持する変数
 
-	//float oldPos_;												// 攻撃モーション実行前の座標を保管する
+	//float oldPos_;											// 攻撃モーション実行前の座標を保管する
 	bool oldPosKeepFlg_;										// 攻撃モーション実行前の座標を保管を1度だけの実行にするためのフラグ
 
 	Bits bitFlg_;												// ビットフィールドを用いた変数
@@ -64,8 +64,9 @@ private:
 	bool deathFlg_;												// HPが0になったときにフラグを立てる
 	cocos2d::Vec2 deathPos_;									// 死亡時の座標を保持するための変数
 
+	void skillAction(void);
 	SkillBase* skillBase_;										// SkillBaseクラスのポインタ情報(コンストラクタで最初に取得)
-	SkillBase* skillSprite = nullptr;						// skillSpriteの情報(Skill発動時に更新)
+	SkillBase* skillSprite = nullptr;							// skillSpriteの情報(Skill発動時に更新)
 	std::vector<std::string> plfile_;							// Playerのスキル情報(.txt)を入れるvector
 	cocos2d::Layer& enemyList_;
 	bool testflg = false;

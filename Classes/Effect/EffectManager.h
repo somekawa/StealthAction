@@ -49,7 +49,7 @@ public:
 	// flipFlag: ç∂âEîΩì]Ç≥ÇπÇÈÇ© loop: Ÿ∞Ãﬂçƒê∂Ç≥ÇπÇÈÇ©
 	const FXStruct& PickUp(std::string effectName,
 						   cocos2d::Vec2 offset, cocos2d::Vec2 pos, cocos2d::Vec2 speed,
-						   int frame, float duration, bool flipFlag, bool loop);
+						   int frame, float duration, bool flipFlag, bool loop, bool animReset);
 	void Play(std::string effectName,cocos2d::Sprite* sprite, bool loop);
 
 	// çXêV

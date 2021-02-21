@@ -34,6 +34,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 	bg->setPosition(size.width / 2, size.height / 2);
 	bg->retain();
 	bg->visit();
+
 	// •”‰®•\Ž¦
 	int id = 0; 
 	auto& roomData = mapGen.GetMSTNode();

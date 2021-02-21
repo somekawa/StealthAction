@@ -54,6 +54,13 @@ void HPGauge::update(float delta)
 	{
 		return;
 	}
+
+	// プレイヤーのHPは右から左に削れたほうがいいと思ったため、アンカーポイントを変更しています
+	if (targetActor_->getName() == "player1" && this->getAnchorPoint() != Vec2(0.0f, 0.5f))
+	{
+		this->setAnchorPoint(Vec2(0.0f, 0.5f));
+	}
+
 	float newScale;
 
 	if (nowLife_ <= 0.0f)
