@@ -172,7 +172,7 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);*/
 
 	// ボタンテスト用
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// 攻撃ボタン
 	// ボタンの押下/非押下はOPRTのほうでselected関数を呼んで管理
 	auto attackBtn = MenuItemImage::create(
@@ -236,7 +236,7 @@ bool Game::init()
 
 	// スキルA(左から2番目)
 	auto skillABtn = MenuItemImage::create(
-		"image/skilltest.png",
+		"image/skill_magic.png",
 		"image/skilltest.png");
 	skillABtn->setName("skillABtn");
 	skillABtn->setPosition(Vec2(visibleSize.width / 2 - skillABtn->getContentSize().width / 2, skillABtn->getContentSize().height / 2));
@@ -244,7 +244,7 @@ bool Game::init()
 
 	// スキルB(左から3番目)
 	auto skillBBtn = MenuItemImage::create(
-		"image/skilltest.png",
+		"image/skill_fire.png",
 		"image/skilltest.png");
 	skillBBtn->setName("skillBBtn");
 	skillBBtn->setPosition(Vec2(visibleSize.width / 2 + skillBBtn->getContentSize().width / 2, skillBBtn->getContentSize().height / 2));
@@ -252,7 +252,7 @@ bool Game::init()
 
 	// スキルC(左から4番目)
 	auto skillCBtn = MenuItemImage::create(
-		"image/skilltest.png",
+		"image/skill_heal.png",
 		"image/skilltest.png");
 	skillCBtn->setName("skillCBtn");
 	skillCBtn->setPosition(Vec2(visibleSize.width / 2 + (skillCBtn->getContentSize().width + skillCBtn->getContentSize().width / 2), skillCBtn->getContentSize().height / 2));
