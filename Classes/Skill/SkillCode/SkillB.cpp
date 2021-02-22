@@ -39,6 +39,8 @@ SkillB::SkillB(SkillBase* ptr)
 	//lpEffectMng.InitializePickedUpEffect("enemySpawn", pos_, dir, 19, 0.08f, flip, true);
 	// ｴﾌｪｸﾄの再生
 	//lpEffectMng.PlayWithLoop(fx_, "enemySpawn");
+
+	time_ = 0.0f;
 }
 
 SkillB::~SkillB()
@@ -47,12 +49,13 @@ SkillB::~SkillB()
 
 void SkillB::UpDate(float delta)
 {
+	time_ += delta;
 	dir_ = dir_.getNormalized() * 7;
 	if (fx_.isActive_)
 	{
 		fx_.sprite_->setPosition(fx_.sprite_->getPosition() + dir_);
-		// 絶対値で
-		if (abs(tpos_.x - fx_.sprite_->getPosition().x) <= 60 && abs(tpos_.y - fx_.sprite_->getPosition().y) <= 60)
+		// 絶対値をとり、敵に衝突もしくは時間経過で消えるようにしておく
+		if ((abs(tpos_.x - fx_.sprite_->getPosition().x) <= 60 && abs(tpos_.y - fx_.sprite_->getPosition().y) <= 60) || time_ >= 19 * 0.08)
 		{
 			// active状態をfalseにしてvisibleを不可視にする
 			fx_.isActive_ = false;
