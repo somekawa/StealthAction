@@ -36,13 +36,13 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 
 	std::list<std::string> path;
 	path.push_back("skill_data");
-	fileLoad_ = lpFileLoder.Directory(path);							// playerとenemyの階層
-	// 初期化のためにchangealldataを使用する
-	for (auto data : fileLoad_)
-	{
-		// データのテスト
-		lpSkillMng.ChangeAllData(data.first, { "dataTest",1,0,180 });
-	}
+	//fileLoad_ = lpFileLoder.Directory(path);							// playerとenemyの階層
+	//// 初期化のためにchangealldataを使用する
+	//for (auto data : fileLoad_)
+	//{
+	//	// データのテスト
+	//	lpSkillMng.ChangeAllData(data.first, { "dataTest",1,0,180 });
+	//}
 }
 
 Actor::~Actor()

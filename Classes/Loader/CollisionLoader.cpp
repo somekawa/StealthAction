@@ -3,6 +3,8 @@
 #include <fstream>
 #include "ActionRect.h"
 #include "CollisionLoader.h"
+#include "_Debug/_DebugConOut.h"
+#include <cocos2d.h>
 
 USING_NS_CC;
 
@@ -50,8 +52,10 @@ struct DataHeader
 void CollisionLoader::ReadData(std::unordered_map<std::string, std::vector<SharedRect>>& colliderBox, std::string pathName)
 {
 	std::string filePath = "Data/" + pathName + ".dat";
-
-	std::ifstream inputData(filePath);
+	auto fileUtiles = FileUtils::getInstance();
+	auto file = fileUtiles->getStringFromFile(filePath);
+	//std::ifstream inputData(filePath);
+	std::stringstream inputData(file);
 	std::stringstream strStream1;
 	std::stringstream strStream2;
 	std::string str1;
@@ -60,7 +64,10 @@ void CollisionLoader::ReadData(std::unordered_map<std::string, std::vector<Share
 	char c = 0;
 	bool readyToSet = false;
 	do {
-		std::getline(inputData, str1);
+		if (!std::getline(inputData, str1))
+		{
+			cocos2d::log("%s “Ç‚Ýž‚ß‚Ä‚È‚¢\n", filePath.c_str());
+		}
 		if (str1.find("ActorName=") != -1)
 		{
 			strStream1.str(str1);

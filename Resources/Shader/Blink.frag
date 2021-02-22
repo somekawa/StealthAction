@@ -40,7 +40,8 @@ void main()
     org = v_fragmentColor * texture2D(u_texture, v_texCoord);
     vec3 color = vec3(0.0, 0.8, 1.0);
     vec3 gray = vec3(0.299, 0.587, 0.114);
-    float grayCol = dot(org, gray);
+    float grayCol;// = dot(org, gray);
+    grayCol = org.x * gray.x + org.y * gray.y + org.z * org.z;
     vec3 retCol; 
     
     // РFТ▓Ро

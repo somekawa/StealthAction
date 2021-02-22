@@ -34,7 +34,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	layer.addChild(objLayer_,layer.getLocalZOrder() + 1);	
 
 	// パスをリスト化
-	pathList_.push_back( "image/Environment/trueMap.tmx");
+	pathList_.push_back("image/Environment/trueMap.tmx");
 
 	nextPosTbl = {
 		Vec2(100, 100),	// E_UP
@@ -226,6 +226,7 @@ MapGenerator& GameMap::GetMapGenerator()
 cocos2d::TMXTiledMap* GameMap::createMapFromPath(std::string& mapPath)
 {
 	TMXTiledMap* map = TMXTiledMap::create(mapPath);
+
 	auto colLayer = map->getLayer("Collision");
 	auto wallSlideLayer = map->getLayer("WallSlide");
 	colLayer->setName("col");

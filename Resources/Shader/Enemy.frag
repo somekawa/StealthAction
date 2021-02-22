@@ -35,13 +35,13 @@ uniform sampler2D u_texture;
 
 void main()
 {
-    float radius = 0.01f;
+    float radius = 0.01;
     vec4 ret = vec4(0.0);
     vec4 normal = vec4(0.0);
     
     vec2 center = vec2(v_texCoord.x, v_texCoord.y );
     normal = texture2D(u_texture, center);
-    if(normal.a != 0.0f)
+    if(normal.a != 0.0)
     {
         // 四方向にずらすことでアウトラインにする
         ret += texture2D(u_texture, vec2(v_texCoord.x, v_texCoord.y - radius));
@@ -49,7 +49,7 @@ void main()
         ret += texture2D(u_texture, vec2(v_texCoord.x + radius, v_texCoord.y));
         ret += texture2D(u_texture, vec2(v_texCoord.x - radius, v_texCoord.y));
         ret.rgb =  u_OutlineColor * ret.a;
-        ret.a = 1f;
+        ret.a = 1;
     
         normal = ( ret * (1.0 - normal.a)) + (normal * normal.a);
     }

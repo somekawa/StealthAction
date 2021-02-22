@@ -298,10 +298,10 @@ bool Game::init()
 	plHpGaugeBack->setAnchorPoint(Vec2(0.0f, 0.5f));
 	layer_[(int)zOlder::FRONT]->addChild(plHpGaugeBack, 0);
 
-	// 敵の出現や消去等を管理するManagerを生成
+	//// 敵の出現や消去等を管理するManagerを生成
 	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *layer_[static_cast<int>(zOlder::FRONT)], *player);
 
-	// 敵のｱﾆﾒｰｼｮﾝ関係、ﾋﾞﾍｲﾋﾞｱの初期化
+	//// 敵のｱﾆﾒｰｼｮﾝ関係、ﾋﾞﾍｲﾋﾞｱの初期化
 	enemyManager_->Initialize();
 	enemyManager_->CreateInitialEnemyOnFloor(3);
 	//enemyManager_->CreateBoss(effectManager_);
@@ -343,15 +343,16 @@ bool Game::init()
 			debugMode = false;
 		}
 	};
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 #else
-	auto listener = EventListenerTouchOneByOne::create();
+	/*auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
 	{
 		return true;
-	};
+	};*/
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	debugMode = false;
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+	
 
 	// レイヤーにカメラをセット(layerにsprite等をすべてぶら下げた後にマスクを設定したほうがよい)
 	layer_[static_cast<int>(zOlder::CHAR_PL)]->setCameraMask(static_cast<int>(CameraFlag::USER1));

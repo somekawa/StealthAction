@@ -8,7 +8,7 @@ ResShadowShader::ResShadowShader()
 	auto fileUtiles = FileUtils::getInstance();
 	auto vertexSource = fileUtiles->getStringFromFile("Shader/Blink.vert");
 	auto fragmentSource = fileUtiles->getStringFromFile("Shader/Blink.frag");
-	program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
+ 	program = backend::Device::getInstance()->newProgram(vertexSource.c_str(), fragmentSource.c_str());
 }
 
 ResShadowShader::~ResShadowShader()

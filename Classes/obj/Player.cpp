@@ -314,7 +314,8 @@ void Player::attackMotion(float delta)
 		if (animationFrame_int_ < 10)
 		{
 			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
-			currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
+			auto col = collider_[playerColor + currentAnimation_];
+			currentCol_ = col[animationFrame_int_];
 			colliderVisible();
 		}
 
