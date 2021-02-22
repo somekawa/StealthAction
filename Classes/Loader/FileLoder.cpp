@@ -15,7 +15,8 @@ DataTable FileLoder::Directory(std::list<std::string> path)
 
 	for (auto itr = directoryName.begin(); itr != directoryName.end(); itr++)
 	{
-		(*itr) = (*itr).substr((*itr).find(findPath));
+		auto findItr = (*itr).find(findPath);
+		(*itr) = (*itr).substr(findItr);
 		if (fileUtils->isFileExist((*itr)))
 		{
 			(*itr) = (*itr).substr((*itr).find("/") + 1);
