@@ -45,6 +45,14 @@ void Fireball::update(float delta)
 			ChangeAnimation("fireball_impact");
 		}
 	}
+
+	// ファイアーボールのバグ防ぐ処理
+	animationFrame_ += delta;
+	if (animationFrame_ >= 0.4f && currentAnimation_ == "fireball_impact")
+	{
+		isAnimEnd_ = true;
+	}
+
 	UpdateAnimation(delta);
 	if (isHitTarget_)
 	{
