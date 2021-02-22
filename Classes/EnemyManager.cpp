@@ -69,7 +69,8 @@ void EnemyManager::CreateInitialEnemyOnFloor(int initNum)
 {
 	// Ø½Ä‚Ì’†g‚ğ‹ó‚É‚·‚é
 	enemies_.clear();
-	CreateEnemy(ActorType::Cultist);
+	//CreateEnemy(ActorType::Cultist);
+	CreateEnemy(ActorType::Assassin);
 
 	for (int init = 0; init < initNum; init++)
 	{

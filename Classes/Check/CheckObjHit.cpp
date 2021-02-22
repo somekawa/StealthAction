@@ -2,6 +2,7 @@
 #include "scene/GameScene.h"
 #include "obj/Player.h"
 #include "obj/Enemy/Enemy.h"
+#include "obj/Enemy/Assassin.h"
 
 USING_NS_CC;
 
@@ -49,8 +50,14 @@ bool CheckObjHit::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	auto plCheckPoint2Pos = Vec2(plCheckPoint2Chip.x, ColSize.height - plCheckPoint2Chip.y);
 
 	// �͈͊Ocheck
-	if (plCheckPoint1Pos.x > ColSize.width || plCheckPoint1Pos.x < 0 ||
-		plCheckPoint1Pos.y > ColSize.height || plCheckPoint1Pos.y < 0)
+	if (plCheckPoint1Pos.x >= ColSize.width || plCheckPoint1Pos.x <= 0 ||
+		plCheckPoint1Pos.y >= ColSize.height || plCheckPoint1Pos.y <= 0)
+	{
+		return false;
+	}
+
+	if (plCheckPoint2Pos.x >= ColSize.width || plCheckPoint2Pos.x <= 0 ||
+		plCheckPoint2Pos.y >= ColSize.height || plCheckPoint2Pos.y <= 0)
 	{
 		return false;
 	}
