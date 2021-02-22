@@ -160,7 +160,9 @@ void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 			buttonLambda("dashBtn", BUTTON::Dash);
 			buttonLambda("transformBtn_toDark", BUTTON::Transfrom);
 			buttonLambda("transformBtn_toLight", BUTTON::Transfrom);
-
+			buttonLambda("skillABtn", BUTTON::SkillA);
+			buttonLambda("skillBBtn", BUTTON::SkillB);
+			buttonLambda("skillCBtn", BUTTON::SkillC);
 			//_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
 			//_keyData._input[static_cast<int>(BUTTON::UP)] = false;
 		}
@@ -209,7 +211,9 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 			};
 
 			if (!buttonLambda("attackBtn", BUTTON::DOWN) && !buttonLambda("jumpBtn", BUTTON::UP) &&
-				!buttonLambda("dashBtn", BUTTON::Dash)   && !buttonLambda("transformBtn"+ trStr, BUTTON::Transfrom))
+				!buttonLambda("dashBtn", BUTTON::Dash)   && !buttonLambda("transformBtn"+ trStr, BUTTON::Transfrom) &&
+				!buttonLambda("skillABtn",BUTTON::SkillA)&& !buttonLambda("skillBBtn", BUTTON::SkillB) &&
+				!buttonLambda("skillCBtn", BUTTON::SkillC))
 			{
 				touchesStart(touch);
 				if (!moveFlag)
