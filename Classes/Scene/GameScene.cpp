@@ -34,6 +34,7 @@
 #include "SoundMng.h"
 #include "Skill/SkillBase.h"
 #include "Map/MapMenu.h"
+#include "PoseMenu.h"
 #include "Shader/PlayerShader.h"
 #include "Shader/ResShadowShader.h"
 //#include "Debug/DebugDraw.h"
@@ -330,6 +331,10 @@ bool Game::init()
 		if (keyCode == EventKeyboard::KeyCode::KEY_M)
 		{
 			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(*gameMap_));
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
+		{
+			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_F1)
 		{
