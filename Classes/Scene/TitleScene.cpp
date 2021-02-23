@@ -35,6 +35,8 @@ bool TitleScene::init()
 	isChanged_ = false;
 
 	auto map = TMXTiledMap::create("image/Environment/title.tmx");
+	auto b = map->getOpacity();
+
 	this->addChild(map);
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32

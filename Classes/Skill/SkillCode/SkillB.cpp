@@ -69,10 +69,9 @@ void SkillB::UpDate(float delta)
 
 	time_ += delta;
 	dir_ = dir_.getNormalized() * 7;
-	//fx_.sprite_->setPosition(fx_.sprite_->getPosition() + dir_);	// ここに書くと、他のスキルが同じ挙動をするバグに繋がる
+	fx_.sprite_->setPosition(fx_.sprite_->getPosition() + dir_);
 	if (param.activation)
 	{
-		fx_.sprite_->setPosition(fx_.sprite_->getPosition() + dir_);
 		// 絶対値をとり、敵に衝突もしくは時間経過で消えるようにしておく
 		if ((abs(tpos_.x - fx_.sprite_->getPosition().x) <= 60 && abs(tpos_.y - fx_.sprite_->getPosition().y) <= 60) || time_ >= 19 * 0.08)
 		{
