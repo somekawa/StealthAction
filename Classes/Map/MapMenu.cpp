@@ -55,7 +55,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 		auto sprite = Sprite::create();
 		sprite->setTextureRect(rect);
 		sprite->setPosition(room.key + offset);
-		sprite->retain();
+		sprite->autorelease();
 		if (id == nowID)
 		{
 			sprite->setColor(Color3B(0.0f, 0.0f, 255.0f));
@@ -65,7 +65,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 		auto drawnode = DrawNode::create();
 		drawnode->drawRect(Vec2(0, 0), roomSize,Color4F::GREEN);
 		drawnode->setPosition(room.key + (offset-roomSize/2));
-		drawnode->retain();
+		drawnode->autorelease();
 		drawnode->visit(renderer,parentTransform, FLAGS_TRANSFORM_DIRTY);
 
 		id++;
@@ -83,7 +83,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 		auto sprite = DrawNode::create();
 		sprite->drawSegment(line.pair_vertex[0] + offset,
 			line.pair_vertex[1] + offset, 1.5f, Color4F::RED);
-		sprite->retain();
+		sprite->autorelease();
 		sprite->visit(renderer, parentTransform, FLAGS_TRANSFORM_DIRTY);
 	}
 	tex->end();

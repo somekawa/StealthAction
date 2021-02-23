@@ -104,7 +104,7 @@ private:
 		static_cast<int>(ActorType::Max)> colliderBox_;
 
 	cocos2d::Sprite* skillSprite;
-
+    cocos2d::Sprite* debugSprite;
     bool exitGame;      //true:ゲームを終了してタイトルに戻す
     bool debugMode;
 
