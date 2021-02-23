@@ -38,7 +38,7 @@ class GameMap
 public:
 	GameMap(cocos2d::Layer& layer);
 	// マップ生成をする (表と裏の二つを読む )
-	void AddMap(std::string& mapPath);
+	void AddMap(std::vector<std::string>& mapPaths);
 	// オブジェクトレイヤを読み込んで配置
 	void CreateObject();
 
@@ -87,6 +87,7 @@ private:
 	// デバッグ用
 #ifdef _DEBUG
 	cocos2d::Label* mapName_;
+	cocos2d::Label* isTutorial;
 	cocos2d::RenderTexture* tex;
 	bool visible;
 #endif // _DEBUG

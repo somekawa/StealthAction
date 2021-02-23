@@ -173,7 +173,7 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);*/
 
 	// ボタンテスト用
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// 攻撃ボタン
 	// ボタンの押下/非押下はOPRTのほうでselected関数を呼んで管理
 	auto attackBtn = MenuItemImage::create(
@@ -264,7 +264,7 @@ bool Game::init()
 	startSp->setName("startSp");
 	startSp->setPosition(Vec2(150.0f, 150.0f));
 	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
-#endif
+//#endif
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
 	
@@ -304,7 +304,7 @@ bool Game::init()
 
 	//// 敵のｱﾆﾒｰｼｮﾝ関係、ﾋﾞﾍｲﾋﾞｱの初期化
 	enemyManager_->Initialize();
-	enemyManager_->CreateInitialEnemyOnFloor(3);
+	//enemyManager_->CreateInitialEnemyOnFloor(3);
 	//enemyManager_->CreateBoss(effectManager_);
 
 	skillSprite = SkillBase::createSkillBase();
