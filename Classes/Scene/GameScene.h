@@ -105,6 +105,8 @@ private:
 	cocos2d::Sprite* skillSprite;
 
     bool debugMode;
+
+	bool isChanged_ = false;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
