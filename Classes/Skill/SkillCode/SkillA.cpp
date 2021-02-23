@@ -64,12 +64,12 @@ void SkillA::UpDate(float delta)
 	}
 
 	float move = speed_ * 60.0f * delta;
-	fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);
+	//fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);// ここに書くと、他のスキルが同じ挙動をするバグに繋がる
 
 	if (param.activation)
 	{
 		//effectData_.origin = fx_.sprite_->getPosition();
-		//fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);
+		fx_.sprite_->setPosition(fx_.sprite_->getPositionX() + move,pos_.y);
 		// 画面端に来たら
 		if (fx_.sprite_->getPosition().x <= 0 || fx_.sprite_->getPosition().x >= Director::getInstance()->getWinSize().width)
 		{
