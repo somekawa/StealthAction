@@ -44,7 +44,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	std::list<std::string> path;
 	path.push_back("skill_data");
 	//Actor.cppで読み込んだPlayer用のSkillデータの受け取り
-	plfile_ = fileLoad_["Player"];											// この中に今、スキルの情報が読み込まれている(名前とか)
+	//plfile_ = fileLoad_["Player"];											// この中に今、スキルの情報が読み込まれている(名前とか)
 
 	type_ = ActorType::Player;
 	actModuleRegistration();
@@ -1133,76 +1133,105 @@ void Player::actModuleRegistration(void)
 
 void Player::skillAction(void)
 {
-	// なんかとぶやつ
-	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillA)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillA)])
-	{
-		auto director = Director::getInstance();
-		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
-		skillSprite->SetPlayerPos(getPosition());
-		skillSprite->SetPlayerDirection(direction_);
-		SkillBase* skill_t = SkillA::CreateSkillA(skillSprite);
-		skillSprite->AddActiveSkill(skill_t);
-		skillSprite->addChild(skill_t);
+	// 何かのスキルがactiveであるときは、ボタンが反応しないようにする
+	auto director = Director::getInstance();
+	auto list = ((SkillBase*)director)->GetSkillList();
+	bool flag = ((SkillBase*)director)->GetAllSkillActivate();
 
-		lpSkillMng.SkillActivate(plfile_[0]);
-	}
-
-	// 炎(SkillBにする予定のやつ)
-	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillB)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillB)])
+	if (!flag)
 	{
-		auto director = Director::getInstance();
-		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
-		auto ppos = getPosition();
-		auto minpos = Vec2(0, 0);
-		auto minlen = FLT_MAX;
-		for (auto enemy : enemyList_.getChildren())
+		// なんかとぶやつ
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillA)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillA)])
 		{
-			auto epos = enemy->getPosition();
-			auto veccomp = epos - ppos;
-			auto length = sqrt(veccomp.x * veccomp.x + veccomp.y * veccomp.y);
-			if (minlen > length)
+			bool skillFlg = ((SkillBase*)director)->GetSkillCT("magic");
+			if (skillFlg)
 			{
-				minlen = length;
-				minpos = epos;
+				auto director = Director::getInstance();
+				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
+				skillSprite->SetPlayerPos(getPosition());
+				skillSprite->SetPlayerDirection(direction_);
+				SkillBase* skill_t = SkillA::CreateSkillA(skillSprite);
+				skillSprite->AddActiveSkill(skill_t);
+				skillSprite->addChild(skill_t);
 			}
+			else
+			{
+				// クールタイム中
+			}
+			//lpSkillMng.SkillActivate(plfile_[0]);
 		}
-		skillSprite->SetTargetPos(minpos);
-		skillSprite->SetPlayerPos(getPosition());
-		skillSprite->SetPlayerDirection(direction_);
-		SkillBase* skill_t = SkillB::CreateSkillB(skillSprite);
-		skillSprite->AddActiveSkill(skill_t);
-		skillSprite->addChild(skill_t);
 
-		lpSkillMng.SkillActivate(plfile_[1]);
+		// 炎(SkillBにする予定のやつ)
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillB)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillB)])
+		{
+			bool skillFlg = ((SkillBase*)director)->GetSkillCT("enemySpawn");
+			if (skillFlg)
+			{
+				auto director = Director::getInstance();
+				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
+				auto ppos = getPosition();
+				auto minpos = Vec2(0, 0);
+				auto minlen = FLT_MAX;
+				for (auto enemy : enemyList_.getChildren())
+				{
+					auto epos = enemy->getPosition();
+					auto veccomp = epos - ppos;
+					auto length = sqrt(veccomp.x * veccomp.x + veccomp.y * veccomp.y);
+					if (minlen > length)
+					{
+						minlen = length;
+						minpos = epos;
+					}
+				}
+				skillSprite->SetTargetPos(minpos);
+				skillSprite->SetPlayerPos(getPosition());
+				skillSprite->SetPlayerDirection(direction_);
+				SkillBase* skill_t = SkillB::CreateSkillB(skillSprite);
+				skillSprite->AddActiveSkill(skill_t);
+				skillSprite->addChild(skill_t);
+			}
+			else
+			{
+				// クールタイム中
+			}
+
+			//lpSkillMng.SkillActivate(plfile_[1]);
+		}
+
+		// HP回復
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillC)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillC)])
+		{
+			bool skillFlg = ((SkillBase*)director)->GetSkillCT("heal");
+			if (skillFlg)
+			{
+				auto director = Director::getInstance();
+				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
+				skillSprite->SetPlayerPos(getPosition());
+				SkillBase* skill_t = SkillC::CreateSkillC(skillSprite);
+				skillSprite->AddActiveSkill(skill_t);
+				skillSprite->addChild(skill_t);
+
+				// 回復処理
+				auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
+				auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
+				hpGauge->SetHP(hpGauge->GetHP() + 50);	// とりあえず半回復
+			}
+			else
+			{
+				// クールタイム中
+			}
+
+			//lpSkillMng.SkillActivate(plfile_[2]);
+		}
+
+		if (skillSprite != nullptr)
+		{
+			skillSprite->RemoveActiveSkill();
+		}
 	}
-
-	// HP回復
-	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillC)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillC)])
+	else
 	{
-		auto director = Director::getInstance();
-		skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
-		skillSprite->SetPlayerPos(getPosition());
-		SkillBase* skill_t = SkillC::CreateSkillC(skillSprite);
-		skillSprite->AddActiveSkill(skill_t);
-		skillSprite->addChild(skill_t);
-
-		lpSkillMng.SkillActivate(plfile_[2]);
-
-		//auto fx_ = lpEffectMng.PickUp("heal", Vec2{ 0.0f,0.0f }, Vec2(this->getPosition().x, this->getPosition().y + 120 / 4), Vec2(0, 0), 9, 0.08f, false, false, true);
-		//BlendFunc func;
-		//func.src = (backend::BlendFactor)GL_SRC_ALPHA;
-		//func.dst = (backend::BlendFactor)GL_ONE;
-		//fx_.sprite_->setBlendFunc(func);
-
-		// 回復処理
-		auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
-		auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-		hpGauge->SetHP(hpGauge->GetHP() + 50);	// とりあえず半回復
-	}
-
-	if (skillSprite != nullptr)
-	{
-		skillSprite->RemoveActiveSkill();
+		// ここに入ってきたら、active中のスキルがあるということだから、他のスキルが発動不可になる
 	}
 }
 

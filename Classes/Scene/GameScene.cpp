@@ -429,6 +429,38 @@ void Game::update(float sp)
 
 
 	gameMap_->ColisionDebugDraw(debugMode);
+
+
+	// スキルのCTに合わせて明度の調整を行うようにする
+	// 該当スキルのCTが0でないときは明度を暗くする
+	auto director = Director::getInstance();
+	// スキルA
+	if (!((SkillBase*)director)->GetSkillCT("magic"))
+	{
+		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillABtn")->setColor(Color3B(150, 150, 150));
+	}
+	else
+	{
+		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillABtn")->setColor(Color3B(255, 255, 255));
+	}
+	// スキルB
+	if (!((SkillBase*)director)->GetSkillCT("enemySpawn"))
+	{
+		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(150, 150, 150));
+	}
+	else
+	{
+		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(255, 255, 255));
+	}
+	// スキルC
+	if (!((SkillBase*)director)->GetSkillCT("heal"))
+	{
+		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(150, 150, 150));
+	}
+	else
+	{
+		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(255, 255, 255));
+	}
 }
 
 void Game::AddPlayer(int playerNum)

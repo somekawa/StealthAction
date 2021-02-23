@@ -18,6 +18,11 @@ SkillC::SkillC(SkillBase* ptr)
 	func.src = (backend::BlendFactor)GL_SRC_ALPHA;
 	func.dst = (backend::BlendFactor)GL_ONE;
 	fx_.sprite_->setBlendFunc(func);
+
+	param.removeFlg = false;
+	param.activation = true;
+	param.name = "heal";
+	param.ct = 180.0f;
 }
 
 SkillC::~SkillC()
@@ -26,11 +31,27 @@ SkillC::~SkillC()
 
 void SkillC::UpDate(float delta)
 {
-	test += delta;
-	if (test >= 9 * 0.08f)	// アニメーション終了後
+	if (!param.activation)
 	{
-		// SkillBaseのremoveFromParentの条件を満たすために切り替える
-		param.activation = false;
+		if (param.ct > 0)
+		{
+			param.ct--;
+		}
+		else
+		{
+			param.ct = 0;
+			param.removeFlg = true;
+		}
+	}
+
+	test += delta;
+	if (param.activation)
+	{
+		if (test >= 9 * 0.08f)	// アニメーション終了後
+		{
+			// SkillBaseのremoveFromParentの条件を満たすために切り替える
+			param.activation = false;
+		}
 	}
 }
 

@@ -7,9 +7,12 @@
 //	skillMng_ = std::make_shared<SkillMng>();
 //}
 
+std::vector<SkillBase*> SkillBase::skillList_;
+
 cocos2d::Sprite* SkillBase::createSkillBase()
 {
 	SkillBase* pRet = new(std::nothrow)SkillBase();
+	skillList_.clear();
 	if (pRet)
 	{
 		pRet->autorelease();
@@ -34,16 +37,31 @@ void SkillBase::AddActiveSkill(SkillBase* ptr)
 
 void SkillBase::RemoveActiveSkill(void)
 {
-	for (auto itr = skillList_.begin();itr != skillList_.end();)
+	// activation‚ªfalse‚È‚çÁ‚·ver.
+	//for (auto itr = skillList_.begin();itr != skillList_.end();)
+	//{
+	//	if ((*itr)->param.activation == false)
+	//	{
+	//		(*itr)->removeFromParent();
+	//		itr = skillList_.erase(itr);
+	//	}
+	//	else
+	//	{
+	//		itr++;
+	//	}
+	//}
+
+	// íœOK‚É‚È‚Á‚½ƒXƒLƒ‹‚¾‚¯‚ðÁ‚·
+	for (auto itr = skillList_.begin(); itr != skillList_.end();)
 	{
-		if ((*itr)->param.activation == false)
+		if ((*itr)->param.removeFlg == true)
 		{
 			(*itr)->removeFromParent();
 			itr = skillList_.erase(itr);
 		}
 		else
 		{
-			itr++;
+			++itr;
 		}
 	}
 }
@@ -60,6 +78,11 @@ void SkillBase::UpDate(float delta)
 
 void SkillBase::Render(void)
 {
+}
+
+std::vector<SkillBase*> SkillBase::GetSkillList(void)
+{
+	return skillList_;
 }
 
 cocos2d::Vec2 SkillBase::GetPlayerPos(void)
@@ -90,5 +113,54 @@ void SkillBase::SetTargetPos(cocos2d::Vec2 targetPos)
 void SkillBase::SetPlayerDirection(const Direction& direction)
 {
 	playerDirection_ = direction;
+}
+
+bool SkillBase::GetAllSkillActivate(void)
+{
+	bool tmp = false;
+
+	if (skillList_.size() > 0)
+	{
+		for (auto itr = skillList_.begin(); itr != skillList_.end();)
+		{
+			tmp |= (*itr)->param.activation;
+			++itr;
+		}
+	}
+
+	return tmp;
+}
+
+bool SkillBase::GetSkillCT(std::string name)
+{
+	bool tmp = true;
+
+	if (skillList_.size() > 0)
+	{
+		for (auto itr = skillList_.begin(); itr != skillList_.end();)
+		{
+			// ’T‚µ‚Ä‚¢‚éskill‚Ì–¼‘O‚Æˆê’v‚µ‚½‚ç
+			if ((*itr)->param.name == name)
+			{
+				// ‚»‚Ìskill‚ÌCT‚ª0‚æ‚è‘å‚«‚¢‚È‚çfalse
+				if ((*itr)->param.ct > 0)
+				{
+					tmp = false;
+					break;		// –Ú“–‚Ä‚ÌƒXƒLƒ‹‚ªŒ©‚Â‚©‚Á‚½‚©‚çbreak‚Å”²‚¯‚é
+				}
+				else
+				{
+					++itr;
+				}
+			}
+			else
+			{
+				// ’T‚µ‚Ä‚¢‚éskill‚Æˆê’v‚µ‚È‚¢‚Æ‚«‚Í‰ñ‚µ‘±‚¯‚é
+				++itr;
+			}
+		}
+	}
+
+	return tmp;
 }
 
