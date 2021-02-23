@@ -109,12 +109,12 @@ void BigCultist::update(float delta)
 			animationFrame_int_ = 0;
 		}
 
-		// ÌßÚ²Ô°‚ªUŒ‚ó‘Ô‚¾‚Æ“–‚½‚è”»’èˆ—‚ğ‚·‚é
-		if (player_.IsAttacking())
-		{
-			// ÌßÚ²Ô°‚Æ‚Ì“–‚½‚è”»’è‚ğ‚Æ‚Á‚Ä‚¢‚é
-			CheckHitPLAttack();
-		}
+		//// ÌßÚ²Ô°‚ªUŒ‚ó‘Ô‚¾‚Æ“–‚½‚è”»’èˆ—‚ğ‚·‚é
+		//if (player_.IsAttacking())
+		//{
+		//	// ÌßÚ²Ô°‚Æ‚Ì“–‚½‚è”»’è‚ğ‚Æ‚Á‚Ä‚¢‚é
+		//	CheckHitPLAttack();
+		//}
 		// ÀŞÒ°¼Ş‚ğ‚­‚ç‚Á‚Ä‚¢‚È‚¢‚Æ€‚ÊÓ°¼®İ‚Å‚È‚¢ê‡
 		if (!onDamaged_ && stateTransitioner_ != &Enemy::Death)
 		{

@@ -150,7 +150,10 @@ void GameMap::ReplaceMap(Player& player)
 #ifdef _DEBUG
 	auto str = StringUtils::format("部屋　%d", mapParentsList_.nowID);
 	mapName_->setString(str);
-	isTutorial->removeFromParentAndCleanup(true);
+	if (isTutorial == nullptr)
+	{
+		isTutorial->removeFromParentAndCleanup(true);
+	}
 #endif // _DEBUG
 	// プレイヤーポジションセット
 	player.setPosition(mapState_.child[childId].nextPos);

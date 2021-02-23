@@ -391,9 +391,10 @@ void Game::update(float sp)
 	for (auto enemy : enemyManager_->GetEnemies())
 	{
 		enemy->OnHit(player->GetAttackCol());
+		enemy->OnHit(skillBaseSp->GetEffectData());
 		player->OnHit(enemy->GetAttackCol());
+	
 	}
-
 
 	if (gameMap_->ChangeFloor())
 	{

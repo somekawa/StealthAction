@@ -186,50 +186,50 @@ bool Enemy::OnAttacked(void)
 	return false;
 }
 
-void Enemy::CheckHitPLAttack(void)
-{
-	if (!onDamaged_)
-	{
-		// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀ
-		auto plColData = player_.GetCurrentCol();
-		// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
-		for (auto attackCol : plColData)
-		{
-			// 現在のﾌﾟﾚｲﾔｰのｺﾘｼﾞｮﾝﾃﾞｰﾀの中に攻撃矩形が有れば
-			if (attackCol->GetData().type_ == 0)
-			{
-				// 現在の自分のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
-				for (auto myCol : currentCol_)
-				{
-					// 現在の自分のｺﾘｼﾞｮﾝﾃﾞｰﾀの中にﾀﾞﾒｰｼﾞ矩形が有れば
-					if (myCol->GetData().type_ == 1)
-					{
-						// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝが現在どこか不明
-						auto plPos = player_.getPosition();
-						// 攻撃矩形のﾎﾟｼﾞｼｮﾝ(真ん中に設定)
-						auto attackColPos = Vec2{ player_.getPosition().x + attackCol->GetData().begin_.x + (attackCol->GetData().size_.x / 2),
-												  player_.getPosition().y + attackCol->GetData().begin_.y + (attackCol->GetData().size_.y / 2) };
-						// ﾀﾞﾒｰｼﾞ矩形のﾎﾟｼﾞｼｮﾝ(真ん中に設定)
-						auto damageColPos = Vec2{ getPosition().x + myCol->GetData().begin_.x + (myCol->GetData().size_.x / 2),
-												  getPosition().y + myCol->GetData().begin_.y + (myCol->GetData().size_.y / 2) };
-						// 攻撃矩形とﾀﾞﾒｰｼﾞ矩形の距離が50以下だと当たっている判定に
-						if (abs(attackColPos.x - damageColPos.x) <= 60.0f &&
-							abs(attackColPos.y - damageColPos.y) <= 80.0f)
-						{
-							hp_ -= 10;
-							// HP減少のテストコード
-							//auto a = ((Game*)Director::getInstance()->getRunningScene());
-							//auto b = (EnemyHPGauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName(myName_ + "_" + std::to_string(id_) + "_HP");
-							//b->SetHP(hp_);	// -10などのダメージ量は敵の攻撃力に変えればいい
-							// onDamaged_をtrueに
-							OnDamaged();
-						}
-					}
-				}
-			}
-		}
-	}
-}
+//void Enemy::CheckHitPLAttack(void)
+//{
+//	//if (!onDamaged_)
+//	//{
+//	//	// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀ
+//	//	auto plColData = player_.GetCurrentCol();
+//	//	// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
+//	//	for (auto attackCol : plColData)
+//	//	{
+//	//		// 現在のﾌﾟﾚｲﾔｰのｺﾘｼﾞｮﾝﾃﾞｰﾀの中に攻撃矩形が有れば
+//	//		if (attackCol->GetData().type_ == 0)
+//	//		{
+//	//			// 現在の自分のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
+//	//			for (auto myCol : currentCol_)
+//	//			{
+//	//				// 現在の自分のｺﾘｼﾞｮﾝﾃﾞｰﾀの中にﾀﾞﾒｰｼﾞ矩形が有れば
+//	//				if (myCol->GetData().type_ == 1)
+//	//				{
+//	//					// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝが現在どこか不明
+//	//					auto plPos = player_.getPosition();
+//	//					// 攻撃矩形のﾎﾟｼﾞｼｮﾝ(真ん中に設定)
+//	//					auto attackColPos = Vec2{ player_.getPosition().x + attackCol->GetData().begin_.x + (attackCol->GetData().size_.x / 2),
+//	//											  player_.getPosition().y + attackCol->GetData().begin_.y + (attackCol->GetData().size_.y / 2) };
+//	//					// ﾀﾞﾒｰｼﾞ矩形のﾎﾟｼﾞｼｮﾝ(真ん中に設定)
+//	//					auto damageColPos = Vec2{ getPosition().x + myCol->GetData().begin_.x + (myCol->GetData().size_.x / 2),
+//	//											  getPosition().y + myCol->GetData().begin_.y + (myCol->GetData().size_.y / 2) };
+//	//					// 攻撃矩形とﾀﾞﾒｰｼﾞ矩形の距離が50以下だと当たっている判定に
+//	//					if (abs(attackColPos.x - damageColPos.x) <= 60.0f &&
+//	//						abs(attackColPos.y - damageColPos.y) <= 80.0f)
+//	//					{
+//	//						hp_ -= 10;
+//	//						// HP減少のテストコード
+//	//						//auto a = ((Game*)Director::getInstance()->getRunningScene());
+//	//						//auto b = (EnemyHPGauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName(myName_ + "_" + std::to_string(id_) + "_HP");
+//	//						//b->SetHP(hp_);	// -10などのダメージ量は敵の攻撃力に変えればいい
+//	//						// onDamaged_をtrueに
+//	//						OnDamaged();
+//	//					}
+//	//				}
+//	//			}
+//	//		}
+//	//	}
+//	//}
+//}
 
 const float& Enemy::GetDistance(void)
 {
