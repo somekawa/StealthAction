@@ -34,9 +34,9 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	// ¼°İ‚ÌÚ²Ô°‚ÉattackLayer_‚ğ‚Ô‚ç‰º‚°‚é
 	myLayer.addChild(attackLayer_, 2, "attack");
 
-	std::list<std::string> path;
-	path.push_back("skill_data");
-	fileLoad_ = lpFileLoder.Directory(path);							// player‚Æenemy‚ÌŠK‘w
+	//std::list<std::string> path;
+	//path.push_back("skill_data");
+	//fileLoad_ = lpFileLoder.Directory(path);							// player‚Æenemy‚ÌŠK‘w
 	// ‰Šú‰»‚Ì‚½‚ß‚Échangealldata‚ğg—p‚·‚é
 	/*for (auto data : fileLoad_)
 	{

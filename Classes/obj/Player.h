@@ -38,6 +38,7 @@ public:
 	void SetDir(Direction dir);									// 現在の方向をセットする
 	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
 	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer, cocos2d::Layer& enemyLayer, SkillBase* skillBasePtr);
+	bool GetGameOverFlg(void);
 private:
 	void attackMotion(float delta);								// 攻撃モーションの設定
 	void transformMotion(float delta);							// トランスフォームの設定
@@ -78,4 +79,6 @@ private:
 	// ダッシュテストで使ってた変数
 	//float testnum = -4.0f;
 	//float testnum = 0.00f;
+
+	bool gameOverSceneFlg_ = false;
 };

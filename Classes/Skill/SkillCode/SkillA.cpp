@@ -64,11 +64,12 @@ void SkillA::UpDate(float delta)
 	}
 
 	float move = speed_ * 60.0f * delta;
+	fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);
 
 	if (param.activation)
 	{
 		//effectData_.origin = fx_.sprite_->getPosition();
-		fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);
+		//fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);
 		// ‰æ–Ê’[‚É—ˆ‚½‚ç
 		if (fx_.sprite_->getPosition().x <= 0 || fx_.sprite_->getPosition().x >= Director::getInstance()->getWinSize().width)
 		{

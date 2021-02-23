@@ -107,6 +107,8 @@ private:
 
     bool exitGame;      //true:ゲームを終了してタイトルに戻す
     bool debugMode;
+
+	bool isChanged_ = false;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

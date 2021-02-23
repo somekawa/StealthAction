@@ -24,6 +24,7 @@
 
 #include "GameScene.h"
 #include "TitleScene.h"
+#include "GameOverScene.h"
 #include "_Debug/_DebugDispOutCC.h"
 #include "_Debug/_DebugConOut.h"
 #include "CameraManager.h"
@@ -178,7 +179,7 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);*/
 
 	// ボタンテスト用
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// 攻撃ボタン
 	// ボタンの押下/非押下はOPRTのほうでselected関数を呼んで管理
 	auto attackBtn = MenuItemImage::create(
@@ -269,7 +270,7 @@ bool Game::init()
 	startSp->setName("startSp");
 	startSp->setPosition(Vec2(150.0f, 150.0f));
 	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
-#endif
+//#endif
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
 	
@@ -309,7 +310,7 @@ bool Game::init()
 
 	//// 敵のｱﾆﾒｰｼｮﾝ関係、ﾋﾞﾍｲﾋﾞｱの初期化
 	enemyManager_->Initialize();
-	enemyManager_->CreateInitialEnemyOnFloor(3);
+	//enemyManager_->CreateInitialEnemyOnFloor(3);
 	//enemyManager_->CreateBoss(effectManager_);
 
 	skillSprite = SkillBase::createSkillBase();
@@ -381,10 +382,26 @@ void Game::update(float sp)
 	{
 		return;
 	}
+
+	// トランジション中のupdate更新を防ぐ
+	if (isChanged_)
+	{
+		return;
+	}
+
+	// gameoversceneへのフラグがtrueになっていたら、画面遷移を行う
+	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
+	if (player->GetGameOverFlg())
+	{
+		isChanged_ = true;
+		Scene* scene = GameOverScene::CreateGameOverScene();
+		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));
+	}
+
 	// SkillBase呼ぶテスト
 	auto skillBaseSp = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
 	skillBaseSp->UpDate(sp);
-	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
+	//auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	gameMap_->update(*player);
 
 
@@ -396,9 +413,10 @@ void Game::update(float sp)
 	for (auto enemy : enemyManager_->GetEnemies())
 	{
 		enemy->OnHit(player->GetAttackCol());
+		enemy->OnHit(skillBaseSp->GetEffectData());
 		player->OnHit(enemy->GetAttackCol());
+	
 	}
-
 
 	if (gameMap_->ChangeFloor())
 	{
@@ -436,7 +454,6 @@ void Game::update(float sp)
 	{
 		playerShader_->SetShader(*enemy, Vec3(1, 0, 0));
 	}
-
 
 	gameMap_->ColisionDebugDraw(debugMode);
 

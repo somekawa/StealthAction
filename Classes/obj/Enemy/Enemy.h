@@ -91,7 +91,7 @@ public:
 	// 自分の攻撃がプレイヤーに当たっているかの判定
 	virtual bool OnAttacked(void);
 	// ﾌﾟﾚｲﾔｰの当たり矩形との当たり判定
-	virtual void CheckHitPLAttack(void);
+	//virtual void CheckHitPLAttack(void);
 
 	virtual void AnimRegistrator(void) = 0;
 	// モジュールの登録

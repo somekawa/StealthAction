@@ -24,8 +24,12 @@ GameMap::GameMap(cocos2d::Layer& layer)
 #ifdef _DEBUG
 	mapName_ = Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
 	mapName_->setPosition(100, 500);
-
 	objLayer_->addChild(mapName_);
+	isTutorial = Label::createWithTTF("今はチュートリアルマップです", "fonts/HGRGE.ttc", 48);
+	isTutorial->setColor(Color3B::YELLOW);
+	isTutorial->setPosition(500, 400);
+	objLayer_->addChild(isTutorial);
+	
 	tex = nullptr;
 	visible = false;
 #endif // _DEBUG
@@ -34,7 +38,9 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	layer.addChild(objLayer_,layer.getLocalZOrder() + 1);	
 
 	// パスをリスト化
+	pathList_.push_back("image/Environment/tutorialMap.tmx");
 	pathList_.push_back("image/Environment/trueMap.tmx");
+	
 
 	nextPosTbl = {
 		Vec2(100, 100),	// E_UP
@@ -48,35 +54,57 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	};
 	
 
-	// 最初のマップデータ作成(データ化)
-	AddMap(pathList_[0]);	
+	// 自動生成マップデータ作成(データ化)
+	AddMap(pathList_);
 	MapChild mapChild;
 	for (auto& node : nodeData)
 	{
 		MapParentState mapParent;
-		mapParent.mapID = 0;	// サイズが1だったらIDは0
+		mapParent.mapID = 1;
 		mapParent.enemyNum = RandomHelper::random_int(3, 7);
 		mapParent.isArrival = false;
 		for (auto& child : node.childData)
 		{
-			mapChild.mapID = 0;
+			mapChild.mapID = 1;
 			mapChild.nextParentID = child.childId;
-		
+
 			mapChild.gateDir = child.dir;
 			mapChild.nextPos = nextPosTbl[static_cast<int>(mapChild.gateDir)];
-			
+
 			mapParent.child.push_back(mapChild);
 		}
 		mapParentsList_.mapParents.push_back(mapParent);
 	}
-	mapParentsList_.nowID = 0;
-	mapParentsList_.mapParents[mapParentsList_.nowID].isArrival = true;
-	// 最初のマップのオブジェクトを作る処理
+
+	// チュートリアルマップデータ作成
+	// インデックスを自動生成したマップの後ろにしておく
+	MapParentState mapParent;
+	mapParent.mapID = 0;
+	mapParent.enemyNum = 0;
+	mapParent.isArrival = false;
+	
+	mapChild.mapID = 1;
+	mapChild.nextParentID = 0;
+
+	mapChild.gateDir = MapDirection::E_Down;
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	mapChild.nextPos = { visibleSize.width / 2 + origin.x - 0,visibleSize.height / 2 + origin.y + 200 };
+	mapParent.child.push_back(mapChild);
+	mapParentsList_.mapParents.push_back(mapParent);
+
+
+	// IDをチュートリアル専用のマップ番号にしておく
+	mapParentsList_.nowID = mapParentsList_.mapParents.size() - 1;
+
+	//mapParentsList_.mapParents[mapParentsList_.nowID].isArrival = true;
+
+	// チュートリアルマップのオブジェクトを作る処理
 	CreateObject();
-	// 最初のマップ以外を見えなくする処理
+	// チュートリアルマップの以外を見えなくする処理
 	for (auto data : mapDatas_)
 	{
-		if (mapDatas_[mapParentsList_.nowID] == data)
+		if (mapDatas_[mapParentsList_.mapParents[mapParentsList_.nowID].mapID] == data)
 		{
 			continue;
 		}
@@ -87,10 +115,13 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	
 }
 
-void GameMap::AddMap(std::string& mapPath)
+void GameMap::AddMap(std::vector<std::string>& mapPaths)
 {
-	auto mapArray = createMapFromPath(mapPath);
-	mapDatas_.push_back(mapArray);
+	for (auto mapPath : mapPaths)
+	{
+		auto mapArray = createMapFromPath(mapPath);
+		mapDatas_.push_back(mapArray);
+	}
 }
 
 void GameMap::LoadMap(Player& player)
@@ -119,6 +150,10 @@ void GameMap::ReplaceMap(Player& player)
 #ifdef _DEBUG
 	auto str = StringUtils::format("部屋　%d", mapParentsList_.nowID);
 	mapName_->setString(str);
+	if (isTutorial->getString() != "")
+	{
+		isTutorial->setString("");
+	}
 #endif // _DEBUG
 	// プレイヤーポジションセット
 	player.setPosition(mapState_.child[childId].nextPos);
@@ -245,7 +280,12 @@ const bool GameMap::ChangeFloor()
 
 void GameMap::ColisionDebugDraw(bool debug)
 {
+	
 #ifdef _DEBUG
+	if (mapParentsList_.mapParents.size() == 0)
+	{
+		return;
+	}
 	if (tex == nullptr)
 	{
 		auto director = Director::getInstance();
