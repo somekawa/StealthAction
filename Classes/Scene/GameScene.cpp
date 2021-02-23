@@ -305,7 +305,7 @@ bool Game::init()
 
 	//// “G‚Ì±ÆÒ°¼®ÝŠÖŒWAËÞÍ²ËÞ±‚Ì‰Šú‰»
 	enemyManager_->Initialize();
-	enemyManager_->CreateInitialEnemyOnFloor(3);
+	//enemyManager_->CreateInitialEnemyOnFloor(3);
 	//enemyManager_->CreateBoss(effectManager_);
 
 	skillSprite = SkillBase::createSkillBase();
