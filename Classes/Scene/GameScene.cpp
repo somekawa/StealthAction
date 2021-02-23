@@ -431,7 +431,7 @@ void Game::update(float sp)
 		enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 		// ÌÛ±•ÏXŒã1‰ñ‚¾‚¯‰Šú‚Ì“G‚Ì”‚¾‚¯²Ý½ÀÝ½
-		//enemyManager_->CreateInitialEnemyOnFloor(1);
+		enemyManager_->CreateInitialEnemyOnFloor(1);
 	}
 
 	// “G‚Ì½Îß°Ý‚ðŠÇ—
@@ -449,7 +449,6 @@ void Game::update(float sp)
 	{
 		playerShader_->SetShader(*enemy, Vec3(1, 0, 0));
 	}
-
 
 	gameMap_->ColisionDebugDraw(debugMode);
 

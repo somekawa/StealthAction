@@ -150,7 +150,7 @@ void GameMap::ReplaceMap(Player& player)
 #ifdef _DEBUG
 	auto str = StringUtils::format("•”‰®@%d", mapParentsList_.nowID);
 	mapName_->setString(str);
-	if (isTutorial == nullptr)
+	if (isTutorial != nullptr)
 	{
 		isTutorial->removeFromParentAndCleanup(true);
 	}
