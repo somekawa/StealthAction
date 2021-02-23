@@ -153,6 +153,7 @@ void GameMap::ReplaceMap(Player& player)
 	if (isTutorial != nullptr)
 	{
 		isTutorial->removeFromParentAndCleanup(true);
+		isTutorial->release();
 	}
 #endif // _DEBUG
 	// プレイヤーポジションセット

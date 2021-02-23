@@ -70,7 +70,7 @@ void SkillBase::UpDate(float delta)
 {
 	for (auto data : skillList_)
 	{
-		effectData_ = cocos2d::Rect(data->pos_, data->GetEffectData().size);
+		effectData_ = cocos2d::Rect(data->fx_.sprite_->getPosition(), data->GetEffectData().size);
 		data->UpDate(delta);
 	}
 	lpEffectMng.Update(delta);
