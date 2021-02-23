@@ -23,6 +23,7 @@
  ****************************************************************************/
 
 #include "GameScene.h"
+#include "TitleScene.h"
 #include "_Debug/_DebugDispOutCC.h"
 #include "_Debug/_DebugConOut.h"
 #include "CameraManager.h"
@@ -51,6 +52,10 @@ namespace
 Scene* Game::createScene()
 {
 	return Game::create();
+}
+
+Game::~Game()
+{
 }
 
 // Print useful error message instead of segfaulting when files are not there.
@@ -334,7 +339,7 @@ bool Game::init()
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
 		{
-			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
+			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(this));
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_F1)
 		{

@@ -82,5 +82,6 @@ void TitleScene::ChangeScene()
 {
 	isChanged_ = true;
 	Scene* scene = Game::createScene();
+	Director::getInstance()->popToRootScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));
 }

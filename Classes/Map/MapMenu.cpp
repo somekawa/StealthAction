@@ -41,6 +41,8 @@ MapMenu::MapMenu(GameMap& gameMap)
 	auto& roomSize = mapGen.GetRoomData()[0].size;
 	auto offset = Vec2(size.width / 2 - roomData[nowID].key.x,
 		size.height / 2 - roomData[nowID].key.y);
+	auto renderer = _director->getRenderer();
+	auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 	for (auto room : roomData)
 	{
 		// “ž’B•”‰®‚Ì‚Ý•\Ž¦ Œ»Ý§ì‚Ì‚½‚ß
@@ -58,15 +60,20 @@ MapMenu::MapMenu(GameMap& gameMap)
 		{
 			sprite->setColor(Color3B(0.0f, 0.0f, 255.0f));
 		}
+		sprite->setOpacity(128);
 		sprite->visit();
+		auto drawnode = DrawNode::create();
+		drawnode->drawRect(Vec2(0, 0), roomSize,Color4F::GREEN);
+		drawnode->setPosition(room.key + (offset-roomSize/2));
+		drawnode->retain();
+		drawnode->visit(renderer,parentTransform, FLAGS_TRANSFORM_DIRTY);
+
 		id++;
 	}
 	// ’Ê˜H•\Ž¦
 	const auto& mapParentList = gameMap.GetMapParentList();
 	
 	auto& lineData = mapGen.GetEdgeData();
-	auto renderer = _director->getRenderer();
-	auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 	for (auto line : lineData)
 	{
 		if (!line.used)

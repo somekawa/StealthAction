@@ -6,9 +6,9 @@
 
 USING_NS_CC;
 
-cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
+cocos2d::Scene* PoseMenu::CreatePoseMenu(Scene* scene)
 {
-	PoseMenu* pRet = new(std::nothrow) PoseMenu(gameMap);
+	PoseMenu* pRet = new(std::nothrow) PoseMenu(scene);
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -22,10 +22,8 @@ cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
 	}
 }
 
-PoseMenu::PoseMenu(GameMap& gameMap)
+PoseMenu::PoseMenu(Scene* scene)
 {
-	auto& mapGen = gameMap.GetMapGenerator();
-	const auto& nowID = gameMap.GetNowID();
 	auto director = Director::getInstance();
 	auto size = director->getVisibleSize();
 	auto tex = RenderTexture::create(size.width, size.height);
@@ -54,7 +52,7 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 	// “ü—ÍŒn“
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
-	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
+	listener->onKeyPressed = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
 		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
 		{
@@ -63,6 +61,7 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_SHIFT)
 		{
 			lpAnimMng.AnimDataClear();
+			Director::getInstance()->popToSceneStackLevel(1);
 			Director::getInstance()->replaceScene(TitleScene::CreateTitleScene());
 		}
 	};

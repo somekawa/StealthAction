@@ -63,6 +63,7 @@ class Game : public BaseScene
 {
 public:
     static cocos2d::Scene* createScene();
+    ~Game();
 
     bool init()override;
     void update(float sp)override;
@@ -104,6 +105,7 @@ private:
 
 	cocos2d::Sprite* skillSprite;
 
+    bool exitGame;      //true:ゲームを終了してタイトルに戻す
     bool debugMode;
 };
 
