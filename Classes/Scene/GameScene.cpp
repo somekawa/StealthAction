@@ -23,6 +23,7 @@
  ****************************************************************************/
 
 #include "GameScene.h"
+#include "GameOverScene.h"
 #include "_Debug/_DebugDispOutCC.h"
 #include "_Debug/_DebugConOut.h"
 #include "CameraManager.h"
@@ -304,7 +305,7 @@ bool Game::init()
 
 	//// 敵のｱﾆﾒｰｼｮﾝ関係、ﾋﾞﾍｲﾋﾞｱの初期化
 	enemyManager_->Initialize();
-	//enemyManager_->CreateInitialEnemyOnFloor(3);
+	enemyManager_->CreateInitialEnemyOnFloor(3);
 	//enemyManager_->CreateBoss(effectManager_);
 
 	skillSprite = SkillBase::createSkillBase();
@@ -376,10 +377,26 @@ void Game::update(float sp)
 	{
 		return;
 	}
+
+	// トランジション中のupdate更新を防ぐ
+	if (isChanged_)
+	{
+		return;
+	}
+
+	// gameoversceneへのフラグがtrueになっていたら、画面遷移を行う
+	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
+	if (player->GetGameOverFlg())
+	{
+		isChanged_ = true;
+		Scene* scene = GameOverScene::CreateGameOverScene();
+		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));
+	}
+
 	// SkillBase呼ぶテスト
 	auto skillBaseSp = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
 	skillBaseSp->UpDate(sp);
-	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
+	//auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	gameMap_->update(*player);
 
 
@@ -413,7 +430,7 @@ void Game::update(float sp)
 		enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
 
 		// ﾌﾛｱ変更後1回だけ初期の敵の数だけｲﾝｽﾀﾝｽ
-		enemyManager_->CreateInitialEnemyOnFloor(1);
+		//enemyManager_->CreateInitialEnemyOnFloor(1);
 	}
 
 	// 敵のｽﾎﾟｰﾝを管理

@@ -133,6 +133,7 @@ void Player::update(float delta)
 	{
 		if (gameOverAction())
 		{
+			gameOverSceneFlg_ = true;
 			return;
 		}
 		return;
@@ -873,6 +874,11 @@ Player* Player::CreatePlayer(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase
 		pRet = nullptr;
 		return nullptr;
 	}
+}
+
+bool Player::GetGameOverFlg(void)
+{
+	return gameOverSceneFlg_;
 }
 
 
