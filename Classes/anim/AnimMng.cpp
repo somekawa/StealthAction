@@ -200,3 +200,11 @@ bool AnimMng::IsAnimEnd(const float& delta, ActorType type, std::string animName
 	}
 	return false;
 }
+
+void AnimMng::AnimDataClear(void)
+{
+	for (auto& data : caches_)
+	{
+		data.clear();
+	}
+}

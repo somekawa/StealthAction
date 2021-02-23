@@ -38,6 +38,9 @@ public:
 	// param@:animTag チェックしたいアニメーションのタグ
 	// tagでアニメーションを探してチェックするアニメーションを決める
 	bool IsAnimEnd(const float& delta, ActorType type, std::string animName);
+
+	void AnimDataClear(void);
+
 	const float& GetAnimationMaxFrame(const ActorType& type, std::string animName)
 	{
 		return animMaxFrame_[static_cast<int>(type)][animName];

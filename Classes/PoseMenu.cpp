@@ -1,6 +1,8 @@
 #include "PoseMenu.h"
+#include "anim/AnimMng.h"
 #include "Map/GameMap.h"
 #include "Scene/GameScene.h"
+#include "Scene/TitleScene.h"
 
 USING_NS_CC;
 
@@ -57,6 +59,11 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
 		{
 			Director::getInstance()->popScene();
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_SHIFT)
+		{
+			lpAnimMng.AnimDataClear();
+			Director::getInstance()->replaceScene(TitleScene::CreateTitleScene());
 		}
 	};
 #else
