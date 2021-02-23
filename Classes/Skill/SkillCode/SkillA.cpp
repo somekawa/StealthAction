@@ -28,7 +28,11 @@ SkillA::SkillA(SkillBase* ptr)
 	}
 	// ｴﾌｪｸﾄを作成して、自身のｴﾌｪｸﾄ画像に格納
 	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_+offset, Vec2(0,0), 4, 0.08f, flip, false,true);
-	fx_.sprite_->setName("magic");
+
+	param.removeFlg = false;
+	param.activation = true;
+	param.name = "magic";
+	param.ct = 180.0f;
 }
 
 SkillA::~SkillA()
@@ -43,9 +47,25 @@ void SkillA::UpDate(float delta)
 	//	return;
 	//}
 
+	// すぐにactivationをfalseにするとupdateに来なくなってctが設定できないから、
+	// ctが経過した後にfalseに切り替えたほうがいいかも
+
+	if (!param.activation)
+	{
+		if (param.ct > 0)
+		{
+			param.ct--;
+		}
+		else
+		{
+			param.ct = 0;
+			param.removeFlg = true;
+		}
+	}
+
 	float move = speed_ * 60.0f * delta;
 
-	if (fx_.isActive_)
+	if (param.activation)
 	{
 		//effectData_.origin = fx_.sprite_->getPosition();
 		fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);
@@ -53,9 +73,9 @@ void SkillA::UpDate(float delta)
 		if (fx_.sprite_->getPosition().x <= 0 || fx_.sprite_->getPosition().x >= Director::getInstance()->getWinSize().width)
 		{
 			// active状態をfalseにしてvisibleを不可視にする
-			fx_.isActive_ = false;
-			fx_.sprite_->setVisible(false);
-			// SkillBaseのremoveFromParentの条件を満たすために切り替える
+			//fx_.isActive_ = false;
+			//fx_.sprite_->setVisible(false);
+			// SkillBaseのremoveFromParentの条件を満たすために切り替える(旧ver)
 			param.activation = false;
 		}
 	}
