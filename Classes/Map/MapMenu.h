@@ -11,5 +11,6 @@ public:
 	
 	
 private:
+	cocos2d::RenderTexture* tex;
 };
 

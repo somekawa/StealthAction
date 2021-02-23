@@ -17,6 +17,5 @@ private:
 	std::vector<cocos2d::Sprite*>residualShadows_;
 	std::shared_ptr<ResShadowShader>resShader_;
 	bool isVisible_;
-	cocos2d::Layer* layer_;
 };
 

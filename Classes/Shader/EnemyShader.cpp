@@ -12,6 +12,7 @@ EnemyShader::EnemyShader()
 
 EnemyShader::~EnemyShader()
 {
+	CC_SAFE_RELEASE(program);
 }
 
 void EnemyShader::SetShader(Node& node, cocos2d::Vec3 point)

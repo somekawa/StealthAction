@@ -13,6 +13,7 @@ ResShadowShader::ResShadowShader()
 
 ResShadowShader::~ResShadowShader()
 {
+	CC_SAFE_RELEASE(program);
 }
 
 void ResShadowShader::SetShader(cocos2d::Node& node)

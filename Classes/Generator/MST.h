@@ -2,6 +2,7 @@
 #include <vector>
 #include <array>
 #include <map>
+#include <memory>
 #include "Direction/Direction.h"
 #include "cocos2d.h"
 
@@ -63,9 +64,6 @@ private:
 	std::vector<int> areaData_;
 	std::vector<Edge_List> minEdgeList_;
 	std::vector<Node_Status> nodeList_;
-
-	Delaunay* delaunay_;
-
 	std::random_device seedGen_;
 	std::default_random_engine engine;
 	std::uniform_int_distribution<> dist;

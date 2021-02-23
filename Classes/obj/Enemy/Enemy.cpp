@@ -13,11 +13,11 @@
 USING_NS_CC;
 
 Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRange,int hp,Layer& myLayer):
-	Actor(hp,myLayer),player_(player),aiTree_(aiTree),activeNode_(NULL),behaviorData_(NULL),visionRange_(visionRange)
+	Actor(hp,myLayer),player_(player),aiTree_(aiTree),activeNode_(nullptr),behaviorData_(nullptr),visionRange_(visionRange)
 {
 	retain();
 	// ビヘイビアデータの生成
-	behaviorData_ = new BehaviorData();
+	behaviorData_ = std::make_shared<BehaviorData>();
 	setPosition(pos);
 	// アニメーションが変更されたかのフラグの初期化
 	isChangedAnim_ = false;
@@ -254,13 +254,13 @@ void Enemy::AIRun(void)
 	// activeStateがNULLの場合はbehaviorTreeから推論し、aiTreeに行動を格納
 	if (activeNode_ == NULL)
 	{
-		activeNode_ = aiTree_->Inference(this, behaviorData_);
+		activeNode_.reset(aiTree_->Inference(this, behaviorData_.get()));
 	}
 	// activeNodeがNULLでない場合は敵の行動として追加したノード
 	// から条件に合致する行動を実行
 	if (activeNode_ != NULL)
 	{
-		activeNode_ = aiTree_->Run(this, activeNode_, behaviorData_);
+		activeNode_.reset(aiTree_->Run(this, activeNode_.get(), behaviorData_.get()));
 	}
 }
 

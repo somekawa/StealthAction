@@ -12,7 +12,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 	const auto& nowID = gameMap.GetNowID();
 	auto director = Director::getInstance();
 	auto size = director->getVisibleSize();
-	auto tex = RenderTexture::create(size.width, size.height);
+	tex = RenderTexture::create(size.width, size.height);
 	tex->setPosition(size.width / 2, size.height / 2);
 	this->addChild(tex);
 
@@ -98,6 +98,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 		if (keyCode == EventKeyboard::KeyCode::KEY_M)
 		{
 			Director::getInstance()->popScene();
+			return true;
 		}
 	};
 #else
@@ -113,6 +114,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 
 MapMenu::~MapMenu()
 {
+	tex->release();
 }
 
 cocos2d::Scene* MapMenu::CreateMapMenu(GameMap& gameMap)

@@ -68,9 +68,10 @@ void SkillBase::RemoveActiveSkill(void)
 
 void SkillBase::UpDate(float delta)
 {
+	effectData_ = cocos2d::Rect();
 	for (auto data : skillList_)
 	{
-		effectData_ = cocos2d::Rect(data->fx_.sprite_->getPosition(), data->GetEffectData().size);
+		effectData_ = cocos2d::Rect(data->fx_.sprite_->getPosition() + data->GetEffectData().size/2, data->GetEffectData().size);
 		data->UpDate(delta);
 	}
 	lpEffectMng.Update(delta);
