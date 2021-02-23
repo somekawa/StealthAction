@@ -41,8 +41,7 @@ protected:
 	// ©g‚ÌÀ²Ìß
 	ActorType type_;
 	std::string currentAnimation_;
-	// ¶‰E”½“]Ì×¸Ş
-	cocos2d::FlipX* flipFlag_;
+	//// ¶‰E”½“]Ì×¸Ş
 	// ¡Œ»İ‘_‚Á‚Ä‚¢‚é‘ÎÛ
 	Actor& target_;
 	// À°¹Ş¯Ä‚Æ“–‚½‚Á‚Ä‚¢‚é‚©‚ÌÌ×¸Ş

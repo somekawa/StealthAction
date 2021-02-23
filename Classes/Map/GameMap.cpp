@@ -115,6 +115,12 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	
 }
 
+GameMap::~GameMap()
+{
+	tex->release();
+	mapParentsList_.mapParents.clear();
+}
+
 void GameMap::AddMap(std::vector<std::string>& mapPaths)
 {
 	for (auto mapPath : mapPaths)

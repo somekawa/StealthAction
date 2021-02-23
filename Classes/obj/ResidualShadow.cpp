@@ -17,7 +17,6 @@ void ResidualShadow::CreateResidualShadow(cocos2d::Sprite& sprite, cocos2d::Laye
 		layer.addChild(tmp);
 		residualShadows_.push_back(tmp);
 	}
-	layer_ = &layer;
 }
 
 void ResidualShadow::Move(cocos2d::Vec2 pos, cocos2d::Vec2 move)

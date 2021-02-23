@@ -2,6 +2,7 @@
 #include <memory>
 #include <list>
 #include <array>
+#include <memory>
 #include "obj/Actor.h"
 
 class Player;
@@ -164,11 +165,11 @@ protected:
 	// プレイヤーを視認しているかのフラグ
 	bool identifiedPlayer_;
 	// ビヘイビアツリー
-	BehaviorTree* aiTree_;	
+	std::shared_ptr<BehaviorTree> aiTree_;	
 	// ビヘイビアデータ
-	BehaviorData* behaviorData_;	
+	std::shared_ptr<BehaviorData> behaviorData_;
 	// 実行中ノード
-	NodeBase* activeNode_;			
+	std::shared_ptr<NodeBase> activeNode_;
 
 	// 方向変更フラグ
 	bool isChangeDir_;

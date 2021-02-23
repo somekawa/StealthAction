@@ -117,6 +117,7 @@ Player::~Player()
 {
 	// 動的なインスタンスをしたらdeleteを忘れないように!
 	delete oprtState_;
+	delete skillBase_;
 }
 
 // 毎フレーム更新

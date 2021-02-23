@@ -37,6 +37,7 @@ class GameMap
 {
 public:
 	GameMap(cocos2d::Layer& layer);
+	~GameMap();
 	// マップ生成をする (表と裏の二つを読む )
 	void AddMap(std::vector<std::string>& mapPaths);
 	// オブジェクトレイヤを読み込んで配置

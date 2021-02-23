@@ -312,6 +312,7 @@ bool Game::init()
 	enemyManager_->Initialize();
 	//enemyManager_->CreateInitialEnemyOnFloor(3);
 	//enemyManager_->CreateBoss(effectManager_);
+	
 
 	skillSprite = SkillBase::createSkillBase();
 	layer_[(int)zOlder::FRONT]->addChild(skillSprite, 0);
@@ -371,6 +372,10 @@ bool Game::init()
 	layer_[static_cast<int>(zOlder::BG)]->setCameraMask(static_cast<int>(CameraFlag::USER1));
 	layer_[(int)zOlder::FRONT]->setCameraMask(static_cast<int>(CameraFlag::USER2));
 
+	debugSprite = Sprite::create();
+
+	this->addChild(debugSprite);
+
 	this->scheduleUpdate();
 	return true;
 }
@@ -413,9 +418,13 @@ void Game::update(float sp)
 	for (auto enemy : enemyManager_->GetEnemies())
 	{
 		enemy->OnHit(player->GetAttackCol());
-		enemy->OnHit(skillBaseSp->GetEffectData());
+
 		player->OnHit(enemy->GetAttackCol());
-	
+		enemy->OnHit(skillBaseSp->GetEffectData());
+
+		debugSprite->setPosition(skillBaseSp->GetEffectData().origin);
+		debugSprite->setAnchorPoint({0, 0});
+		debugSprite->setTextureRect(skillBaseSp->GetEffectData());
 	}
 
 	if (gameMap_->ChangeFloor())
