@@ -58,8 +58,6 @@ protected:
 	cocos2d::Vec2 tpos_;
 	static std::vector<SkillBase*> skillList_;
 	SkillParam param;
-	// ©g‚Ì´Ìª¸Ä‚Ì½Ìß×²Ä
-	cocos2d::Sprite* effectSprite_;
 
 	FXStruct fx_;
 	cocos2d::Rect effectData_;

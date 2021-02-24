@@ -97,6 +97,9 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	// IDをチュートリアル専用のマップ番号にしておく
 	mapParentsList_.nowID = mapParentsList_.mapParents.size() - 1;
 
+	// クリアする扉のある部屋
+	mapParentsList_.clearMapID = 0;
+
 	//mapParentsList_.mapParents[mapParentsList_.nowID].isArrival = true;
 
 	// チュートリアルマップのオブジェクトを作る処理
@@ -117,13 +120,22 @@ GameMap::GameMap(cocos2d::Layer& layer)
 
 GameMap::~GameMap()
 {
-	tex->release();
 	mapParentsList_.mapParents.clear();
+	for (auto& mapData : mapDatas_)
+	{
+		mapData->release();
+	}
+#ifdef _DEBUG
+	
+	CC_SAFE_RELEASE(mapName_);
+	CC_SAFE_RELEASE(isTutorial);
+	CC_SAFE_RELEASE(tex);
+#endif // _DEBUG
 }
 
 void GameMap::AddMap(std::vector<std::string>& mapPaths)
 {
-	for (auto mapPath : mapPaths)
+	for (auto& mapPath : mapPaths)
 	{
 		auto mapArray = createMapFromPath(mapPath);
 		mapDatas_.push_back(mapArray);

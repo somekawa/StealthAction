@@ -79,6 +79,8 @@ public:
 	// 左右反転でｵﾌｾｯﾄのｾｯﾄ
 	cocos2d::Vec2 GetFlipOffset(std::string effectName);
 
+	// プールをクリア
+	void ClearPool();
 
 	void Move(FXStruct fx);
 private:

@@ -45,8 +45,9 @@ void EnemyManager::Update(void)
 			CreateEnemy((ActorType)randomType);
 		}
 	}
-	std::remove_if(enemies_.begin(), enemies_.end(), [&](Enemy* enemy) {
-		return !(enemy->AliveCheck());
+	std::remove_if(enemies_.begin(), enemies_.end(), [&](Enemy* enemy)
+		{
+			return !(enemy->AliveCheck());
 		});
 }
 

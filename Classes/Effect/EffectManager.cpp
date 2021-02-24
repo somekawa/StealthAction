@@ -4,6 +4,7 @@ USING_NS_CC;
 
 EffectManager::~EffectManager()
 {
+
 }
 
 void EffectManager::CreatePools(cocos2d::Layer& layer)
@@ -45,6 +46,11 @@ cocos2d::Vec2 EffectManager::GetFlipOffset(std::string effectName)
 		offset = Vec2{ -offset_[effectName].x,offset_[effectName].y };
 	}
 	return offset;
+}
+
+void EffectManager::ClearPool()
+{
+	spritePool_.clear();
 }
 
 void EffectManager::Move(FXStruct fx)

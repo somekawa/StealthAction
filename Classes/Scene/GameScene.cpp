@@ -32,7 +32,6 @@
 #include "obj/Enemy/Enemy.h"
 #include "Loader/CollisionLoader.h"
 #include "Map/GameMap.h"
-#include "renderer/backend/Device.h"
 #include "SoundMng.h"
 #include "Skill/SkillBase.h"
 #include "Map/MapMenu.h"
@@ -44,12 +43,6 @@
 
 USING_NS_CC;
 
-namespace
-{
-	backend::ProgramState* programState;
-	backend::Program* program;
-}
-
 Scene* Game::createScene()
 {
 	return Game::create();
@@ -57,6 +50,7 @@ Scene* Game::createScene()
 
 Game::~Game()
 {
+	lpEffectMng.ClearPool();
 }
 
 // Print useful error message instead of segfaulting when files are not there.
@@ -398,6 +392,7 @@ void Game::update(float sp)
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	if (player->GetGameOverFlg())
 	{
+		lpEffectMng.ClearPool();
 		isChanged_ = true;
 		Scene* scene = GameOverScene::CreateGameOverScene();
 		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));
@@ -422,9 +417,9 @@ void Game::update(float sp)
 		player->OnHit(enemy->GetAttackCol());
 		enemy->OnHit(skillBaseSp->GetEffectData());
 
-		debugSprite->setPosition(skillBaseSp->GetEffectData().origin);
+		/*debugSprite->setPosition(skillBaseSp->GetEffectData().origin);
 		debugSprite->setAnchorPoint({0, 0});
-		debugSprite->setTextureRect(skillBaseSp->GetEffectData());
+		debugSprite->setTextureRect(skillBaseSp->GetEffectData());*/
 	}
 
 	if (gameMap_->ChangeFloor())

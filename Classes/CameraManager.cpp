@@ -3,6 +3,11 @@
 
 USING_NS_CC;
 
+CameraManager::~CameraManager()
+{
+	
+}
+
 void CameraManager::AddCamera(cocos2d::Scene& scene, cocos2d::Size zoomSize, CameraType cameraType, cocos2d::CameraFlag cameraFlag)
 {
 	auto defaultcamera = scene.getDefaultCamera();

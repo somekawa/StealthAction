@@ -165,11 +165,11 @@ protected:
 	// プレイヤーを視認しているかのフラグ
 	bool identifiedPlayer_;
 	// ビヘイビアツリー
-	std::shared_ptr<BehaviorTree> aiTree_;	
+	BehaviorTree* aiTree_;	
 	// ビヘイビアデータ
-	std::shared_ptr<BehaviorData> behaviorData_;
+	BehaviorData* behaviorData_;
 	// 実行中ノード
-	std::shared_ptr<NodeBase> activeNode_;
+	NodeBase* activeNode_;
 
 	// 方向変更フラグ
 	bool isChangeDir_;

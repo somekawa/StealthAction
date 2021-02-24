@@ -14,7 +14,7 @@ class CameraManager
 {
 public:
 	CameraManager() = default;
-	~CameraManager() = default;
+	~CameraManager();
 
 	// ƒJƒƒ‰‚ğ’Ç‰Á‚·‚é
 	void AddCamera(cocos2d::Scene& scene,  cocos2d::Size zoomSize, CameraType cameraType, cocos2d::CameraFlag cameraFlag);

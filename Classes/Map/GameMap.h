@@ -10,7 +10,7 @@ using MapData = std::vector<cocos2d::TMXTiledMap*>;
 // 子供ステータス
 struct MapChild
 {
-	int mapID;				// 子供のmapID
+	int mapID;				// 子供のマップのID
 	int nextParentID;		// 次の親ID
 	MapDirection gateDir;	// 子供に行くためのゲートの場所
 	cocos2d::Vec2 nextPos;	// 次のプレイヤー座標
@@ -19,7 +19,7 @@ struct MapChild
 // 親のステータス
 struct MapParentState
 {
-	int mapID;					// 親のmapID
+	int mapID;					// 親のマップID
 	std::vector<MapChild> child;// 子供へのアクセス
 	int enemyNum;				// 敵の数
 	bool isArrival;				// 到達したかどうか
@@ -28,6 +28,7 @@ struct MapParentState
 struct MapParentList
 {
 	int nowID;	 // 現在の親ID
+	int clearMapID;	// クリアする扉のある親ID
 	std::vector<MapParentState> mapParents;// 親たち
 };
 class Gate;
@@ -55,7 +56,7 @@ public:
 
 	// 今のマップを取得
 	cocos2d::TMXTiledMap* GetNowMap();
-	// 今のマップID取得
+	// 今の親ID取得
 	const int GetNowID();
 	// エネミーの数
 	int GetEnemyNum();
