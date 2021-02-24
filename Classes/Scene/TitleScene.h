@@ -6,6 +6,7 @@ class TitleScene : public BaseScene
 public:
 	static Scene* CreateTitleScene();
 	TitleScene();
+	~TitleScene();
 
 	bool init()override;
 	void update(float delta)override;

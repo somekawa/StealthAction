@@ -23,6 +23,10 @@ TitleScene::TitleScene()
 {
 }
 
+TitleScene::~TitleScene()
+{
+}
+
 bool TitleScene::init()
 {
 	if (!Scene::init())

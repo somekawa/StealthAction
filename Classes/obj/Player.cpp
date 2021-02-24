@@ -773,6 +773,8 @@ void Player::KeyInputClear(void)
 
 void Player::AnimRegistrator(void)
 {
+	lpAnimMng.AnimDataClear();	// “o˜^ƒf[ƒ^‚Ì‰Šú‰»
+
 	std::string path_light = "image/PlayerAnimationAsset/player/Light/player_Light";
 	std::string path_dark = "image/PlayerAnimationAsset/player/Dark/player_Dark";
 
