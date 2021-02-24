@@ -219,6 +219,15 @@ bool Game::init()
 	skillCBtn->setPosition(Vec2(visibleSize.width / 2 + (skillCBtn->getContentSize().width + skillCBtn->getContentSize().width / 2), skillCBtn->getContentSize().height / 2));
 	layer_[(int)zOlder::FRONT]->addChild(skillCBtn, 0);
 
+	//メニュー遷移ボタン
+	auto menuBtn = MenuItemImage::create(
+		"image/keep_button1.png",
+		"image/keep_button1_select.png");
+	menuBtn->setName("menuCBtn");
+	menuBtn->setPosition(Vec2(visibleSize.width-(menuBtn->getContentSize().width*0.25)/2-10, visibleSize.height-(menuBtn->getContentSize().height * 0.25)/2-10));
+	menuBtn->setScale(0.25f);
+		layer_[(int)zOlder::FRONT]->addChild(menuBtn, 0);
+
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
 	

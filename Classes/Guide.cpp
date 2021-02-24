@@ -34,13 +34,17 @@ Guide::Guide()
 	gameScene->visit();
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto sprite = Sprite::create("image/guide.png");
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-	auto sprite = Sprite::create("image/android_guide.png");
-#endif //CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto sprite_size = sprite->getContentSize();
 	sprite->retain();
 	sprite->setPosition(size.width / 2, size.height / 2);
 	sprite->visit();
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+	auto sprite = Sprite::create("image/android_guide.png");
+	auto sprite_size = sprite->getContentSize();
+	sprite->retain();
+	sprite->setPosition(size.width / 2, size.height / 2);
+	sprite->visit();
+#endif //CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	tex->end();
 
 	// “ü—ÍŒn“
