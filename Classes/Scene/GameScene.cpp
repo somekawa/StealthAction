@@ -283,13 +283,9 @@ bool Game::init()
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
-		if (keyCode == EventKeyboard::KeyCode::KEY_M)
-		{
-			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(*gameMap_));
-		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
 		{
-			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(this));
+			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_F1)
 		{

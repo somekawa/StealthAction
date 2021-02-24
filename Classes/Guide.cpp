@@ -1,16 +1,11 @@
-#include "anim/AnimMng.h"
-#include "Map/GameMap.h"
-#include "Map/MapMenu.h"
 #include "Guide.h"
 #include "Scene/GameScene.h"
-#include "Scene/TitleScene.h"
-#include "PoseMenu.h"
 
 USING_NS_CC;
 
-cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
+cocos2d::Scene* Guide::CreateGuide()
 {
-	PoseMenu* pRet = new(std::nothrow) PoseMenu(gameMap);
+	Guide* pRet = new(std::nothrow) Guide();
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
@@ -24,7 +19,7 @@ cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
 	}
 }
 
-PoseMenu::PoseMenu(GameMap& gameMap)
+Guide::Guide()
 {
 	auto director = Director::getInstance();
 	auto size = director->getVisibleSize();
@@ -33,48 +28,30 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 	this->addChild(tex);
 
 	auto gameScene = director->getRunningScene();
-	if (gameScene->getName() != "GameScene")
-	{
-		Director::getInstance()->popScene();
-	}
 	tex->begin();
 
 	// ゲームシーン表示
 	gameScene->visit();
-	// ゲームシーンの表示を半分暗く
-	cocos2d::Rect rect = cocos2d::Rect(0, 0, size.width, size.height);
-	auto bg = Sprite::create();
-	bg->setTextureRect(rect);
-	bg->setColor({ 0, 0, 0 });
-	bg->setOpacity(200);
-	bg->setPosition(size.width / 2, size.height / 2);
-	bg->retain();
-	bg->visit();
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+	auto sprite = Sprite::create("image/guide.png");
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+	auto sprite = Sprite::create("image/android_guide.png");
+#endif //CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+	auto sprite_size = sprite->getContentSize();
+	sprite->retain();
+	sprite->setPosition(size.width / 2, size.height / 2);
+	sprite->visit();
 	tex->end();
+
 	// 入力系統
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	auto a = Director::getInstance()->getRunningScene();
 	listener->onKeyPressed = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
-
-		if (keyCode == EventKeyboard::KeyCode::KEY_M)
-		{
-			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap));
-		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_G)
 		{
-			Director::getInstance()->pushScene(Guide::CreateGuide());
-		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
-		{
 			Director::getInstance()->popScene();
-		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_SHIFT)
-		{
-			lpAnimMng.AnimDataClear();
-			Director::getInstance()->popToSceneStackLevel(1);
-			Director::getInstance()->replaceScene(TitleScene::CreateTitleScene());
 		}
 	};
 #else
@@ -88,6 +65,6 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 }
 
-PoseMenu::~PoseMenu()
+Guide::~Guide()
 {
 }

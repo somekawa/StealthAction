@@ -17,24 +17,10 @@ MapMenu::MapMenu(GameMap& gameMap)
 	this->addChild(tex);
 
 	auto gameScene = director->getRunningScene();
-	if (gameScene->getName() != "GameScene")
-	{
-		Director::getInstance()->popScene();
-	}
 	tex->begin();
 
 	// ゲームシーン表示
 	gameScene->visit();
-	// ゲームシーンの表示を半分暗く
-	cocos2d::Rect rect = cocos2d::Rect(0, 0, size.width, size.height);
-	auto bg = Sprite::create();
-	bg->setTextureRect(rect);
-	bg->setColor({ 0, 0, 0 });
-	bg->setOpacity(200);
-	bg->setPosition(size.width / 2, size.height / 2);
-	bg->retain();
-	bg->visit();
-
 	// 部屋表示
 	int id = 0; 
 	auto& roomData = mapGen.GetMSTNode();
