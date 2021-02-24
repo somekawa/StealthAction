@@ -14,4 +14,6 @@ private:
 	void ChangeScene();
 	// ‘JˆÚ’†‚©‚Ç‚¤‚©
 	bool isChanged_;
+	// ƒLƒƒƒ‰”½“]
+	bool flipFlg_;
 };
