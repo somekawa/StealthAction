@@ -1,4 +1,5 @@
 #include <cmath>
+#include "_Debug/_DebugConOut.h"
 #include "Generator/Geometry.h"
 #include "Skill/SkillMng.h"
 #include "SkillA.h"
@@ -8,7 +9,7 @@ USING_NS_CC;
 SkillA::SkillA(SkillBase* ptr)
 {
 	pos_ = ptr->GetPlayerPos();
-	effectData_.size = Size(180, 180);
+	effectData_.size = Size(100, 100);
 	// ﾌﾟﾚｲﾔｰの方向の取得
 	auto direction = ptr->GetPlayerDirection();
 
@@ -70,6 +71,8 @@ void SkillA::UpDate(float delta)
 	{
 		//effectData_.origin = fx_.sprite_->getPosition();
 		fx_.sprite_->setPosition(fx_.sprite_->getPositionX() + move,pos_.y);
+		effectData_.origin = fx_.sprite_->getPosition();
+		TRACE("エフェクト:X:%f,Y:%f\n", fx_.sprite_->getPositionX(),pos_.y);
 		// 画面端に来たら
 		if (fx_.sprite_->getPosition().x <= 0 || fx_.sprite_->getPosition().x >= Director::getInstance()->getWinSize().width)
 		{

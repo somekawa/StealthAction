@@ -73,6 +73,7 @@ void SkillB::UpDate(float delta)
 	if (param.activation)
 	{
 		fx_.sprite_->setPosition(fx_.sprite_->getPosition() + dir_);
+		effectData_.origin = fx_.sprite_->getPosition();
 		// â‘Î’l‚ð‚Æ‚èA“G‚ÉÕ“Ë‚à‚µ‚­‚ÍŽžŠÔŒo‰ß‚ÅÁ‚¦‚é‚æ‚¤‚É‚µ‚Ä‚¨‚­
 		if ((abs(tpos_.x - fx_.sprite_->getPosition().x) <= 60 && abs(tpos_.y - fx_.sprite_->getPosition().y) <= 60) || time_ >= 19 * 0.08)
 		{

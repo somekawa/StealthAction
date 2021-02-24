@@ -76,40 +76,6 @@ bool Game::init()
 	lpSoundMng.AddSound("bgm", "BGM/BGM_piano.mp3", SoundType::BGM);
 	//lpSoundMng.PlayBySoundName("bgm", 0.5f);
 
-	// 各敵キャラのAINodeの生成----------------------------------------------------------
-	
-	//CharaInfoRegistrator(ActorType::Cultist);
-	//CharaInfoRegistrator(ActorType::Fireball);
-	//-------------------------------------------------------------------------------
-	/////////////////////////////
-	// 2. add a menu item with "X" image, which is clicked to quit the program
-	//    you may modify it.
-	// add a "close" icon to exit the progress. it's an autorelease object
-	//auto closeItem = MenuItemImage::create(
-	//	"CloseNormal.png",
-	//	"CloseSelected.png",
-	//	CC_CALLBACK_1(Game::menuCloseCallback, this));
-	//if (closeItem == nullptr ||
-	//	closeItem->getContentSize().width <= 0 ||
-	//	closeItem->getContentSize().height <= 0)
-	//{
-	//	problemLoading("'CloseNormal.png' and 'CloseSelected.png'");
-	//}
-	//else
-	//{
-	//	float x = origin.x + visibleSize.width - closeItem->getContentSize().width / 2;
-	//	float y = origin.y + closeItem->getContentSize().height / 2;
-	//	closeItem->setPosition(Vec2(x, y));
-	//}
-	//// create menu, it's an autorelease object
-	//auto menu = Menu::create(closeItem, NULL);
-	//menu->setPosition(Vec2::ZERO);
-	//this->addChild(menu, 1);
-	/////////////////////////////
-	// 3. add your codes below...
-	// add a label shows "Hello World"
-	// create and initialize a label
-
 	for (auto& layer : layer_)
 	{
 		layer = Layer::create();
@@ -156,24 +122,11 @@ bool Game::init()
 
 	this->setName("GameScene");
 
-	// Scene - Layer - Sprite	// bgLayerはGameSceneに直接ぶら下がる
-	//this->addChild(bgLayer, (int)zOlder::BG);
-
-	// 背景の登録(bgLayerにぶら下がるbgSprite)
-	auto bgSprite1 = Sprite::create("image/Environment/background-big.png");
-	bgSprite1->setPosition(Vec2(0, visibleSize.height / 2));
-	layer_[(int)zOlder::BG]->addChild(bgSprite1, -2);
-
-	auto bgSprite2 = Sprite::create("image/Environment/background-big.png");
-	bgSprite2->setPosition(Vec2(720, visibleSize.height / 2));
-	layer_[(int)zOlder::BG]->addChild(bgSprite2, -1);
-
-	/*auto bgMiddle = Sprite::create("image/Environment/middleground-big.png");
-	bgMiddle->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	layer_[(int)zOlder::BG]->addChild(bgMiddle, 0);*/
+	auto _Gbg = LayerGradient::create(Color4B::BLACK, Color4B::WHITE);
+	layer_[(int)zOlder::BG]->addChild(_Gbg);
 
 	// ボタンテスト用
-//#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	// 攻撃ボタン
 	// ボタンの押下/非押下はOPRTのほうでselected関数を呼んで管理
 	auto attackBtn = MenuItemImage::create(
@@ -226,6 +179,13 @@ bool Game::init()
 	transformBtn_toLight->setVisible(false);	// 初期は見えない
 	layer_[(int)zOlder::FRONT]->addChild(transformBtn_toLight, 0);
 
+	// 移動バーチャルパッド用
+	auto startSp = Sprite::create("CloseNormal.png");
+	startSp->setName("startSp");
+	startSp->setPosition(Vec2(150.0f, 150.0f));
+	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
+#endif
+
 	// とりあえず今はくっつけた感じで表示してます
 	// アイテム(左から1番目)
 	auto itemBtn = MenuItemImage::create(
@@ -259,12 +219,6 @@ bool Game::init()
 	skillCBtn->setPosition(Vec2(visibleSize.width / 2 + (skillCBtn->getContentSize().width + skillCBtn->getContentSize().width / 2), skillCBtn->getContentSize().height / 2));
 	layer_[(int)zOlder::FRONT]->addChild(skillCBtn, 0);
 
-	// 移動バーチャルパッド用
-	auto startSp = Sprite::create("CloseNormal.png");
-	startSp->setName("startSp");
-	startSp->setPosition(Vec2(150.0f, 150.0f));
-	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
-//#endif
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
 	
@@ -392,10 +346,11 @@ void Game::update(float sp)
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	if (player->GetGameOverFlg())
 	{
-		lpEffectMng.ClearPool();
 		isChanged_ = true;
 		Scene* scene = GameOverScene::CreateGameOverScene();
 		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));
+		CC_SAFE_RELEASE(this);
+		return;
 	}
 
 	// SkillBase呼ぶテスト
@@ -417,9 +372,9 @@ void Game::update(float sp)
 		player->OnHit(enemy->GetAttackCol());
 		enemy->OnHit(skillBaseSp->GetEffectData());
 
-		/*debugSprite->setPosition(skillBaseSp->GetEffectData().origin);
+		debugSprite->setPosition(skillBaseSp->GetEffectData().origin);
 		debugSprite->setAnchorPoint({0, 0});
-		debugSprite->setTextureRect(skillBaseSp->GetEffectData());*/
+		debugSprite->setTextureRect(skillBaseSp->GetEffectData());
 	}
 
 	if (gameMap_->ChangeFloor())
