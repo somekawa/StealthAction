@@ -335,7 +335,9 @@ void Enemy::Hit(void)
 	auto hpGauge = (HPGauge*)scene->getChildByTag((int)zOlder::FRONT)->getChildByName(getName() + "_HPgauge" + "_" + std::to_string(id_));
 	if (!onDamaged_)
 	{
-		hp_ -= 10.0f;
+		auto player = scene->getChildByTag((int)zOlder::CHAR_PL)->getChildByName("player1");
+		auto damageNum = ((Player*)player)->GetGiveDamageNum();
+		hp_ -= damageNum;
 		hpGauge->SetHP(hp_);
 		onDamaged_ = true;
 	}

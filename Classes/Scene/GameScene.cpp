@@ -449,8 +449,8 @@ void Game::update(float sp)
 	{
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(255, 255, 255));
 	}
-	// スキルC
-	if (!((SkillBase*)director)->GetSkillCT("heal"))
+	// スキルC(CT中またはdarkモードの時は暗くする)
+	if (!((SkillBase*)director)->GetSkillCT("heal") || player->GetPlayerColor() == "player_Dark_")
 	{
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(150, 150, 150));
 	}
