@@ -614,91 +614,91 @@ void Player::dashMotion(float delta)
 
 void Player::colliderVisible(void)
 {
-	//// トランスフォームの時はコライダーを無視する
-	//if (currentAnimation_ == "Transform" || currentAnimation_ == "Death")
-	//{
-	//	return;
-	//}
+	// トランスフォームの時はコライダーを無視する
+	if (currentAnimation_ == "Transform" || currentAnimation_ == "Death")
+	{
+		return;
+	}
 
-	//if (animationFrame_int_ <= 0)
-	//{
-	//	animationFrame_int_ = 0;
-	//}
-	////CCLOG("plHP:%d", hp_);
-	//if (collider_[playerColor + currentAnimation_].size() <= animationFrame_int_)
-	//{
-	//	return;
-	//}
-	//currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
-	//for (auto collider : this->getChildren())
-	//{
-	//	if (playerColor + currentAnimation_ == collider->getName() &&
-	//		animationFrame_int_ == collider->getTag())
-	//	{
-	//		// 攻撃の時だけオフセットが必要
-	//		attackCollider("AttackFirst", collider, attackColOffset_);
-	//		attackCollider("AttackSecond", collider, attackColOffset_);
-	//		attackCollider("AttackThird", collider, attackColOffset_);
+	if (animationFrame_int_ <= 0)
+	{
+		animationFrame_int_ = 0;
+	}
+	//CCLOG("plHP:%d", hp_);
+	if (collider_[playerColor + currentAnimation_].size() <= animationFrame_int_)
+	{
+		return;
+	}
+	currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
+	for (auto collider : this->getChildren())
+	{
+		if (playerColor + currentAnimation_ == collider->getName() &&
+			animationFrame_int_ == collider->getTag())
+		{
+			// 攻撃の時だけオフセットが必要
+			attackCollider("AttackFirst", collider, attackColOffset_);
+			attackCollider("AttackSecond", collider, attackColOffset_);
+			attackCollider("AttackThird", collider, attackColOffset_);
 
-	//		//if (currentAnimation_ == "AttackFirst")
-	//		//{
-	//		//	if (direction_ == Direction::Right)
-	//		//	{
-	//		//		if (!attackF_offsetFlg_)
-	//		//		{
-	//		//			attackColOffset_ = collider->getPosition().x + 30.0f;
-	//		//			attackF_offsetFlg_ = true;
-	//		//		}
-	//		//	}
-	//		//	else
-	//		//	{
-	//		//		attackColOffset_ = 0.0f;
-	//		//		attackF_offsetFlg_ = false;
-	//		//	}
-	//		//	collider->setPosition(attackColOffset_,collider->getPosition().y);
-	//		//}
-	//		//if (currentAnimation_ == "AttackSecond")
-	//		//{
-	//		//	if (direction_ == Direction::Right)
-	//		//	{
-	//		//		if (!attackS_offsetFlg_)
-	//		//		{
-	//		//			attackS_offsetPos_ = collider->getPosition().x + 30.0f;
-	//		//			attackS_offsetFlg_ = true;
-	//		//		}
-	//		//	}
-	//		//	else
-	//		//	{
-	//		//		attackS_offsetPos_ = 0.0f;
-	//		//		attackS_offsetFlg_ = false;
-	//		//	}
-	//		//	collider->setPosition(attackS_offsetPos_, collider->getPosition().y);
-	//		//}
-	//		//if (currentAnimation_ == "AttackThird")
-	//		//{
-	//		//	if (direction_ == Direction::Right)
-	//		//	{
-	//		//		if (!attackT_offsetFlg_)
-	//		//		{
-	//		//			attackT_offsetPos_ = collider->getPosition().x + 30.0f;
-	//		//			attackT_offsetFlg_ = true;
-	//		//		}
-	//		//	}
-	//		//	else
-	//		//	{
-	//		//		attackT_offsetPos_ = 0.0f;
-	//		//		attackT_offsetFlg_ = false;
-	//		//	}
-	//		//	collider->setPosition(attackT_offsetPos_, collider->getPosition().y);
-	//		//}
+			//if (currentAnimation_ == "AttackFirst")
+			//{
+			//	if (direction_ == Direction::Right)
+			//	{
+			//		if (!attackF_offsetFlg_)
+			//		{
+			//			attackColOffset_ = collider->getPosition().x + 30.0f;
+			//			attackF_offsetFlg_ = true;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		attackColOffset_ = 0.0f;
+			//		attackF_offsetFlg_ = false;
+			//	}
+			//	collider->setPosition(attackColOffset_,collider->getPosition().y);
+			//}
+			//if (currentAnimation_ == "AttackSecond")
+			//{
+			//	if (direction_ == Direction::Right)
+			//	{
+			//		if (!attackS_offsetFlg_)
+			//		{
+			//			attackS_offsetPos_ = collider->getPosition().x + 30.0f;
+			//			attackS_offsetFlg_ = true;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		attackS_offsetPos_ = 0.0f;
+			//		attackS_offsetFlg_ = false;
+			//	}
+			//	collider->setPosition(attackS_offsetPos_, collider->getPosition().y);
+			//}
+			//if (currentAnimation_ == "AttackThird")
+			//{
+			//	if (direction_ == Direction::Right)
+			//	{
+			//		if (!attackT_offsetFlg_)
+			//		{
+			//			attackT_offsetPos_ = collider->getPosition().x + 30.0f;
+			//			attackT_offsetFlg_ = true;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		attackT_offsetPos_ = 0.0f;
+			//		attackT_offsetFlg_ = false;
+			//	}
+			//	collider->setPosition(attackT_offsetPos_, collider->getPosition().y);
+			//}
 
-	//		collider->setVisible(true);
-	//	}
-	//	else
-	//	{
-	//		collider->setVisible(false);
-	//	}
-	//}
+			collider->setVisible(true);
+		}
+		else
+		{
+			collider->setVisible(false);
+		}
+	}
 }
 
 void Player::attackCollider(std::string str,cocos2d::Node* col,float& pos)
@@ -907,12 +907,12 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("Wall_Slide");
 		actCtl_.RunInitializeActCtl(type_,"右移動", act);
 
-		/*auto anchor1 = DrawNode::create();
+		auto anchor1 = DrawNode::create();
 		anchor1->drawDot(act.checkPoint1, 3.0f, Color4F::BLUE);
 		this->addChild(anchor1, 5);
 		auto anchor2 = DrawNode::create();
 		anchor2->drawDot(act.checkPoint2, 3.0f, Color4F::BLUE);
-		this->addChild(anchor2, 5);*/
+		this->addChild(anchor2, 5);
 	}
 
 	// 左移動
@@ -934,12 +934,12 @@ void Player::actModuleRegistration(void)
 		act.blackList.emplace_back("AttackThird");
 		act.blackList.emplace_back("Wall_Slide");
 		actCtl_.RunInitializeActCtl(type_,"左移動", act);
-		/*auto anchor3 = DrawNode::create();
+		auto anchor3 = DrawNode::create();
 		anchor3->drawDot(act.checkPoint1, 3.0f, Color4F::GREEN);
 		this->addChild(anchor3, 5);
 		auto anchor4 = DrawNode::create();
 		anchor4->drawDot(act.checkPoint2, 3.0f, Color4F::GREEN);
-		this->addChild(anchor4, 5);*/
+		this->addChild(anchor4, 5);
 	}
 
 	// 右向き反転
