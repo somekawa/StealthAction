@@ -30,9 +30,9 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	gravity_ = std::make_unique<Gravity>(*this);
 
 	// UŒ‚‚ÌÛ‚ÉoŒ»‚·‚éµÌŞ¼Şª¸Ä‚ÌÚ²Ô°
-	attackLayer_ = Layer::create();
+	//attackLayer_ = Layer::create();
 	// ¼°İ‚ÌÚ²Ô°‚ÉattackLayer_‚ğ‚Ô‚ç‰º‚°‚é
-	myLayer.addChild(attackLayer_, 2, "attack");
+	//myLayer.addChild(attackLayer_, 2, "attack");
 
 	//std::list<std::string> path;
 	//path.push_back("skill_data");

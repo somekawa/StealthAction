@@ -3,6 +3,7 @@
 #include "Scene/LoadScene.h"
 #include "obj/Player.h"
 #include "Gate.h"
+#include "ClearObj.h"
 #include "Generator/MapGenerator.h"
 #include "Generator/MST.h"
 
@@ -20,6 +21,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	objLayer_ = Layer::create();
 	
 	isChangeFloor_ = false;
+	isClear_ = false;
 
 #ifdef _DEBUG
 	mapName_ = Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
@@ -208,7 +210,7 @@ void GameMap::CreateObject()
 			auto w = prop["width"].asInt();
 			auto h = prop["height"].asInt();
 
-			// ゲートだった時(今はこれしか存在しない)
+			// ゲートだった時
 			if (name == "gate")
 			{
 				auto gateNum = prop["gateNum"].asInt();
@@ -223,12 +225,16 @@ void GameMap::CreateObject()
 					objs_.push_back(gate);
 				}
 			}
-			/*if (name == "clear")
+			// クリアオブジェクトだった時
+			if (name == "clear")
 			{
-				auto gate = Gate::CreateGate({ x, y }, -1);
-				gate->setCameraMask(static_cast<int>(CameraFlag::USER1));
-				objs_.push_back(gate);
-			}*/
+				if (mapParentsList_.clearMapID == mapParentsList_.nowID)
+				{
+					auto clearObj = ClearObj::CreateClearObj({ x, y });
+					clearObj->setCameraMask(static_cast<int>(CameraFlag::USER1));
+					objs_.push_back(clearObj);
+				}
+			}
 		}
 	}
 	// オブジェクトをセット
@@ -244,13 +250,13 @@ cocos2d::TMXTiledMap* GameMap::GetNowMap()
 	return mapDatas_[static_cast<int>(nowMapParent.mapID)];
 }
 
-void GameMap::update(Player& player)
+void GameMap::Update(Player& player,int nowEnemyNum)
 {
 	// 常にフロア変更のフラグはfalseに
 	isChangeFloor_ = false;
 	for (auto obj : objs_)
 	{
-		obj->Update();
+		obj->Update(nowEnemyNum);
 		
 		if(obj->IsHit(player))
 		{
@@ -263,6 +269,7 @@ void GameMap::update(Player& player)
 			}
 			if (obj->getName() == "clear")
 			{
+				isClear_ = true;
 			}
 		}
 	}
@@ -282,6 +289,11 @@ const int GameMap::GetNowID()
 int GameMap::GetEnemyNum()
 {
 	return mapParentsList_.mapParents[mapParentsList_.nowID].enemyNum;
+}
+
+int GameMap::IsClear()
+{
+	return isClear_;
 }
 
 MapGenerator& GameMap::GetMapGenerator()

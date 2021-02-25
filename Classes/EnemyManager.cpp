@@ -35,16 +35,16 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::Update(void)
 {
-	for (auto e : enemies_)
-	{
-		// Ž€‚ñ‚Å‚¢‚é‚©¶‚«‚Ä‚¢‚é‚©‚ÌÌ×¸ÞŠi”[
-		spawnFlag_ = (e->AliveCheck());
-		if (!spawnFlag_)
-		{
-			auto randomType = static_cast<int>(ActorType::Assassin) + (rand() % static_cast<int>(ActorType::Assassin));
-			CreateEnemy((ActorType)randomType);
-		}
-	}
+	//for (auto e : enemies_)
+	//{
+	//	// Ž€‚ñ‚Å‚¢‚é‚©¶‚«‚Ä‚¢‚é‚©‚ÌÌ×¸ÞŠi”[
+	//	//spawnFlag_ = (e->AliveCheck());
+	//	/*if (!spawnFlag_)
+	//	{
+	//		auto randomType = static_cast<int>(ActorType::Assassin) + (rand() % static_cast<int>(ActorType::Assassin));
+	//		CreateEnemy((ActorType)randomType);
+	//	}*/
+	//}
 	std::remove_if(enemies_.begin(), enemies_.end(), [&](Enemy* enemy)
 		{
 			return !(enemy->AliveCheck());

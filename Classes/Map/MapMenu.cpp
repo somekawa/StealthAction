@@ -25,7 +25,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 	int id = 0; 
 	auto& roomData = mapGen.GetMSTNode();
 	auto& roomSize = mapGen.GetRoomData()[0].size;
-	if (roomData.size() < nowID)
+	if (roomData.size() > nowID)
 	{
 		auto offset = Vec2(size.width / 2 - roomData[nowID].key.x,
 			size.height / 2 - roomData[nowID].key.y);

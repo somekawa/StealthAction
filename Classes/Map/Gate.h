@@ -9,8 +9,6 @@ public:
 	Gate(cocos2d::Vec2 pos, int gateNum);
 	~Gate();
 	static Gate* CreateGate(cocos2d::Vec2 pos, int gateNum);
-
-	void Update()override;
 	//bool IsHit(Player& player)override;
 	int GetGateNum();
 private:

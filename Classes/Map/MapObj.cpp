@@ -11,9 +11,18 @@ MapObj::~MapObj()
 {
 }
 
+void MapObj::Update(int nowEnemyNum)
+{
+	if (nowEnemyNum == 0)
+	{
+		isEnable_ = true;
+		this->setVisible(isEnable_);
+	}
+}
+
 bool MapObj::IsHit(Player& player)
 {
-	if (!isOpen_)
+	if (!isEnable_)
 	{
 		return false;
 	}
