@@ -47,6 +47,7 @@ Imp::Imp(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange visionRange
 
 Imp::~Imp()
 {
+	attackLayer_->removeFromParentAndCleanup(true);
 }
 
 Imp* Imp::CreateImp(Vec2 pos,Player& player, BehaviorTree* aiTree, VisionRange visionRange,int hp,Layer& myLayer)

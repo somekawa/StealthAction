@@ -71,6 +71,7 @@ Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange vis
 
 Cultist::~Cultist()
 {
+	attackLayer_->removeFromParentAndCleanup(true);
 }
 
 Cultist* Cultist::CreateCultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp,Layer& myLayer)

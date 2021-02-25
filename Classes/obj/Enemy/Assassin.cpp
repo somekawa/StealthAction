@@ -59,7 +59,7 @@ Assassin::Assassin(Vec2 pos, Player& player,
 
 Assassin::~Assassin()
 {
-
+	attackLayer_->removeFromParentAndCleanup(true);
 }
 
 Assassin* Assassin::CreateAssassin(Vec2 pos, Player& player,

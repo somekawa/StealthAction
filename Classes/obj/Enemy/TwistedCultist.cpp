@@ -52,6 +52,7 @@ TwistedCultist::TwistedCultist(Vec2 pos,Player& player,
 
 TwistedCultist::~TwistedCultist()
 {
+	attackLayer_->removeFromParentAndCleanup(true);
 }
 
 TwistedCultist* TwistedCultist::CreateTwistedCultist(Vec2 pos,Player& player, 

@@ -38,7 +38,8 @@ void SoundMng::PlayBySoundName(std::string soundName, float volume)
 	if (soundList_.find(soundName) != soundList_.end())
 	{
 		bool loop = soundList_[soundName].type == SoundType::BGM;
-		soundList_[soundName].id = AudioEngine::play2d(soundList_[soundName].path, loop, volume);
+		auto profile = AudioEngine::getProfile(soundList_[soundName].id);
+		soundList_[soundName].id = AudioEngine::play2d(soundList_[soundName].path, loop, volume, profile);
 	}
 	else
 	{
