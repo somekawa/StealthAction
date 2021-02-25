@@ -326,7 +326,7 @@ bool Actor::OnHit(const cocos2d::Rect& collision)
 	{
 		flg = true;
 	}
-	// ‹éŒ`ŠÔ‚Ì‹——£‚ð‘ª‚é
+	// ‹éŒ`ŠÔ‚Ì‹——£‚ð‘ª‚éq
 	auto distance = Vec2(collision.origin.x - damageCol_.origin.x, collision.origin.y - damageCol_.origin.y);
 	auto sizediff = Vec2((damageCol_.size.width / 2.0f) + (collision.size.width / 2.0f),
 					     (damageCol_.size.height / 2.0f) + (collision.size.height / 2.0f));
@@ -334,7 +334,7 @@ bool Actor::OnHit(const cocos2d::Rect& collision)
 	{
 		if (!isHitAttack_)
 		{
-			if (abs(distance.x) <= sizediff.x && abs(distance.y) <= sizediff.y)
+			if (abs(distance.x) <= sizediff.x /*&& abs(distance.y) <= sizediff.y*/)
 			{
 				//onDamaged_ = true;
 				isHitAttack_ = true;

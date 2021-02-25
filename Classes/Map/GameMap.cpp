@@ -179,12 +179,7 @@ void GameMap::ReplaceMap(Player& player)
 
 void GameMap::CreateObject()
 {
-
-	auto objGroup = GetNowMap()->getObjectGroup("gate");
-	if (objGroup == nullptr)
-	{
-		return;
-	}
+	auto objGroups = GetNowMap()->getObjectGroups();
 	// オブジェクトが既にあったら削除する
 	if (objs_.size() > 0)
 	{
@@ -194,36 +189,48 @@ void GameMap::CreateObject()
 		}
 		objs_.clear();
 	}
-
-	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
-	// TMXMapのオブジェクトレイヤーから情報取得
-	auto& objs = objGroup->getObjects();
-	for (auto& obj : objs)
+	for (auto objGroup : objGroups)
 	{
-		ValueMap prop = obj.asValueMap();
-		auto name = prop["name"].asString();
-		auto x = prop["x"].asFloat();
-		auto y = prop["y"].asFloat();
-		auto w = prop["width"].asInt();
-		auto h = prop["height"].asInt();
-		
-		// ゲートだった時(今はこれしか存在しない)
-		if (name == "gate")
+		//auto objGroup = GetNowMap()->getObjectGroup("gate");
+		if (objGroup == nullptr)
 		{
-			auto gateNum = prop["gateNum"].asInt();
-			for (int i = 0; i < nowMapParent.child.size(); ++i)
+			return;
+		}
+		auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
+		// TMXMapのオブジェクトレイヤーから情報取得
+		auto& objs = objGroup->getObjects();
+		for (auto& obj : objs)
+		{
+			ValueMap prop = obj.asValueMap();
+			auto name = prop["name"].asString();
+			auto x = prop["x"].asFloat();
+			auto y = prop["y"].asFloat();
+			auto w = prop["width"].asInt();
+			auto h = prop["height"].asInt();
+
+			// ゲートだった時(今はこれしか存在しない)
+			if (name == "gate")
 			{
-				if (static_cast<int>(nowMapParent.child[i].gateDir) != gateNum)
+				auto gateNum = prop["gateNum"].asInt();
+				for (int i = 0; i < nowMapParent.child.size(); ++i)
 				{
-					continue;
+					if (static_cast<int>(nowMapParent.child[i].gateDir) != gateNum)
+					{
+						continue;
+					}
+					auto gate = Gate::CreateGate({ x, y }, i);
+					gate->setCameraMask(static_cast<int>(CameraFlag::USER1));
+					objs_.push_back(gate);
 				}
-				auto gate = Gate::CreateGate({ x, y }, i);
+			}
+			/*if (name == "clear")
+			{
+				auto gate = Gate::CreateGate({ x, y }, -1);
 				gate->setCameraMask(static_cast<int>(CameraFlag::USER1));
 				objs_.push_back(gate);
-			}
-		}	
+			}*/
+		}
 	}
-
 	// オブジェクトをセット
 	for (auto obj : objs_)
 	{
@@ -243,14 +250,20 @@ void GameMap::update(Player& player)
 	isChangeFloor_ = false;
 	for (auto obj : objs_)
 	{
-		obj->Update(player);
+		obj->Update();
 		
 		if(obj->IsHit(player))
 		{
-			nextId_ = obj->GetGateNum();
-			// プレイヤーがゲートをくぐった時にのみtrueにする
-			isChangeFloor_ = true;
-			LoadMap(player);
+			if (obj->getName() == "gate")
+			{
+				nextId_ = dynamic_cast<Gate*>(obj)->GetGateNum();
+				// プレイヤーがゲートをくぐった時にのみtrueにする
+				isChangeFloor_ = true;
+				LoadMap(player);
+			}
+			if (obj->getName() == "clear")
+			{
+			}
 		}
 	}
 	frame_++;

@@ -31,7 +31,7 @@ Assassin::Assassin(Vec2 pos, Player& player,
 	direction_ = Direction::Left;
 
 	// 攻撃矩形のサイズ設定
-	attackRect_.size_ = Size(30.0f, 30.0f);
+	attackRect_.size_ = Size(50.0f, 50.0f);
 
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{

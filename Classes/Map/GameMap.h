@@ -31,7 +31,7 @@ struct MapParentList
 	int clearMapID;	// クリアする扉のある親ID
 	std::vector<MapParentState> mapParents;// 親たち
 };
-class Gate;
+class MapObj;
 class Player;
 class MapGenerator;
 class GameMap
@@ -79,7 +79,7 @@ private:
 	MapParentList mapParentsList_;	// マップ親リスト
 	
 	MapData mapDatas_;	// 0番が親
-	std::vector<Gate*>objs_; // 現在はゲートのみ
+	std::vector<MapObj*>objs_; // 現在はゲートのみ
 	int nextId_;
 	int frame_;
 	// 次のプレイヤー初期位置テーブル

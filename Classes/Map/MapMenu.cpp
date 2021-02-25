@@ -25,52 +25,66 @@ MapMenu::MapMenu(GameMap& gameMap)
 	int id = 0; 
 	auto& roomData = mapGen.GetMSTNode();
 	auto& roomSize = mapGen.GetRoomData()[0].size;
-	auto offset = Vec2(size.width / 2 - roomData[nowID].key.x,
-		size.height / 2 - roomData[nowID].key.y);
-	auto renderer = _director->getRenderer();
-	auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
-	for (auto room : roomData)
+	if (roomData.size() < nowID)
 	{
-		// 到達部屋のみ表示 現在制作のため
-		/*if (!mapParentList.mapParents[id].isArrival)
+		auto offset = Vec2(size.width / 2 - roomData[nowID].key.x,
+			size.height / 2 - roomData[nowID].key.y);
+		auto renderer = _director->getRenderer();
+		auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+		for (auto room : roomData)
 		{
-			id++;
-			continue;
-		}*/
-		cocos2d::Rect rect = cocos2d::Rect(0,0, roomSize.width, roomSize.height);
-		auto sprite = Sprite::create();
-		sprite->setTextureRect(rect);
-		sprite->setPosition(room.key + offset);
-		sprite->autorelease();
-		if (id == nowID)
-		{
-			sprite->setColor(Color3B(0.0f, 0.0f, 255.0f));
-		}
-		sprite->setOpacity(128);
-		sprite->visit();
-		auto drawnode = DrawNode::create();
-		drawnode->drawRect(Vec2(0, 0), roomSize,Color4F::GREEN);
-		drawnode->setPosition(room.key + (offset-roomSize/2));
-		drawnode->autorelease();
-		drawnode->visit(renderer,parentTransform, FLAGS_TRANSFORM_DIRTY);
+			// 到達部屋のみ表示 現在制作のため
+			/*if (!mapParentList.mapParents[id].isArrival)
+			{
+				id++;
+				continue;
+			}*/
+			cocos2d::Rect rect = cocos2d::Rect(0, 0, roomSize.width, roomSize.height);
+			auto sprite = Sprite::create();
+			sprite->setTextureRect(rect);
+			sprite->setPosition(room.key + offset);
+			sprite->autorelease();
+			if (id == nowID)
+			{
+				sprite->setColor(Color3B(0.0f, 0.0f, 255.0f));
+			}
+			sprite->setOpacity(128);
+			sprite->visit();
+			auto drawnode = DrawNode::create();
+			drawnode->drawRect(Vec2(0, 0), roomSize, Color4F::GREEN);
+			drawnode->setPosition(room.key + (offset - roomSize / 2));
+			drawnode->autorelease();
+			drawnode->visit(renderer, parentTransform, FLAGS_TRANSFORM_DIRTY);
 
-		id++;
-	}
-	// 通路表示
-	const auto& mapParentList = gameMap.GetMapParentList();
-	
-	auto& lineData = mapGen.GetEdgeData();
-	for (auto line : lineData)
-	{
-		if (!line.used)
-		{
-			continue;
+			id++;
 		}
-		auto sprite = DrawNode::create();
-		sprite->drawSegment(line.pair_vertex[0] + offset,
-			line.pair_vertex[1] + offset, 1.5f, Color4F::RED);
-		sprite->autorelease();
-		sprite->visit(renderer, parentTransform, FLAGS_TRANSFORM_DIRTY);
+		// 通路表示
+		const auto& mapParentList = gameMap.GetMapParentList();
+
+		auto& lineData = mapGen.GetEdgeData();
+		for (auto line : lineData)
+		{
+			if (!line.used)
+			{
+				continue;
+			}
+			auto sprite = DrawNode::create();
+			sprite->drawSegment(line.pair_vertex[0] + offset,
+				line.pair_vertex[1] + offset, 1.5f, Color4F::RED);
+			sprite->autorelease();
+			sprite->visit(renderer, parentTransform, FLAGS_TRANSFORM_DIRTY);
+		}
+	}
+	else
+	{
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+		auto label = Label::createWithTTF("Map Not Found ", "fonts/PixelMplus12-Regular.ttf", 48);
+		label->setPosition(Vec2(origin.x + visibleSize.width / 2,
+			origin.y + visibleSize.height /2 - (label->getContentSize().height)));
+
+		// add the label as a child to this layer
+		this->addChild(label, 0);
 	}
 	tex->end();
 

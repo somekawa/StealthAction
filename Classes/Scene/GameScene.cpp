@@ -380,13 +380,12 @@ void Game::update(float sp)
 	for (auto enemy : enemyManager_->GetEnemies())
 	{
 		enemy->OnHit(player->GetAttackCol());
-
 		player->OnHit(enemy->GetAttackCol());
 		enemy->OnHit(skillBaseSp->GetEffectData());
 
-		debugSprite->setPosition(skillBaseSp->GetEffectData().origin);
+		/*debugSprite->setPosition(skillBaseSp->GetEffectData().origin);
 		debugSprite->setAnchorPoint({0, 0});
-		debugSprite->setTextureRect(skillBaseSp->GetEffectData());
+		debugSprite->setTextureRect(skillBaseSp->GetEffectData());*/
 	}
 
 	if (gameMap_->ChangeFloor())
