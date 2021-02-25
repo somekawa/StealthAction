@@ -28,7 +28,7 @@ SkillA::SkillA(SkillBase* ptr)
 		speed_ = -10.0f;
 	}
 	// ´Ìª¸Ä‚ğì¬‚µ‚ÄA©g‚Ì´Ìª¸Ä‰æ‘œ‚ÉŠi”[
-	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_+offset, Vec2(0,0), 4, 0.08f, flip, false,true);
+	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_, Vec2(0,0), 4, 0.08f, flip, false,true);
 
 	param.removeFlg = false;
 	param.activation = true;

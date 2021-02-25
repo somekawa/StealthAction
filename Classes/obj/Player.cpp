@@ -82,7 +82,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 				// colliderBoxを自身の子にする
 				auto draw = col[colNum]->create();
 				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-				//draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
 				draw->setTag(col[colNum]->GetData().frame_);
 				// ここでsetLocalOrderをやんないといけない
 				// 攻撃矩形だと0に、ﾀﾞﾒｰｼﾞ矩形だと1に
@@ -271,7 +271,7 @@ void Player::attackMotion(float delta)
 		{
 			return true;
 		}
-		if (oprtState_->GetNowData()[1] && !oprtState_->GetOldData()[1] && !flag)
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::DOWN)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::DOWN)] && !flag)
 		{
 			return true;
 		}
@@ -692,7 +692,7 @@ void Player::colliderVisible(void)
 			//	collider->setPosition(attackT_offsetPos_, collider->getPosition().y);
 			//}
 
-			collider->setVisible(true);
+			//collider->setVisible(true);
 		}
 		else
 		{
