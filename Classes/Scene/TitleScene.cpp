@@ -63,12 +63,15 @@ bool TitleScene::init()
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
-		if (!isChanged_)
+		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
 		{
-			this->ChangeScene();
+			if (!isChanged_)
+			{
+				this->ChangeScene();
+			}
 		}
 	};
-	auto label = Label::createWithTTF("To Start Press Any Key ", "fonts/PixelMplus12-Regular.ttf", 48);
+	auto label = Label::createWithTTF("To Start Press SPACE Key ", "fonts/PixelMplus12-Regular.ttf", 48);
 	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 3 - (label->getContentSize().height * 2)));
 

@@ -6,12 +6,24 @@ USING_NS_CC;
 
 OPRT_touch::OPRT_touch(Sprite* delta)
 {
-	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+	for (auto key = static_cast<int>(BUTTON::RIGHT); key < static_cast<int>(BUTTON::MAX); key++)
 	{
 		_keyData._input[key] = false;
 		_keyData._data[key] = false;
 		_keyData._oldData[key] = false;
 	}
+
+	// UPからMenuまでを登録
+	nameTable_ = {
+		"jumpBtn","attackBtn","dashBtn",
+		"skillABtn","skillBBtn","skillCBtn","menuBtn"
+	};
+
+	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::Non); key++)
+	{
+		map_.emplace(nameTable_[key-static_cast<int>(BUTTON::UP)], static_cast<BUTTON>(key));
+	}
+
 	touchesflg(delta);
 }
 
@@ -144,7 +156,7 @@ void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 		((MenuItemImage*)label1)->unselected();
 	};
 
-	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+	for (auto key = static_cast<int>(BUTTON::RIGHT); key < static_cast<int>(BUTTON::MAX); key++)
 	{
 		if (touchVectors[touch->getID()].isMoveTouch)
 		{
@@ -155,16 +167,11 @@ void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 		}
 		else
 		{
-			buttonLambda("attackBtn", BUTTON::DOWN);
-			buttonLambda("jumpBtn", BUTTON::UP);
-			buttonLambda("dashBtn", BUTTON::Dash);
-			buttonLambda("transformBtn_toDark", BUTTON::Transfrom);
-			buttonLambda("transformBtn_toLight", BUTTON::Transfrom);
-			buttonLambda("skillABtn", BUTTON::SkillA);
-			buttonLambda("skillBBtn", BUTTON::SkillB);
-			buttonLambda("skillCBtn", BUTTON::SkillC);
-			//_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
-			//_keyData._input[static_cast<int>(BUTTON::UP)] = false;
+			for (auto button : map_)
+			{
+				buttonLambda(button.first, button.second);
+			}
+			buttonLambda("transformBtn" + trStr, BUTTON::Transfrom);
 		}
 	}
 }
@@ -210,10 +217,13 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 				return false;
 			};
 
-			if (!buttonLambda("attackBtn", BUTTON::DOWN) && !buttonLambda("jumpBtn", BUTTON::UP) &&
-				!buttonLambda("dashBtn", BUTTON::Dash)   && !buttonLambda("transformBtn"+ trStr, BUTTON::Transfrom) &&
-				!buttonLambda("skillABtn",BUTTON::SkillA)&& !buttonLambda("skillBBtn", BUTTON::SkillB) &&
-				!buttonLambda("skillCBtn", BUTTON::SkillC))
+			bool buttonFlg = false;
+			for (auto button : map_)
+			{
+				buttonFlg |= buttonLambda(button.first, button.second);
+			}
+
+			if (!buttonFlg && !buttonLambda("transformBtn"+ trStr, BUTTON::Transfrom))
 			{
 				touchesStart(touch);
 				if (!moveFlag)
@@ -262,7 +272,7 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 
 void OPRT_touch::KeyReset(void)
 {
-	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+	for (auto key = static_cast<int>(BUTTON::RIGHT); key < static_cast<int>(BUTTON::MAX); key++)
 	{
 		_keyData._input[key] = false;
 		_keyData._data[key] = false;

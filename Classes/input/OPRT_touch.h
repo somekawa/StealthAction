@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <map>
 #include "OPRT_state.h"
 
 #define SWIPE_LEFT 1
@@ -54,6 +55,6 @@ struct OPRT_touch : OPRT_state
 private:
 	KeyData _keyData;
 	std::string trStr = "_toDark";
+	std::map<std::string, BUTTON> map_;
+	std::array<std::string, static_cast<int>(BUTTON::MAX)> nameTable_;
 };
-
-

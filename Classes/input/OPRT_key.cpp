@@ -4,7 +4,7 @@ USING_NS_CC;
 
 OPRT_key::OPRT_key(Sprite* sprite)
 {
-	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+	for (auto key = static_cast<int>(BUTTON::RIGHT); key < static_cast<int>(BUTTON::MAX); key++)
 	{
 		_keyData._input[key] = false;
 		_keyData._data[key] = false;
@@ -147,7 +147,7 @@ const std::array<bool, static_cast<int>(BUTTON::MAX)> &OPRT_key::GetOldData(void
 
 void OPRT_key::KeyReset(void)
 {
-	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::MAX); key++)
+	for (auto key = static_cast<int>(BUTTON::RIGHT); key < static_cast<int>(BUTTON::MAX); key++)
 	{
 		_keyData._input[key] = false;
 		_keyData._data[key] = false;

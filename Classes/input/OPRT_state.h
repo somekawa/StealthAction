@@ -15,17 +15,18 @@ enum class TRG_KEY {
 	INPUT
 };
 
+// æ“ª‚ğright‚É•ÏX
 enum class BUTTON {
-	UP,
-	DOWN,
 	RIGHT,
 	LEFT,
-	ATTACK,
 	Transfrom,
+	UP,
+	DOWN,
 	Dash,
 	SkillA,
 	SkillB,
 	SkillC,
+	Menu,
 	// “G‚ÉactModule‚ğ“o˜^‚·‚éÛ‚Ég—p
 	Non,
 	MAX
