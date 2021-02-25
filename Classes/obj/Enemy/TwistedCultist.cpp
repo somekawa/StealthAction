@@ -188,8 +188,9 @@ void TwistedCultist::AnimRegistrator(void)
 
 }
 
-void TwistedCultist::AddAttackObj(const float& angle)
+bool TwistedCultist::AddAttackObj(const float& angle)
 {
+	return true;
 }
 
 void TwistedCultist::actModuleRegistration(void)

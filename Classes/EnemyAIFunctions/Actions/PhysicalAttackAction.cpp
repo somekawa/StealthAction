@@ -12,7 +12,10 @@ bool PhysicalAttackAction::operator()(cocos2d::Sprite& sprite, ActModule& module
     {
 		if (dynamic_cast<Enemy&>(sprite).GetType() == ActorType::Cultist)
 		{
-			dynamic_cast<Enemy&>(sprite).AddAttackObj(0.0f);
+			if (!dynamic_cast<Enemy&>(sprite).AddAttackObj(0.0f))
+			{
+				return true;
+			}
 		}
 		else
 		{

@@ -18,6 +18,8 @@ Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange vis
 {
 	attackCnt_ = 0;
 	myName_ = "cultist";
+	flag_ = false;
+	fireBallCT_ = 0;
 
 	//pos_ = { 500,500 };
 	//this->setPosition(Vec2(pos_.x, pos_.y));
@@ -184,8 +186,29 @@ void Cultist::AnimRegistrator(void)
 
 }
 
-void Cultist::AddAttackObj(const float& angle)
+bool Cultist::AddAttackObj(const float& angle)
 {
+	// ˜A‘±‚ÅUŒ‚‚µ‚Ä‚­‚é‚Ì‚ð–h‚®
+	if (flag_)
+	{
+		// 1“xUŒ‚‚µ‚½Œã‚ÉÄ“xUŒ‚‚·‚é‚Ü‚Å‚ÌƒN[ƒ‹ƒ^ƒCƒ€‚ðÝ’è‚·‚é
+		if (fireBallCT_ > 0)
+		{
+			fireBallCT_--;
+		}
+		else
+		{
+			fireBallCT_ = 0;
+			flag_ = false;
+		}
+		currentAnimation_ = "cultist_idle";
+		isAttacking_ = false;
+		return false;
+	}
+
+	flag_ = true;
+	fireBallCT_ = 120;
+
 	// UŒ‚‚µ‚Ä‚¢‚½‚çfireball‚ð”ò‚Î‚·
 	auto fireball = Fireball::CreateFireball({ getPosition().x,getPosition().y + 30.0f },direction_,angle,player_);
 	if (direction_ == Direction::Left)
@@ -201,6 +224,7 @@ void Cultist::AddAttackObj(const float& angle)
 	attackCnt_++;
 	isAttacking_ = true;
 	fireball->scheduleUpdate();
+	return true;
 }
 
 const float Cultist::GetPLAngle(void)

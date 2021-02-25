@@ -16,7 +16,7 @@ public:
     void update(float delta)override;
     void AnimRegistrator(void);
 
-    void AddAttackObj(const float& angle);
+    bool AddAttackObj(const float& angle);
     const float GetPLAngle(void);
     void actModuleRegistration(void);
 
@@ -40,5 +40,8 @@ private:
     void(Cultist::* updater_)(void);
     // UŒ‚‰ñ”
     int attackCnt_;
+
+	bool flag_;
+	int fireBallCT_;
 };
 

@@ -15,7 +15,7 @@ public:
 	void update(float delta)override;
 	void AnimRegistrator(void);
 
-    void AddAttackObj(const float& angle);
+    bool AddAttackObj(const float& angle);
 	//CREATE_FUNC(Imp);
     void actModuleRegistration(void);
 

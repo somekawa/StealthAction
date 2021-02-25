@@ -129,8 +129,9 @@ void Imp::AnimRegistrator(void)
 	lpAnimMng.InitAnimation(*this, ActorType::Imp, "walk");
 }
 
-void Imp::AddAttackObj(const float& angle)
+bool Imp::AddAttackObj(const float& angle)
 {
+	return true;
 }
 
 void Imp::actModuleRegistration(void)

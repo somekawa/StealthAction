@@ -64,7 +64,7 @@ public:
 	// 今現在のﾌﾛｱに存在する自分自身を消す(ﾌﾛｱ変更の際に使用)
 	virtual void DeleteSelfOnFloor(void);
 
-	virtual void AddAttackObj(const float& angle) = 0;
+	virtual bool AddAttackObj(const float& angle) = 0;
 
 	virtual void ChangeDirection(float delta);
 	virtual const float& GetDistance(void);

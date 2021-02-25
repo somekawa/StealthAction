@@ -28,7 +28,7 @@ Assassin::Assassin(Vec2 pos, Player& player,
 
 	currentAnimation_ = "assassin_idle";
 	previousAnimation_ = currentAnimation_;
-	direction_ = Direction::Left;
+	direction_ = Direction::Right;
 
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(50.0f, 50.0f);
@@ -192,8 +192,9 @@ void Assassin::AnimRegistrator(void)
 
 }
 
-void Assassin::AddAttackObj(const float& angle)
+bool Assassin::AddAttackObj(const float& angle)
 {
+	return true;
 }
 
 void Assassin::actModuleRegistration(void)
@@ -204,7 +205,7 @@ void Assassin::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ 0.5f,0 };
+		act.vel = Vec2{ 3.0f,0 };
 		act.actName = "assassin_run";
 		act.checkPoint1 = Vec2{ 50.0f,size.y - 9.0f };	// 右上
 		act.checkPoint2 = Vec2{ 50.0f,  15.0f };			// 右下
@@ -226,7 +227,7 @@ void Assassin::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = nullptr;
-		act.vel = Vec2{ 0.5f,0 };
+		act.vel = Vec2{ 3.0f,0 };
 		act.actName = "assassin_run";
 		act.checkPoint1 = Vec2{ -15.0f, size.y - 9.0f };	// 左上
 		act.checkPoint2 = Vec2{ -15.0f, 15.0f };			// 左下

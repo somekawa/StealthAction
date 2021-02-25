@@ -196,8 +196,9 @@ void BigCultist::AnimRegistrator(void)
 {
 }
 
-void BigCultist::AddAttackObj(const float& angle)
+bool BigCultist::AddAttackObj(const float& angle)
 {
+	return true;
 }
 
 void BigCultist::actModuleRegistration(void)

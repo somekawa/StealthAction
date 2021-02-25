@@ -14,7 +14,7 @@ public:
     void update(float delta)override;
     void AnimRegistrator(void);
 
-    void AddAttackObj(const float& angle);
+    bool AddAttackObj(const float& angle);
     void actModuleRegistration(void);
 
 private:
