@@ -37,20 +37,20 @@ Assassin::Assassin(Vec2 pos, Player& player,
 	{
 		// colliderBoxのLoad
 		lpCol.ReadData(collider_, anim);
-		//for (auto col : collider_[anim])
-		//{
-		//	for (int colNum = 0; colNum < col.size(); colNum++)
-		//	{
-		//		// colliderBoxを自身の子にする
-		//		auto draw = col[colNum]->create();
-		//		draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-		//		draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+		for (auto col : collider_[anim])
+		{
+			for (int colNum = 0; colNum < col.size(); colNum++)
+			{
+				// colliderBoxを自身の子にする
+				auto draw = col[colNum]->create();
+				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
+				//draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
 
-		//		draw->setTag(col[colNum]->GetData().frame_);
+				draw->setTag(col[colNum]->GetData().frame_);
 
-		//		this->addChild(draw,col[colNum]->GetData().type_, anim);
-		//	}
-		//}
+				this->addChild(draw,col[colNum]->GetData().type_, anim);
+			}
+		}
 	}
 	
 	// 初期アニメーションのセット
@@ -152,6 +152,7 @@ void Assassin::update(float delta)
 				//currentAnimation_ = "assassin_death";
 				ChangeAnimation("assassin_death");
 				stateTransitioner_ = &Enemy::Death;
+				
 			}
 		}
 

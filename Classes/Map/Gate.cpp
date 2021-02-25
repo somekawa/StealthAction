@@ -12,8 +12,8 @@ Gate::Gate(Vec2 pos, int gateNum)
 	own_->setScaleY(2);
 	this->addChild(own_);
 	this->setName("gate");
-	//this->setVisible(false);
-	isOpen_ = false;
+	this->setVisible(false);
+	isEnable_ = false;
 }
 Gate::~Gate()
 {
@@ -35,15 +35,6 @@ Gate* Gate::CreateGate(cocos2d::Vec2 pos, int gateNum)
 		pRet = nullptr;
 		return nullptr;
 	}
-}
-
-void Gate::Update()
-{
-	if (frame > 180)
-	{
-		isOpen_ = true;
-	}
-	frame++;
 }
 
 int Gate::GetGateNum()

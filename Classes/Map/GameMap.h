@@ -49,7 +49,7 @@ public:
 	// 今のマップをロードした次のマップに切り替え(プレイヤーのポジション)
 	void ReplaceMap(Player& player);
 	// 更新
-	void update(Player& player);
+	void Update(Player& player, int nowEnemyNum);
 
 	// マップ親リストを取得
 	MapParentList& GetMapParentList();
@@ -60,6 +60,9 @@ public:
 	const int GetNowID();
 	// エネミーの数
 	int GetEnemyNum();
+
+	// クリアしたかどうか
+	int IsClear();
 	// マップジェネレータ取得
 	MapGenerator& GetMapGenerator();
 	// フロア変更のフラグ取得
@@ -96,5 +99,8 @@ private:
 
 	// フロア変更したときにtrueになる
 	bool isChangeFloor_;
+
+	// クリアしたときtrue
+	bool isClear_;
 };
 

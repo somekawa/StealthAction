@@ -349,7 +349,7 @@ void Game::update(float sp)
 
 	// gameoversceneへのフラグがtrueになっていたら、画面遷移を行う
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
-	if (player->GetGameOverFlg())
+	if (player->GetGameOverFlg()|| gameMap_->IsClear())
 	{
 		isChanged_ = true;
 		Scene* scene = GameOverScene::CreateGameOverScene();
@@ -369,7 +369,7 @@ void Game::update(float sp)
 	auto skillBaseSp = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
 	skillBaseSp->UpDate(sp);
 	//auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
-	gameMap_->update(*player);
+	
 
 
 	// skillの攻撃対象選別 // 
@@ -408,9 +408,10 @@ void Game::update(float sp)
 		// ﾌﾛｱ変更後1回だけ初期の敵の数だけｲﾝｽﾀﾝｽ
 		enemyManager_->CreateInitialEnemyOnFloor(1);
 	}
-
+	auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
+	gameMap_->Update(*player, enemyNum);
 	// 敵のｽﾎﾟｰﾝを管理
-	//enemyManager_->Update(effectManager_);
+	enemyManager_->Update();
 	
 	// カメラスクロール
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
