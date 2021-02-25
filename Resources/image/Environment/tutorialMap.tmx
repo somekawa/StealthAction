@@ -43,6 +43,9 @@
    </properties>
   </object>
  </objectgroup>
+ <objectgroup id="4" name="clear">
+  <object id="41" name="clear" x="528" y="240" width="32" height="32"/>
+ </objectgroup>
  <layer id="1" name="Collision" width="64" height="36">
   <data encoding="csv">
 62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,

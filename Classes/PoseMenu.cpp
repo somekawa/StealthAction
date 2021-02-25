@@ -4,6 +4,7 @@
 #include "Guide.h"
 #include "Scene/GameScene.h"
 #include "Scene/TitleScene.h"
+#include "SoundMng.h"
 #include "PoseMenu.h"
 
 USING_NS_CC;
@@ -26,6 +27,7 @@ cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
 
 PoseMenu::PoseMenu(GameMap& gameMap)
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto director = Director::getInstance();
 	auto size = director->getVisibleSize();
 	auto tex = RenderTexture::create(size.width, size.height);
@@ -73,6 +75,7 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_SHIFT)
 		{
 			lpAnimMng.AnimDataClear();
+			lpSoundMng.SetPauseAll(true);
 			Director::getInstance()->popToSceneStackLevel(1);
 			Director::getInstance()->replaceScene(TitleScene::CreateTitleScene());
 		}

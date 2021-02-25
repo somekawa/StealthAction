@@ -4,6 +4,7 @@
 #include "ActionRect.h"
 #include "Loader/CollisionLoader.h"
 #include "anim/AnimMng.h"
+#include "SoundMng.h"
 #include "obj/Player.h"
 
 #include "BehaviorBaseAI/BehaviorData.h"
@@ -20,6 +21,8 @@ Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange vis
 	myName_ = "cultist";
 	flag_ = false;
 	fireBallCT_ = 0;
+
+	lpSoundMng.AddSound("burst01", "BGM/s-burst01.mp3",SoundType::SE);
 
 	//pos_ = { 500,500 };
 	//this->setPosition(Vec2(pos_.x, pos_.y));
@@ -332,6 +335,7 @@ void Cultist::NormalAttack(void)
 {
 	if (animationFrame_int_ < 11)
 	{
+		lpSoundMng.PlayBySoundName("burst01");
 		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	}
 
