@@ -55,12 +55,6 @@ void HPGauge::update(float delta)
 		return;
 	}
 
-	// プレイヤーのHPは右から左に削れたほうがいいと思ったため、アンカーポイントを変更しています
-	if (targetActor_->getName() == "player1" && this->getAnchorPoint() != Vec2(0.0f, 0.5f))
-	{
-		this->setAnchorPoint(Vec2(0.0f, 0.5f));
-	}
-
 	float newScale;
 
 	if (nowLife_ <= 0.0f)
@@ -74,7 +68,21 @@ void HPGauge::update(float delta)
 		newScale = nowLife_ / initLife_;
 	}
 
-	this->setScale(newScale, 1.0);
+	if (targetActor_->getName() == "player1")
+	{
+		this->setScale(newScale, 1.0);
+		// プレイヤーのHPは右から左に削れたほうがいいと思ったため、アンカーポイントを変更しています
+		if (this->getAnchorPoint() != Vec2(0.0f, 0.5f))
+		{
+			this->setAnchorPoint(Vec2(0.0f, 0.5f));
+		}
+	}
+	else
+	{
+		// 敵のゲージはプレイヤーと同じサイズだと見づらくなるため、縮小しています
+		this->setScale(newScale / 2, 1.0 / 2);
+	}
+
 	if (moveFlag_ == 1)
 	{
 		setPosition(Vec2(targetActor_->getPosition().x - 30.0f, targetActor_->getPosition().y + 100.0f));
