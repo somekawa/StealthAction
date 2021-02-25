@@ -58,6 +58,11 @@ bool TitleScene::init()
 
 	flipFlg_ = false;
 
+	// タイトルロゴ
+	auto titleLogo = Sprite::create("image/title_logo.png");
+	titleLogo->setPosition(Vec2(visibleSize.width / 3 - 50, visibleSize.height / 2 + 140));
+	this->addChild(titleLogo);
+
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
@@ -92,6 +97,12 @@ bool TitleScene::init()
 	this->addChild(label, 0);
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+
+	// メッセージの点滅
+	auto actionBlink = Blink::create(7, 5);				// 7秒で5回点滅
+	auto repeat = Repeat::create(actionBlink, -1);
+	label->runAction(repeat);
+
 	this->setName("TitleScene");
 	this->scheduleUpdate();
 	return true;
