@@ -11,6 +11,7 @@
 #include "../Skill/SkillCode/SkillC.h"
 #include "../Loader/FileLoder.h"
 #include "../HPGauge.h"
+#include "SoundMng.h"
 #include "ResidualShadow.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
@@ -32,6 +33,12 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	skillBase_ = skillBasePtr;
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	lpSoundMng.AddSound("recovery", "BGM/Recovery.mp3", SoundType::SE);
+	lpSoundMng.AddSound("burst", "BGM/s-burst01.mp3", SoundType::SE);
+	lpSoundMng.AddSound("burst2", "BGM/s-burst02.mp3", SoundType::SE);
+	lpSoundMng.AddSound("Transform", "BGM/se_maoudamashii_element_fire01.mp3", SoundType::SE);
+	lpSoundMng.AddSound("Knife", "BGM/Knife.mp3", SoundType::SE);
 
 	// キー入力かタッチ操作か判断
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
@@ -68,7 +75,6 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	bitFlg_.ThirdAttackFlg = false;
 	bitFlg_.TransfromFlg = false;
 
-	playerColor = "player_Light_";
 	gameOverFlg_ = false;
 	deathFlg_ = false;
 	hp_ = hp;
@@ -141,7 +147,7 @@ void Player::update(float delta)
 		return;
 	}
 
-	// darkモード(攻撃力は上がるが、HPは減少し続ける)
+	// バーサーカーモード(攻撃力は上がるが、HPは減少し続ける)
 	if (playerColor == "player_Dark_")
 	{
 		// HP減少処理
@@ -202,7 +208,7 @@ void Player::update(float delta)
 	// 攻撃が連続で当たっているようになり、HPの減少が激しい。<- 直さないといけない。
 	onDamaged_ = isHitAttack_;
 
-	// ダメージをくらった際の処理(この中にdeath処理を書いてしまうと、darkモード死亡したときに対応できない)
+	// ダメージをくらった際の処理(この中にdeath処理を書いてしまうと、バーサーカーモードで死亡したときに対応できない)
 	if (onDamaged_)
 	{
 		// HP減少処理
@@ -455,6 +461,7 @@ void Player::transformMotion(float delta)
 	// トランスフォーム
 	if (bitFlg_.TransfromFlg)
 	{
+		lpSoundMng.PlayBySoundName("Transform",0.2f);
 		currentAnimation_ = "Transform";
 	}
 	if (!bitFlg_.TransfromFlg)
@@ -885,22 +892,6 @@ bool Player::GetGameOverFlg(void)
 	return gameOverSceneFlg_;
 }
 
-int Player::GetGiveDamageNum(void)
-{
-	if (playerColor == "player_Light_")
-	{
-		return AttackNumDef;			// 通常状態
-	}
-	else
-	{
-		return AttackNumDef * 3;		// dark状態(hpが減少し続ける代わりにダメージが多く与えられる)
-	}
-}
-
-std::string Player::GetPlayerColor(void)
-{
-	return playerColor;
-}
 
 void Player::actModuleRegistration(void)
 {
@@ -1075,6 +1066,7 @@ void Player::actModuleRegistration(void)
 
 	// 攻撃
 	{
+		lpSoundMng.PlayBySoundName("Knife");
 		ActModule act;
 		act.state = oprtState_;
 		//act.button = BUTTON::ATTACK;
@@ -1089,6 +1081,7 @@ void Player::actModuleRegistration(void)
 
 	// 攻撃2
 	{
+		lpSoundMng.PlayBySoundName("Knife");
 		ActModule act;
 		act.state = oprtState_;
 		act.button = BUTTON::DOWN;
@@ -1100,6 +1093,7 @@ void Player::actModuleRegistration(void)
 
 	// 攻撃3
 	{
+		lpSoundMng.PlayBySoundName("Knife");
 		ActModule act;
 		act.state = oprtState_;
 		act.button = BUTTON::DOWN;
@@ -1172,6 +1166,7 @@ void Player::skillAction(void)
 			bool skillFlg = ((SkillBase*)director)->GetSkillCT("magic");
 			if (skillFlg)
 			{
+				lpSoundMng.PlayBySoundName("burst2");
 				auto director = Director::getInstance();
 				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
 				skillSprite->SetPlayerPos(getPosition());
@@ -1193,6 +1188,7 @@ void Player::skillAction(void)
 			bool skillFlg = ((SkillBase*)director)->GetSkillCT("enemySpawn");
 			if (skillFlg)
 			{
+				lpSoundMng.PlayBySoundName("burst");
 				auto director = Director::getInstance();
 				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
 				auto ppos = getPosition();
@@ -1227,15 +1223,10 @@ void Player::skillAction(void)
 		// HP回復
 		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillC)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillC)])
 		{
-			// darkモードでは使用不可にする
-			if (playerColor == "player_Dark_")
-			{
-				return;
-			}
-
 			bool skillFlg = ((SkillBase*)director)->GetSkillCT("heal");
 			if (skillFlg)
 			{
+				lpSoundMng.PlayBySoundName("recovery");
 				auto director = Director::getInstance();
 				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
 				skillSprite->SetPlayerPos(getPosition());

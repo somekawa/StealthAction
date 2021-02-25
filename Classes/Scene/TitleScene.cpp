@@ -1,3 +1,4 @@
+#include "SoundMng.h"
 #include "TitleScene.h"
 #include "GameScene.h"
 
@@ -21,6 +22,7 @@ Scene* TitleScene::CreateTitleScene()
 
 TitleScene::TitleScene()
 {
+	lpSoundMng.AddSound("TitleBGM", "BGM/mizunishizumuorgan.mp3", SoundType::BGM);
 }
 
 TitleScene::~TitleScene()
@@ -33,6 +35,8 @@ bool TitleScene::init()
 	{
 		return false;
 	}
+
+	lpSoundMng.PlayBySoundName("TitleBGM");
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -146,6 +150,7 @@ void TitleScene::update(float delta)
 void TitleScene::ChangeScene()
 {
 	isChanged_ = true;
+	lpSoundMng.SetPauseAll(true);
 	Scene* scene = Game::createScene();
 	Director::getInstance()->popToRootScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));

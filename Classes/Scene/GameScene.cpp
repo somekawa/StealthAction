@@ -73,8 +73,8 @@ bool Game::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	// サウンド
-	lpSoundMng.AddSound("bgm", "BGM/BGM_piano.mp3", SoundType::BGM);
-	//lpSoundMng.PlayBySoundName("bgm", 0.5f);
+	lpSoundMng.AddSound("BattleBGM", "BGM/sento.mp3", SoundType::BGM);
+	lpSoundMng.PlayBySoundName("BattleBGM", 0.5f);
 
 	for (auto& layer : layer_)
 	{
@@ -449,8 +449,8 @@ void Game::update(float sp)
 	{
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(255, 255, 255));
 	}
-	// スキルC(CT中またはdarkモードの時は暗くする)
-	if (!((SkillBase*)director)->GetSkillCT("heal") || player->GetPlayerColor() == "player_Dark_")
+	// スキルC
+	if (!((SkillBase*)director)->GetSkillCT("heal"))
 	{
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(150, 150, 150));
 	}
