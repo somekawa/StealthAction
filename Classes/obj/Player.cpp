@@ -15,7 +15,7 @@
 #include "ResidualShadow.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "input/OPRT_key.h"
+#include "input/OPRT_touch.h"
 #else
 #include "input/OPRT_touch.h"
 #endif
@@ -43,7 +43,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	// キー入力かタッチ操作か判断
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// thisの意味
-	oprtState_ = new OPRT_key(this);
+	oprtState_ = new OPRT_touch(this);
 #else
 	oprtState_ = new OPRT_touch(this);
 #endif

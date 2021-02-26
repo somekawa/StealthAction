@@ -2,6 +2,7 @@
 #include <cocos2d.h>
 
 class GameMap;
+class OPRT_state;
 class PoseMenu : public cocos2d::Scene
 {
 public:
@@ -10,5 +11,6 @@ public:
 	~PoseMenu();
 private:
 	void ButtonDraw(void);
+	void update(float delta);
+	OPRT_state* oprtState_;										// OPRT_state‚Ì‚à‚Ì‚ğŒÄ‚Ño‚·
 };
-

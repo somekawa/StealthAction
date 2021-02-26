@@ -13,10 +13,11 @@ OPRT_touch::OPRT_touch(Sprite* delta)
 		_keyData._oldData[key] = false;
 	}
 
-	// UPからMenuまでを登録
+	// UPからGameExitまでを登録
 	nameTable_ = {
 		"jumpBtn","attackBtn","dashBtn",
-		"skillABtn","skillBBtn","skillCBtn","menuBtn"
+		"skillABtn","skillBBtn","skillCBtn","menuBtn",
+		"continueBtn","mapBtn","guideBtn","exitBtn"
 	};
 
 	for (auto key = static_cast<int>(BUTTON::UP); key < static_cast<int>(BUTTON::Non); key++)
@@ -95,9 +96,25 @@ void OPRT_touch::touchesEnd(cocos2d::Touch* touch)
 	// ボタン非押下状態の画像に戻すために使用
 	auto buttonLambda = [&](std::string str, BUTTON button) {
 		auto director = Director::getInstance();
-		auto label1 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName(str);
-		_keyData._input[static_cast<int>(button)] = false;
-		((MenuItemImage*)label1)->unselected();
+		cocos2d::Node* label1;
+		if (button == BUTTON::Continue || button == BUTTON::Map || button == BUTTON::Guide || button == BUTTON::GameExit)
+		{
+			if (director->getRunningScene()->getName() != "PoseMenu")
+			{
+				return;
+			}
+			label1 = director->getRunningScene()->getChildByName(str);
+		}
+		else
+		{
+			if (director->getRunningScene()->getName() == "PoseMenu")
+			{
+				return;
+			}
+			label1 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName(str);
+			_keyData._input[static_cast<int>(button)] = false;
+			((MenuItemImage*)label1)->unselected();
+		}
 	};
 
 	for (auto key = static_cast<int>(BUTTON::RIGHT); key < static_cast<int>(BUTTON::MAX); key++)
@@ -139,7 +156,26 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 			auto director = Director::getInstance();
 
 			auto buttonLambda = [&](std::string str,BUTTON button) {
-				auto label1 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName(str);
+				cocos2d::Node* label1;
+				if (button == BUTTON::Continue || button == BUTTON::Map || button == BUTTON::Guide || button == BUTTON::GameExit)
+				{
+					if (director->getRunningScene()->getName() != "PoseMenu")
+					{
+						return false;
+					}
+					else
+					{
+						label1 = director->getRunningScene()->getChildByName(str);
+					}
+				}
+				else
+				{
+					if (director->getRunningScene()->getName() == "PoseMenu")
+					{
+						return false;
+					}
+					label1 = director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName(str);
+				}
 				auto r = label1->getBoundingBox();
 				if (r.containsPoint(touchVectors[touch->getID()].pos)) {
 					// label1がクリック/タッチされた場合の処理
@@ -165,6 +201,11 @@ void OPRT_touch::touchesflg(cocos2d::Sprite* delta)
 			for (auto button : map_)
 			{
 				buttonFlg |= buttonLambda(button.first, button.second);
+			}
+
+			if (director->getRunningScene()->getName() == "PoseMenu")
+			{
+				buttonFlg = true;
 			}
 
 			if (!buttonFlg && !buttonLambda("transformBtn"+ trStr, BUTTON::Transfrom))

@@ -35,21 +35,32 @@ bool GameOverScene::init()
 
 	isChanged_ = false;
 
+	auto _Gbg = LayerGradient::create(Color4B::BLACK, Color4B::WHITE);
+	this->addChild(_Gbg);
+
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * keyEvent)
 	{
-		if (!isChanged_)
+		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
 		{
-			this->ChangeScene();
+			if (!isChanged_)
+			{
+				this->ChangeScene();
+			}
 		}
 	};
-	auto label = Label::createWithTTF("This is GameOverScene ", "fonts/PixelMplus12-Regular.ttf", 48);
+	auto label = Label::createWithTTF("GameOver...", "fonts/PixelMplus12-Regular.ttf", 48);
 	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height / 3 - label->getContentSize().height));
-
-	// add the label as a child to this layer
+		origin.y + visibleSize.height - (label->getContentSize().height * 2)));
+	label->setColor(Color3B::RED);
 	this->addChild(label, 0);
+
+	auto label2 = Label::createWithTTF("Please Press SPACE Key", "fonts/PixelMplus12-Regular.ttf", 48);
+	label2->setPosition(Vec2(origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height / 3 - (label->getContentSize().height * 2)));
+	label2->setColor(Color3B::BLACK);
+	this->addChild(label2, 0);
 #else
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event)
@@ -57,15 +68,33 @@ bool GameOverScene::init()
 		this->ChangeScene();
 		return true;
 	};
-	auto label = Label::createWithTTF("Tap To Start ", "fonts/PixelMplus12-Regular.ttf", 48);
+	auto label = Label::createWithTTF("GameOver...", "fonts/PixelMplus12-Regular.ttf", 48);
 	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height / 3 - label->getContentSize().height));
-
-	// add the label as a child to this layer
+		origin.y + visibleSize.height - (label->getContentSize().height * 2)));
+	label->setColor(Color3B::RED);
 	this->addChild(label, 0);
+
+	auto label2 = Label::createWithTTF("Tap To Title", "fonts/PixelMplus12-Regular.ttf", 48);
+	label2->setPosition(Vec2(origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height / 3 - (label->getContentSize().height * 2)));
+	label2->setColor(Color3B::BLACK);
+	this->addChild(label2, 0);
+
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 	this->setName("GameOverScene");
+
+	// メッセージの点滅
+	auto actionBlink = Blink::create(7, 5);				// 7秒で5回点滅
+	auto repeat = Repeat::create(actionBlink, -1);
+	label2->runAction(repeat);
+
+	// 死亡時のキャラクター
+	auto deathChar = Sprite::create("image/gameover_char.png");
+	deathChar->setPosition(visibleSize / 2);
+	deathChar->setScale(3.0f);
+	this->addChild(deathChar);
+
 	this->scheduleUpdate();
 	return true;
 }

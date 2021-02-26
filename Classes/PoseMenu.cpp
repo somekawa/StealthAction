@@ -5,6 +5,7 @@
 #include "Scene/GameScene.h"
 #include "Scene/TitleScene.h"
 #include "SoundMng.h"
+#include "input/OPRT_touch.h"
 #include "PoseMenu.h"
 
 USING_NS_CC;
@@ -27,11 +28,11 @@ cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
 
 PoseMenu::PoseMenu(GameMap& gameMap)
 {
-
+	oprtState_ = new OPRT_touch((Sprite*)this);
 	ButtonDraw();
 
 	// “ü—ÍŒn“
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	auto a = Director::getInstance()->getRunningScene();
 	listener->onKeyPressed = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
@@ -48,7 +49,7 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 		}
 
 		//ƒQ[ƒ€‚É–ß‚é
-		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
+		if (keyCode == EventKeyboard::KeyCode::KEY_TAB)
 		{
 			Director::getInstance()->popScene();
 		}
@@ -62,18 +63,21 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 		}
 	};
 #else
-	auto listener = EventListenerTouchOneByOne::create();
-	listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
-	{
-		Director::getInstance()->popScene();
-		return true;
-	};
+	//auto listener = EventListenerTouchOneByOne::create();
+	//listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
+	//{
+	//	Director::getInstance()->popScene();
+	//	return true;
+	//};
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+	//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+	this->setName("PoseMenu");
+	this->scheduleUpdate();
 }
 
 PoseMenu::~PoseMenu()
 {
+	delete oprtState_;
 }
 
 void PoseMenu::ButtonDraw(void)
@@ -104,9 +108,13 @@ void PoseMenu::ButtonDraw(void)
 	bg->retain();
 	bg->visit();
 
-	auto button = [=](Vec2 pos,std::string txt)
+	auto button = [=](Vec2 pos,std::string txt,std::string name)
 	{
-		auto sprite = Sprite::create("image/button.png");
+		auto sprite = MenuItemImage::create(
+			"image/button.png",
+			"image/button.png");
+
+		//auto sprite = Sprite::create("image/button.png");
 		auto sprite_size = sprite->getContentSize();
 		auto label = Label::createWithTTF(txt, "fonts/PixelMplus12-Regular.ttf", 40);
 		label->setTextColor(Color4B::BLACK);
@@ -115,15 +123,49 @@ void PoseMenu::ButtonDraw(void)
 		// add the label as a child to this layer
 		this->addChild(label, 0);
 		sprite->retain();
-		sprite->setScaleX(0.2);
-		sprite->setScaleY(0.1);
+		sprite->setName(name);
+		sprite->setScaleX(0.2f);
+		sprite->setScaleY(0.1f);
 		sprite->setPosition(pos);
 		sprite->visit();
+		this->addChild(sprite);
 	};
-	button(Vec2(size.width / 2, (size.height / 5) * 4), "continue"	);
-	button(Vec2(size.width / 2, (size.height / 5) * 3), "view Map"	);
-	button(Vec2(size.width / 2, (size.height / 5) * 2), "view Guide");
-	button(Vec2(size.width / 2, (size.height / 5)	 ), "Game Exit");
+	button(Vec2(size.width / 2, (size.height / 5) * 4), "continue"	, "continueBtn");
+	button(Vec2(size.width / 2, (size.height / 5) * 3), "view Map"	, "mapBtn");
+	button(Vec2(size.width / 2, (size.height / 5) * 2), "view Guide", "guideBtn");
+	button(Vec2(size.width / 2, (size.height / 5)	 ), "Game Exit" , "exitBtn");
 
 	tex->end();
+}
+
+void PoseMenu::update(float delta)
+{
+	if (Director::getInstance()->getRunningScene()->getName() != "PoseMenu")
+	{
+		return;
+	}
+
+	auto label1 = this->getChildByName("continueBtn");
+	if (label1 != nullptr && ((MenuItemImage*)label1)->isSelected())
+	{
+		int a = 0;
+	}
+
+	auto label2 = this->getChildByName("mapBtn");
+	if (label2 != nullptr && ((MenuItemImage*)label2)->isSelected())
+	{
+		int a = 0;
+	}
+
+	auto label3 = this->getChildByName("guideBtn");
+	if (label3 != nullptr && ((MenuItemImage*)label3)->isSelected())
+	{
+		int a = 0;
+	}
+
+	auto label4 = this->getChildByName("exitBtn");
+	if (label4 != nullptr && ((MenuItemImage*)label4)->isSelected())
+	{
+		int a = 0;
+	}
 }

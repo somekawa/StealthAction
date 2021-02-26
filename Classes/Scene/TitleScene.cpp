@@ -80,7 +80,7 @@ bool TitleScene::init()
 			}
 		}
 	};
-	auto label = Label::createWithTTF("To Start Press SPACE Key ", "fonts/PixelMplus12-Regular.ttf", 48);
+	auto label = Label::createWithTTF("Please Press SPACE Key ", "fonts/PixelMplus12-Regular.ttf", 48);
 	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 3 - (label->getContentSize().height * 2)));
 

@@ -262,6 +262,12 @@ bool Game::init()
 	plHpGaugeBack->setAnchorPoint(Vec2(0.0f, 0.5f));
 	layer_[(int)zOlder::FRONT]->addChild(plHpGaugeBack, 0);
 
+	// プレイヤーHPゲージカバー
+	auto plHpGaugeCover = Sprite::create("image/HPbar_cover.png");
+	plHpGaugeCover->setPosition(Vec2(plHPGauge->getPosition().x - 45, plHPGauge->getPosition().y));
+	plHpGaugeCover->setAnchorPoint(Vec2(0.0f, 0.5f));
+	layer_[(int)zOlder::FRONT]->addChild(plHpGaugeCover, 0);
+
 	//// 敵の出現や消去等を管理するManagerを生成
 	enemyManager_ = std::make_unique<EnemyManager>(*layer_[static_cast<int>(zOlder::CHAR_ENEMY)], *layer_[static_cast<int>(zOlder::FRONT)], *player);
 

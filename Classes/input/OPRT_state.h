@@ -27,6 +27,10 @@ enum class BUTTON {
 	SkillB,
 	SkillC,
 	Menu,
+	Continue,
+	Map,
+	Guide,
+	GameExit,
 	// “G‚ÉactModule‚ğ“o˜^‚·‚éÛ‚Ég—p
 	Non,
 	MAX
