@@ -68,7 +68,7 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 		{
 			Director::getInstance()->pushScene(Guide::CreateGuide());
 		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
+		if (keyCode == EventKeyboard::KeyCode::KEY_TAB)
 		{
 			Director::getInstance()->popScene();
 		}
