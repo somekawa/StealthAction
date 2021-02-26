@@ -17,10 +17,17 @@ MapMenu::MapMenu(GameMap& gameMap)
 	this->addChild(tex);
 
 	auto gameScene = director->getRunningScene();
+	auto menuBtn = MenuItemImage::create(
+		"image/keep_button1.png",
+		"image/keep_button1_select.png");
+	menuBtn->setPosition(Vec2(size.width - (menuBtn->getContentSize().width * 0.25) / 2 - 10, size.height - (menuBtn->getContentSize().height * 0.25) / 2 - 10));
+	menuBtn->setScale(0.25f);
+	this->addChild(menuBtn);
 	tex->begin();
 
 	// ゲームシーン表示
 	gameScene->visit();
+
 	// 部屋表示
 	int id = 0; 
 	auto& roomData = mapGen.GetMSTNode();
@@ -86,6 +93,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 		// add the label as a child to this layer
 		this->addChild(label, 0);
 	}
+
 	tex->end();
 
 	

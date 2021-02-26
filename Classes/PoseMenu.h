@@ -12,5 +12,6 @@ public:
 private:
 	void ButtonDraw(void);
 	void update(float delta);
+	GameMap& gameMap_;
 	OPRT_state* oprtState_;										// OPRT_state‚Ì‚à‚Ì‚ğŒÄ‚Ño‚·
 };

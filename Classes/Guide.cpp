@@ -75,6 +75,12 @@ void Guide::spriteDraw(Size size)
 	};
 	sprite("image/mapBg.png", Vec2(size.width / 2, size.height / 2));
 	sprite("image/playerGuide.png", Vec2(size.width / 2, size.height - (size.height / 10) - 144 / 2), 0.5f);
+	auto menuBtn = MenuItemImage::create(
+		"image/keep_button1.png",
+		"image/keep_button1_select.png");
+	menuBtn->setPosition(Vec2(size.width - (menuBtn->getContentSize().width * 0.25) / 2 - 10, size.height - (menuBtn->getContentSize().height * 0.25) / 2 - 10));
+	menuBtn->setScale(0.25f);
+	this->addChild(menuBtn);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto scl = 3.0f;
 	sprite("image/PlayerAsset/Light/idle.png", Vec2(size.width / 6 + 20, (size.height / 10) + 18 / 2 * scl), scl);

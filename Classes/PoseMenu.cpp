@@ -26,7 +26,7 @@ cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
 	}
 }
 
-PoseMenu::PoseMenu(GameMap& gameMap)
+PoseMenu::PoseMenu(GameMap& gameMap):gameMap_(gameMap)
 {
 	oprtState_ = new OPRT_touch((Sprite*)this);
 	ButtonDraw();
@@ -40,7 +40,7 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 		//マップ表示
 		if (keyCode == EventKeyboard::KeyCode::KEY_M)
 		{
-			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap));
+			Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap_));
 		}
 		//操作説明表示
 		if (keyCode == EventKeyboard::KeyCode::KEY_G)
@@ -108,32 +108,28 @@ void PoseMenu::ButtonDraw(void)
 	bg->retain();
 	bg->visit();
 
-	auto button = [=](Vec2 pos,std::string txt,std::string name)
+	auto button = [=](Vec2 pos,std::string path,std::string name)
 	{
 		auto sprite = MenuItemImage::create(
 			"image/button.png",
 			"image/button.png");
-
-		//auto sprite = Sprite::create("image/button.png");
-		auto sprite_size = sprite->getContentSize();
-		auto label = Label::createWithTTF(txt, "fonts/PixelMplus12-Regular.ttf", 40);
-		label->setTextColor(Color4B::BLACK);
-		label->setPosition(pos);
-
-		// add the label as a child to this layer
-		this->addChild(label, 0);
+		auto sprite2 = MenuItemImage::create(path,path);
 		sprite->retain();
 		sprite->setName(name);
 		sprite->setScaleX(0.2f);
 		sprite->setScaleY(0.1f);
 		sprite->setPosition(pos);
 		sprite->visit();
-		this->addChild(sprite);
+		sprite2->retain();
+		sprite2->setName(name);
+		sprite2->setScale(0.5f);
+		sprite2->setPosition(pos);
+		sprite2->visit();
 	};
-	button(Vec2(size.width / 2, (size.height / 5) * 4), "continue"	, "continueBtn");
-	button(Vec2(size.width / 2, (size.height / 5) * 3), "view Map"	, "mapBtn");
-	button(Vec2(size.width / 2, (size.height / 5) * 2), "view Guide", "guideBtn");
-	button(Vec2(size.width / 2, (size.height / 5)	 ), "Game Exit" , "exitBtn");
+	button(Vec2(size.width / 2, (size.height / 5) * 4), "image/continue.png"	, "continueBtn");
+	button(Vec2(size.width / 2, (size.height / 5) * 3), "image/view Map.png"	, "mapBtn");
+	button(Vec2(size.width / 2, (size.height / 5) * 2), "image/view Guide.png", "guideBtn");
+	button(Vec2(size.width / 2, (size.height / 5)	 ), "image/Game Exit.png" , "exitBtn");
 
 	tex->end();
 }
@@ -148,24 +144,27 @@ void PoseMenu::update(float delta)
 	auto label1 = this->getChildByName("continueBtn");
 	if (label1 != nullptr && ((MenuItemImage*)label1)->isSelected())
 	{
-		int a = 0;
+		Director::getInstance()->popScene();
 	}
 
 	auto label2 = this->getChildByName("mapBtn");
 	if (label2 != nullptr && ((MenuItemImage*)label2)->isSelected())
 	{
-		int a = 0;
+		Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap_));
 	}
 
 	auto label3 = this->getChildByName("guideBtn");
 	if (label3 != nullptr && ((MenuItemImage*)label3)->isSelected())
 	{
-		int a = 0;
+		Director::getInstance()->pushScene(Guide::CreateGuide());
 	}
 
 	auto label4 = this->getChildByName("exitBtn");
 	if (label4 != nullptr && ((MenuItemImage*)label4)->isSelected())
 	{
-		int a = 0;
+		lpAnimMng.AnimDataClear();
+		lpSoundMng.SetPauseAll(true);
+		Director::getInstance()->popToSceneStackLevel(1);
+		Director::getInstance()->replaceScene(TitleScene::CreateTitleScene());
 	}
 }
