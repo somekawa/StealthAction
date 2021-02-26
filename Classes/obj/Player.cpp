@@ -147,7 +147,7 @@ void Player::update(float delta)
 		return;
 	}
 
-	// バーサーカーモード(攻撃力は上がるが、HPは減少し続ける)
+	// darkモード(攻撃力は上がるが、HPは減少し続ける)
 	if (playerColor == "player_Dark_")
 	{
 		// HP減少処理
@@ -208,7 +208,7 @@ void Player::update(float delta)
 	// 攻撃が連続で当たっているようになり、HPの減少が激しい。<- 直さないといけない。
 	onDamaged_ = isHitAttack_;
 
-	// ダメージをくらった際の処理(この中にdeath処理を書いてしまうと、バーサーカーモードで死亡したときに対応できない)
+	// ダメージをくらった際の処理(この中にdeath処理を書いてしまうと、darkモードで死亡したときに対応できない)
 	if (onDamaged_)
 	{
 		// HP減少処理
@@ -893,6 +893,22 @@ bool Player::GetGameOverFlg(void)
 	return gameOverSceneFlg_;
 }
 
+int Player::GetGiveDamageNum(void)
+{
+	if (playerColor == "player_Light_")
+	{
+		return AttackNumDef;			// 通常状態
+	}
+	else
+	{
+		return AttackNumDef * 3;		// dark状態(hpが減少し続ける代わりにダメージが多く与えられる)
+	}
+}
+
+std::string Player::GetPlayerColor(void)
+{
+	return playerColor;
+}
 
 void Player::actModuleRegistration(void)
 {
@@ -1221,6 +1237,12 @@ void Player::skillAction(void)
 		// HP回復
 		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillC)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillC)])
 		{
+			// darkモードでは使用不可にする
+			if (playerColor == "player_Dark_")
+			{
+				return;
+			}
+
 			bool skillFlg = ((SkillBase*)director)->GetSkillCT("heal");
 			if (skillFlg)
 			{

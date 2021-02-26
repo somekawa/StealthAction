@@ -294,7 +294,6 @@ bool Game::init()
 	{
 		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
 		{
-
 			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_F1)
@@ -350,9 +349,8 @@ void Game::update(float sp)
 
 	// gameoversceneへのフラグがtrueになっていたら、画面遷移を行う
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
-	if (player->GetGameOverFlg())
+	if (player->GetGameOverFlg()|| gameMap_->IsClear())
 	{
-		lpSoundMng.SetPauseAll(true);
 		isChanged_ = true;
 		Scene* scene = GameOverScene::CreateGameOverScene();
 		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));
@@ -371,7 +369,7 @@ void Game::update(float sp)
 	auto skillBaseSp = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
 	skillBaseSp->UpDate(sp);
 	//auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
-	gameMap_->update(*player);
+	
 
 
 	// skillの攻撃対象選別 // 
@@ -410,9 +408,10 @@ void Game::update(float sp)
 		// ﾌﾛｱ変更後1回だけ初期の敵の数だけｲﾝｽﾀﾝｽ
 		enemyManager_->CreateInitialEnemyOnFloor(1);
 	}
-
+	auto enemyNum = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildrenCount();
+	gameMap_->Update(*player, enemyNum);
 	// 敵のｽﾎﾟｰﾝを管理
-	//enemyManager_->Update(effectManager_);
+	enemyManager_->Update();
 	
 	// カメラスクロール
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
@@ -451,8 +450,8 @@ void Game::update(float sp)
 	{
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(255, 255, 255));
 	}
-	// スキルC
-	if (!((SkillBase*)director)->GetSkillCT("heal"))
+	// スキルC(CT中またはdarkモードの時は暗くする)
+	if (!((SkillBase*)director)->GetSkillCT("heal") || player->GetPlayerColor() == "player_Dark_")
 	{
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(150, 150, 150));
 	}

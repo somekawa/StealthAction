@@ -18,6 +18,7 @@ struct Bits
 };
 
 #define AttackMove 30
+#define AttackNumDef 10				// 通常状態の攻撃力
 
 class SkillBase;
 class ResidualShadow;
@@ -38,7 +39,9 @@ public:
 	void SetDir(Direction dir);									// 現在の方向をセットする
 	void KeyInputClear(void);									// マップの切替時にキー入力をリセットしたい
 	static Player* CreatePlayer(int hp,cocos2d::Layer& myLayer, cocos2d::Layer& enemyLayer, SkillBase* skillBasePtr);
-	bool GetGameOverFlg(void);
+	bool GetGameOverFlg(void);									// ゲームオーバーシーンへ遷移してもよいか判断する
+	int GetGiveDamageNum(void);									// 敵に与えるダメージ量(lightとdarkでは値が変わる)
+	std::string GetPlayerColor(void);							// 現在のプレイヤーカラー
 private:
 	void attackMotion(float delta);								// 攻撃モーションの設定
 	void transformMotion(float delta);							// トランスフォームの設定
@@ -70,8 +73,6 @@ private:
 	SkillBase* skillSprite = nullptr;							// skillSpriteの情報(Skill発動時に更新)
 	std::vector<std::string> plfile_;							// Playerのスキル情報(.txt)を入れるvector
 	cocos2d::Layer& enemyList_;
-	bool testflg = false;
-
 	std::string playerColor = "player_Light_";
 
 	// 分身
