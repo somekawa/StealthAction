@@ -210,6 +210,7 @@ bool Cultist::AddAttackObj(const float& angle)
 		return false;
 	}
 
+	lpSoundMng.PlayBySoundName("burst01");
 	flag_ = true;
 	fireBallCT_ = 120;
 
@@ -336,7 +337,6 @@ void Cultist::NormalAttack(void)
 {
 	if (animationFrame_int_ < 11)
 	{
-		lpSoundMng.PlayBySoundName("burst01");
 		currentCol_ = collider_[currentAnimation_][animationFrame_int_];
 	}
 
