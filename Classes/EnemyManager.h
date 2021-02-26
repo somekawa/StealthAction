@@ -1,5 +1,6 @@
 #pragma once
 #include <cocos2d.h>
+#include <vector>
 #include "obj/ActorType.h"
 #include "BehaviorBaseAI/BehaviorTree.h"
 
@@ -56,5 +57,7 @@ private:
 	// 敵のﾘｽﾄ(Enemy class独自の関数を使用したいので)
 	// 敵をgetChildrenで見てもdynamic_castでEnemy&にcast不可能だった
 	std::list<Enemy*> enemies_;
+	// スポーン位置をマップから取得
+	std::vector<cocos2d::Vec2> spawnPos_;
 };
 

@@ -4,6 +4,6 @@
 
 bool Attack::operator()(cocos2d::Sprite& sprite, ActModule& module)
 {
-	TRACE("ATTACK\n");
+	//TRACE("ATTACK\n");
 	return true;
 }
