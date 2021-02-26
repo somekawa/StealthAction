@@ -159,6 +159,7 @@ void Player::update(float delta)
 	// キャラクター切替
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
+		lpSoundMng.PlayBySoundName("Transform", 0.5f);
 		playerColor == "player_Light_" ? playerColor = "player_Dark_" : playerColor = "player_Light_";
 	}
 
@@ -354,6 +355,7 @@ void Player::attackMotion(float delta)
 			}
 			else
 			{
+				lpSoundMng.PlayBySoundName("Knife");
 				currentAnimation_ = "AttackSecond";
 				// 反転ﾌﾗｸﾞのｾｯﾄ
 				bool flip = false;
@@ -405,6 +407,7 @@ void Player::attackMotion(float delta)
 			}
 			else
 			{
+				lpSoundMng.PlayBySoundName("Knife");
 				currentAnimation_ = "AttackThird";
 				// 反転ﾌﾗｸﾞのｾｯﾄ
 				bool flip = false;
@@ -462,7 +465,6 @@ void Player::transformMotion(float delta)
 	// トランスフォーム
 	if (bitFlg_.TransfromFlg)
 	{
-		lpSoundMng.PlayBySoundName("Transform",0.2f);
 		currentAnimation_ = "Transform";
 	}
 	if (!bitFlg_.TransfromFlg)
