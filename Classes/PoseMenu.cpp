@@ -46,6 +46,7 @@ PoseMenu::PoseMenu(GameMap& gameMap)
 		{
 			Director::getInstance()->pushScene(Guide::CreateGuide());
 		}
+
 		//ƒQ[ƒ€‚É–ß‚é
 		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
 		{

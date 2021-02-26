@@ -126,7 +126,7 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(_Gbg);
 
 	// ボタンテスト用
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// 攻撃ボタン
 	// ボタンの押下/非押下はOPRTのほうでselected関数を呼んで管理
 	auto attackBtn = MenuItemImage::create(
@@ -136,7 +136,7 @@ bool Game::init()
 	attackBtn->setName("attackBtn");
 	attackBtn->setAnchorPoint(Vec2(0.5f, 0.0f));
 	float x = origin.x + visibleSize.width - attackBtn->getContentSize().width / 2 - 20;
-	float y = origin.y + attackBtn->getContentSize().height / 2;
+	float y = origin.y;
 	attackBtn->setPosition(Vec2(x, y));
 	layer_[(int)zOlder::FRONT]->addChild(attackBtn, 0);
 
@@ -180,7 +180,7 @@ bool Game::init()
 	layer_[(int)zOlder::FRONT]->addChild(transformBtn_toLight, 0);
 
 	// 移動バーチャルパッド用
-	auto startSp = Sprite::create("CloseNormal.png");
+	auto startSp = Sprite::create("image/virtualPad.png");
 	startSp->setName("startSp");
 	startSp->setPosition(Vec2(150.0f, 150.0f));
 	layer_[(int)zOlder::FRONT]->addChild(startSp, 1);
@@ -292,7 +292,7 @@ bool Game::init()
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
-		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
+		if (keyCode == EventKeyboard::KeyCode::KEY_TAB)
 		{
 			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 		}
@@ -359,7 +359,7 @@ void Game::update(float sp)
 		return;
 	}
 
-	// ANDROID時にメニューボタン押下したらF2押下と同じ扱いをする
+	// ANDROID時にメニューボタン押下したらTAB押下と同じ扱いをする
 	auto label1 = this->getChildByTag((int)zOlder::FRONT)->getChildByName("menuBtn");
 	if (((MenuItemImage*)label1)->isSelected())
 	{

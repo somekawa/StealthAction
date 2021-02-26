@@ -1,4 +1,5 @@
 #include "EnemyManager.h"
+#include "Scene/GameScene.h"
 #include "obj/Enemy/Enemy.h"
 #include "obj/Enemy/Assassin.h"
 #include "obj/Enemy/Cultist.h"
@@ -25,6 +26,9 @@ int EnemyManager::enemyNum_ = 0;
 EnemyManager::EnemyManager(Layer& layer,Layer& hpLayer,Player& player):
 	layer_(layer),hpLayer_(hpLayer),player_(&player)
 {
+	// srand関数で、乱数パターンを初期化する
+	unsigned int now = (unsigned int)time(0);
+	srand(now);
 	spawnFlag_ = false;
 }
 
@@ -70,9 +74,9 @@ void EnemyManager::CreateInitialEnemyOnFloor(int initNum)
 {
 	// ﾘｽﾄの中身を空にする
 	enemies_.clear();
-	//CreateEnemy(ActorType::TwistedCultist);
+	CreateEnemy(ActorType::TwistedCultist);
 	CreateEnemy(ActorType::Cultist);
-	//CreateEnemy(ActorType::Assassin);
+	CreateEnemy(ActorType::Assassin);
 
 	for (int init = 0; init < initNum; init++)
 	{
@@ -258,9 +262,38 @@ void EnemyManager::ResetEnemyNum(void)
 
 void EnemyManager::CreateEnemy(ActorType type)
 {
+	// TMXMapからスポーン位置を取得して保存する
+	if (spawnPos_.size() <= 0)
+	{
+		auto map = Director::getInstance()->getRunningScene()->getChildByTag(static_cast<int>(zOlder::BG))->getChildByName("MapData");
+		auto objGroups = ((TMXTiledMap*)map)->getObjectGroup("enemySpawn");
+		// スポーン位置を保存する
+		if (objGroups == nullptr)
+		{
+			return;
+		}
+		// TMXMapのオブジェクトレイヤーから情報取得
+		auto& objs = objGroups->getObjects();
+		for (auto& obj : objs)
+		{
+			ValueMap prop = obj.asValueMap();
+			auto name = prop["name"].asString();
+			auto x = prop["x"].asFloat();
+			auto y = prop["y"].asFloat();
+			// enemyだった時
+			if (name == "enemy")
+			{
+				spawnPos_.emplace(spawnPos_.begin(), Vec2(x, y));
+			}
+		}
+	}
+
+	int randNum = rand() % 5;
+	auto spawnPos = spawnPos_[randNum];
+	//auto spawnPos = Vec2{ 150 + float(rand() % 300), 100 + float(rand() % 200) };
+
 	Enemy* sprite = nullptr;
 	HPGauge* hpSprite = nullptr;
-	auto spawnPos = Vec2{ 150 + float(rand() % 300), 100 + float(rand() % 200) };
 	auto vRange = VisionRange(0.0f, 0.0f);
 	switch (type)
 	{

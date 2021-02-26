@@ -71,7 +71,6 @@ Cultist::Cultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange vis
 
 Cultist::~Cultist()
 {
-	attackLayer_->removeFromParentAndCleanup(true);
 }
 
 Cultist* Cultist::CreateCultist(Vec2 pos, Player& player, BehaviorTree* aiTree, VisionRange visionRange, int hp,Layer& myLayer)
@@ -104,6 +103,7 @@ void Cultist::update(float delta)
 	// Ž€‚ñ‚¾”»’è
 	if (getName() == "cultist_death" || getName() == "changeFloor_death")
 	{
+		attackLayer_->removeFromParentAndCleanup(true);
 		// Ž©•ª‚ðe‚Å‚ ‚éGameScene‚©‚çíœ‚·‚é
 		this->removeFromParentAndCleanup(true);
 	}

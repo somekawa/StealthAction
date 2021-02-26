@@ -16,6 +16,12 @@ void CameraManager::AddCamera(cocos2d::Scene& scene, cocos2d::Size zoomSize, Cam
 	camera->setCameraFlag(cameraFlag);
 	scene.addChild(camera);
 	cameras_[static_cast<int>(cameraType)] = camera;
+	// UIカメラのUSER2は深度値を大きくして、手前にする
+	// これにより敵やプレイヤーがUIの後ろになる
+	if (cameraFlag == CameraFlag::USER2)	
+	{
+		camera->setDepth(10);
+	}
 }
 
 void CameraManager::NotOutRangeSetPos(cocos2d::Vec2& pos,CameraType cameraType, float scale)
