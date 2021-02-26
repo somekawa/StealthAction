@@ -113,133 +113,6 @@ void ActionCtl::update(ActorType type,float sp,Sprite& sprite)
 {
 	// 各ｱｸﾀｰの更新
 	updater_[type](sp, sprite);
-	//// mapModuleに登録した内容を順番に呼び出してcheckする
-	//// checklistとか
-	//auto actCheck = [&](std::string actName){
-	//	for (auto check : _mapModule[actName].act)
-	//	{
-	//		// mapFlameの内容をmapModuleのフレーム情報に代入
-	//		_mapModule[actName].flame = _mapFlame[actName];
-
-	//		if (!(check(sprite,_mapModule[actName])))
-	//		{
-	//			// フレーム値を0に戻す
-	//			_mapFlame[actName] = 0.0f;
-	//			// 1つでも引っかかったらfalse
-	//			return false;
-	//		}
-	//	}
-	//	// すべて抜けてきたらtrue
-	//	return true;
-	//};
-
-	///*<参考例>*/
-	////if (actCheck("左移動"))
-	////{
-	////	_mapModule["左移動"].runAction(sprite, _mapModule["左移動"]);
-	////}
-
-	//// 何かアクションが行われているかを判定するフラグ
-	//bool actFlg = false;
-
-	//// 上のラムダ式でtrueだった場合のみ処理が走る
-	//for (auto data : _mapModule)
-	//{
-	//	if (actCheck(data.first))
-	//	{
-	//		// フレーム値の更新
-	//		data.second.flame = _mapFlame[data.first];
-
-	//		// (左右移動とかの)処理が走るところ
-	//		data.second.runAction(sprite, data.second);
-
-	//		// data.second.action = for文で回してるアクション
-	//		// GetActionは実際に今行われているアクション
-	//		if (((Player&)sprite).GetAction() == "player_Fall" || data.second.actName != "player_Non"|| ((Player&)sprite).GetAction() == "player_Jump" || ((Player&)sprite).GetAction() == "player_Jumping")
-	//		{
-	//			// 現在のアクションがジャンプになっているときもJUMPINGを設定するようにしておく
-	//			if (((Player&)sprite).GetAction() == "player_Jumping" || ((Player&)sprite).GetAction() == "player_Jump")
-	//			{
-	//				((Player&)sprite).SetAction("player_Jumping");
-	//			}
-	//			else 
-	//			{
-	//				((Player&)sprite).SetAction(data.second.actName);
-	//			}
-	//		}
-	//		
-	//		// フレームの加算(落下とジャンプで使用している)
-	//		_mapFlame[data.first]+= 0.1f;
-	//		if (_mapFlame[data.first] >= 3.0f)
-	//		{
-	//			_mapFlame[data.first] = 3.0f;
-	//		}
-
-	//		// 空中での攻撃ボタンで一時静止用
-	//		if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
-	//		{
-	//			_mapModule["落下"].stopCnt = 1;
-	//		}
-
-	//		if (_mapModule["落下"].stopCnt == 1)
-	//		{
-	//			if (_mapFlame["落下"] >= 3.0f)
-	//			{
-	//				_mapModule["落下"].stopCnt = 0;
-	//			}
-	//		}
-
-	//		// ここはジャンプの最高点に到達したときとかに関係する処理
-	//		if (((Player&)sprite).GetAction() == "player_Jumping" || ((Player&)sprite).GetAction() == "player_Jumping")
-	//		{
-	//			// _mapFlame[data.first]にしてしまうと、現在のアクションがジャンプでも
-	//			// 左右移動とかの加算された値が3.0fを超えていたら落下に切り替わる原因になってた
-	//			// else ifの部分を付け加えて、ジャンピングを0.1fからにすることで角でジャンプし続けるバグ解消
-	//			if (_mapFlame["ジャンピング"] >= 0.1f && _mapFlame["ジャンピング"] < 3.0f)
-	//			{
-	//				((Player&)sprite).SetAction("player_Jumping");
-	//				//continue;
-	//			}
-	//			else if (_mapFlame["ジャンプ"] >= 0.1f)
-	//			{
-	//				// ジャンプし始めに必要
-	//				((Player&)sprite).SetAction("player_Jumping");
-	//			}
-	//			else 
-	//			{
-	//				// 最高点に到達したら落下に切り替える
-	//				((Player&)sprite).SetAction("player_Fall");
-	//			}
-	//		}
-
-	//		actFlg = true;
-	//	}
-	//	else
-	//	{
-	//		// プレイヤーが落下できなかった(着地している)ときは、IDLEにする
-	//		// 今まで(書き換えたい情報)がFALLINGの状態だった && 現在の状態がFALLINGであるときIDLEにする
-	//		if (data.second.actName == "player_Fall" && ((Player&)sprite).GetAction() == "player_Fall")
-	//		{
-	//			((Player&)sprite).SetAction("player_Look_Intro");
-	//		}
-	//	}
-
-	//	// プレイヤー向き変更
-	//	if (actCheck("左向き"))
-	//	{
-	//		((Player&)sprite).SetDir(Direction::Left);
-	//	}
-	//	else if (actCheck("右向き"))
-	//	{
-	//		((Player&)sprite).SetDir(Direction::Right);
-	//	}
-	//}
-
-	//// 何もアクションが行われていなければIDOLを設定する
-	//if (!actFlg)
-	//{
-	//	((Player&)sprite).SetAction("player_Look_Intro");
-	//}
 }
 
 void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule& module)
@@ -397,7 +270,7 @@ void ActionCtl::InitUpdater(ActorType& type)
 	case ActorType::Player:
 		updater_.emplace(type, [&](float sp, Sprite& sprite) {
 			// mapModuleに登録した内容を順番に呼び出してcheckする
-		// checklistとか
+			// checklistとか
 			auto actCheck = [&](std::string actName) {
 				for (auto check : _mapModule[actName].act)
 				{
@@ -456,20 +329,6 @@ void ActionCtl::InitUpdater(ActorType& type)
 					if (_mapFlame[data.first] >= 3.0f)
 					{
 						_mapFlame[data.first] = 3.0f;
-					}
-
-					// 空中での攻撃ボタンで一時静止用
-					if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
-					{
-						_mapModule["落下"].stopCnt = 1;
-					}
-
-					if (_mapModule["落下"].stopCnt == 1)
-					{
-						if (_mapFlame["落下"] >= 3.0f)
-						{
-							_mapModule["落下"].stopCnt = 0;
-						}
 					}
 
 					// ここはジャンプの最高点に到達したときとかに関係する処理

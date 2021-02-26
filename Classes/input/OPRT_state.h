@@ -21,7 +21,7 @@ enum class BUTTON {
 	LEFT,
 	Transfrom,
 	UP,
-	DOWN,
+	Attack,
 	Dash,
 	SkillA,
 	SkillB,

@@ -280,7 +280,7 @@ void Player::attackMotion(float delta)
 		{
 			return true;
 		}
-		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::DOWN)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::DOWN)] && !flag)
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Attack)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Attack)] && !flag)
 		{
 			return true;
 		}
@@ -1011,7 +1011,6 @@ void Player::actModuleRegistration(void)
 		ActModule act;
 		act.actName = "Fall";
 		act.state = oprtState_;
-		act.button = BUTTON::DOWN;
 		//act.checkPoint1 = Vec2{ 0,-10 };			// ç∂â∫
 		//act.checkPoint2 = Vec2{ 0,-10 };			// âEâ∫
 		act.checkPoint1 = Vec2{ 0,0 };				// ç∂â∫
@@ -1087,8 +1086,7 @@ void Player::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = oprtState_;
-		//act.button = BUTTON::ATTACK;
-		act.button = BUTTON::DOWN;
+		act.button = BUTTON::Attack;
 		act.actName = "AttackFirst";
 		//act.checkPoint1 = Vec2{ 0, 0 };		
 		//act.checkPoint2 = Vec2{ 0, 0 };
@@ -1101,7 +1099,7 @@ void Player::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = oprtState_;
-		act.button = BUTTON::DOWN;
+		act.button = BUTTON::Attack;
 		act.actName = "AttackSecond";
 		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// âüÇµÇΩèuä‘
@@ -1112,7 +1110,7 @@ void Player::actModuleRegistration(void)
 	{
 		ActModule act;
 		act.state = oprtState_;
-		act.button = BUTTON::DOWN;
+		act.button = BUTTON::Attack;
 		act.actName = "AttackThird";
 		act.blackList.emplace_back("Fall");
 		act.touch = TOUCH_TIMMING::ON_TOUCH;	// âüÇµÇΩèuä‘

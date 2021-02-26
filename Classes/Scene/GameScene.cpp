@@ -292,7 +292,7 @@ bool Game::init()
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
-		if (keyCode == EventKeyboard::KeyCode::KEY_F2)
+		if (keyCode == EventKeyboard::KeyCode::KEY_TAB)
 		{
 			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 		}
@@ -358,7 +358,7 @@ void Game::update(float sp)
 		return;
 	}
 
-	// ANDROID時にメニューボタン押下したらF2押下と同じ扱いをする
+	// ANDROID時にメニューボタン押下したらTAB押下と同じ扱いをする
 	auto label1 = this->getChildByTag((int)zOlder::FRONT)->getChildByName("menuBtn");
 	if (((MenuItemImage*)label1)->isSelected())
 	{

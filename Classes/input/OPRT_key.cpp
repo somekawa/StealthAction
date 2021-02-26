@@ -41,9 +41,9 @@ void OPRT_key::keyflg(Sprite* sprite)
 		{
 			_keyData._input[static_cast<int>(BUTTON::UP)] = true;
 		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) 
+		if (keyCode == EventKeyboard::KeyCode::KEY_S) 
 		{
-			_keyData._input[static_cast<int>(BUTTON::DOWN)] = true;
+			_keyData._input[static_cast<int>(BUTTON::Attack)] = true;
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) 
 		{
@@ -62,7 +62,7 @@ void OPRT_key::keyflg(Sprite* sprite)
 			}
 		}
 
-		if (keyCode == EventKeyboard::KeyCode::KEY_A)
+		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
 		{
 			_keyData._input[static_cast<int>(BUTTON::Transfrom)] = true;
 		}
@@ -96,9 +96,9 @@ void OPRT_key::keyflg(Sprite* sprite)
 		{
 			_keyData._input[static_cast<int>(BUTTON::UP)] = false;
 		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW)
+		if (keyCode == EventKeyboard::KeyCode::KEY_S)
 		{
-			_keyData._input[static_cast<int>(BUTTON::DOWN)] = false;
+			_keyData._input[static_cast<int>(BUTTON::Attack)] = false;
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) 
 		{
@@ -109,7 +109,7 @@ void OPRT_key::keyflg(Sprite* sprite)
 			_keyData._input[static_cast<int>(BUTTON::LEFT)] = false;
 		}
 
-		if (keyCode == EventKeyboard::KeyCode::KEY_A)
+		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
 		{
 			_keyData._input[static_cast<int>(BUTTON::Transfrom)] = false;
 		}
