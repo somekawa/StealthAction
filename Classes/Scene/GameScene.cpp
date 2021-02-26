@@ -351,6 +351,7 @@ void Game::update(float sp)
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
 	if (player->GetGameOverFlg()|| gameMap_->IsClear())
 	{
+		lpSoundMng.SetPauseAll(true);
 		isChanged_ = true;
 		Scene* scene = GameOverScene::CreateGameOverScene();
 		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));

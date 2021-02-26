@@ -8,5 +8,7 @@ public:
 	static cocos2d::Scene* CreatePoseMenu(GameMap& gameMap);
 	PoseMenu(GameMap& gameMap);
 	~PoseMenu();
+private:
+	void ButtonDraw(void);
 };
 
