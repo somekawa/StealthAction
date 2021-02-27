@@ -301,6 +301,20 @@ bool Game::init()
 	{
 		if (keyCode == EventKeyboard::KeyCode::KEY_TAB)
 		{
+			// ここで一度削除しておかないとエラーにつながる
+			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("magicCT") != nullptr)
+			{
+				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("magicCT");
+			}
+			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("enemySpawnCT") != nullptr)
+			{
+				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("enemySpawnCT");
+			}
+			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("healCT") != nullptr)
+			{
+				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("healCT");
+			}
+
 			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_F1)
@@ -381,6 +395,19 @@ void Game::update(float sp)
 	auto label1 = this->getChildByTag((int)zOlder::FRONT)->getChildByName("menuBtn");
 	if (((MenuItemImage*)label1)->isSelected())
 	{
+		// ここで一度削除しておかないとエラーにつながる
+		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("magicCT") != nullptr)
+		{
+			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("magicCT");
+		}
+		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("enemySpawnCT") != nullptr)
+		{
+			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("enemySpawnCT");
+		}
+		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("healCT") != nullptr)
+		{
+			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("healCT");
+		}
 		// メニュー表示時には選択状態を解除する(これを書かないと、continueを押した瞬間にまたメニューに切り替わってしまう)
 		((MenuItemImage*)label1)->unselected();
 		Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
