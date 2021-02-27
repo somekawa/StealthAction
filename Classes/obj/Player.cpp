@@ -39,6 +39,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	lpSoundMng.AddSound("burst2", "BGM/s-burst02.mp3", SoundType::SE);
 	lpSoundMng.AddSound("Transform", "BGM/se_maoudamashii_element_fire01.mp3", SoundType::SE);
 	lpSoundMng.AddSound("Knife", "BGM/Knife.mp3", SoundType::SE);
+	lpSoundMng.AddSound("Dash", "BGM/Dash.mp3", SoundType::SE);
 
 	// キー入力かタッチ操作か判断
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
@@ -551,6 +552,7 @@ void Player::dashMotion(float delta)
 	{
 		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Dash)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Dash)])
 		{
+			lpSoundMng.PlayBySoundName("Dash");
 			//this->setPosition(this->getPosition().x + 100, this->getPosition().y);		
 			currentAnimation_ = "Dash";
 			bitFlg_.DashFlg = true;
