@@ -91,12 +91,20 @@ void Guide::spriteDraw(Size size)
 	cancelBtn->setName("cancelBtn");			// MapMenu‚Æ“¯‚¶–¼‘O‚ðÝ’è‚·‚é
 	this->addChild(cancelBtn);
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	auto scl = 3.0f;
 	sprite("image/PlayerAsset/Light/idle.png", Vec2(size.width / 6 + 20, (size.height / 10) + 18 / 2 * scl), scl);
 	sprite("image/PlayerAsset/Dark/idle.png", Vec2(size.width - (size.width / 6 + 20), (size.height / 10) + 18 / 2 * scl), scl, true);
-	sprite("image/androidGuide.png", Vec2((size.width / 2), (size.height / 2)-25), 0.5f);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+	scl = 0.2f;
+	sprite("image/SkillGuide.png", Vec2(size.width / 2, (size.height / 2)+144*scl), scl);
+	sprite("image/DashGuide.png", Vec2(size.width / 2, (size.height / 2)), scl);
+	sprite("image/moveGuide1.png", Vec2(size.width / 2, (size.height / 2)-144 * scl), scl);
+	sprite("image/AttackGuide.png", Vec2(size.width / 2, (size.height / 2)-(144 * scl)*2), scl);
+	sprite("image/JumpGuide.png", Vec2(size.width / 2, (size.height / 2)-(144 * scl)*3), scl);
+	sprite("image/TransformGuide.png", Vec2(size.width / 2, (size.height / 2)-(144 * scl)*4), scl);
+
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+	sprite("image/androidGuide.png", Vec2((size.width / 2), (size.height / 2) - 40), 0.5f);
 
 #endif //CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 }
