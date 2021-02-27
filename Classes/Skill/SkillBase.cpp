@@ -166,3 +166,36 @@ bool SkillBase::GetSkillCT(std::string name)
 	return tmp;
 }
 
+int SkillBase::GetSkillCTTime(std::string name)
+{
+	int time = 0;
+
+	if (skillList_.size() > 0)
+	{
+		for (auto itr = skillList_.begin(); itr != skillList_.end();)
+		{
+			// ’T‚µ‚Ä‚¢‚éskill‚Ì–¼‘O‚Æˆê’v‚µ‚½‚ç
+			if ((*itr)->param.name == name)
+			{
+				// ‚»‚Ìskill‚ÌCT‚ª0‚æ‚è‘å‚«‚¢‚È‚çfalse
+				if ((*itr)->param.ct > 0)
+				{
+					time = (*itr)->param.ct;
+					break;		// –Ú“–‚Ä‚ÌƒXƒLƒ‹‚ªŒ©‚Â‚©‚Á‚½‚©‚çbreak‚Å”²‚¯‚é
+				}
+				else
+				{
+					++itr;
+				}
+			}
+			else
+			{
+				// ’T‚µ‚Ä‚¢‚éskill‚Æˆê’v‚µ‚È‚¢‚Æ‚«‚Í‰ñ‚µ‘±‚¯‚é
+				++itr;
+			}
+		}
+	}
+
+	return time / 60;
+}
+

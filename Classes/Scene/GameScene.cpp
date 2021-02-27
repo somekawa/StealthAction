@@ -127,7 +127,7 @@ bool Game::init()
 	layer_[(int)zOlder::BG]->addChild(_Gbg);
 
 	// ボタンテスト用
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	// 攻撃ボタン
 	// ボタンの押下/非押下はOPRTのほうでselected関数を呼んで管理
 	auto attackBtn = MenuItemImage::create(
@@ -456,28 +456,80 @@ void Game::update(float sp)
 	// スキルA
 	if (!((SkillBase*)director)->GetSkillCT("magic"))
 	{
+		if (((SkillBase*)director)->GetSkillCTTime("magic") >= 0)
+		{
+			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("magicCT") != nullptr)
+			{
+				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("magicCT");
+			}
+			std::string number = StringUtils::format("%d", ((SkillBase*)director)->GetSkillCTTime("magic"));
+			auto label = Label::createWithTTF(number.c_str(), "fonts/PixelMplus12-Regular.ttf", 48);
+			label->setPosition(this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillABtn")->getPosition());
+			label->setName("magicCT");
+			layer_[(int)zOlder::FRONT]->addChild(label, 3);
+			label->setCameraMask(static_cast<int>(CameraFlag::USER2));	// カメラマスクを設定しないと、アイコンの後ろに隠れてしまう
+		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillABtn")->setColor(Color3B(150, 150, 150));
 	}
 	else
 	{
+		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("magicCT") != nullptr)
+		{
+			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("magicCT");
+		}
+
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillABtn")->setColor(Color3B(255, 255, 255));
 	}
 	// スキルB
 	if (!((SkillBase*)director)->GetSkillCT("enemySpawn"))
 	{
+		if (((SkillBase*)director)->GetSkillCTTime("enemySpawn") >= 0)
+		{
+			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("enemySpawnCT") != nullptr)
+			{
+				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("enemySpawnCT");
+			}
+			std::string number = StringUtils::format("%d", ((SkillBase*)director)->GetSkillCTTime("enemySpawn"));
+			auto label = Label::createWithTTF(number.c_str(), "fonts/PixelMplus12-Regular.ttf", 48);
+			label->setPosition(this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->getPosition());
+			label->setName("enemySpawnCT");
+			layer_[(int)zOlder::FRONT]->addChild(label, 3);
+			label->setCameraMask(static_cast<int>(CameraFlag::USER2));	// カメラマスクを設定しないと、アイコンの後ろに隠れてしまう
+		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(150, 150, 150));
 	}
 	else
 	{
+		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("enemySpawnCT") != nullptr)
+		{
+			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("enemySpawnCT");
+		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(255, 255, 255));
 	}
 	// スキルC(CT中またはdarkモードの時は暗くする)
 	if (!((SkillBase*)director)->GetSkillCT("heal") || player->GetPlayerColor() == "player_Dark_")
 	{
+		if (((SkillBase*)director)->GetSkillCTTime("heal") >= 0)
+		{
+			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("healCT") != nullptr)
+			{
+				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("healCT");
+			}
+			std::string number = StringUtils::format("%d", ((SkillBase*)director)->GetSkillCTTime("heal"));
+			auto label = Label::createWithTTF(number.c_str(), "fonts/PixelMplus12-Regular.ttf", 48);
+			label->setPosition(this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->getPosition());
+			label->setName("healCT");
+			layer_[(int)zOlder::FRONT]->addChild(label, 3);
+			label->setCameraMask(static_cast<int>(CameraFlag::USER2));	// カメラマスクを設定しないと、アイコンの後ろに隠れてしまう
+		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(150, 150, 150));
 	}
 	else
 	{
+		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("healCT") != nullptr)
+		{
+			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("healCT");
+		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(255, 255, 255));
 	}
 }

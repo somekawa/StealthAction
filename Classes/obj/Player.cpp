@@ -15,7 +15,7 @@
 #include "ResidualShadow.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "input/OPRT_touch.h"
+#include "input/OPRT_key.h"
 #else
 #include "input/OPRT_touch.h"
 #endif
@@ -43,7 +43,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 	// キー入力かタッチ操作か判断
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	// thisの意味
-	oprtState_ = new OPRT_touch(this);
+	oprtState_ = new OPRT_key(this);
 #else
 	oprtState_ = new OPRT_touch(this);
 #endif
@@ -89,7 +89,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 				// colliderBoxを自身の子にする
 				auto draw = col[colNum]->create();
 				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-				draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
+				//draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
 				draw->setTag(col[colNum]->GetData().frame_);
 				// ここでsetLocalOrderをやんないといけない
 				// 攻撃矩形だと0に、ﾀﾞﾒｰｼﾞ矩形だと1に

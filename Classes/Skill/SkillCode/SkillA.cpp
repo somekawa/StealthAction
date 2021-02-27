@@ -33,7 +33,7 @@ SkillA::SkillA(SkillBase* ptr)
 	param.removeFlg = false;
 	param.activation = true;
 	param.name = "magic";
-	param.ct = 180.0f;
+	param.ct = 15.0f * 60.0f;		// 15•b
 }
 
 SkillA::~SkillA()

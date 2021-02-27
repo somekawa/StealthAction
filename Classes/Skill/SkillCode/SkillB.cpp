@@ -45,7 +45,7 @@ SkillB::SkillB(SkillBase* ptr)
 	param.removeFlg = false;
 	param.activation = true;
 	param.name = "enemySpawn";
-	param.ct = 180.0f;
+	param.ct = 30.0f * 60.0f;			// 30•b
 }
 
 SkillB::~SkillB()

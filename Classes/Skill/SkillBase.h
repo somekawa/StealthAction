@@ -40,6 +40,7 @@ public:
 
 	bool GetAllSkillActivate(void);				// スキルのうちどれかがactiveになっていたらtrueを返す
 	bool GetSkillCT(std::string name);			// falseならCTが0じゃないため、まだそのスキルは使用不可
+	int GetSkillCTTime(std::string name);		// スキルCT取得
 
 	// ｽｷﾙｴﾌｪｸﾄ情報取得
 	FXStruct& GetFX(void)

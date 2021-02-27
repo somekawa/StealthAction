@@ -22,7 +22,7 @@ SkillC::SkillC(SkillBase* ptr)
 	param.removeFlg = false;
 	param.activation = true;
 	param.name = "heal";
-	param.ct = 180.0f;
+	param.ct = 35.0f * 60.0f;		// 35•b
 }
 
 SkillC::~SkillC()
