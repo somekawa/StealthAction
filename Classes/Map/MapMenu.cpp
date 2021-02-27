@@ -22,8 +22,8 @@ MapMenu::MapMenu(GameMap& gameMap)
 	auto gameScene = director->getRunningScene();
 	// ~ƒ{ƒ^ƒ“‰æ‘œ‚É•Ï‚¦‚é
 	auto canselBtn = MenuItemImage::create(
-		"image/keep_button1.png",
-		"image/keep_button1_select.png");
+		"image/cancelBtn.png",
+		"image/cancelBtn_select.png");
 	canselBtn->setPosition(Vec2(size.width - (canselBtn->getContentSize().width * 0.25) / 2 - 10, size.height - (canselBtn->getContentSize().height * 0.25) / 2 - 10));
 	canselBtn->setScale(0.25f);
 	canselBtn->setName("cancelBtn");		// Guide‚Æ“¯‚¶–¼‘O‚ğİ’è‚·‚é

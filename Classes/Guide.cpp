@@ -84,8 +84,8 @@ void Guide::spriteDraw(Size size)
 	sprite("image/playerGuide.png", Vec2(size.width / 2, size.height - (size.height / 10) - 144 / 2), 0.5f);
 
 	auto cancelBtn = MenuItemImage::create(
-		"image/keep_button1.png",
-		"image/keep_button1_select.png");
+		"image/cancelBtn.png",
+		"image/cancelBtn_select.png");
 	cancelBtn->setPosition(Vec2(size.width - (cancelBtn->getContentSize().width * 0.25) / 2 - 10, size.height - (cancelBtn->getContentSize().height * 0.25) / 2 - 10));
 	cancelBtn->setScale(0.25f);
 	cancelBtn->setName("cancelBtn");			// MapMenu‚Æ“¯‚¶–¼‘O‚ğİ’è‚·‚é
