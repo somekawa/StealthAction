@@ -421,6 +421,17 @@ void ActionCtl::InitUpdater(ActorType& type)
 					data.second.runAction(sprite, data.second);
 					actFlg = true;
 				}
+				else
+				{
+					if (data.first == "右移動")
+					{
+						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
+					}
+					else if (data.first == "左移動")
+					{
+						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					}
+				}
 				// フレームの加算(落下とジャンプで使用している)
 				_mapFlame[data.first] += 0.1f;
 				if (_mapFlame[data.first] >= 3.0f)
@@ -485,6 +496,18 @@ void ActionCtl::InitUpdater(ActorType& type)
 					actFlg = true;
 
 				}
+				else
+				{
+					if (data.first == "右移動")
+					{
+						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
+					}
+					else if (data.first == "左移動")
+					{
+						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					}
+				}
+
 				// フレームの加算(落下とジャンプで使用している)
 				_mapFlame[data.first] += 0.1f;
 				if (_mapFlame[data.first] >= 3.0f)
@@ -550,6 +573,18 @@ void ActionCtl::InitUpdater(ActorType& type)
 					actFlg = true;
 
 				}
+				else
+				{
+					if (data.first == "右移動")
+					{
+						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
+					}
+					else if (data.first == "左移動")
+					{
+						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					}
+				}
+
 				// フレームの加算(落下とジャンプで使用している)
 				_mapFlame[data.first] += 0.1f;
 				if (_mapFlame[data.first] >= 3.0f)
