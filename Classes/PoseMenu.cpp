@@ -62,6 +62,7 @@ PoseMenu::PoseMenu(GameMap& gameMap):gameMap_(gameMap)
 			Director::getInstance()->replaceScene(TitleScene::CreateTitleScene());
 		}
 	};
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 #else
 	//auto listener = EventListenerTouchOneByOne::create();
 	//listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
@@ -125,6 +126,8 @@ void PoseMenu::ButtonDraw(void)
 		sprite2->setScale(0.5f);
 		sprite2->setPosition(pos);
 		sprite2->visit();
+		this->addChild(sprite);
+		this->addChild(sprite2, 1);
 	};
 	button(Vec2(size.width / 2, (size.height / 5) * 4), "image/continue.png"	, "continueBtn");
 	button(Vec2(size.width / 2, (size.height / 5) * 3), "image/view Map.png"	, "mapBtn");
@@ -144,24 +147,28 @@ void PoseMenu::update(float delta)
 	auto label1 = this->getChildByName("continueBtn");
 	if (label1 != nullptr && ((MenuItemImage*)label1)->isSelected())
 	{
+		((MenuItemImage*)label1)->unselected();
 		Director::getInstance()->popScene();
 	}
 
 	auto label2 = this->getChildByName("mapBtn");
 	if (label2 != nullptr && ((MenuItemImage*)label2)->isSelected())
 	{
+		((MenuItemImage*)label2)->unselected();
 		Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap_));
 	}
 
 	auto label3 = this->getChildByName("guideBtn");
 	if (label3 != nullptr && ((MenuItemImage*)label3)->isSelected())
 	{
+		((MenuItemImage*)label3)->unselected();
 		Director::getInstance()->pushScene(Guide::CreateGuide());
 	}
 
 	auto label4 = this->getChildByName("exitBtn");
 	if (label4 != nullptr && ((MenuItemImage*)label4)->isSelected())
 	{
+		((MenuItemImage*)label4)->unselected();
 		lpAnimMng.AnimDataClear();
 		lpSoundMng.SetPauseAll(true);
 		Director::getInstance()->popToSceneStackLevel(1);

@@ -377,11 +377,12 @@ void Game::update(float sp)
 		CC_SAFE_RELEASE(this);
 		return;
 	}
-
 	// ANDROID時にメニューボタン押下したらTAB押下と同じ扱いをする
 	auto label1 = this->getChildByTag((int)zOlder::FRONT)->getChildByName("menuBtn");
 	if (((MenuItemImage*)label1)->isSelected())
 	{
+		// メニュー表示時には選択状態を解除する(これを書かないと、continueを押した瞬間にまたメニューに切り替わってしまう)
+		((MenuItemImage*)label1)->unselected();
 		Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 	}
 

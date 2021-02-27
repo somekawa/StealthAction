@@ -31,6 +31,7 @@ enum class BUTTON {
 	Map,
 	Guide,
 	GameExit,
+	CancelBtn,
 	// “G‚ÉactModule‚ğ“o˜^‚·‚éÛ‚Ég—p
 	Non,
 	MAX

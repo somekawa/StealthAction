@@ -2,12 +2,15 @@
 #include "Generator/MapGenerator.h"
 #include "Scene/GameScene.h"
 #include "Generator/MST.h"
+#include "input/OPRT_touch.h"
 #include "GameMap.h"
 
 USING_NS_CC;
 
 MapMenu::MapMenu(GameMap& gameMap)
 {
+	oprtState_ = new OPRT_touch((Sprite*)this);
+
 	auto& mapGen = gameMap.GetMapGenerator();
 	const auto& nowID = gameMap.GetNowID();
 	auto director = Director::getInstance();
@@ -17,12 +20,14 @@ MapMenu::MapMenu(GameMap& gameMap)
 	this->addChild(tex);
 
 	auto gameScene = director->getRunningScene();
-	auto menuBtn = MenuItemImage::create(
+	// ×ボタン画像に変える
+	auto canselBtn = MenuItemImage::create(
 		"image/keep_button1.png",
 		"image/keep_button1_select.png");
-	menuBtn->setPosition(Vec2(size.width - (menuBtn->getContentSize().width * 0.25) / 2 - 10, size.height - (menuBtn->getContentSize().height * 0.25) / 2 - 10));
-	menuBtn->setScale(0.25f);
-	this->addChild(menuBtn);
+	canselBtn->setPosition(Vec2(size.width - (canselBtn->getContentSize().width * 0.25) / 2 - 10, size.height - (canselBtn->getContentSize().height * 0.25) / 2 - 10));
+	canselBtn->setScale(0.25f);
+	canselBtn->setName("cancelBtn");		// Guideと同じ名前を設定する
+	this->addChild(canselBtn);
 	tex->begin();
 
 	// ゲームシーン表示
@@ -32,13 +37,13 @@ MapMenu::MapMenu(GameMap& gameMap)
 	int id = 0; 
 	auto& roomData = mapGen.GetMSTNode();
 	auto& roomSize = mapGen.GetRoomData()[0].size;
+	const auto& mapParentList = gameMap.GetMapParentList();
 	if (roomData.size() > nowID)
 	{
 		auto offset = Vec2(size.width / 2 - roomData[nowID].key.x,
 			size.height / 2 - roomData[nowID].key.y);
 		auto renderer = _director->getRenderer();
 		auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
-		const auto& mapParentList = gameMap.GetMapParentList();
 		for (auto room : roomData)
 		{
 			// 到達部屋のみ表示 現在制作のため
@@ -98,7 +103,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 	
 	
 	// 入力系統
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	auto listener = cocos2d::EventListenerKeyboard::create();
 	listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
@@ -108,20 +113,39 @@ MapMenu::MapMenu(GameMap& gameMap)
 			return true;
 		}
 	};
-#else
-	auto listener = EventListenerTouchOneByOne::create();
-	listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
-	{
-		Director::getInstance()->popScene();
-		return true;
-	};
-#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+#else
+	//auto listener = EventListenerTouchOneByOne::create();
+	//listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
+	//{
+	//	Director::getInstance()->popScene();
+	//	return true;
+	//};
+#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+
+	this->setName("MapMenu");
+	this->scheduleUpdate();
 }
 
 MapMenu::~MapMenu()
 {
+	delete oprtState_;
 	tex->release();
+}
+
+void MapMenu::update(float delta)
+{
+	if (Director::getInstance()->getRunningScene()->getName() != "MapMenu")
+	{
+		return;
+	}
+
+	auto label1 = this->getChildByName("cancelBtn");
+	if (label1 != nullptr && ((MenuItemImage*)label1)->isSelected())
+	{
+		((MenuItemImage*)label1)->unselected();
+		Director::getInstance()->popScene();
+	}
 }
 
 cocos2d::Scene* MapMenu::CreateMapMenu(GameMap& gameMap)

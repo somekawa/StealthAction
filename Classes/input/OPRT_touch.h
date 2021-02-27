@@ -57,4 +57,5 @@ private:
 	std::string trStr = "_toDark";
 	std::map<std::string, BUTTON> map_;
 	std::array<std::string, static_cast<int>(BUTTON::MAX)> nameTable_;
+	BUTTON oldBtn_;
 };
