@@ -25,6 +25,7 @@
 #include "GameScene.h"
 #include "TitleScene.h"
 #include "GameOverScene.h"
+#include "ClearScene.h"
 #include "_Debug/_DebugDispOutCC.h"
 #include "_Debug/_DebugConOut.h"
 #include "CameraManager.h"
@@ -355,8 +356,20 @@ void Game::update(float sp)
 
 	// gameoversceneへのフラグがtrueになっていたら、画面遷移を行う
 	auto player = (Player*)layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1");
-	if (player->GetGameOverFlg()|| gameMap_->IsClear())
+	if (gameMap_->IsClear())
 	{
+		lpEffectMng.ClearPool();
+		lpSoundMng.SetPauseAll(true);
+		isChanged_ = true;
+		Scene* scene = ClearScene::CreateClearScene();
+		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene, Color3B::WHITE));
+		CC_SAFE_RELEASE(this);
+		return;
+	}
+
+	if (player->GetGameOverFlg())
+	{
+		lpEffectMng.ClearPool();
 		lpSoundMng.SetPauseAll(true);
 		isChanged_ = true;
 		Scene* scene = GameOverScene::CreateGameOverScene();

@@ -38,14 +38,15 @@ MapMenu::MapMenu(GameMap& gameMap)
 			size.height / 2 - roomData[nowID].key.y);
 		auto renderer = _director->getRenderer();
 		auto& parentTransform = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+		const auto& mapParentList = gameMap.GetMapParentList();
 		for (auto room : roomData)
 		{
 			// “ž’B•”‰®‚Ì‚Ý•\Ž¦ Œ»Ý§ì‚Ì‚½‚ß
-			/*if (!mapParentList.mapParents[id].isArrival)
+			if (!mapParentList.mapParents[id].isArrival)
 			{
 				id++;
 				continue;
-			}*/
+			}
 			cocos2d::Rect rect = cocos2d::Rect(0, 0, roomSize.width, roomSize.height);
 			auto sprite = Sprite::create();
 			sprite->setTextureRect(rect);
@@ -66,8 +67,6 @@ MapMenu::MapMenu(GameMap& gameMap)
 			id++;
 		}
 		// ’Ê˜H•\Ž¦
-		const auto& mapParentList = gameMap.GetMapParentList();
-
 		auto& lineData = mapGen.GetEdgeData();
 		for (auto line : lineData)
 		{
