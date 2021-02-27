@@ -40,6 +40,7 @@ public:
 	bool IsAnimEnd(const float& delta, ActorType type, std::string animName);
 
 	void AnimDataClear(void);
+	void FireBallClear(void);
 
 	const float& GetAnimationMaxFrame(const ActorType& type, std::string animName)
 	{

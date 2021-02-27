@@ -118,6 +118,7 @@ bool Game::init()
 	respawnFlag_ = false;
 
 	// fireball ‚ÌŠe±ÆÒ°¼®Ý‚Ì·¬¯¼­“o˜^
+	lpAnimMng.FireBallClear();
 	lpAnimMng.addAnimationCache("Fireball", "fireball_normal", 4, 0.08f, true);
 	lpAnimMng.addAnimationCache("Fireball", "fireball_impact", 5, 0.08f, false);
 

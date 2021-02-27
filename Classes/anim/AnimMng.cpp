@@ -208,3 +208,8 @@ void AnimMng::AnimDataClear(void)
 		data.clear();
 	}
 }
+
+void AnimMng::FireBallClear(void)
+{
+	cachesExceptCharacter_.clear();
+}
