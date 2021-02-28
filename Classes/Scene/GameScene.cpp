@@ -295,11 +295,11 @@ bool Game::init()
 	skillSprite->setPosition(0,0);
 
 	// 地図表示時の背景に設定したいやつ…
-	/*auto mapBgSprite = Sprite::create("image/mapBg.png");
+	auto mapBgSprite = Sprite::create("image/mapBg.png");
 	layer_[(int)zOlder::FRONT]->addChild(mapBgSprite, 0);
 	mapBgSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	mapBgSprite->setVisible(false);
-	mapBgSprite->setName("mapBgSprite");*/
+	mapBgSprite->setName("mapBgSprite");
 
 
 	// ｴﾌｪｸﾄ用ｵﾌﾞｼﾞｪｸﾄﾌﾟｰﾙ作成
@@ -451,8 +451,11 @@ void Game::update(float sp)
 	cameraManager_->ScrollCamera(layer_[static_cast<int>(zOlder::CHAR_PL)]->getChildByName("player1")->getPosition(), CameraType::PLAYER1);
 	
 	// シェーダセット
-	resShadowShader_->SetShader(*player);
-	playerShader_->SetShader(*player, Vec3(0, 0, 0));
+	//resShadowShader_->SetShader(*player);
+	if (player->GetPlayerColor() == "player_Light_")
+	{
+		playerShader_->SetShader(*player, Vec3(0, 0, 0));
+	}
 	
 	auto enemies = layer_[static_cast<int>(zOlder::CHAR_ENEMY)]->getChildren();
 	for (auto& enemy : enemies)

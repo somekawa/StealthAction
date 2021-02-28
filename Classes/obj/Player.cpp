@@ -160,7 +160,7 @@ void Player::update(float delta)
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
 		lpSoundMng.PlayBySoundName("Transform", 0.5f);
-		playerColor == "player_Light_" ? playerColor = "player_Dark_" : playerColor = "player_Light_";
+		
 	}
 
 	skillAction();
@@ -481,6 +481,7 @@ void Player::transformMotion(float delta)
 		animationFrame_ += delta;
 		if (animationFrame_ >= 1.85f)
 		{
+			playerColor == "player_Light_" ? playerColor = "player_Dark_" : playerColor = "player_Light_";
 			bitFlg_.TransfromFlg = false;
 			currentAnimation_ = "Look_Intro";
 			animationFrame_ = 0.0f;
