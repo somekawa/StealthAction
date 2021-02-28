@@ -233,12 +233,12 @@ bool Game::init()
 		layer_[(int)zOlder::FRONT]->addChild(menuBtn, 0);
 		BtnSize = menuBtn->getContentSize().width;
 #endif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-	/*auto menuGuide = Sprite::create("image/menuGuide.png");
+	auto menuGuide = Sprite::create("image/menuGuide.png");
 	auto sprite_size = menuGuide->getContentSize();
 	menuGuide->setScale(0.3f);
 	auto menuPosX = visibleSize.width - menuGuide->getContentSize().width/2*menuGuide->getScale() - BtnSize;
 	menuGuide->setPosition(Vec2(menuPosX, visibleSize.height-(menuGuide->getContentSize().height/2)*menuGuide->getScale()));
-	this->addChild(menuGuide);*/
+	this->addChild(menuGuide);
 
 	// map“Ç‚İ‚İ
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
@@ -295,11 +295,11 @@ bool Game::init()
 	skillSprite->setPosition(0,0);
 
 	// ’n}•\¦‚Ì”wŒi‚Éİ’è‚µ‚½‚¢‚â‚Âc
-	//auto mapBgSprite = Sprite::create("image/mapBg.png");
-	//layer_[(int)zOlder::FRONT]->addChild(mapBgSprite, 0);
-	//mapBgSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	//mapBgSprite->setVisible(false);
-	//mapBgSprite->setName("mapBgSprite");
+	/*auto mapBgSprite = Sprite::create("image/mapBg.png");
+	layer_[(int)zOlder::FRONT]->addChild(mapBgSprite, 0);
+	mapBgSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	mapBgSprite->setVisible(false);
+	mapBgSprite->setName("mapBgSprite");*/
 
 
 	// ´Ìª¸Ä—pµÌŞ¼Şª¸ÄÌß°Ùì¬
