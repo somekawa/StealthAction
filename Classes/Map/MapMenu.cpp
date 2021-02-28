@@ -33,6 +33,11 @@ MapMenu::MapMenu(GameMap& gameMap)
 	// ゲームシーン表示
 	gameScene->visit();
 
+	auto menuGuide = Sprite::create("image/mapBg.png");
+	auto sprite_size = menuGuide->getContentSize();
+	menuGuide->setPosition(Vec2(size.width / 2, size.height / 2));
+	menuGuide->retain();
+	menuGuide->visit();
 	// 部屋表示
 	int id = 0; 
 	auto& roomData = mapGen.GetMSTNode();
@@ -91,8 +96,8 @@ MapMenu::MapMenu(GameMap& gameMap)
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		Vec2 origin = Director::getInstance()->getVisibleOrigin();
 		auto label = Label::createWithTTF("Map Not Found ", "fonts/PixelMplus12-Regular.ttf", 48);
-		label->setPosition(Vec2(origin.x + visibleSize.width / 2,
-			origin.y + visibleSize.height /2 - (label->getContentSize().height)));
+		label->setTextColor(Color4B::BLACK);
+		label->setPosition(Vec2(visibleSize.width / 2+label->getContentSize().width/10,visibleSize.height /2 + (label->getContentSize().height)));
 
 		// add the label as a child to this layer
 		this->addChild(label, 0);

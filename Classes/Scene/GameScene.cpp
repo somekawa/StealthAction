@@ -221,6 +221,8 @@ bool Game::init()
 	skillCBtn->setPosition(Vec2(visibleSize.width / 2 + (skillCBtn->getContentSize().width + skillCBtn->getContentSize().width / 2), skillCBtn->getContentSize().height / 2));
 	layer_[(int)zOlder::FRONT]->addChild(skillCBtn, 0);
 
+	float BtnSize = 0.0f;
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	//メニュー遷移ボタン
 	auto menuBtn = MenuItemImage::create(
 		"image/keep_button1.png",
@@ -229,6 +231,14 @@ bool Game::init()
 	menuBtn->setPosition(Vec2(visibleSize.width-(menuBtn->getContentSize().width*0.25)/2-10, visibleSize.height-(menuBtn->getContentSize().height * 0.25)/2-10));
 	menuBtn->setScale(0.25f);
 		layer_[(int)zOlder::FRONT]->addChild(menuBtn, 0);
+		BtnSize = menuBtn->getContentSize().width;
+#endif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	auto menuGuide = Sprite::create("image/menuGuide.png");
+	auto sprite_size = menuGuide->getContentSize();
+	menuGuide->setScale(0.3f);
+	auto menuPosX = visibleSize.width - menuGuide->getContentSize().width/2*menuGuide->getScale() - BtnSize;
+	menuGuide->setPosition(Vec2(menuPosX, visibleSize.height-(menuGuide->getContentSize().height/2)*menuGuide->getScale()));
+	this->addChild(menuGuide);
 
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
@@ -392,6 +402,7 @@ void Game::update(float sp)
 		CC_SAFE_RELEASE(this);
 		return;
 	}
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	// ANDROID時にメニューボタン押下したらTAB押下と同じ扱いをする
 	auto label1 = this->getChildByTag((int)zOlder::FRONT)->getChildByName("menuBtn");
 	if (((MenuItemImage*)label1)->isSelected())
@@ -413,6 +424,9 @@ void Game::update(float sp)
 		((MenuItemImage*)label1)->unselected();
 		Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 	}
+
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+
 
 	// SkillBase呼ぶテスト
 	auto skillBaseSp = (SkillBase*)layer_[static_cast<int>(zOlder::FRONT)]->getChildByName("skillSprite");
