@@ -119,8 +119,8 @@ bool Game::init()
 
 	// fireball の各ｱﾆﾒｰｼｮﾝのｷｬｯｼｭ登録
 	lpAnimMng.FireBallClear();
-	lpAnimMng.addAnimationCache("Fireball", "fireball_normal", 4, 0.08f, true);
-	lpAnimMng.addAnimationCache("Fireball", "fireball_impact", 5, 0.08f, false);
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/Fireball", "fireball_normal", 4, 0.08f, true);
+	lpAnimMng.addAnimationCache("image/EnemyAnimationAsset/Fireball", "fireball_impact", 5, 0.08f, false);
 
 	this->setName("GameScene");
 
@@ -233,12 +233,12 @@ bool Game::init()
 		layer_[(int)zOlder::FRONT]->addChild(menuBtn, 0);
 		BtnSize = menuBtn->getContentSize().width;
 #endif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-	auto menuGuide = Sprite::create("image/menuGuide.png");
+	/*auto menuGuide = Sprite::create("image/menuGuide.png");
 	auto sprite_size = menuGuide->getContentSize();
 	menuGuide->setScale(0.3f);
 	auto menuPosX = visibleSize.width - menuGuide->getContentSize().width/2*menuGuide->getScale() - BtnSize;
 	menuGuide->setPosition(Vec2(menuPosX, visibleSize.height-(menuGuide->getContentSize().height/2)*menuGuide->getScale()));
-	this->addChild(menuGuide);
+	this->addChild(menuGuide);*/
 
 	// map読み込み
 	gameMap_ = std::make_shared<GameMap>(*layer_[(int)zOlder::BG]);
@@ -264,7 +264,7 @@ bool Game::init()
 	layer_[(int)zOlder::FRONT]->addChild(plHPGauge, 1);
 	plHPGauge->setName("PL_HPgauge");
 	plHPGauge->setTag(100);
-	plHPGauge->setPosition(visibleSize.width / 10, visibleSize.height - (plHPGauge->getContentSize().height + plHPGauge->getContentSize().height / 4));
+	plHPGauge->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);
 
 	plHPGauge->scheduleUpdate();
 
@@ -276,7 +276,7 @@ bool Game::init()
 
 	// プレイヤーHPゲージカバー
 	auto plHpGaugeCover = Sprite::create("image/HPbar_cover.png");
-	plHpGaugeCover->setPosition(Vec2(plHPGauge->getPosition().x - 40, plHPGauge->getPosition().y));
+	plHpGaugeCover->setPosition(Vec2(plHPGauge->getPosition().x - 45, plHPGauge->getPosition().y));
 	plHpGaugeCover->setAnchorPoint(Vec2(0.0f, 0.5f));
 	layer_[(int)zOlder::FRONT]->addChild(plHpGaugeCover, 0);
 
@@ -312,20 +312,6 @@ bool Game::init()
 	{
 		if (keyCode == EventKeyboard::KeyCode::KEY_TAB)
 		{
-			// ここで一度削除しておかないとエラーにつながる
-			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("magicCT") != nullptr)
-			{
-				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("magicCT");
-			}
-			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("enemySpawnCT") != nullptr)
-			{
-				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("enemySpawnCT");
-			}
-			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("healCT") != nullptr)
-			{
-				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("healCT");
-			}
-
 			Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 		}
 		if (keyCode == EventKeyboard::KeyCode::KEY_F1)
@@ -407,21 +393,6 @@ void Game::update(float sp)
 	auto label1 = this->getChildByTag((int)zOlder::FRONT)->getChildByName("menuBtn");
 	if (((MenuItemImage*)label1)->isSelected())
 	{
-		// ここで一度削除しておかないとエラーにつながる
-		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("magicCT") != nullptr)
-		{
-			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("magicCT");
-		}
-		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("enemySpawnCT") != nullptr)
-		{
-			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("enemySpawnCT");
-		}
-		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("healCT") != nullptr)
-		{
-			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("healCT");
-		}
-		// メニュー表示時には選択状態を解除する(これを書かないと、continueを押した瞬間にまたメニューに切り替わってしまう)
-		((MenuItemImage*)label1)->unselected();
 		Director::getInstance()->pushScene(PoseMenu::CreatePoseMenu(*gameMap_));
 	}
 
@@ -498,80 +469,28 @@ void Game::update(float sp)
 	// スキルA
 	if (!((SkillBase*)director)->GetSkillCT("magic"))
 	{
-		if (((SkillBase*)director)->GetSkillCTTime("magic") >= 0)
-		{
-			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("magicCT") != nullptr)
-			{
-				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("magicCT");
-			}
-			std::string number = StringUtils::format("%d", ((SkillBase*)director)->GetSkillCTTime("magic"));
-			auto label = Label::createWithTTF(number.c_str(), "fonts/PixelMplus12-Regular.ttf", 48);
-			label->setPosition(this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillABtn")->getPosition());
-			label->setName("magicCT");
-			layer_[(int)zOlder::FRONT]->addChild(label, 3);
-			label->setCameraMask(static_cast<int>(CameraFlag::USER2));	// カメラマスクを設定しないと、アイコンの後ろに隠れてしまう
-		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillABtn")->setColor(Color3B(150, 150, 150));
 	}
 	else
 	{
-		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("magicCT") != nullptr)
-		{
-			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("magicCT");
-		}
-
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillABtn")->setColor(Color3B(255, 255, 255));
 	}
 	// スキルB
 	if (!((SkillBase*)director)->GetSkillCT("enemySpawn"))
 	{
-		if (((SkillBase*)director)->GetSkillCTTime("enemySpawn") >= 0)
-		{
-			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("enemySpawnCT") != nullptr)
-			{
-				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("enemySpawnCT");
-			}
-			std::string number = StringUtils::format("%d", ((SkillBase*)director)->GetSkillCTTime("enemySpawn"));
-			auto label = Label::createWithTTF(number.c_str(), "fonts/PixelMplus12-Regular.ttf", 48);
-			label->setPosition(this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->getPosition());
-			label->setName("enemySpawnCT");
-			layer_[(int)zOlder::FRONT]->addChild(label, 3);
-			label->setCameraMask(static_cast<int>(CameraFlag::USER2));	// カメラマスクを設定しないと、アイコンの後ろに隠れてしまう
-		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(150, 150, 150));
 	}
 	else
 	{
-		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("enemySpawnCT") != nullptr)
-		{
-			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("enemySpawnCT");
-		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillBBtn")->setColor(Color3B(255, 255, 255));
 	}
 	// スキルC(CT中またはdarkモードの時は暗くする)
 	if (!((SkillBase*)director)->GetSkillCT("heal") || player->GetPlayerColor() == "player_Dark_")
 	{
-		if (((SkillBase*)director)->GetSkillCTTime("heal") >= 0)
-		{
-			if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("healCT") != nullptr)
-			{
-				this->getChildByTag((int)zOlder::FRONT)->removeChildByName("healCT");
-			}
-			std::string number = StringUtils::format("%d", ((SkillBase*)director)->GetSkillCTTime("heal"));
-			auto label = Label::createWithTTF(number.c_str(), "fonts/PixelMplus12-Regular.ttf", 48);
-			label->setPosition(this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->getPosition());
-			label->setName("healCT");
-			layer_[(int)zOlder::FRONT]->addChild(label, 3);
-			label->setCameraMask(static_cast<int>(CameraFlag::USER2));	// カメラマスクを設定しないと、アイコンの後ろに隠れてしまう
-		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(150, 150, 150));
 	}
 	else
 	{
-		if (this->getChildByTag((int)zOlder::FRONT)->getChildByName("healCT") != nullptr)
-		{
-			this->getChildByTag((int)zOlder::FRONT)->removeChildByName("healCT");
-		}
 		this->getChildByTag((int)zOlder::FRONT)->getChildByName("skillCBtn")->setColor(Color3B(255, 255, 255));
 	}
 }

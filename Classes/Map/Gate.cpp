@@ -1,15 +1,15 @@
 #include "Gate.h"
 #include "obj/Player.h"
+#include "anim/AnimMng.h"
 
 USING_NS_CC;
 Gate::Gate(Vec2 pos, int gateNum)
 {
 	gateNum_ = gateNum;
-	own_ = Sprite::create("image/Sprites/map/gate.png");
+	own_ = Sprite::create();
+	own_->runAction(RepeatForever::create(Animate::create(lpAnimMng.GetAnimationCache("warp"))));
 	own_->setPosition(pos);
 	own_->setAnchorPoint({ 0, 0 });
-	own_->setScaleX(1);
-	own_->setScaleY(2);
 	this->addChild(own_);
 	this->setName("gate");
 	this->setVisible(false);

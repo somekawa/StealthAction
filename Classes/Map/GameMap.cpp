@@ -6,13 +6,15 @@
 #include "ClearObj.h"
 #include "Generator/MapGenerator.h"
 #include "Generator/MST.h"
+#include "anim/AnimMng.h"
 
 USING_NS_CC;
 #pragma execution_character_set("utf-8")
 
 GameMap::GameMap(cocos2d::Layer& layer)
 {
-	
+	// ワープのアニメーション登録
+	lpAnimMng.addAnimationCache("image/Sprites/map", "warp", 5, 0.25f, true);
 	std::random_device engine;
 	mapGenerator_ = std::make_shared<MapGenerator>(engine());
 	mapGenerator_->Call();
@@ -24,7 +26,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	isClear_ = false;
 
 #ifdef _DEBUG
-	mapName_ = Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
+	/*mapName_ = Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
 	mapName_->setPosition(100, 500);
 	objLayer_->addChild(mapName_);
 	isTutorial = Label::createWithTTF("今はチュートリアルマップです", "fonts/HGRGE.ttc", 48);
@@ -33,7 +35,7 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	objLayer_->addChild(isTutorial);
 	
 	tex = nullptr;
-	visible = false;
+	visible = false;*/
 #endif // _DEBUG
 	// マップレイヤーより前へ
 	
@@ -78,6 +80,9 @@ GameMap::GameMap(cocos2d::Layer& layer)
 		mapParentsList_.mapParents.push_back(mapParent);
 	}
 
+	// クリアする扉のある部屋
+	mapParentsList_.clearMapID = random(0, 49);
+
 	// チュートリアルマップデータ作成
 	// インデックスを自動生成したマップの後ろにしておく
 	MapParentState mapParent;
@@ -98,11 +103,6 @@ GameMap::GameMap(cocos2d::Layer& layer)
 
 	// IDをチュートリアル専用のマップ番号にしておく
 	mapParentsList_.nowID = mapParentsList_.mapParents.size() - 1;
-
-	// クリアする扉のある部屋
-	mapParentsList_.clearMapID = 0;
-
-	//mapParentsList_.mapParents[mapParentsList_.nowID].isArrival = true;
 
 	// チュートリアルマップのオブジェクトを作る処理
 	CreateObject();
@@ -129,9 +129,9 @@ GameMap::~GameMap()
 	}
 #ifdef _DEBUG
 	
-	CC_SAFE_RELEASE(mapName_);
+	/*CC_SAFE_RELEASE(mapName_);
 	CC_SAFE_RELEASE(isTutorial);
-	CC_SAFE_RELEASE(tex);
+	CC_SAFE_RELEASE(tex);*/
 #endif // _DEBUG
 }
 
@@ -168,12 +168,12 @@ void GameMap::ReplaceMap(Player& player)
 	// オブジェクト作成
 	CreateObject();
 #ifdef _DEBUG
-	auto str = StringUtils::format("部屋　%d", mapParentsList_.nowID);
+	/*auto str = StringUtils::format("部屋　%d", mapParentsList_.nowID);
 	mapName_->setString(str);
 	if (isTutorial->getString() != "")
 	{
 		isTutorial->setString("");
-	}
+	}*/
 #endif // _DEBUG
 	// プレイヤーポジションセット
 	player.setPosition(mapState_.child[childId].nextPos);
@@ -324,46 +324,46 @@ const bool GameMap::ChangeFloor()
 void GameMap::ColisionDebugDraw(bool debug)
 {
 	
-#ifdef _DEBUG
-	if (mapParentsList_.mapParents.size() == 0)
-	{
-		return;
-	}
-	if (tex == nullptr)
-	{
-		auto director = Director::getInstance();
-		auto size = director->getVisibleSize();
-		tex = RenderTexture::create(size.width, size.height);
-		tex->setPosition(size.width / 2, size.height / 2);
-		mapLayer_->addChild(tex);
-		tex->begin();
-		auto nowMap = GetNowMap();
-		auto colLayer = nowMap->getLayer("Collision");
-		auto mapIdx = nowMap->getMapSize();
-		auto mapTileSize = colLayer->getMapTileSize();
-		for (int y = 0; y < mapIdx.height; ++y)
-		{
-			for (int x = 0; x < mapIdx.width; ++x)
-			{
-				if (colLayer->getTileGIDAt({ static_cast<float>(x),mapIdx.height - static_cast<float>(y + 1) }) != 0)
-				{
-					auto rect = cocos2d::Rect({ 0,0 }, mapTileSize);
-					Sprite* sprite = Sprite::create();
-					sprite->setTextureRect(rect);
-					sprite->setPosition(x * mapTileSize.width, y * mapTileSize.height);
-					sprite->setColor(Color3B(0.0f, 255.0f, 0.0f));
-					sprite->setOpacity(122.0f);
-					sprite->setAnchorPoint({ 0.0f,0.0f });
-					sprite->retain();
-					sprite->visit();
-				}
-			}
-		}
-		tex->end();
-	}
-	else
-	{
-		tex->setVisible(debug);
-	}
-#endif
+//#ifdef _DEBUG
+//	if (mapParentsList_.mapParents.size() == 0)
+//	{
+//		return;
+//	}
+//	if (tex == nullptr)
+//	{
+//		auto director = Director::getInstance();
+//		auto size = director->getVisibleSize();
+//		tex = RenderTexture::create(size.width, size.height);
+//		tex->setPosition(size.width / 2, size.height / 2);
+//		mapLayer_->addChild(tex);
+//		tex->begin();
+//		auto nowMap = GetNowMap();
+//		auto colLayer = nowMap->getLayer("Collision");
+//		auto mapIdx = nowMap->getMapSize();
+//		auto mapTileSize = colLayer->getMapTileSize();
+//		for (int y = 0; y < mapIdx.height; ++y)
+//		{
+//			for (int x = 0; x < mapIdx.width; ++x)
+//			{
+//				if (colLayer->getTileGIDAt({ static_cast<float>(x),mapIdx.height - static_cast<float>(y + 1) }) != 0)
+//				{
+//					auto rect = cocos2d::Rect({ 0,0 }, mapTileSize);
+//					Sprite* sprite = Sprite::create();
+//					sprite->setTextureRect(rect);
+//					sprite->setPosition(x * mapTileSize.width, y * mapTileSize.height);
+//					sprite->setColor(Color3B(0.0f, 255.0f, 0.0f));
+//					sprite->setOpacity(122.0f);
+//					sprite->setAnchorPoint({ 0.0f,0.0f });
+//					sprite->retain();
+//					sprite->visit();
+//				}
+//			}
+//		}
+//		tex->end();
+//	}
+//	else
+//	{
+//		tex->setVisible(debug);
+//	}
+//#endif
 }

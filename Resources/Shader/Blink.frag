@@ -53,8 +53,4 @@ void main()
     retCol.g = max(retCol.g * 1.2, 0.0);
     retCol.b = max(retCol.b * 1.2, 0.0);
     gl_FragColor = vec4(retCol, org.a);
-//    float len = length(v_texCoord);
-//    vec2 uv = vec2(v_texCoord.x - (v_texCoord.x / len) * cos(len - 0)* 0.05,
-//               v_texCoord.y - (v_texCoord.y / len)*sin(len * 12.0f - 0 * 7.0f)*0.05f);
-//    gl_FragColor = float4(1.0, 1.0, 1.0, 1.0);
 }

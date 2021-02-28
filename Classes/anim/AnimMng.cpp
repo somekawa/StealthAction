@@ -73,7 +73,10 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 		auto string = animName + "%d.png";		// plistの中だからパスじゃない
 		auto str = StringUtils::format(string.c_str(), i);
 		SpriteFrame* sprite = cache->getSpriteFrameByName(name + "_" + str);
-
+		if (sprite == nullptr)
+		{
+			log("nullptrninatteiru");
+		}
 		animation->addSpriteFrame(sprite);
 	}
 
@@ -98,7 +101,7 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 
 void AnimMng::addAnimationCache(std::string name, std::string animName, int frame, float duration, bool isLoop)
 {
-	std::string fileName = "image/EnemyAnimationAsset/" + name + "/" + animName;
+	std::string fileName = name + "/" + animName;
 	// アニメーションキャッシュはシングルトン
 	AnimationCache* animationCache = AnimationCache::getInstance();
 

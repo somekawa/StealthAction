@@ -77,7 +77,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 			id++;
 		}
 		// ’Ê˜H•\Ž¦
-		auto& lineData = mapGen.GetEdgeData();
+		/*auto& lineData = mapGen.GetEdgeData();
 		for (auto line : lineData)
 		{
 			if (!line.used)
@@ -89,7 +89,7 @@ MapMenu::MapMenu(GameMap& gameMap)
 				line.pair_vertex[1] + offset, 1.5f, Color4F::RED);
 			sprite->autorelease();
 			sprite->visit(renderer, parentTransform, FLAGS_TRANSFORM_DIRTY);
-		}
+		}*/
 	}
 	else
 	{
