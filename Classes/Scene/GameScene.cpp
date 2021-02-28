@@ -264,8 +264,7 @@ bool Game::init()
 	layer_[(int)zOlder::FRONT]->addChild(plHPGauge, 1);
 	plHPGauge->setName("PL_HPgauge");
 	plHPGauge->setTag(100);
-	plHPGauge->setPosition(visibleSize.width / 10, visibleSize.height - visibleSize.height / 10);
-
+	plHPGauge->setPosition(visibleSize.width / 10, visibleSize.height - (plHPGauge->getContentSize().height + plHPGauge->getContentSize().height / 4));
 	plHPGauge->scheduleUpdate();
 
 	// プレイヤーのバー背景(ゲージの減少を見やすくする為)
@@ -276,7 +275,7 @@ bool Game::init()
 
 	// プレイヤーHPゲージカバー
 	auto plHpGaugeCover = Sprite::create("image/HPbar_cover.png");
-	plHpGaugeCover->setPosition(Vec2(plHPGauge->getPosition().x - 45, plHPGauge->getPosition().y));
+	plHpGaugeCover->setPosition(Vec2(plHPGauge->getPosition().x - 40, plHPGauge->getPosition().y));
 	plHpGaugeCover->setAnchorPoint(Vec2(0.0f, 0.5f));
 	layer_[(int)zOlder::FRONT]->addChild(plHpGaugeCover, 0);
 
