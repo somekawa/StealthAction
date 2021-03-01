@@ -109,6 +109,14 @@ private:
     bool debugMode;
 
 	bool isChanged_ = false;
+
+	int nowNumA = 15;
+	int nowNumB = 30;
+	int nowNumC = 35;
+
+	int oldNumA = 15;
+	int oldNumB = 30;
+	int oldNumC = 35;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
