@@ -17,7 +17,8 @@ struct Bits
 	bool DashFlg		 : 1;
 };
 
-#define AttackMove 30
+#define DashMove 30
+#define Calculation(X) ((X * 100.0f) - 16.0f) / 4.0f
 #define AttackNumDef 10				// ’Êíó‘Ô‚ÌUŒ‚—Í
 
 class SkillBase;

@@ -30,6 +30,7 @@
 #include <array>
 #include <list>
 #include <unordered_map>
+#include <utility>
 #include "cocos2d.h"
 #include "EnemyManager.h"
 #include "anim/AnimMng.h"
@@ -110,13 +111,8 @@ private:
 
 	bool isChanged_ = false;
 
-	int nowNumA = 15;
-	int nowNumB = 30;
-	int nowNumC = 35;
-
-	int oldNumA = 15;
-	int oldNumB = 30;
-	int oldNumC = 35;
+	void SkillCntUpdate(std::string skillName,std::string buttonName, int skillNum);	// スキルCT表示の更新関数
+	std::vector<std::pair<int, int>> skillTimeCnt;			// スキルCTの表示用(first:old second:now)
 };
 
 #endif // __HELLOWORLD_SCENE_H__

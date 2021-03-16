@@ -99,20 +99,9 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 		}
 	}
 
-	// こう書くとplayerが下の段に移動したときにくっついてくる文字になる
-	// updateで見るだけして、1度だけ読み込みさせて文字を描画できるようにしてみるとか
-	//auto label = Label::createWithTTF("Text_Yomikomitai", "fonts/Marker Felt.ttf", 24);
-	//if (label == nullptr)
-	//{
-	//	int a = 0;
-	//}
-	//label->setPosition(Vec2(100,100));
-	//this->addChild(label, 1);
-
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(30.0f, 30.0f);
 	attackColOffset_ = 0.0f;
-
 
 	// 残像
 	resShadow_ = std::make_shared<ResidualShadow>();
@@ -563,17 +552,15 @@ void Player::dashMotion(float delta)
 		//y = exp(-pow(x,2))
 		// pow…2乗とかできるやつ
 		// exp…ネイピア数
-		float tmpnum = animationFrame_;
-		tmpnum = ((tmpnum * 100.0f) - 16.0f) / 4.0f;
 		//tmpnum *= 100.0f;
 		//tmpnum -= 16.0f;
 		//tmpnum /= 4.0f;
-		auto move = exp(-pow(tmpnum, 2));
 		Vec2 dashSpeed;
+		float tmpnum = animationFrame_;
+		auto move = exp(-pow(Calculation(tmpnum), 2));
 		if (direction_ == Direction::Right)
 		{
-			dashSpeed = Vec2(move * 30, 0);
-
+			dashSpeed = Vec2(move * DashMove, 0);
 			resShadow_->Move(this->getPosition(), dashSpeed);
 			// 等速移動(比較できるようにコメントアウトで置いてるやつ)
 			//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(0.3 * 30, 0)));
@@ -591,7 +578,7 @@ void Player::dashMotion(float delta)
 		}
 		else
 		{
-			dashSpeed = Vec2(move * -30, 0);
+			dashSpeed = Vec2(move * -DashMove, 0);
 
 			resShadow_->Move(this->getPosition(), dashSpeed);
 			runAction(cocos2d::MoveBy::create(0.0f, dashSpeed));
@@ -716,50 +703,50 @@ void Player::colliderVisible(void)
 
 void Player::attackCollider(std::string str,cocos2d::Node* col,float& pos)
 {
-	if (!oldPosKeepFlg_)
-	{
-		return;
-	}
+	//if (!oldPosKeepFlg_)
+	//{
+	//	return;
+	//}
 
-	// 攻撃の時だけオフセットが必要
-	if (currentAnimation_ == str.c_str())
-	{
-		if (!this->IsAttacking())	// 2・3撃目はずっとattackingがtrueだからコライダー位置の設定のしなおしにならない
-		{
-			if (direction_ == Direction::Right)
-			{
-				this->SetAttackOffset(Vec2(col->getPosition().x + 30.0f, col->getPosition().y));
-				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(this->getPosition().x + AttackMove, this->getPosition().y)));
-				//this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + AttackMove, this->getPosition().y)));
-				this->SetIsAttacking(true);
-			}
-			else
-			{
-				this->SetAttackOffset(cocos2d::Vec2(0.0f, 0.0f));
-				this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(this->getPosition().x - AttackMove, this->getPosition().y)));
-				//this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - AttackMove, this->getPosition().y)));
-				this->SetIsAttacking(true);
-			}
+	//// 攻撃の時だけオフセットが必要
+	//if (currentAnimation_ == str.c_str())
+	//{
+	//	if (!this->IsAttacking())	// 2・3撃目はずっとattackingがtrueだからコライダー位置の設定のしなおしにならない
+	//	{
+	//		if (direction_ == Direction::Right)
+	//		{
+	//			this->SetAttackOffset(Vec2(col->getPosition().x + 30.0f, col->getPosition().y));
+	//			this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(this->getPosition().x + AttackMove, this->getPosition().y)));
+	//			//this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + AttackMove, this->getPosition().y)));
+	//			this->SetIsAttacking(true);
+	//		}
+	//		else
+	//		{
+	//			this->SetAttackOffset(cocos2d::Vec2(0.0f, 0.0f));
+	//			this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(this->getPosition().x - AttackMove, this->getPosition().y)));
+	//			//this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - AttackMove, this->getPosition().y)));
+	//			this->SetIsAttacking(true);
+	//		}
 
-			//for (auto col : this->getChildren())
-			//{
-			//	// 矩形の名前がattackならば
-			//	if (col->getName() == this->GetAction())
-			//	{
-			//		// 矩形のﾀｲﾌﾟがattackのやつのみの抽出
-			//		if (col->getLocalZOrder() == 0)
-			//		{
-			//			// 矩形のﾎﾟｼﾞｼｮﾝの変更
-			//			// 矩形のﾎﾟｼﾞｼｮﾝは1度のみの変更でないと
-			//			// 毎ﾌﾚｰﾑ回ってしまうと矩形がどっかいくのでここでｾｯﾄしている。
-			//			// 矩形がずれていくが、当たり判定は本来の位置で行われている
-			//			col->setPosition(this->GetAttackRect().offset_.x, col->getPosition().y);
-			//		}
-			//	}
-			//}
-		}
-		col->setPosition(this->GetAttackRect().offset_.x, col->getPosition().y);
-	}
+	//		//for (auto col : this->getChildren())
+	//		//{
+	//		//	// 矩形の名前がattackならば
+	//		//	if (col->getName() == this->GetAction())
+	//		//	{
+	//		//		// 矩形のﾀｲﾌﾟがattackのやつのみの抽出
+	//		//		if (col->getLocalZOrder() == 0)
+	//		//		{
+	//		//			// 矩形のﾎﾟｼﾞｼｮﾝの変更
+	//		//			// 矩形のﾎﾟｼﾞｼｮﾝは1度のみの変更でないと
+	//		//			// 毎ﾌﾚｰﾑ回ってしまうと矩形がどっかいくのでここでｾｯﾄしている。
+	//		//			// 矩形がずれていくが、当たり判定は本来の位置で行われている
+	//		//			col->setPosition(this->GetAttackRect().offset_.x, col->getPosition().y);
+	//		//		}
+	//		//	}
+	//		//}
+	//	}
+	//	col->setPosition(this->GetAttackRect().offset_.x, col->getPosition().y);
+	//}
 }
 
 // 現在のアクション情報を取得する
