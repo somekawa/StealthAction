@@ -1,10 +1,12 @@
 #pragma once
-#include "BaseScene.h"
 #include <vector>
+#include "BaseScene.h"
+
 using MapData = std::vector<cocos2d::TMXTiledMap*>;
 
 class Player;
 class GameMap;
+
 class LoadScene : public BaseScene
 {
 public:
@@ -17,6 +19,4 @@ private:
 	Scene* scene;
 	Player& player_;
 	GameMap* gameMap_;
-
 };
-

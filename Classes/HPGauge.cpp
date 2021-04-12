@@ -1,3 +1,4 @@
+// 担当場所
 #include "HPGauge.h"
 #include "obj/Actor.h"
 
@@ -7,10 +8,14 @@ HPGauge::HPGauge()
 {
 }
 
-HPGauge::HPGauge(Actor& target,char moveTag):targetActor_(&target)
+HPGauge::~HPGauge()
+{
+}
+
+HPGauge::HPGauge(Actor& target, char moveTag) :targetActor_(&target)
 {
 	moveFlag_ = moveTag;
-	initLife_ = targetActor_->GetHp();
+	initLife_ = static_cast<float>(targetActor_->GetHp());
 	nowLife_ = initLife_;
 	if (target.getName() == "player1")
 	{
@@ -20,10 +25,6 @@ HPGauge::HPGauge(Actor& target,char moveTag):targetActor_(&target)
 	{
 		setColor(Color3B::RED);
 	}
-}
-
-HPGauge::~HPGauge()
-{
 }
 
 HPGauge* HPGauge::createHPGauge(Actor& target, char moveTag)
@@ -71,7 +72,7 @@ void HPGauge::update(float delta)
 	if (targetActor_->getName() == "player1")
 	{
 		this->setScale(newScale, 1.0);
-		// プレイヤーのHPは右から左に削れたほうがいいと思ったため、アンカーポイントを変更しています
+		// プレイヤーのHPは右から左に削れたほうがいいため、アンカーポイントを変更している
 		if (this->getAnchorPoint() != Vec2(0.0f, 0.5f))
 		{
 			this->setAnchorPoint(Vec2(0.0f, 0.5f));
@@ -79,15 +80,16 @@ void HPGauge::update(float delta)
 	}
 	else
 	{
-		// 敵のゲージはプレイヤーと同じサイズだと見づらくなるため、縮小しています
+		// 敵のゲージはプレイヤーと同じサイズだと見づらくなるため、縮小している
 		this->setScale(newScale / 2, 1.0 / 2);
 	}
 
+	// 敵のゲージの座標移動処理
 	if (moveFlag_ == 1)
 	{
 		setPosition(Vec2(targetActor_->getPosition().x - 30.0f, targetActor_->getPosition().y + 100.0f));
 	}
-
+	// 敵死亡時に敵のゲージを削除する
 	if (getTag() == 0 || !targetActor_->AliveCheck())
 	{
 		removeFromParentAndCleanup(true);
@@ -98,9 +100,9 @@ void HPGauge::SetHP(float hp)
 {
 	nowLife_ = hp;
 	// 上限を超えないように
-	if (nowLife_ > 100)
+	if (nowLife_ > 100.0f)
 	{
-		nowLife_ = 100;
+		nowLife_ = 100.0f;
 	}
 }
 
@@ -108,4 +110,3 @@ float HPGauge::GetHP(void)
 {
 	return nowLife_;
 }
-

@@ -5,7 +5,7 @@ USING_NS_CC;
 Collider::Collider(Sprite& target):
 	target_(target)
 {
-	pos_ = target_.getPosition();
+	pos_  = target_.getPosition();
 	size_ = target_.getContentSize();
 	this->setPosition(pos_);
 }
@@ -20,12 +20,11 @@ Node* Collider::Create(Sprite& target)
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
-		return pRet;
 	}
 	else
 	{
 		delete pRet;
 		pRet = nullptr;
-		return nullptr;
 	}
+	return pRet;
 }

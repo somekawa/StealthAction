@@ -1,5 +1,4 @@
 #include <cocos2d.h>
-
 #include "ActionRect.h"
 
 USING_NS_CC;

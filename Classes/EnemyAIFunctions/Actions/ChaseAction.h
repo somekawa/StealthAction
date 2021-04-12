@@ -1,9 +1,8 @@
 #pragma once
 #include "module/ActModule.h"
 
-// ﾌﾟﾚｲﾔｰを追いかけるｱｸｼｮﾝ
+// プレイヤーを追いかけるアクション
 struct ChaseAction
 {
 	bool operator()(cocos2d::Sprite& sprite, ActModule& module);
 };
-

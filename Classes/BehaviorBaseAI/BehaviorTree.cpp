@@ -13,7 +13,7 @@ BehaviorTree::BehaviorTree():
 NodeBase* BehaviorTree::Inference(Enemy* enemy, BehaviorData* data)
 {
 	// データをリセットして開始
-	data->Init();
+	data->InitAct();
 	return root_->Inference(enemy, data);
 }
 
@@ -36,12 +36,14 @@ void BehaviorTree::AddNode(std::string searchName, std::string entryName, int pr
 			search_node->AddChild(add_node);
 		}
 	}
-	else {
+	else 
+	{
 		if (root_ == NULL)
 		{
 			root_ = new NodeBase(entryName, NULL, NULL, priority, selRule, judgment, action, 1);
 		}
-		else {
+		else 
+		{
 			printf("ルートは既に登録されています\n");
 		}
 	}
@@ -63,14 +65,20 @@ NodeBase* BehaviorTree::Run(Enemy* enemy, NodeBase* actionNode, BehaviorData* da
 		{
 			return NULL;
 		}
-		else {
+		else 
+		{
 			// 途中ならそこから始める
 			return SequenceBack(sequence_node, enemy, data);
 		}
 		// 失敗は終了
 	}
-	else if (state == State::Failed) {
+	else if (state == State::Failed) 
+	{
 		return NULL;
+	}
+	else
+	{
+		// 何も処理を行わない
 	}
 
 	// 現状維持

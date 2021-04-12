@@ -1,3 +1,4 @@
+// 全て担当
 #include "obj/Actor.h"
 #include "CheckList.h"
 
@@ -6,7 +7,7 @@ bool CheckList::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	// ホワイトリスト登録物Check
 	for (auto data : module.whiteList)
 	{
-		if (data == ((Actor&)sprite).GetAction())
+		if (data == dynamic_cast<Actor&>(sprite).GetAction())
 		{
 			return true;
 		}
@@ -15,7 +16,7 @@ bool CheckList::operator()(cocos2d::Sprite & sprite, ActModule & module)
 	// ブラックリスト登録物Check
 	for (auto data : module.blackList)
 	{
-		if (data == ((Actor&)sprite).GetAction())
+		if (data == dynamic_cast<Actor&>(sprite).GetAction())
 		{
 			return false;
 		}

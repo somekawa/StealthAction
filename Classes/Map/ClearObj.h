@@ -9,6 +9,4 @@ public:
 	~ClearObj();
 	static ClearObj* CreateClearObj(cocos2d::Vec2 pos);
 private:
-	int frame = 0;
 };
-

@@ -10,22 +10,6 @@
 
 USING_NS_CC;
 
-cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
-{
-	PoseMenu* pRet = new(std::nothrow) PoseMenu(gameMap);
-	if (pRet && pRet->init())
-	{
-		pRet->autorelease();
-		return pRet;
-	}
-	else
-	{
-		delete pRet;
-		pRet = nullptr;
-		return nullptr;
-	}
-}
-
 PoseMenu::PoseMenu(GameMap& gameMap):gameMap_(gameMap)
 {
 	oprtState_ = new OPRT_touch((Sprite*)this);
@@ -34,7 +18,6 @@ PoseMenu::PoseMenu(GameMap& gameMap):gameMap_(gameMap)
 	// 入力系統
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	auto listener = cocos2d::EventListenerKeyboard::create();
-	auto a = Director::getInstance()->getRunningScene();
 	listener->onKeyPressed = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* keyEvent)
 	{
 		//マップ表示
@@ -63,15 +46,7 @@ PoseMenu::PoseMenu(GameMap& gameMap):gameMap_(gameMap)
 		}
 	};
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
-#else
-	//auto listener = EventListenerTouchOneByOne::create();
-	//listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
-	//{
-	//	Director::getInstance()->popScene();
-	//	return true;
-	//};
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-	//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 	this->setName("PoseMenu");
 	this->scheduleUpdate();
 }
@@ -81,16 +56,31 @@ PoseMenu::~PoseMenu()
 	delete oprtState_;
 }
 
+cocos2d::Scene* PoseMenu::CreatePoseMenu(GameMap& gameMap)
+{
+	PoseMenu* pRet = new(std::nothrow) PoseMenu(gameMap);
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+	}
+	return pRet;
+}
+
 void PoseMenu::ButtonDraw(void)
 {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto director = Director::getInstance();
-	auto size = director->getVisibleSize();
-	auto tex = RenderTexture::create(size.width, size.height);
+	const auto visibleSize = Director::getInstance()->getVisibleSize();
+	const auto director = Director::getInstance();
+	const auto size = director->getVisibleSize();
+	const auto tex = RenderTexture::create(static_cast<int>(size.width), static_cast<int>(size.height));
 	tex->setPosition(size.width / 2, size.height / 2);
 	this->addChild(tex);
 
-	auto gameScene = director->getRunningScene();
+	const auto gameScene = director->getRunningScene();
 	if (gameScene->getName() != "GameScene")
 	{
 		Director::getInstance()->popScene();
@@ -101,7 +91,7 @@ void PoseMenu::ButtonDraw(void)
 	gameScene->visit();
 	// ゲームシーンの表示を半分暗く
 	cocos2d::Rect rect = cocos2d::Rect(0, 0, size.width, size.height);
-	auto bg = Sprite::create();
+	const auto bg = Sprite::create();
 	bg->setTextureRect(rect);
 	bg->setColor({ 0, 0, 0 });
 	bg->setOpacity(200);
@@ -111,10 +101,10 @@ void PoseMenu::ButtonDraw(void)
 
 	auto button = [=](Vec2 pos,std::string path,std::string name)
 	{
-		auto sprite = MenuItemImage::create(
+		const auto sprite = MenuItemImage::create(
 			"image/button.png",
 			"image/button.png");
-		auto sprite2 = MenuItemImage::create(path,path);
+		const auto sprite2 = MenuItemImage::create(path,path);
 		sprite->retain();
 		sprite->setName(name);
 		sprite->setScaleX(0.2f);
@@ -129,10 +119,10 @@ void PoseMenu::ButtonDraw(void)
 		this->addChild(sprite);
 		this->addChild(sprite2, 1);
 	};
-	button(Vec2(size.width / 2, (size.height / 5) * 4), "image/continue.png"	, "continueBtn");
-	button(Vec2(size.width / 2, (size.height / 5) * 3), "image/view Map.png"	, "mapBtn");
-	button(Vec2(size.width / 2, (size.height / 5) * 2), "image/view Guide.png", "guideBtn");
-	button(Vec2(size.width / 2, (size.height / 5)	 ), "image/Game Exit.png" , "exitBtn");
+	button(Vec2(size.width / 2.0f, (size.height / 5.0f) * 4), "image/continue.png"	  , "continueBtn");
+	button(Vec2(size.width / 2.0f, (size.height / 5.0f) * 3), "image/view Map.png"	  , "mapBtn");
+	button(Vec2(size.width / 2.0f, (size.height / 5.0f) * 2), "image/view Guide.png"  , "guideBtn");
+	button(Vec2(size.width / 2.0f, (size.height / 5.0f)	 )  , "image/Game Exit.png"   , "exitBtn");
 
 	tex->end();
 }
@@ -144,28 +134,28 @@ void PoseMenu::update(float delta)
 		return;
 	}
 
-	auto label1 = this->getChildByName("continueBtn");
+	const auto label1 = this->getChildByName("continueBtn");
 	if (label1 != nullptr && ((MenuItemImage*)label1)->isSelected())
 	{
 		((MenuItemImage*)label1)->unselected();
 		Director::getInstance()->popScene();
 	}
 
-	auto label2 = this->getChildByName("mapBtn");
+	const auto label2 = this->getChildByName("mapBtn");
 	if (label2 != nullptr && ((MenuItemImage*)label2)->isSelected())
 	{
 		((MenuItemImage*)label2)->unselected();
 		Director::getInstance()->pushScene(MapMenu::CreateMapMenu(gameMap_));
 	}
 
-	auto label3 = this->getChildByName("guideBtn");
+	const auto label3 = this->getChildByName("guideBtn");
 	if (label3 != nullptr && ((MenuItemImage*)label3)->isSelected())
 	{
 		((MenuItemImage*)label3)->unselected();
 		Director::getInstance()->pushScene(Guide::CreateGuide());
 	}
 
-	auto label4 = this->getChildByName("exitBtn");
+	const auto label4 = this->getChildByName("exitBtn");
 	if (label4 != nullptr && ((MenuItemImage*)label4)->isSelected())
 	{
 		((MenuItemImage*)label4)->unselected();

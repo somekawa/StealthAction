@@ -13,4 +13,3 @@ protected:
 	cocos2d::Sprite* own_;
 	bool isEnable_;
 };
-

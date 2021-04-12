@@ -60,51 +60,55 @@ bool MapGenerator::CreateRoom(void)
 {
     for (std::size_t n = 0; n < FLOOR; n++)
     {
-        double result = dist_(engine_);
-        double r = 100 * dist_(engine_);
-        auto  t = 2 * M_PI * result;
-        auto pos_area1 = (cocos2d::Vec2(400 + r * cos(t), 500 + r * sin(t)));
-        auto pos = (cocos2d::Vec2(600 + r * cos(t), 500 + r * sin(t)));
-        auto pos_area2 = (cocos2d::Vec2(600 + r * cos(t), 700 + r * sin(t)));
-        auto pos_area3 = (cocos2d::Vec2(600 + r * cos(t), 300 + r * sin(t)));
-        auto pos_area4 = (cocos2d::Vec2(800 + r * cos(t), 500 + r * sin(t)));
-        auto size = (cocos2d::Size(4.0f * 16, 4.0f * 8));
-        auto name = "floor" + cocos2d::StringUtils::toString(n);
+        const float result = dist_(engine_);
+		const float r = 100.0f * dist_(engine_);
+		const float t = 2.0f * static_cast<float>(M_PI) * result;
+		const cocos2d::Vec2 pos_area1 = (cocos2d::Vec2(400.0f + r * cos(t), 500.0f + r * sin(t)));
+		const cocos2d::Vec2 pos = (cocos2d::Vec2(600.0f + r * cos(t), 500.0f + r * sin(t)));
+		const cocos2d::Vec2 pos_area2 = (cocos2d::Vec2(600.0f + r * cos(t), 700.0f + r * sin(t)));
+		const cocos2d::Vec2 pos_area3 = (cocos2d::Vec2(600.0f + r * cos(t), 300.0f + r * sin(t)));
+		const cocos2d::Vec2 pos_area4 = (cocos2d::Vec2(800.0f + r * cos(t), 500.0f + r * sin(t)));
+		const cocos2d::Size size = (cocos2d::Size(4.0f * 16.0f, 4.0f * 8.0f));
+		const std::string name = "floor" + cocos2d::StringUtils::toString(n);
 
-        auto area = (n / (FLOOR / 5));
+        const unsigned int area = (n / (FLOOR / 5));
         if (area == 0)
         {
             if (n == 0)
             {
-                data_.emplace_back(Room_Data{0,false,cocos2d::Vec2(600, 500),size,cocos2d::Vec2(600, 500),name,cocos2d::Color4F(1, 1, 1, 0.5),cocos2d::Color4F(1,0, 0,1) });
+                data_.emplace_back(Room_Data{0,false,cocos2d::Vec2(600.0f, 500.0f),size,cocos2d::Vec2(600.0f, 500.0f),name,cocos2d::Color4F(1.0f, 1.0f, 1.0f, 0.5f),cocos2d::Color4F(1.0f,0.0f, 0.0f,1.0f) });
                 continue;
             }
-            data_.emplace_back(Room_Data{0,false,pos,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(1, 0, 0, 0.5), cocos2d::Color4F(0.8,0.8,0.8, 0.5) });
+            data_.emplace_back(Room_Data{0,false,pos,size,cocos2d::Vec2(450.0f,500.0f),name, cocos2d::Color4F(1.0f, 0.0f, 0.0f, 0.5f), cocos2d::Color4F(0.8f,0.8f,0.8f, 0.5f) });
         }
         else if (area == 1)
         {
-            data_.emplace_back(Room_Data{1,true,pos_area1,size,cocos2d::Vec2(450,500),name, cocos2d::Color4F(0, 0, 1,1), cocos2d::Color4F(0.8,0.8,0.8,0.5)});
+            data_.emplace_back(Room_Data{1,true,pos_area1,size,cocos2d::Vec2(450.0f,500.0f),name, cocos2d::Color4F(0.0f, 0.0f, 1.0f,1.0f), cocos2d::Color4F(0.8f,0.8f,0.8f,0.5f)});
         }
         else if (area == 2)
         {
-           data_.emplace_back(Room_Data{2,true,pos_area2,size,cocos2d::Vec2(600,600),name,cocos2d::Color4F(0, 1,0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5)});
+           data_.emplace_back(Room_Data{2,true,pos_area2,size,cocos2d::Vec2(600.0f,600.0f),name,cocos2d::Color4F(0.0f, 1.0f,0.0f,1.0f), cocos2d::Color4F(0.8f,0.8f,0.8f,0.5f)});
         }
         else if (area == 3)
         {
-           data_.emplace_back(Room_Data{3,true,pos_area3,size,cocos2d::Vec2(600,400),name, cocos2d::Color4F(0.0,1.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5) });
+           data_.emplace_back(Room_Data{3,true,pos_area3,size,cocos2d::Vec2(600.0f,400.0f),name, cocos2d::Color4F(0.0f,1.0f,1.0f,1.0f), cocos2d::Color4F(0.8f,0.8f,0.8f,0.5f) });
         }
         else if (area == 4)
         {
-           data_.emplace_back(Room_Data{4,true,pos_area4,size,cocos2d::Vec2(750,500),name, cocos2d::Color4F(1.0, 0.0,1.0,1), cocos2d::Color4F(0.8,0.8,0.8,0.5)});
+           data_.emplace_back(Room_Data{4,true,pos_area4,size,cocos2d::Vec2(750.0f,500.0f),name, cocos2d::Color4F(1.0f, 0.0f,1.0f,1.0f), cocos2d::Color4F(0.8f,0.8f,0.8f,0.5f)});
         }
+		else
+		{
+			// 何も処理を行わない
+		}
     }
     return true;
 }
 
 bool MapGenerator::DistributedRoom(void)
 {
-    auto vec = cocos2d::Vec2(0, 0);
-    auto vec1 = cocos2d::Vec2(0, 0);
+	cocos2d::Vec2 vec = cocos2d::Vec2(0.0f, 0.0f);
+	cocos2d::Vec2 vec1 = cocos2d::Vec2(0.0f, 0.0f);
     bool flag = true;     //呼ばれるたびに加算し、分割を開始するかの判定に使用する
     
     while (flag)
@@ -120,12 +124,12 @@ bool MapGenerator::DistributedRoom(void)
                     continue;
                 }
 
-                auto square_center_n = cocos2d::Vec2(data_[n].size.width / 2, data_[n].size.height / 2);
-                auto square_center_m = cocos2d::Vec2(data_[m].size.width / 2, data_[m].size.height / 2);
-                auto tmp = std::abs(data_[n].pos.x - data_[m].pos.x);
-                auto tmp2 = std::abs(data_[n].pos.y - data_[m].pos.y);
-                auto tmp3 = (square_center_n + square_center_m).x;
-                auto tmp4 = (square_center_n + square_center_m).y;
+				const cocos2d::Vec2 square_center_n = cocos2d::Vec2(data_[n].size.width / 2, data_[n].size.height / 2);
+				const cocos2d::Vec2 square_center_m = cocos2d::Vec2(data_[m].size.width / 2, data_[m].size.height / 2);
+				const float tmp  = std::abs(data_[n].pos.x - data_[m].pos.x);
+				const float tmp2 = std::abs(data_[n].pos.y - data_[m].pos.y);
+				const float tmp3 = (square_center_n + square_center_m).x;
+				const float tmp4 = (square_center_n + square_center_m).y;
 
                 if ((square_center_n + square_center_m).x > std::abs((data_[n].pos.x + square_center_n.x)- (data_[m].pos.x + square_center_m.x)) &&
                     (square_center_n + square_center_m).y > std::abs((data_[n].pos.y + square_center_n.y) - (data_[m].pos.y + square_center_m.y)))
@@ -151,11 +155,11 @@ bool MapGenerator::DistributedRoom(void)
 
 bool MapGenerator::CreateDelaunay(void)
 {
-    delaunay_->CreateTriangle(cocos2d::Vec2(0, 0), cocos2d::Vec2(600, 500));
+    delaunay_->CreateTriangle(cocos2d::Vec2(0.0f, 0.0f), cocos2d::Vec2(600.0f, 500.0f));
     for (int i = 0; i < FLOOR; i++)
     {
-        delaunay_->SubdivisionTriangle((data_[i].pos + data_[i].size / 2) - cocos2d::Vec2(600, 400));
-        vertex_.push_back((data_[i].pos + data_[i].size / 2) - cocos2d::Vec2(600, 400));
+        delaunay_->SubdivisionTriangle((data_[i].pos + data_[i].size / 2) - cocos2d::Vec2(600.0f, 400.0f));
+        vertex_.push_back((data_[i].pos + data_[i].size / 2) - cocos2d::Vec2(600.0f, 400.0f));
         areaData_.push_back(data_[i].area);
     }
     delaunay_->FinishDelaunay();

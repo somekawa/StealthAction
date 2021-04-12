@@ -1,8 +1,9 @@
 #pragma once
-
 #include <cocos2d.h> 
 #include <memory>
 #include <list>
+#include <vector>
+#include <string>
 #include "Geometory.h"
 #include "Direction/Direction.h"
 #include "ActorType.h"
@@ -32,12 +33,8 @@ class Actor :
 	public cocos2d::Sprite
 {
 public:
-	// デフォルトコンストラクタ追加中
-	//Actor();
 	Actor(int hp,cocos2d::Layer& myLayer);
 	~Actor();
-	// 各Actorの行動処理
-	virtual void Action(void) = 0;
 	// 更新処理
 	virtual void Update(void);
 	// 更新
@@ -49,15 +46,10 @@ public:
 	virtual void ChangeAnimation(std::string animName);
 	// 現在のアニメーションを取得
 	virtual std::string GetAction(void);
-	// currentAnimationのｾｯﾄ
+	// currentAnimationのセット
 	virtual void SetAction(std::string actName);
-
-
-
-	// 方向変更
-	virtual void ChangeDirection(float delta) = 0;
 	// アニメーション登録
-	virtual void AnimRegistrator(void) = 0;
+	virtual void AnimRegistrator(void);
 	// オブジェクトが死んだらdeleteFlagをtrueにする
 	virtual void Delete(void)
 	{
@@ -68,23 +60,22 @@ public:
 	{
 		return deleteFlag_;
 	}
-	// ﾎﾟｼﾞｼｮﾝ取得
+	// ポジション取得
 	virtual const Vector2I& GetPos(void) const
 	{
 		return pos_;
 	}
-
 	// 攻撃矩形の取得
 	virtual const AttackRect& GetAttackRect(void)
 	{
 		return attackRect_;
 	}
-	// ｱﾆﾒｰｼｮﾝのﾌﾚｰﾑ値の取得
+	// アニメーションのフレーム値の取得
 	virtual const float& GetAnimationFrame(void)
 	{
 		return animationFrame_;
 	}
-	// ﾎﾟｼﾞｼｮﾝｾｯﾄ
+	// ポジションセット
 	virtual void SetPos(Vector2I pos);
 	// 方向の取得
 	virtual const Direction& GetDirection(void)
@@ -93,13 +84,9 @@ public:
 	}
 	// 向いている方向のセット
 	virtual void SetDirection(Direction dir);
-
-	// これ作る必要あるのか分からないが、皆が使うと思い、作成しました
 	// 整数値で現在のフレーム値を取得
-	virtual const int& GetAnimationFrameInt(void);
-	virtual const int& GetAnimationFrameInt(std::string str);
-
-	virtual void CheckMapObjHit(float delta);
+	virtual const int GetAnimationFrameInt(void);
+	virtual const int GetAnimationFrameInt(std::string str);
 	// 壁に当たっているか判定
 	virtual const bool& IsHitWall(void)
 	{
@@ -111,9 +98,9 @@ public:
 		return onFloor_;
 	}
 	// ダメージをくらったときに使用
-	virtual void OnDamaged(void)
+	virtual void OnIsHitAttack(void)
 	{
-		onDamaged_ = true;
+		isHitAttack_ = true;
 	}
 	void SetIsAttacking(bool flg);
 	// 攻撃しているかのフラグ取得関数
@@ -121,12 +108,7 @@ public:
 	{
 		return isAttacking_;
 	}
-	// ﾀﾞﾒｰｼﾞをくらったﾌﾗｸﾞの取得関数
-	virtual const bool& GetOnDamaged(void)
-	{
-		return onDamaged_;
-	}
-	// 攻撃矩形のｵﾌｾｯﾄを設定
+	// 攻撃矩形のオフセットを設定
 	virtual void SetAttackOffset(cocos2d::Vec2 offset);
 	// 現在のコライダーボックスの取得
 	const std::vector <std::shared_ptr<ActionRect>>& GetCurrentCol(void)
@@ -138,23 +120,23 @@ public:
 	{
 		return hp_;
 	}
-	// 自分のﾀｲﾌﾟ取得
+	// 自分のタイプ取得
 	virtual const ActorType& GetType(void)
 	{
 		return type_;
 	}
-	// 攻撃ｵﾌﾞｼﾞｪｸﾄを発射しているかの取得
+	// 攻撃オブジェクトを発射しているかの取得
 	virtual bool GetFire(void)
 	{
 		return isFire_;
 	}
-	// 生きているかのﾌﾗｸﾞ取得
+	// 生きているかのフラグ取得
 	virtual bool AliveCheck(void)
 	{
 		return isAlive_;
 	}
 	// モジュールの登録
-	virtual  void actModuleRegistration(void) = 0;							
+	virtual  void ActModuleRegistration(void) = 0;							
 
 	// 攻撃矩形の取得
 	const cocos2d::Rect& GetAttackCol(void)
@@ -166,15 +148,16 @@ public:
 	{
 		return damageCol_;
 	}
-	// 各ｺﾗｲﾀﾞｰ情報の設定
+	// 各コライダー情報の設定
 	virtual void SetCollider(void);
 
 	// 当たり判定
 	virtual bool OnHit(const cocos2d::Rect& collision);
 	virtual void SetIsHitAttack(bool flg);
 private:
-
+	std::vector<std::string> split(std::string str, std::string separator);	// xmlデータをカンマで区切る
 protected:
+	void XmlActDataRead(std::string string, OPRT_state* oprt);		// アクションデータ読み込み
 	// hp
 	int hp_;
 	// ポジション
@@ -185,11 +168,11 @@ protected:
 	Vector2I speed_;
 	// キャラクターのタイプ
 	ActorType type_;
-	// 現在のｱﾆﾒｰｼｮﾝ
+	// 現在のアニメーション
 	std::string currentAnimation_;
 	// 1フレーム前のアニメーション
 	std::string previousAnimation_;
-	// ｱﾆﾒｰｼｮﾝしている時はこのﾌﾚｰﾑ変数を加算
+	// アニメーションしている時はこのフレーム変数を加算
 	float animationFrame_;
 	// コライダーボックスの矩形表示や、データを配列から取り出すため、
 	// 上記のアニメーションフレームをint型整数に直したframe値
@@ -209,7 +192,7 @@ protected:
 	bool onFloor_;
 	// 壁に当たったかのフラグ
 	bool isHitWall_;
-	// 自分のｺﾗｲﾀﾞｰﾃﾞｰﾀ
+	// 自分のコライダーデータ
 	std::unordered_map<std::string,
 		std::vector<std::vector<std::shared_ptr<ActionRect>>>>collider_;
 	// 現在のコライダー
@@ -217,20 +200,20 @@ protected:
 	// 重力
 	std::unique_ptr<Gravity> gravity_;
 	// ダメージを食らったフラグ
-	bool onDamaged_;
+	//bool onDamaged_;
 	// 攻撃しているかのフラグ
 	bool isAttacking_;
 	// 攻撃に当たったかの判定を取る
 	bool isHitAttack_;
 	// 攻撃矩形
 	AttackRect attackRect_;
-	// 自分自身が存在するﾚｲﾔｰ
+	// 自分自身が存在するレイヤー
 	cocos2d::Layer& myLayer_;
 
 	cocos2d::Layer* attackLayer_;
-	// 攻撃ｵﾌﾞｼﾞｪｸﾄを出しているかのﾌﾗｸﾞ
+	// 攻撃オブジェクトを出しているかのフラグ
 	bool isFire_;
-	// 生きているか死んでいるかのﾌﾗｸﾞ
+	// 生きているか死んでいるかのフラグ
 	bool isAlive_;
 
 	// ActionCtlを呼び出す
@@ -240,9 +223,9 @@ protected:
 	DataTable fileLoad_;
 
 	// 攻撃矩形の格納先
-	// first : 矩形ﾃﾞｰﾀ
+	// first : 矩形データ
 	// second : 攻撃矩形の名前
 	cocos2d::Rect attackCol_;
-	// ﾀﾞﾒｰｼﾞ矩形の格納先
+	// ダメージ矩形の格納先
 	cocos2d::Rect damageCol_;
 };

@@ -1,3 +1,4 @@
+// 担当場所
 #include <cmath>
 #include "_Debug/_DebugConOut.h"
 #include "Generator/Geometry.h"
@@ -10,8 +11,8 @@ SkillA::SkillA(SkillBase* ptr)
 {
 	pos_ = ptr->GetPlayerPos();
 	effectData_.size = Size(100, 100);
-	// ﾌﾟﾚｲﾔｰの方向の取得
-	auto direction = ptr->GetPlayerDirection();
+	// プレイヤーの方向の取得
+	const auto direction = ptr->GetPlayerDirection();
 
 	Vec2 offset = {0.0f,0.0f};
 	bool flip = false;
@@ -27,8 +28,8 @@ SkillA::SkillA(SkillBase* ptr)
 		offset = Vec2(-50.0f, 20.0f);
 		speed_ = -10.0f;
 	}
-	// ｴﾌｪｸﾄを作成して、自身のｴﾌｪｸﾄ画像に格納
-	fx_ = lpEffectMng.PickUp("magic", Vec2{ 0.0f,0.0f }, pos_, Vec2(0,0), 4, 0.08f, flip, false,true);
+	// エフェクトを作成して、自身のエフェクト画像に格納
+	fx_ = lpEffectMng.PickUp("magic", Vec2(0.0f,0.0f), pos_, Vec2(0.0f,0.0f), 4, 0.08f, flip, false,true);
 
 	param.removeFlg = false;
 	param.activation = true;
@@ -40,17 +41,23 @@ SkillA::~SkillA()
 {
 }
 
+SkillBase* SkillA::CreateSkillA(SkillBase* ptr)
+{
+	SkillBase* pRet = new(std::nothrow)SkillA(ptr);
+	if (pRet)
+	{
+		pRet->autorelease();
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+	}
+	return pRet;
+}
+
 void SkillA::UpDate(float delta)
 {
-	//if (!fx_.isActive_)
-	//{
-	//	fx_.sprite_->setVisible(false);
-	//	return;
-	//}
-
-	// すぐにactivationをfalseにするとupdateに来なくなってctが設定できないから、
-	// ctが経過した後にfalseに切り替えたほうがいいかも
-
 	if (!param.activation)
 	{
 		if (param.ct > 0)
@@ -64,63 +71,15 @@ void SkillA::UpDate(float delta)
 		}
 	}
 
-	float move = speed_ * 60.0f * delta;
-	//fx_.sprite_->setPositionX(fx_.sprite_->getPositionX() + move);// ここに書くと、他のスキルが同じ挙動をするバグに繋がる
-
 	if (param.activation)
 	{
-		//effectData_.origin = fx_.sprite_->getPosition();
-		fx_.sprite_->setPosition(fx_.sprite_->getPositionX() + move,pos_.y);
+		fx_.sprite_->setPosition(fx_.sprite_->getPositionX() + (speed_ * 60.0f * delta) , pos_.y);
 		effectData_.origin = fx_.sprite_->getPosition();
-		TRACE("エフェクト:X:%f,Y:%f\n", fx_.sprite_->getPositionX(),pos_.y);
 		// 画面端に来たら
-		if (fx_.sprite_->getPosition().x <= 0 || fx_.sprite_->getPosition().x >= Director::getInstance()->getWinSize().width)
+		if (fx_.sprite_->getPosition().x <= 0.0f ||
+			fx_.sprite_->getPosition().x >= Director::getInstance()->getWinSize().width)
 		{
-			// active状態をfalseにしてvisibleを不可視にする
-			//fx_.isActive_ = false;
-			//fx_.sprite_->setVisible(false);
-			// SkillBaseのremoveFromParentの条件を満たすために切り替える(旧ver)
 			param.activation = false;
 		}
-	}
-}
-
-void SkillA::Init()
-{
-}
-
-bool SkillA::GetActive(void)
-{
-	return false;
-}
-
-cocos2d::Vec2 SkillA::GetPlayerPos(void)
-{
-	return cocos2d::Vec2();
-}
-
-cocos2d::Vec2 SkillA::GetTargetPos(void)
-{
-	return cocos2d::Vec2();
-}
-
-cocos2d::Rect SkillA::GetEffectData(void)
-{
-	return effectData_;
-}
-
-SkillBase* SkillA::CreateSkillA(SkillBase* ptr)
-{
-	SkillBase* pRet = new(std::nothrow)SkillA(ptr);
-	if (pRet)
-	{
-		pRet->autorelease();
-		return pRet;
-	}
-	else
-	{
-		delete pRet;
-		pRet = nullptr;
-		return nullptr;
 	}
 }

@@ -24,11 +24,25 @@ Fireball::Fireball(Vec2 pos,Direction direction,float angle,Actor& target):
 	this->runAction(FlipX::create(dirFlag_));
 
 	ChangeAnimation("fireball_normal");
-
 }
 
 Fireball::~Fireball()
 {
+}
+
+Fireball* Fireball::CreateFireball(Vec2 pos, Direction direction, float angle, Actor& target)
+{
+	Fireball* pRet = new(std::nothrow) Fireball(pos, direction, angle, target);
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+	}
+	return pRet;
 }
 
 void Fireball::update(float delta)
@@ -46,7 +60,6 @@ void Fireball::update(float delta)
 		}
 	}
 
-	// ファイアーボールのバグ防ぐ処理
 	animationFrame_ += delta;
 	if (animationFrame_ >= 0.4f && currentAnimation_ == "fireball_impact")
 	{
@@ -71,22 +84,4 @@ void Fireball::Move(void)
 
 void Fireball::AnimRegistrator(void)
 {
-
-
-}
-
-Fireball* Fireball::CreateFireball(Vec2 pos,Direction direction,float angle,Actor& target)
-{
-	Fireball* pRet = new(std::nothrow) Fireball(pos,direction,angle,target);
-	if (pRet && pRet->init())
-	{
-		pRet->autorelease();
-		return pRet;
-	}
-	else
-	{
-		delete pRet;
-		pRet = nullptr;
-		return nullptr;
-	}
 }

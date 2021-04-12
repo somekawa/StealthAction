@@ -2,17 +2,17 @@
 #include "obj/Enemy/Enemy.h"
 #include "_Debug/_DebugConOut.h"
 
-// trueを返せばこのActionをする
+// trueを返せばこのActionを実行する
 bool ChaseJudgement::operator()(cocos2d::Sprite& sprite, ActModule& module)
 {
-	auto direction = dynamic_cast<Enemy&>(sprite).GetDirection();
+	const Direction direction = dynamic_cast<Enemy&>(sprite).GetDirection();
 
 	if (!dynamic_cast<Enemy&>(sprite).IsMove(direction))
 	{
 		return false;
 	}
-	// もう既にmoveTypeがｾｯﾄされている時はtrueでそのまま返さないと
-	// MoveLRActionの処理が回らないので
+
+	// 既にmoveTypeがセットされている時はtrueで返す
 	if (dynamic_cast<Enemy&>(sprite).GetMoveType() != MoveType::Non)
 	{
 		return true;

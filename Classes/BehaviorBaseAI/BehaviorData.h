@@ -25,7 +25,7 @@ public:
 	// シーケンスステップのセット
 	void SetSequenceStep(std::string name,int step);
 	// 初期化
-	void Init();
+	void InitAct();
 	// 使用済みノードのリセット
 	void ResetUsedNode(std::vector<NodeBase*>* resetHierarchy);
 

@@ -6,11 +6,11 @@
 
 struct SkillParamMng
 {
-	std::string name;	//スキル名の保存
-	bool lock;			//true: lock | false: unlock
-	bool activation;	//現在発動しているか true: 発動中 | false: 未発動
-	int power;			//火力
-	float ct;			//クールタイム
+	std::string name;	// スキル名の保存
+	bool lock;			// true: lock | false: unlock
+	bool activation;	// 現在発動しているか true: 発動中 | false: 未発動
+	int power;			// 火力
+	float ct;			// クールタイム
 };
 
 class SkillMng
@@ -37,8 +37,6 @@ public:
 private:
 	SkillMng();
 	
-
 	//スキルデータの保存
 	std::map<std::string, SkillParamMng> skillData_;
 };
-

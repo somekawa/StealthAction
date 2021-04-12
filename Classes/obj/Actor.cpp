@@ -1,15 +1,14 @@
-#include "Actor.h"
+// データ読み込み処理(XmlActDataRead関数、split関数)を担当
+#include "RapidXML/rapidxml.hpp"
+#include "RapidXML/rapidxml_utils.hpp"
+#include "_Debug/_DebugConOut.h"
 #include "Scene/GameScene.h"
 #include "Gravity.h"
-#include "_Debug/_DebugConOut.h"
 #include "ActionRect.h"
 #include "Skill/SkillMng.h"
+#include "Actor.h"
 
 USING_NS_CC;
-
-//Actor::Actor()
-//{
-//}
 
 Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 {
@@ -24,25 +23,14 @@ Actor::Actor(int hp,Layer& myLayer):hp_(hp),myLayer_(myLayer)
 	// 攻撃しているかのフラグの初期化
 	isAttacking_ = false;
 	// ダメージをくらったフラグの初期化
-	onDamaged_ = false;
+	//onDamaged_ = false;
 	animationFrame_ = 0.0f;
 	// 自分自身を参照で渡し、生成
 	gravity_ = std::make_unique<Gravity>(*this);
-
 	// 攻撃の際に出現するｵﾌﾞｼﾞｪｸﾄのﾚｲﾔｰ
 	attackLayer_ = Layer::create();
 	// ｼｰﾝのﾚｲﾔｰにattackLayer_をぶら下げる
 	myLayer.addChild(attackLayer_, 2, "attack");
-
-	//std::list<std::string> path;
-	//path.push_back("skill_data");
-	//fileLoad_ = lpFileLoder.Directory(path);							// playerとenemyの階層
-	// 初期化のためにchangealldataを使用する
-	/*for (auto data : fileLoad_)
-	{
-		 データのテスト
-		lpSkillMng.ChangeAllData(data.first, { "dataTest",1,0,180 });
-	}*/
 }
 
 Actor::~Actor()
@@ -61,7 +49,7 @@ void Actor::UpdateAnimation(float delta)
 	// アニメーションカウントを毎フレームdelta値を加算
 	animationFrame_ += delta;
 	// あるアニメーションの終了までの継続時間の格納
-	auto duration = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDuration();
+	float duration = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDuration();
 	// アニメーションカウントが継続時間を超えていれば
 	if (animationFrame_ >= duration)
 	{
@@ -78,7 +66,6 @@ void Actor::UpdateAnimation(float delta)
 			isAnimEnd_ = true;
 		}
 	}
-	TRACE("animEndFlag:%d\n", isAnimEnd_);
 }
 
 void Actor::ChangeAnimation(std::string animName)
@@ -114,6 +101,10 @@ void Actor::SetAction(std::string actName)
 	currentAnimation_ = actName;
 }
 
+void Actor::AnimRegistrator(void)
+{
+}
+
 void Actor::SetPos(Vector2I pos)
 {
 	pos_ = pos;
@@ -124,107 +115,18 @@ void Actor::SetDirection(Direction dir)
 	direction_ = dir;
 }
 
-const int& Actor::GetAnimationFrameInt(void)
+const int Actor::GetAnimationFrameInt(void)
 {
 	// 毎フレーム加算される値(animationFrame)に1フレームに要する時間(delayPerUnit)を引き
 	// delayPerUnitで割ると現在のフレーム値がintで取得可能　
 	auto delay = lpAnimMng.GetAnimationCache(type_, currentAnimation_)->getDelayPerUnit();
-	auto val = (int)(animationFrame_ * 100.0f) / (int)(delay * 100.0f);
-	return val;
+	return static_cast<int>(animationFrame_ * 100.0f) / static_cast<int>(delay * 100.0f);
 }
 
-const int& Actor::GetAnimationFrameInt(std::string str)
+const int Actor::GetAnimationFrameInt(std::string str)
 {
-	// 毎フレーム加算される値(animationFrame)に1フレームに要する時間(delayPerUnit)を引き
-	// delayPerUnitで割ると現在のフレーム値がintで取得可能　
 	auto delay = lpAnimMng.GetAnimationCache(type_, str)->getDelayPerUnit();
-	auto val = (int)(animationFrame_ * 100.0f) / (int)(delay * 100.0f);
-	return val;
-}
-
-void Actor::CheckMapObjHit(float delta)
-{
-	auto director = Director::getInstance();
-	auto a = director->getRunningScene()->getChildByTag((int)zOlder::BG);
-	if ((TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData") == nullptr)
-	{
-		return;
-	}
-	auto position = this->getPosition();
-
-	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
-	// コリジョンレイヤーの縦横
-	auto ColSize = CollisionData->getLayerSize();
-	const int chipSize = CollisionData->getMapTileSize().width;
-	auto colSize = Vec2::ZERO;
-
-	for (auto col : currentCol_)
-	{
-		if (col->GetData().type_ == 1)
-		{
-			colSize = Vec2{ (float)col->GetData().size_.x,(float)col->GetData().size_.y };
-		}
-	}
-	this->setAnchorPoint({ 0.5f,0.0f });
-	// 自分の隣が壁かそうでないか
-	auto checkID = [&](Vec2 point) {
-		auto gridPos = Vec2{ point } / chipSize;
-		auto bottom = Vec2(gridPos.x, ColSize.height - gridPos.y);
-		auto posGid = CollisionData->getTileGIDAt(bottom);
-		if (posGid != 0)
-		{
-			// 補正が必要なときにtrue
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-		return false;
-	};
-	// 足元のポジション
-	auto bottomPos = Vec2{ position.x,position.y - (0.3f * (delta * 50)) };
-	// 自分の横隣のポジション
-	// speed_はdirによって-になったり+になったりするので変数を活用
-	auto nextPos = Vec2{ position.x + speed_.x,position.y };
-	// 足元のポジションを基準に升目単位に直す
-	auto nextYGrid = Vec2{ bottomPos.x,bottomPos.y } / chipSize;
-	// 横隣のポジションを基準に升目単位に直す
-	auto nextXGrid = Vec2{ nextPos.x,nextPos.y } / chipSize;
-
-	auto gridYPos = Vec2(nextYGrid.x, ColSize.height - nextYGrid.y);
-	auto gridYGid = CollisionData->getTileGIDAt(gridYPos);
-
-	auto gridXPos = Vec2(nextXGrid.x, ColSize.height - nextXGrid.y);
-	auto gridXGid = CollisionData->getTileGIDAt(gridXPos);
-	// 範囲外check
-	if (gridXPos.x > ColSize.width || gridXPos.x < 0 ||
-		gridXPos.y > ColSize.height || gridXPos.y < 0)
-	{
-		return;
-	}
-	// 範囲外check
-	if (gridYPos.x > ColSize.width || gridYPos.x < 0 ||
-		gridYPos.y > ColSize.height || gridYPos.y < 0)
-	{
-		return;
-	}
-	if (gridXGid != 0)
-	{
-		isHitWall_ = true;
-	}
-	else
-	{
-		isHitWall_ = false;
-	}
-	if (gridYGid != 0)
-	{
-		onFloor_ = true;
-	}
-	else
-	{
-		onFloor_ = false;
-	}
+	return static_cast<int>(animationFrame_ * 100.0f) / static_cast<int>(delay * 100.0f);
 }
 
 void Actor::SetIsAttacking(bool flg)
@@ -240,9 +142,9 @@ void Actor::SetAttackOffset(cocos2d::Vec2 offset)
 void Actor::SetCollider(void)
 {
 	// 攻撃矩形情報のｾﾞﾛｸﾘ
-	attackCol_ = cocos2d::Rect(0, 0, 0, 0);
+	attackCol_ = { 0.0f, 0.0f, 0.0f, 0.0f };
 	// ﾀﾞﾒｰｼﾞ矩形情報のｾﾞﾛｸﾘ
-	damageCol_ = cocos2d::Rect(0, 0, 0, 0);
+	damageCol_ = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	for (auto col : currentCol_)
 	{
@@ -261,13 +163,17 @@ void Actor::SetCollider(void)
 				{
 					// 攻撃矩形のﾎﾟｼﾞｼｮﾝ
 					// direction毎に+ or - してやらないといけない
-					attackCol_.origin = getPosition() + (attackCol_.size/2);
+					attackCol_.origin = getPosition() + (attackCol_.size / 2.0f);
 				}
 				else if (direction_ == Direction::Left)
 				{
 					// 攻撃矩形のﾎﾟｼﾞｼｮﾝ
 					// direction毎に+ or - してやらないといけない
-					attackCol_.origin = Vec2(getPosition().x - (attackCol_.size.width/2/* + 15.0f*/), getPosition().y + attackCol_.size.height);
+					attackCol_.origin = Vec2(getPosition().x - (attackCol_.size.width / 2.0f), getPosition().y + attackCol_.size.height);
+				}
+				else
+				{
+					// 何も処理を行わない
 				}
 			}
 			else
@@ -284,10 +190,11 @@ void Actor::SetCollider(void)
 					// direction毎に+ or - してやらないといけない
 					attackCol_.origin = Vec2(getPosition().x - attackCol_.size.width,getPosition().y + attackCol_.size.height);
 				}
+				else
+				{
+					// 何も処理を行わない
+				}
 			}
-			/*auto damagedraw = DrawNode::create();
-			damagedraw->drawRect(attackCol_.origin, attackCol_.origin - attackCol_.size, Color4F::GRAY);
-			addChild(damagedraw);*/
 		}
 		else
 		{
@@ -297,21 +204,22 @@ void Actor::SetCollider(void)
 			{
 				// ﾀﾞﾒｰｼﾞ矩形のﾎﾟｼﾞｼｮﾝ
 				damageCol_.origin = Vec2(getPosition().x, getPosition().y);
-				/*auto damagedraw = DrawNode::create();
-				damagedraw->drawDot(damageCol_.origin,3.0f, Color4F::GRAY);
-				addChild(damagedraw);*/
 			}
 			else
 			{
 				if (direction_ == Direction::Left)
 				{
 					// ﾀﾞﾒｰｼﾞ矩形のﾎﾟｼﾞｼｮﾝ
-					damageCol_.origin = Vec2(getPosition().x + (damageCol_.size.width / 4), getPosition().y);
+					damageCol_.origin = Vec2(getPosition().x + (damageCol_.size.width / 4.0f), getPosition().y);
 				}
 				else if (direction_ == Direction::Right)
 				{
 					// ﾀﾞﾒｰｼﾞ矩形のﾎﾟｼﾞｼｮﾝ
-					damageCol_.origin = Vec2(getPosition().x - (damageCol_.size.width / 4), getPosition().y);
+					damageCol_.origin = Vec2(getPosition().x - (damageCol_.size.width / 4.0f), getPosition().y);
+				}
+				else
+				{
+					// 何も処理を行わない
 				}
 			}
 		}
@@ -320,26 +228,28 @@ void Actor::SetCollider(void)
 
 bool Actor::OnHit(const cocos2d::Rect& collision)
 {
-	auto flg = false;
+	bool flg = false;
 
 	if (collision.size.width > 0.0f && collision.size.height > 0.0f)
 	{
 		flg = true;
 	}
-	// 矩形間の距離を測る
-	auto distance = Vec2(collision.origin.x - damageCol_.origin.x, collision.origin.y - damageCol_.origin.y);
-	auto sizediff = Vec2((damageCol_.size.width / 2.0f) + (collision.size.width / 2.0f),
-					     (damageCol_.size.height / 2.0f) + (collision.size.height / 2.0f));
-	if (flg)
+	else
 	{
-		if (!isHitAttack_)
+		return false;
+	}
+
+	if (!isHitAttack_)
+	{
+		// 矩形間の距離を測る
+		auto distance = Vec2(collision.origin.x - damageCol_.origin.x, collision.origin.y - damageCol_.origin.y);
+		auto sizediff = Vec2((damageCol_.size.width / 2.0f) + (collision.size.width / 2.0f),
+			(damageCol_.size.height / 2.0f) + (collision.size.height / 2.0f));
+
+		if (abs(distance.x) <= sizediff.x && abs(distance.y) <= sizediff.y)
 		{
-			if (abs(distance.x) <= sizediff.x && abs(distance.y) <= sizediff.y)
-			{
-				//onDamaged_ = true;
-				isHitAttack_ = true;
-				return true;
-			}
+			isHitAttack_ = true;
+			return true;
 		}
 	}
 	return false;
@@ -350,3 +260,125 @@ void Actor::SetIsHitAttack(bool flg)
 	isHitAttack_ = flg;
 }
 
+void Actor::XmlActDataRead(std::string string, OPRT_state* oprt)
+{
+	std::string path = "../Resources/Data/moduleData/" + string + ".xml";
+
+	// xml読み込み
+	rapidxml::xml_document<> doc;
+	rapidxml::file<> file(path.c_str());
+	doc.parse<0>(file.data());
+	rapidxml::xml_node<>* parentNode = doc.first_node("data");
+
+	// モジュール数をxmlデータから取得
+	auto sumData = parentNode->first_node("moduleSum")->first_attribute()->value();
+	std::vector<ActModule> act;
+	act.resize(std::atoi(sumData));
+
+	std::map<std::string, std::function<void(std::string, int num)>> dataFunc;
+
+	dataFunc["actName"] = [&](std::string str, int num) {
+		act[num].actName = str;
+	};
+
+	dataFunc["state"] = [&](std::string str, int num) {
+		act[num].state = oprt;
+	};
+
+	dataFunc["button"] = [&](std::string str, int num) {
+		act[num].button = static_cast<BUTTON>(std::atoi(str.c_str()));
+	};
+
+	dataFunc["vel"] = [&](std::string str, int num) {
+		auto string = split(str, ",");	// カンマ区切り処理
+		act[num].vel = Vec2(static_cast<float>(std::atof(string[0].c_str())), static_cast<float>(std::atof(string[1].c_str())));
+	};
+
+	dataFunc["checkPoint1"] = [&](std::string str, int num) {
+		auto string = split(str, ",");
+		act[num].checkPoint1 = Vec2(static_cast<float>(std::atof(string[0].c_str())), static_cast<float>(std::atof(string[1].c_str())));
+	};
+
+	dataFunc["checkPoint2"] = [&](std::string str, int num) {
+		auto string = split(str, ",");
+		act[num].checkPoint2 = Vec2(static_cast<float>(std::atof(string[0].c_str())), static_cast<float>(std::atof(string[1].c_str())));
+	};
+
+	dataFunc["checkPoint3"] = [&](std::string str, int num) {
+		auto string = split(str, ",");
+		act[num].checkPoint3 = Vec2(static_cast<float>(std::atof(string[0].c_str())), static_cast<float>(std::atof(string[1].c_str())));
+	};
+
+	dataFunc["checkPoint4"] = [&](std::string str, int num) {
+		auto string = split(str, ",");
+		act[num].checkPoint4 = Vec2(static_cast<float>(std::atof(string[0].c_str())), static_cast<float>(std::atof(string[1].c_str())));
+	};
+
+	dataFunc["touch"] = [&](std::string str, int num) {
+		act[num].touch = static_cast<TOUCH_TIMMING>(std::atoi(str.c_str()));
+	};
+
+	dataFunc["gravity"] = [&](std::string str, int num) {
+		auto string = split(str, ",");
+		act[num].gravity = Vec2(static_cast<float>(std::atof(string[0].c_str())), static_cast<float>(std::atof(string[1].c_str())));
+	};
+
+	dataFunc["jumpVel"] = [&](std::string str, int num) {
+		auto string = split(str, ",");
+		act[num].jumpVel = Vec2(static_cast<float>(std::atof(string[0].c_str())), static_cast<float>(std::atof(string[1].c_str())));
+	};
+
+	dataFunc["flipFlg"] = [&](std::string str, int num) {
+		act[num].flipFlg = static_cast<bool>(std::atoi(str.c_str()));
+	};
+
+	dataFunc["blackList"] = [&](std::string str, int num) {
+		act[num].blackList.emplace_back(str);
+	};
+
+	dataFunc["whiteList"] = [&](std::string str, int num) {
+		act[num].whiteList.emplace_back(str);
+	};
+
+	int num = 0;
+	for (rapidxml::xml_node<char>* moduleItr = parentNode->first_node("module"); moduleItr != nullptr; moduleItr = moduleItr->next_sibling())
+	{
+		for (rapidxml::xml_attribute<char>* attr = moduleItr->first_node("act")->first_attribute(); attr; attr = attr->next_attribute())
+		{
+			// blackList以外の処理(name : =の左辺,value : =の右辺("〇〇"の中身))
+			dataFunc[attr->name()](attr->value(), num);
+		}
+		for (rapidxml::xml_node<char>* itr = moduleItr->first_node("blackList")->first_node("name"); itr != nullptr; itr = itr->next_sibling())
+		{
+			// blackListの処理(blackListに登録したいactNameが入っている)
+			dataFunc["blackList"](itr->value(), num);
+		}
+		for (rapidxml::xml_node<char>* itr = moduleItr->first_node("whiteList")->first_node("name"); itr != nullptr; itr = itr->next_sibling())
+		{
+			// whiteListの処理(whiteListに登録したいactNameが入っている)
+			dataFunc["whiteList"](itr->value(), num);
+		}
+
+		// アクションの登録
+		actCtl_.InitAct(type_, static_cast<AnimationType>(num + 1), act[num]);
+		num++;
+	}
+
+	// 更新関数の登録
+	actCtl_.InitUpdater(type_);
+}
+
+std::vector<std::string> Actor::split(std::string str, std::string separator)
+{
+	if (separator == "") return { str };
+	std::vector<std::string> result;
+	std::string tstr = str + separator;
+	auto l = tstr.length(), sl = separator.length();
+	std::string::size_type pos = 0, prev = 0;
+
+	for (; pos < l && (pos = tstr.find(separator, pos)) != std::string::npos; prev = (pos += sl))
+	{
+		result.emplace_back(tstr, prev, pos - prev);
+	}
+	return result;
+}

@@ -54,6 +54,7 @@ void MST::MakeMSTforPrim()
 			{
 				return vert == minVert;
 			});
+
 		if (vertItr == A.end())
 		{
 			continue;
@@ -152,17 +153,18 @@ void MST::RevertPartofEdge()
 		{			
 			continue;
 		}
-		for (int i = 0; i < nodeList_.size(); i++)
+		for (unsigned int i = 0; i < nodeList_.size(); i++)
 		{
 			if (nodeList_[i].key != edge.pair_vertex[0] && nodeList_[i].key != edge.pair_vertex[1])
 			{
 				continue;
 			}
-			for (int j = i + 1; j < nodeList_.size(); j++)
+			for (unsigned int j = i + 1; j < nodeList_.size(); j++)
 			{
 				Edge_List uvEdge = { nodeList_[i].key, nodeList_[j].key };
-				if (!(edge.pair_vertex == uvEdge)|| nodeList_[i].childData.size() > 4 
-					|| nodeList_[j].childData.size() > 4 || dist(engine) > 1)
+				if (!(edge.pair_vertex == uvEdge) ||
+					nodeList_[i].childData.size() > 4 || nodeList_[j].childData.size() > 4 ||
+					dist(engine) > 1)
 				{
 					continue;
 				}
@@ -205,7 +207,7 @@ void MST::NextFancPrepation(void)
 		}
 	}
 	int idx = 0;
-	for (int i = 0; i < nodeList_.size(); i++)
+	for (unsigned int i = 0; i < nodeList_.size(); i++)
 	{
 		auto dir = MapDirection::Max;
 
@@ -213,13 +215,13 @@ void MST::NextFancPrepation(void)
 		{
 			//中心に向かうベクトル
 			// 扉を置く方向
-			auto vec = pair.pair_node - nodeList_[i].key;
-			auto nvec1 = Vec2(1, 0)/*nodeList_[i].key / hypot(nodeList_[i].key.x, nodeList_[i].key.y)*/;
-			auto nvec2 = vec / hypot(vec.x, vec.y);
-			auto cos = lpGeometry.Dot(nvec1, nvec2);
-			auto sin = lpGeometry.Cross(nvec1, nvec2);
-			auto rad = atan2(sin, cos);
-			float angle = rad * (180 /M_PI);
+			const Vec2 vec = pair.pair_node - nodeList_[i].key;
+			const Vec2 nvec1 = Vec2(1, 0)/*nodeList_[i].key / hypot(nodeList_[i].key.x, nodeList_[i].key.y)*/;
+			const Vec2 nvec2 = vec / hypot(vec.x, vec.y);
+			const float cos = lpGeometry.Dot(nvec1, nvec2);
+			const float sin = lpGeometry.Cross(nvec1, nvec2);
+			const float rad = atan2(sin, cos);
+			float angle = rad * (180.0f /static_cast<float>(M_PI));
 			if (angle < 0)
 			{
 				angle = angle + 360;
@@ -230,7 +232,7 @@ void MST::NextFancPrepation(void)
 			pair.dir = dir;
 
 			// エリアロック
-			for (int j = 0; j < vertexList_.size(); j++)
+			for (unsigned int j = 0; j < vertexList_.size(); j++)
 			{
 				if (pair.pair_node == vertexList_[j] && areaData_[i] == areaData_[j])
 				{
@@ -243,8 +245,8 @@ void MST::NextFancPrepation(void)
 
 Edge_List MST::FindShortest(cocos2d::Vec2& unUsedvert, cocos2d::Vec2& usedvert, float& min_distance, Edge_List& min_edge)
 {
-	auto distance = std::sqrt(lpGeometry.Distance_Calculator(unUsedvert, usedvert));
-	Edge_List tmpEdge = { unUsedvert, usedvert };
+	const float distance = std::sqrt(lpGeometry.Distance_Calculator(unUsedvert, usedvert));
+	const Edge_List tmpEdge = { unUsedvert, usedvert };
 	if (min_distance > distance)
 	{
 		for (auto& edge : edgeData)
@@ -273,8 +275,8 @@ std::vector<Edge_Status> MST::GetEdgeData()
 
 bool operator==(const Edge_List& edge, const Edge_List& edge1)
 {
-	if ((edge[0] == edge1[0]) && (edge[1] == edge1[1])
-		||(edge[1] == edge1[0])&&(edge[0] == edge1[1]))
+	if ((edge[0] == edge1[0]) && (edge[1] == edge1[1]) ||
+		(edge[1] == edge1[0]) && (edge[0] == edge1[1]))
 	{
 		return true;
 	}

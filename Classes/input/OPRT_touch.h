@@ -1,6 +1,6 @@
 #pragma once
-
 #include <array>
+#include <vector>
 #include <map>
 #include "OPRT_state.h"
 
@@ -12,9 +12,9 @@
 
 // キー情報関係
 struct KeyData {
-	std::array<bool, static_cast<int>(BUTTON::MAX)> _data;					// keyflgで情報を入れる
-	std::array<bool, static_cast<int>(BUTTON::MAX)> _oldData;
-	std::array<bool, static_cast<int>(BUTTON::MAX)> _input;
+	std::array<bool, static_cast<int>(BUTTON::MAX)> data_;					// keyflgで情報を入れる
+	std::array<bool, static_cast<int>(BUTTON::MAX)> oldData_;
+	std::array<bool, static_cast<int>(BUTTON::MAX)> input_;
 };
 
 struct Touches
@@ -35,27 +35,24 @@ struct OPRT_touch : OPRT_state
 	cocos2d::Point touchStartPoint;			// タッチの最初の座標
 	cocos2d::Point touchEndPoint;			// タッチの終わりの座標
 	int swipeRotate;						// スワイプの方向
-	//void touchStart(cocos2d::Touch* touch);	// スワイプが始まった時
-	//void touchMove(cocos2d::Touch* touch);	// スワイプの移動が行われた時
-	//void touchEnd(cocos2d::Touch* touch);	// スワイプが終わった時
 
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetNowData(void);	// 今の情報を返す
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetOldData(void);	// 1フレーム前の情報を返す
 
-	// マルチタップテスト(バーチャルパッド含む)
-	void touchesStart(cocos2d::Touch* touch);	// タッチが始まった時
-	void touchesMove(cocos2d::Touch* touch);	// スワイプの移動が行われた時
-	void touchesEnd(cocos2d::Touch* touch);	// タッチ(スワイプ)が終わった時
+	// マルチタップ(バーチャルパッド含む)
+	void StartTouch(cocos2d::Touch* touch);	// タッチが始まった時
+	void MoveTouch(cocos2d::Touch* touch);	// スワイプの移動が行われた時
+	void EndTouch(cocos2d::Touch* touch);	// タッチ(スワイプ)が終わった時
 
-	void touchesflg(cocos2d::Sprite* delta);
+	void SetUpTouch(cocos2d::Sprite* delta);	// タッチ操作のセットアップ
 	std::vector<Touches> touchVectors;
 	bool moveFlag;
 
-	void KeyReset(void);						// マップ切替時のキーリセット
+	void ResetKey(void);						// マップ切替時のキーリセット
 private:
-	KeyData _keyData;
-	std::string trStr = "_toDark";
-	std::map<std::string, BUTTON> map_;
-	std::array<std::string, static_cast<int>(BUTTON::MAX)> nameTable_;
-	BUTTON oldBtn_;
+	KeyData keyData_;							// キーのデータが格納される変数
+	std::string trStr_;							// トランスフォーム切替で使用する変数
+	std::map<std::string, BUTTON> map_;			// ボタン名をキーにしてボタンの押下/非押下処理
+	std::map<BUTTON,std::vector<std::string>> sceneBtn_;	// Sceneに対するボタンの情報を保存する
+	cocos2d::Node* SetBtnNameInfo(std::string str, BUTTON button);	// 現在の表示Sceneからボタン情報を一致させてreturnする
 };

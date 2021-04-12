@@ -15,7 +15,7 @@ bool _DebugDispOutCC::DrawRect(std::string spName, Vec2 pos, cocos2d::Vec2 posLU
 		node = DrawNode::create();
 		//node->drawPoint(Vec2(-15, -70), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
 		node->drawRect(posLU, posRD, col);
-		node->setGlobalZOrder(_DbgScreen);
+		node->setGlobalZOrder(static_cast<float>(_DbgScreen));
 		node->setName(spName);
 		director->getRunningScene()->addChild(node);
 	}

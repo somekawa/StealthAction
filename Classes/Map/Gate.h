@@ -9,10 +9,7 @@ public:
 	Gate(cocos2d::Vec2 pos, int gateNum);
 	~Gate();
 	static Gate* CreateGate(cocos2d::Vec2 pos, int gateNum);
-	//bool IsHit(Player& player)override;
 	int GetGateNum();
 private:
 	int gateNum_;
-	int frame = 0;
 };
-

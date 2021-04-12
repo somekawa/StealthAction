@@ -1,6 +1,7 @@
+// 全て担当
 #pragma once
 
-#include "cocos2d.h"
+#include <cocos2d.h>
 
 enum class OPRT_TYPE {
 	KEY,
@@ -15,7 +16,6 @@ enum class TRG_KEY {
 	INPUT
 };
 
-// 先頭をrightに変更
 enum class BUTTON {
 	RIGHT,
 	LEFT,
@@ -50,8 +50,8 @@ struct OPRT_state
 	~OPRT_state();
 
 	virtual OPRT_TYPE GetType(void) = 0;				// 入力タイプを受け取る
-	virtual void update() = 0;							// 純粋仮想関数にしてたときのupdate
+	virtual void update() = 0;							
 	virtual const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetNowData(void) = 0;
 	virtual const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetOldData(void) = 0;
-	virtual void KeyReset(void) = 0;					// マップ切替時のキーリセット
+	virtual void ResetKey(void) = 0;					// マップ切替時のキーリセット
 };

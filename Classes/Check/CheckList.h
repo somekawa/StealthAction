@@ -1,5 +1,4 @@
 #pragma once
-
 #include "module/ActModule.h"
 
 struct CheckList

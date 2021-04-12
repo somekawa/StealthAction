@@ -1,5 +1,12 @@
+// データ読み込み処理、プレイヤー関連処理担当
+#include "_Debug/_DebugConOut.h"
+#include "RapidXML/rapidxml.hpp"
+#include "RapidXML/rapidxml_utils.hpp"
 #include "obj/Player.h"
 #include "obj/Enemy/Enemy.h"
+#include "obj/Enemy/Assassin.h"
+#include "obj/Enemy/Cultist.h"
+#include "obj/Enemy/TwistedCultist.h"
 #include "input/OPRT_state.h"
 #include "move/Move_LR.h"
 #include "move/FallFalling.h"
@@ -11,9 +18,8 @@
 #include "Check/CheckObjHit.h"
 #include "Check/CheckList.h"
 #include "Check/Flip.h"
-#include "ActionCtl.h"
-#include "_Debug/_DebugConOut.h"
 #include "Effect/EffectManager.h"
+#include "ActionCtl.h"
 
 #include "EnemyAIFunctions/Judgement/ChaseJudgement.h"
 #include "EnemyAIFunctions/Judgement/PatrolJudgement.h"
@@ -31,235 +37,93 @@ USING_NS_CC;
 
 ActionCtl::ActionCtl()
 {
+	// チェック関係(プレイヤーとエネミー共通)
+	checkStructFunc_.emplace("CheckKeyList", CheckKeyList());
+	checkStructFunc_.emplace("CheckList"   , CheckList());
+	checkStructFunc_.emplace("CheckObjHit" , CheckObjHit());
+	// チェック関係(エネミー)
+	checkStructFunc_.emplace("FlipJudgement"		  , FlipJudgement());
+	checkStructFunc_.emplace("PatrolJudgement"		  , PatrolJudgement());
+	checkStructFunc_.emplace("ChaseJudgement"		  , ChaseJudgement());
+	checkStructFunc_.emplace("PhysicalAttackJudgement", PhysicalAttackJudgement());
+
+	// アクション関係(プレイヤー)
+	plActStructFunc_.emplace("Flip"       , Flip());
+	plActStructFunc_.emplace("Move_LR"    , Move_LR());
+	plActStructFunc_.emplace("FallFalling", FallFalling());
+	plActStructFunc_.emplace("Attack"     , Attack());
+	plActStructFunc_.emplace("WallSlide"  , WallSlide());
+	plActStructFunc_.emplace("Jump"       , Jump());
+	plActStructFunc_.emplace("JumpJumping", JumpJumping());
+	// アクション関係(エネミー)
+	enActStructFunc_.emplace("FlipAction"		   , FlipAction());
+	enActStructFunc_.emplace("MoveLRAction"		   , MoveLRAction());
+	enActStructFunc_.emplace("FallAction"		   , FallAction());
+	enActStructFunc_.emplace("PhysicalAttackAction", PhysicalAttackAction());
+
+	// xmlデータの読み込み
+	XmlPurser("player", plXmlData_);
+	XmlPurser("enemy" , enXmlData_);
 }
 
 ActionCtl::~ActionCtl()
 {
 }
 
-void ActionCtl::ActCtl(std::string actName,ActModule & module)
+void ActionCtl::Update(ActorType type,Sprite& sprite)
 {
-	//// blackListに引っかからないときにはwhiteListに追加
-	//_mapFlame.emplace(actName,0.0f);
-
-	//// 左右移動
-	//if (actName == "左移動" || actName == "右移動")
-	//{
-	//	_mapModule.emplace(actName,std::move(module));
-	//	_mapModule[actName].act.emplace_back(CheckKeyList());
-	//	_mapModule[actName].act.emplace_back(CheckObjHit());
-	//	_mapModule[actName].act.emplace_back(CheckList());
-	//	_mapModule[actName].runAction = Move_LR();
-	//}
-
-	//// 反転
-	//if (actName == "左向き" || actName == "右向き")
-	//{
-	//	_mapModule.emplace(actName,std::move(module));
-	//	_mapModule[actName].act.emplace_back(CheckKeyList());
-	//	_mapModule[actName].act.emplace_back(CheckList());
-	//	//_mapModule[actName].act.emplace_back(CheckObjHit());
-	//	_mapModule[actName].runAction = Flip();
-	//}
-
-	//if(actName == "落下")
-	//{
-	//	_mapModule.emplace(actName,std::move(module));
-	//	//_mapModule[actName].act.emplace_back(CheckKeyList());
-	//	_mapModule[actName].act.emplace_back(CheckObjHit());
-	//	_mapModule[actName].act.emplace_back(CheckList());
-	//	_mapModule[actName].runAction = FallFalling();
-	//}
-
-	//if (actName == "ジャンプ")
-	//{
-	//	_mapModule.emplace(actName,std::move(module));
-	//	_mapModule[actName].act.emplace_back(CheckKeyList());
-	//	_mapModule[actName].act.emplace_back(CheckObjHit());
-	//	_mapModule[actName].act.emplace_back(CheckList());
-	//	_mapModule[actName].runAction = Jump();
-	//}
-
-	//if (actName == "ジャンピング")
-	//{
-	//	_mapModule.emplace(actName, std::move(module));
-	//	// 長押しにするならコメントアウトはずす
-	//	//_mapModule[actName].act.emplace_back(CheckKeyList());
-	//	_mapModule[actName].act.emplace_back(CheckObjHit());
-	//	_mapModule[actName].act.emplace_back(CheckList());
-	//	_mapModule[actName].runAction = JumpJumping();
-	//}
-
-	//if (actName == "攻撃")
-	//{
-	//	_mapModule.emplace(actName, std::move(module));
-	//	_mapModule[actName].act.emplace_back(CheckKeyList());
-	//	//_mapModule[actName].act.emplace_back(CheckObjHit());
-	//	//_mapModule[actName].act.emplace_back(CheckList());
-	//	_mapModule[actName].runAction = Attack();
-	//}
-
-	//if (actName == "右壁スライド" || actName == "左壁スライド")
-	//{
-	//	_mapModule.emplace(actName, std::move(module));
-	//	_mapModule[actName].act.emplace_back(CheckKeyList());
-	//	_mapModule[actName].act.emplace_back(CheckObjHit());
-	//	_mapModule[actName].act.emplace_back(CheckList());
-	//	_mapModule[actName].runAction = WallSlide();
-	//}
+	// 各アクターの更新
+	updater_[type](sprite);
 }
 
-void ActionCtl::update(ActorType type,float sp,Sprite& sprite)
-{
-	// 各ｱｸﾀｰの更新
-	updater_[type](sp, sprite);
-}
-
-void ActionCtl::RunInitializeActCtl(ActorType type,std::string actName,ActModule& module)
+void ActionCtl::InitAct(ActorType type, AnimationType actName,ActModule& module)
 {
 	// blackListに引っかからないときにはwhiteListに追加
-	_mapFlame.emplace(actName, 0.0f);
+	mapFlame_.emplace(actName, 0.0f);
 
-	// 反転
-	if (actName == "左向き" || actName == "右向き")
-	{
-		_mapModule.emplace(actName, std::move(module));
-		_mapModule[actName].commonAction_ = actName;
-
+	// モジュール設定
+	auto setModule = [&](ActorType type) {
 		if (type != ActorType::Player)
 		{
-			// ﾌﾟﾚｲﾔｰじゃないとJudgementをcheckに格納する
-			_mapModule[actName].act.emplace_back(FlipJudgement());
-			_mapModule[actName].act.emplace_back(CheckList());
-			// judgementがtrueになると実行するｱｸｼｮﾝ
-			_mapModule[actName].runAction = FlipAction();
+			for (auto data : enXmlData_[actName].second)
+			{
+				mapModule_[actName].act.emplace_back(checkStructFunc_[data]);
+			}
+			mapModule_[actName].runAction = enActStructFunc_[enXmlData_[actName].first];
 		}
 		else
 		{
-			_mapModule[actName].act.emplace_back(CheckKeyList());
-			_mapModule[actName].act.emplace_back(CheckList());
-			//_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].runAction = Flip();
+			for (auto data : plXmlData_[actName].second)
+			{
+				mapModule_[actName].act.emplace_back(checkStructFunc_[data]);
+			}
+			mapModule_[actName].runAction = plActStructFunc_[plXmlData_[actName].first];
 		}
-	}
-	// 全ｱｸﾀｰに共通するｱｸｼｮﾝ
-	// 左右移動
-	if (actName == "左移動" || actName == "右移動")
+	};
+
+	if (actName == AnimationType::L_move || actName == AnimationType::R_move)
 	{
-		_mapModule.emplace(actName, std::move(module));
-		_mapModule[actName].commonAction_ = actName;
-
-		if (type != ActorType::Player)
-		{
-			// ﾌﾟﾚｲﾔｰじゃないとJudgementをcheckに格納する
-			_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].act.emplace_back(CheckList());
-			// patrol状態にするかどうかの判定関数ｵﾌﾞｼﾞｪｸﾄ
-			_mapModule[actName].act.emplace_back(PatrolJudgement());
-			// chase状態にするかどうかの判定関数ｵﾌﾞｼﾞｪｸﾄ
-			_mapModule[actName].act.emplace_back(ChaseJudgement());
-			// judgementがtrueになると実行するｱｸｼｮﾝ
-			_mapModule[actName].runAction = MoveLRAction();
-		}
-		else
-		{
-			_mapModule[actName].act.emplace_back(CheckKeyList());
-			_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = Move_LR();
-		}
-
+		mapModule_.emplace(actName, std::move(module));
+		mapModule_[actName].commonAction = actName;
+		setModule(type);
 	}
-	if (actName == "落下")
+	else if (actName == AnimationType::L_dir || actName == AnimationType::R_dir   ||
+			 actName == AnimationType::Fall  || actName == AnimationType::Attack1)
 	{
-		_mapModule.emplace(actName, std::move(module));
-
-		_mapModule[actName].commonAction_ = actName;
-
-		if (type != ActorType::Player)
-		{
-			//_mapModule[actName].act.emplace_back(CheckKeyList());
-			_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = FallAction();
-		}
-		else
-		{
-			//_mapModule[actName].act.emplace_back(CheckKeyList());
-			_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = FallFalling();
-		}
-
+		mapModule_.emplace(actName, std::move(module));
+		setModule(type);
 	}
-	if (actName == "攻撃")
+	else
 	{
-		_mapModule.emplace(actName, std::move(module));
-
-		if (type != ActorType::Player)
+		if (type == ActorType::Player)
 		{
-			_mapModule[actName].act.emplace_back(PhysicalAttackJudgement());
-			//_mapModule[actName].act.emplace_back(CheckObjHit());
-			//_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = PhysicalAttackAction();
+			if (actName == AnimationType::L_wallSlide || actName == AnimationType::R_wallSlide ||
+				actName == AnimationType::Jump        || actName == AnimationType::Jumping)
+			{
+				mapModule_.emplace(actName, std::move(module));
+				setModule(type);
+			}
 		}
-		else
-		{
-			_mapModule[actName].act.emplace_back(CheckKeyList());
-			//_mapModule[actName].act.emplace_back(CheckObjHit());
-			//_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = Attack();
-		}
-	}
-	// ｱｸﾀｰのﾀｲﾌﾟ毎の固有のｱｸｼｮﾝの登録
-	switch (type)
-	{
-	case ActorType::Player:
-		if (actName == "右壁スライド" || actName == "左壁スライド")
-		{
-			_mapModule.emplace(actName, std::move(module));
-			_mapModule[actName].act.emplace_back(CheckKeyList());
-			_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = WallSlide();
-		}
-
-		if (actName == "ジャンプ")
-		{
-			_mapModule.emplace(actName, std::move(module));
-			_mapModule[actName].act.emplace_back(CheckKeyList());
-			_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = Jump();
-		}
-
-		if (actName == "ジャンピング")
-		{
-			_mapModule.emplace(actName, std::move(module));
-			// 長押しにするならコメントアウトはずす
-			//_mapModule[actName].act.emplace_back(CheckKeyList());
-			_mapModule[actName].act.emplace_back(CheckObjHit());
-			_mapModule[actName].act.emplace_back(CheckList());
-			_mapModule[actName].runAction = JumpJumping();
-		}
-
-
-		break;
-	case ActorType::Imp:
-		break;
-	case ActorType::Assassin:
-
-		break;
-	case ActorType::TwistedCultist:
-		break;
-	case ActorType::Cultist:
-		break;
-	case ActorType::BigCultist:
-		break;
-	case ActorType::Max:
-		break;
-	default:
-		break;
 	}
 }
 
@@ -268,19 +132,19 @@ void ActionCtl::InitUpdater(ActorType& type)
 	switch (type)
 	{
 	case ActorType::Player:
-		updater_.emplace(type, [&](float sp, Sprite& sprite) {
+		updater_.emplace(type, [&](Sprite & sprite) {
 			// mapModuleに登録した内容を順番に呼び出してcheckする
 			// checklistとか
-			auto actCheck = [&](std::string actName) {
-				for (auto check : _mapModule[actName].act)
+			auto actCheck = [&](AnimationType actName) {
+				for (auto check : mapModule_[actName].act)
 				{
 					// mapFlameの内容をmapModuleのフレーム情報に代入
-					_mapModule[actName].flame = _mapFlame[actName];
+					mapModule_[actName].flame = mapFlame_[actName];
 
-					if (!(check(sprite, _mapModule[actName])))
+					if (!(check(sprite, mapModule_[actName])))
 					{
 						// フレーム値を0に戻す
-						_mapFlame[actName] = 0.0f;
+						mapFlame_[actName] = 0.0f;
 						// 1つでも引っかかったらfalse
 						return false;
 					}
@@ -299,106 +163,106 @@ void ActionCtl::InitUpdater(ActorType& type)
 			bool actFlg = false;
 
 			// 上のラムダ式でtrueだった場合のみ処理が走る
-			for (auto data : _mapModule)
+			for (auto data : mapModule_)
 			{
 				if (actCheck(data.first))
 				{
 					// フレーム値の更新
-					data.second.flame = _mapFlame[data.first];
+					data.second.flame = mapFlame_[data.first];
 
 					// (左右移動とかの)処理が走るところ
 					data.second.runAction(sprite, data.second);
 
 					// data.second.action = for文で回してるアクション
 					// GetActionは実際に今行われているアクション
-					if (((Player&)sprite).GetAction() == "Fall" || data.second.actName != "Non" || ((Player&)sprite).GetAction() == "Jump" || ((Player&)sprite).GetAction() == "Jumping")
+					if (data.second.actName != "Non" ||
+						dynamic_cast<Player&>(sprite).GetAction() == "Fall" || dynamic_cast<Player&>(sprite).GetAction() == "Jump" || dynamic_cast<Player&>(sprite).GetAction() == "Jumping")
 					{
 						// 現在のアクションがジャンプになっているときもJUMPINGを設定するようにしておく
-						if (((Player&)sprite).GetAction() == "Jumping" || ((Player&)sprite).GetAction() == "Jump")
+						if (dynamic_cast<Player&>(sprite).GetAction() == "Jumping" || dynamic_cast<Player&>(sprite).GetAction() == "Jump")
 						{
-							((Player&)sprite).SetAction("Jumping");
+							dynamic_cast<Player&>(sprite).SetAction("Jumping");
 						}
 						else
 						{
-							((Player&)sprite).SetAction(data.second.actName);
+							dynamic_cast<Player&>(sprite).SetAction(data.second.actName);
 						}
 					}
 
 					// フレームの加算(落下とジャンプで使用している)
-					_mapFlame[data.first] += 0.1f;
-					if (_mapFlame[data.first] >= 3.0f)
+					mapFlame_[data.first] += 0.1f;
+					if (mapFlame_[data.first] >= 3.0f)
 					{
-						_mapFlame[data.first] = 3.0f;
+						mapFlame_[data.first] = 3.0f;
 					}
 
 					// ここはジャンプの最高点に到達したときとかに関係する処理
-					if (((Player&)sprite).GetAction() == "Jumping" || ((Player&)sprite).GetAction() == "Jumping")
+					if (dynamic_cast<Player&>(sprite).GetAction() == "Jumping" || dynamic_cast<Player&>(sprite).GetAction() == "Jumping")
 					{
 						// _mapFlame[data.first]にしてしまうと、現在のアクションがジャンプでも
 						// 左右移動とかの加算された値が3.0fを超えていたら落下に切り替わる原因になってた
 						// else ifの部分を付け加えて、ジャンピングを0.1fからにすることで角でジャンプし続けるバグ解消
-						if (_mapFlame["ジャンピング"] >= 0.1f && _mapFlame["ジャンピング"] < 3.0f)
+						if (mapFlame_[AnimationType::Jumping] >= 0.1f && mapFlame_[AnimationType::Jumping] < 3.0f)
 						{
-							((Player&)sprite).SetAction("Jumping");
-							//continue;
+							dynamic_cast<Player&>(sprite).SetAction("Jumping");
 						}
-						else if (_mapFlame["ジャンプ"] >= 0.1f)
+						else if (mapFlame_[AnimationType::Jump] >= 0.1f)
 						{
 							// ジャンプし始めに必要
-							((Player&)sprite).SetAction("Jumping");
+							dynamic_cast<Player&>(sprite).SetAction("Jumping");
 						}
 						else
 						{
 							// 最高点に到達したら落下に切り替える
-							((Player&)sprite).SetAction("Fall");
+							dynamic_cast<Player&>(sprite).SetAction("Fall");
 						}
 					}
-
 					actFlg = true;
 				}
 				else
 				{
 					// プレイヤーが落下できなかった(着地している)ときは、IDLEにする
 					// 今まで(書き換えたい情報)がFALLINGの状態だった && 現在の状態がFALLINGであるときIDLEにする
-					if (data.second.actName == "Fall" && ((Player&)sprite).GetAction() == "Fall")
+					if (data.second.actName == "Fall" && dynamic_cast<Player&>(sprite).GetAction() == "Fall")
 					{
-						((Player&)sprite).SetAction("Look_Intro");
+						dynamic_cast<Player&>(sprite).SetAction("Look_Intro");
 					}
 				}
 
 				// プレイヤー向き変更
-				if (actCheck("左向き"))
+				if (actCheck(AnimationType::L_dir))
 				{
-					((Player&)sprite).SetDir(Direction::Left);
+					dynamic_cast<Player&>(sprite).SetDir(Direction::Left);
 				}
-				else if (actCheck("右向き"))
+				else if (actCheck(AnimationType::R_dir))
 				{
-					((Player&)sprite).SetDir(Direction::Right);
+					dynamic_cast<Player&>(sprite).SetDir(Direction::Right);
+				}
+				else
+				{
+					// 何も処理を行わない
 				}
 			}
 
 			// 何もアクションが行われていなければIDOLを設定する
 			if (!actFlg)
 			{
-				((Player&)sprite).SetAction("Look_Intro");
+				dynamic_cast<Player&>(sprite).SetAction("Look_Intro");
 			}
-
-			});
-		break;
-	case ActorType::Imp:
+		});
 		break;
 	case ActorType::Assassin:
-		updater_.emplace(type, [&](float sp, Sprite& sprite) {
-			auto actCheck = [&](std::string actName) {
-				for (auto check : _mapModule[actName].act)
+		updater_.emplace(type, [&](Sprite & sprite) {
+			auto actCheck = [&](AnimationType actName) {
+				for (auto check : mapModule_[actName].act)
 				{
 					// mapFlameの内容をmapModuleのフレーム情報に代入
-					_mapModule[actName].flame = _mapFlame[actName];
+					mapModule_[actName].flame = mapFlame_[actName];
 
-					if (!(check(sprite, _mapModule[actName])))
+					if (!(check(sprite, mapModule_[actName])))
 					{
 						// フレーム値を0に戻す
-						_mapFlame[actName] = 0.0f;
+						mapFlame_[actName] = 0.0f;
 						// 1つでも引っかかったらfalse
 						return false;
 					}
@@ -410,12 +274,12 @@ void ActionCtl::InitUpdater(ActorType& type)
 			bool actFlg = false;
 
 			// 上のラムダ式でtrueだった場合のみ処理が走る
-			for (auto data : _mapModule)
+			for (auto data : mapModule_)
 			{
 				if (actCheck(data.first))
 				{
 					// フレーム値の更新
-					data.second.flame = _mapFlame[data.first];
+					data.second.flame = mapFlame_[data.first];
 
 					// (左右移動とかの)処理が走るところ
 					data.second.runAction(sprite, data.second);
@@ -423,34 +287,24 @@ void ActionCtl::InitUpdater(ActorType& type)
 				}
 				else
 				{
-					if (data.first == "右移動")
+					if (data.first == AnimationType::R_move)
 					{
 						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
 					}
-					else if (data.first == "左移動")
+					else if (data.first == AnimationType::L_move)
 					{
 						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
 					}
+					else
+					{
+						// 何も処理を行わない
+					}
 				}
 				// フレームの加算(落下とジャンプで使用している)
-				_mapFlame[data.first] += 0.1f;
-				if (_mapFlame[data.first] >= 3.0f)
+				mapFlame_[data.first] += 0.1f;
+				if (mapFlame_[data.first] >= 3.0f)
 				{
-					_mapFlame[data.first] = 3.0f;
-				}
-
-				// 空中での攻撃ボタンで一時静止用
-				if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
-				{
-					_mapModule["落下"].stopCnt = 1;
-				}
-
-				if (_mapModule["落下"].stopCnt == 1)
-				{
-					if (_mapFlame["落下"] >= 3.0f)
-					{
-						_mapModule["落下"].stopCnt = 0;
-					}
+					mapFlame_[data.first] = 3.0f;
 				}
 			}
 			// 何もアクションが行われていなければidleを設定する
@@ -458,21 +312,20 @@ void ActionCtl::InitUpdater(ActorType& type)
 			{
 				dynamic_cast<Enemy&>(sprite).SetAction("assassin_idle");
 			}
-			});
-
+		});
 		break;
 	case ActorType::TwistedCultist:
-		updater_.emplace(type, [&](float sp, Sprite& sprite) {
-			auto actCheck = [&](std::string actName) {
-				for (auto check : _mapModule[actName].act)
+		updater_.emplace(type, [&](Sprite & sprite) {
+			auto actCheck = [&](AnimationType actName) {
+				for (auto check : mapModule_[actName].act)
 				{
 					// mapFlameの内容をmapModuleのフレーム情報に代入
-					_mapModule[actName].flame = _mapFlame[actName];
+					mapModule_[actName].flame = mapFlame_[actName];
 
-					if (!(check(sprite, _mapModule[actName])))
+					if (!(check(sprite, mapModule_[actName])))
 					{
 						// フレーム値を0に戻す
-						_mapFlame[actName] = 0.0f;
+						mapFlame_[actName] = 0.0f;
 						// 1つでも引っかかったらfalse
 						return false;
 					}
@@ -484,12 +337,12 @@ void ActionCtl::InitUpdater(ActorType& type)
 			bool actFlg = false;
 
 			// 上のラムダ式でtrueだった場合のみ処理が走る
-			for (auto data : _mapModule)
+			for (auto data : mapModule_)
 			{
 				if (actCheck(data.first))
 				{
 					// フレーム値の更新
-					data.second.flame = _mapFlame[data.first];
+					data.second.flame = mapFlame_[data.first];
 
 					// (左右移動とかの)処理が走るところ
 					data.second.runAction(sprite, data.second);
@@ -498,35 +351,25 @@ void ActionCtl::InitUpdater(ActorType& type)
 				}
 				else
 				{
-					if (data.first == "右移動")
+					if (data.first == AnimationType::R_move)
 					{
 						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
 					}
-					else if (data.first == "左移動")
+					else if (data.first == AnimationType::L_move)
 					{
 						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					}
+					else
+					{
+						// 何も処理を行わない
 					}
 				}
 
 				// フレームの加算(落下とジャンプで使用している)
-				_mapFlame[data.first] += 0.1f;
-				if (_mapFlame[data.first] >= 3.0f)
+				mapFlame_[data.first] += 0.1f;
+				if (mapFlame_[data.first] >= 3.0f)
 				{
-					_mapFlame[data.first] = 3.0f;
-				}
-
-				// 空中での攻撃ボタンで一時静止用
-				if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
-				{
-					_mapModule["落下"].stopCnt = 1;
-				}
-
-				if (_mapModule["落下"].stopCnt == 1)
-				{
-					if (_mapFlame["落下"] >= 3.0f)
-					{
-						_mapModule["落下"].stopCnt = 0;
-					}
+					mapFlame_[data.first] = 3.0f;
 				}
 			}
 			// 何もアクションが行われていなければidleを設定する
@@ -538,17 +381,17 @@ void ActionCtl::InitUpdater(ActorType& type)
 		});
 		break;
 	case ActorType::Cultist:
-		updater_.emplace(type, [&](float sp, Sprite& sprite) {
-			auto actCheck = [&](std::string actName) {
-				for (auto check : _mapModule[actName].act)
+		updater_.emplace(type, [&](Sprite & sprite) {
+			auto actCheck = [&](AnimationType actName) {
+				for (auto check : mapModule_[actName].act)
 				{
 					// mapFlameの内容をmapModuleのフレーム情報に代入
-					_mapModule[actName].flame = _mapFlame[actName];
+					mapModule_[actName].flame = mapFlame_[actName];
 
-					if (!(check(sprite, _mapModule[actName])))
+					if (!(check(sprite, mapModule_[actName])))
 					{
 						// フレーム値を0に戻す
-						_mapFlame[actName] = 0.0f;
+						mapFlame_[actName] = 0.0f;
 						// 1つでも引っかかったらfalse
 						return false;
 					}
@@ -560,13 +403,13 @@ void ActionCtl::InitUpdater(ActorType& type)
 			bool actFlg = false;
 
 			// 上のラムダ式でtrueだった場合のみ処理が走る
-			for (auto data : _mapModule)
+			for (auto data : mapModule_)
 			{
 				if (actCheck(data.first))
 				{
 
 					// フレーム値の更新
-					data.second.flame = _mapFlame[data.first];
+					data.second.flame = mapFlame_[data.first];
 
 					// (左右移動とかの)処理が走るところ
 					data.second.runAction(sprite, data.second);
@@ -575,35 +418,25 @@ void ActionCtl::InitUpdater(ActorType& type)
 				}
 				else
 				{
-					if (data.first == "右移動")
+					if (data.first == AnimationType::R_move)
 					{
 						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Left);
 					}
-					else if (data.first == "左移動")
+					else if (data.first == AnimationType::L_move)
 					{
 						dynamic_cast<Enemy&>(sprite).SetDirection(Direction::Right);
+					}
+					else
+					{
+						// 何も処理を行わない
 					}
 				}
 
 				// フレームの加算(落下とジャンプで使用している)
-				_mapFlame[data.first] += 0.1f;
-				if (_mapFlame[data.first] >= 3.0f)
+				mapFlame_[data.first] += 0.1f;
+				if (mapFlame_[data.first] >= 3.0f)
 				{
-					_mapFlame[data.first] = 3.0f;
-				}
-
-				// 空中での攻撃ボタンで一時静止用
-				if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
-				{
-					_mapModule["落下"].stopCnt = 1;
-				}
-
-				if (_mapModule["落下"].stopCnt == 1)
-				{
-					if (_mapFlame["落下"] >= 3.0f)
-					{
-						_mapModule["落下"].stopCnt = 0;
-					}
+					mapFlame_[data.first] = 3.0f;
 				}
 			}
 			// 何もアクションが行われていなければidleを設定する
@@ -613,74 +446,40 @@ void ActionCtl::InitUpdater(ActorType& type)
 			}
 		});
 		break;
-	case ActorType::BigCultist:
-		updater_.emplace(type, [&](float sp, Sprite& sprite) {
-			auto actCheck = [&](std::string actName) {
-				for (auto check : _mapModule[actName].act)
-				{
-					// mapFlameの内容をmapModuleのフレーム情報に代入
-					_mapModule[actName].flame = _mapFlame[actName];
-
-					if (!(check(sprite, _mapModule[actName])))
-					{
-						// フレーム値を0に戻す
-						_mapFlame[actName] = 0.0f;
-						// 1つでも引っかかったらfalse
-						return false;
-					}
-				}
-				// すべて抜けてきたらtrue
-				return true;
-			};
-			// 何かアクションが行われているかを判定するフラグ
-			bool actFlg = false;
-
-			// 上のラムダ式でtrueだった場合のみ処理が走る
-			for (auto data : _mapModule)
-			{
-				if (actCheck(data.first))
-				{
-
-					// フレーム値の更新
-					data.second.flame = _mapFlame[data.first];
-
-					// (左右移動とかの)処理が走るところ
-					data.second.runAction(sprite, data.second);
-					actFlg = true;
-
-				}
-				// フレームの加算(落下とジャンプで使用している)
-				_mapFlame[data.first] += 0.1f;
-				if (_mapFlame[data.first] >= 3.0f)
-				{
-					_mapFlame[data.first] = 3.0f;
-				}
-
-				// 空中での攻撃ボタンで一時静止用
-				if (_mapFlame["攻撃"] > 0.0f && _mapFlame["落下"] > 0.0f)
-				{
-					_mapModule["落下"].stopCnt = 1;
-				}
-
-				if (_mapModule["落下"].stopCnt == 1)
-				{
-					if (_mapFlame["落下"] >= 3.0f)
-					{
-						_mapModule["落下"].stopCnt = 0;
-					}
-				}
-			}
-			// 何もアクションが行われていなければidleを設定する
-			if (!actFlg)
-			{
-				dynamic_cast<Enemy&>(sprite).SetAction("bigCultist_idle");
-			}
-		});
-		break;
 	case ActorType::Max:
 		break;
 	default:
 		break;
 	}
-	
+
+}
+
+void ActionCtl::XmlPurser(std::string fileName, xmlMap& xmlmap)
+{
+	// xmlから読み込む
+	const std::string path = "../Resources/Data/ActCtlData/";   // ここで../がないとファイルが探せない
+	const std::string xml  = ".xml";
+	const std::string f_name = path + fileName + xml;
+	rapidxml::xml_document<> doc;
+	rapidxml::file<> file(f_name.c_str());
+	doc.parse<0>(file.data());
+	rapidxml::xml_node<>* parentNode = doc.first_node("data");
+
+	int num = 1;	// AnimationTypeのNonを飛ばして開始する為に初期値を1にする
+
+	// それぞれがactで1かたまり状態
+	// AnimationTypeをキーにしてpairで登録
+	for (rapidxml::xml_node<char>* actItr = parentNode->first_node("act"); actItr != nullptr; actItr = actItr->next_sibling())
+	{
+		std::vector<std::string> tmpVec;		// runactionが1つに対してcheckは複数ある為、vectorに保存する
+		for (rapidxml::xml_node<char>* itr = actItr->first_node("checks")->first_node("check"); itr != nullptr; itr = itr->next_sibling())
+		{
+			// check関係が入る
+			tmpVec.emplace_back(itr->value());
+		}
+
+		// 登録
+		xmlmap[static_cast<AnimationType>(num)] = std::make_pair(actItr->first_node("runaction")->value(), tmpVec);	// runactionの1つに対して、check関連複数個を登録する方法
+		num++;
+	}
 }

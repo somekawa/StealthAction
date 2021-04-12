@@ -18,26 +18,12 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	std::random_device engine;
 	mapGenerator_ = std::make_shared<MapGenerator>(engine());
 	mapGenerator_->Call();
-	auto nodeData = mapGenerator_->GetMSTNode();
+	const auto nodeData = mapGenerator_->GetMSTNode();
 	mapLayer_ = &layer;
 	objLayer_ = Layer::create();
 	
 	isChangeFloor_ = false;
 	isClear_ = false;
-
-#ifdef _DEBUG
-	/*mapName_ = Label::createWithTTF("部屋  0", "fonts/HGRGE.ttc", 24);
-	mapName_->setPosition(100, 500);
-	objLayer_->addChild(mapName_);
-	isTutorial = Label::createWithTTF("今はチュートリアルマップです", "fonts/HGRGE.ttc", 48);
-	isTutorial->setColor(Color3B::YELLOW);
-	isTutorial->setPosition(500, 400);
-	objLayer_->addChild(isTutorial);
-	
-	tex = nullptr;
-	visible = false;*/
-#endif // _DEBUG
-	// マップレイヤーより前へ
 	
 	layer.addChild(objLayer_,layer.getLocalZOrder() + 1);	
 
@@ -45,19 +31,17 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	pathList_.push_back("image/Environment/tutorialMap.tmx");
 	pathList_.push_back("image/Environment/trueMap.tmx");
 	
-
 	nextPosTbl = {
-		Vec2(100, 100),	// E_UP
-		Vec2(300, 100),	// N_RIGHT
-		Vec2(700, 100),	// N_LEFT
-		Vec2(900, 100),	// W_UP
-		Vec2(900, 500),	// W_DOWN
-		Vec2(700, 500),	// S_LEFT
-		Vec2(300, 500),	// S_RIGHT
-		Vec2(700, 500),	// E_DOWN 
+		Vec2(100.0f, 100.0f),	// E_UP
+		Vec2(300.0f, 100.0f),	// N_RIGHT
+		Vec2(700.0f, 100.0f),	// N_LEFT
+		Vec2(900.0f, 100.0f),	// W_UP
+		Vec2(900.0f, 500.0f),	// W_DOWN
+		Vec2(700.0f, 500.0f),	// S_LEFT
+		Vec2(300.0f, 500.0f),	// S_RIGHT
+		Vec2(700.0f, 500.0f),	// E_DOWN 
 	};
 	
-
 	// 自動生成マップデータ作成(データ化)
 	AddMap(pathList_);
 	MapChild mapChild;
@@ -94,12 +78,11 @@ GameMap::GameMap(cocos2d::Layer& layer)
 	mapChild.nextParentID = 0;
 
 	mapChild.gateDir = MapDirection::E_Down;
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	mapChild.nextPos = { visibleSize.width / 2 + origin.x - 0,visibleSize.height / 2 + origin.y + 200 };
+	const auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	mapChild.nextPos  = { visibleSize.width / 2 + origin.x - 0,visibleSize.height / 2 + origin.y + 200 };
 	mapParent.child.push_back(mapChild);
 	mapParentsList_.mapParents.push_back(mapParent);
-
 
 	// IDをチュートリアル専用のマップ番号にしておく
 	mapParentsList_.nowID = mapParentsList_.mapParents.size() - 1;
@@ -127,12 +110,6 @@ GameMap::~GameMap()
 	{
 		mapData->release();
 	}
-#ifdef _DEBUG
-	
-	/*CC_SAFE_RELEASE(mapName_);
-	CC_SAFE_RELEASE(isTutorial);
-	CC_SAFE_RELEASE(tex);*/
-#endif // _DEBUG
 }
 
 void GameMap::AddMap(std::vector<std::string>& mapPaths)
@@ -146,16 +123,17 @@ void GameMap::AddMap(std::vector<std::string>& mapPaths)
 
 void GameMap::LoadMap(Player& player)
 {
-	auto fade = TransitionFade::create(1.0f, LoadScene::CreateLoadScene(player, *this), Color3B::BLACK);
+	const auto fade = TransitionFade::create(1.0f, LoadScene::CreateLoadScene(player, *this), Color3B::BLACK);
 	Director::getInstance()->pushScene(fade);
 }
 
 void GameMap::ReplaceMap(Player& player)
 {
-	int childId = nextId_;
-	auto mapState_ = mapParentsList_.mapParents[mapParentsList_.nowID];
-	auto selectNextMap = mapDatas_[static_cast<int>(mapState_.child[childId].mapID)];
-	auto nowMap = GetNowMap();
+	const int childId = nextId_;
+	const auto mapState_ = mapParentsList_.mapParents[mapParentsList_.nowID];
+	const auto selectNextMap = mapDatas_[static_cast<int>(mapState_.child[childId].mapID)];
+	const auto nowMap = GetNowMap();
+
 	if (nowMap != selectNextMap)
 	{
 		selectNextMap->setVisible(true);
@@ -163,25 +141,20 @@ void GameMap::ReplaceMap(Player& player)
 		nowMap->setVisible(false);
 		nowMap->setName("");
 	}
+
 	mapParentsList_.nowID = static_cast<int>(mapState_.child[childId].nextParentID);
 	mapParentsList_.mapParents[mapParentsList_.nowID].isArrival = true;
+
 	// オブジェクト作成
 	CreateObject();
-#ifdef _DEBUG
-	/*auto str = StringUtils::format("部屋　%d", mapParentsList_.nowID);
-	mapName_->setString(str);
-	if (isTutorial->getString() != "")
-	{
-		isTutorial->setString("");
-	}*/
-#endif // _DEBUG
+
 	// プレイヤーポジションセット
 	player.setPosition(mapState_.child[childId].nextPos);
 }
 
 void GameMap::CreateObject()
 {
-	auto objGroups = GetNowMap()->getObjectGroups();
+	const auto objGroups = GetNowMap()->getObjectGroups();
 	// オブジェクトが既にあったら削除する
 	if (objs_.size() > 0)
 	{
@@ -191,36 +164,37 @@ void GameMap::CreateObject()
 		}
 		objs_.clear();
 	}
+
 	for (auto objGroup : objGroups)
 	{
-		//auto objGroup = GetNowMap()->getObjectGroup("gate");
 		if (objGroup == nullptr)
 		{
 			return;
 		}
-		auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
+		const auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
 		// TMXMapのオブジェクトレイヤーから情報取得
-		auto& objs = objGroup->getObjects();
+		const auto& objs = objGroup->getObjects();
+
 		for (auto& obj : objs)
 		{
 			ValueMap prop = obj.asValueMap();
-			auto name = prop["name"].asString();
-			auto x = prop["x"].asFloat();
-			auto y = prop["y"].asFloat();
-			auto w = prop["width"].asInt();
-			auto h = prop["height"].asInt();
+			const auto name = prop["name"].asString();
+			const auto x = prop["x"].asFloat();
+			const auto y = prop["y"].asFloat();
+			const auto w = prop["width"].asInt();
+			const auto h = prop["height"].asInt();
 
 			// ゲートだった時
 			if (name == "gate")
 			{
-				auto gateNum = prop["gateNum"].asInt();
-				for (int i = 0; i < nowMapParent.child.size(); ++i)
+				const auto gateNum = prop["gateNum"].asInt();
+				for (unsigned int i = 0; i < nowMapParent.child.size(); ++i)
 				{
 					if (static_cast<int>(nowMapParent.child[i].gateDir) != gateNum)
 					{
 						continue;
 					}
-					auto gate = Gate::CreateGate({ x, y }, i);
+					const auto gate = Gate::CreateGate({ x, y }, i);
 					gate->setCameraMask(static_cast<int>(CameraFlag::USER1));
 					objs_.push_back(gate);
 				}
@@ -230,13 +204,14 @@ void GameMap::CreateObject()
 			{
 				if (mapParentsList_.clearMapID == mapParentsList_.nowID)
 				{
-					auto clearObj = ClearObj::CreateClearObj({ x, y });
+					const auto clearObj = ClearObj::CreateClearObj({ x, y });
 					clearObj->setCameraMask(static_cast<int>(CameraFlag::USER1));
 					objs_.push_back(clearObj);
 				}
 			}
 		}
 	}
+
 	// オブジェクトをセット
 	for (auto obj : objs_)
 	{
@@ -246,7 +221,7 @@ void GameMap::CreateObject()
 
 cocos2d::TMXTiledMap* GameMap::GetNowMap()
 {
-	auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
+	const auto nowMapParent = mapParentsList_.mapParents[mapParentsList_.nowID];
 	return mapDatas_[static_cast<int>(nowMapParent.mapID)];
 }
 
@@ -254,6 +229,7 @@ void GameMap::Update(Player& player,int nowEnemyNum)
 {
 	// 常にフロア変更のフラグはfalseに
 	isChangeFloor_ = false;
+
 	for (auto obj : objs_)
 	{
 		obj->Update(nowEnemyNum);
@@ -273,6 +249,7 @@ void GameMap::Update(Player& player,int nowEnemyNum)
 			}
 		}
 	}
+
 	frame_++;
 }
 
@@ -305,8 +282,8 @@ cocos2d::TMXTiledMap* GameMap::createMapFromPath(std::string& mapPath)
 {
 	TMXTiledMap* map = TMXTiledMap::create(mapPath);
 
-	auto colLayer = map->getLayer("Collision");
-	auto wallSlideLayer = map->getLayer("WallSlide");
+	const auto colLayer = map->getLayer("Collision");
+	const auto wallSlideLayer = map->getLayer("WallSlide");
 	colLayer->setName("col");
 	wallSlideLayer->setName("slide");
 	mapLayer_->addChild(map);
@@ -323,7 +300,6 @@ const bool GameMap::ChangeFloor()
 
 void GameMap::ColisionDebugDraw(bool debug)
 {
-	
 //#ifdef _DEBUG
 //	if (mapParentsList_.mapParents.size() == 0)
 //	{

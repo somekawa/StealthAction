@@ -21,9 +21,9 @@ void ResidualShadow::CreateResidualShadow(cocos2d::Sprite& sprite, cocos2d::Laye
 
 void ResidualShadow::Move(cocos2d::Vec2 pos, cocos2d::Vec2 move)
 {
-	for (int i = 0; i < residualShadows_.size(); ++i)
+	for (unsigned int i = 0; i < residualShadows_.size(); ++i)
 	{
-		cocos2d::Vec2 offset = move *(i + 1)* 1.1f;
+		cocos2d::Vec2 offset = move *(static_cast<float>(i) + 1.0f)* 1.1f;
 		residualShadows_[i]->setPosition(pos - offset);
 	}
 }

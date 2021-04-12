@@ -24,6 +24,7 @@ struct MapParentState
 	int enemyNum;				// 敵の数
 	bool isArrival;				// 到達したかどうか
 };
+
 // 親リスト
 struct MapParentList
 {
@@ -31,17 +32,19 @@ struct MapParentList
 	int clearMapID;	// クリアする扉のある親ID
 	std::vector<MapParentState> mapParents;// 親たち
 };
+
 class MapObj;
 class Player;
 class MapGenerator;
+
 class GameMap
 {
 public:
 	GameMap(cocos2d::Layer& layer);
 	~GameMap();
-	// マップ生成をする (表と裏の二つを読む )
+	// マップ生成をする (表と裏の2つを読む )
 	void AddMap(std::vector<std::string>& mapPaths);
-	// オブジェクトレイヤを読み込んで配置
+	// オブジェクトレイヤーを読み込んで配置
 	void CreateObject();
 
 	// マップをロード開始
@@ -79,10 +82,10 @@ private:
 	cocos2d::Layer* objLayer_;	// マップオブジェクトのレイヤー
 
 	std::vector<std::string>pathList_;	// マップデータのパスのリスト	
-	MapParentList mapParentsList_;	// マップ親リスト
+	MapParentList mapParentsList_;		// マップ親リスト
 	
-	MapData mapDatas_;	// 0番が親
-	std::vector<MapObj*>objs_; // 現在はゲートのみ
+	MapData mapDatas_;					// 0番が親
+	std::vector<MapObj*>objs_;			// 現在はゲートのみ
 	int nextId_;
 	int frame_;
 	// 次のプレイヤー初期位置テーブル
@@ -103,4 +106,3 @@ private:
 	// クリアしたときtrue
 	bool isClear_;
 };
-

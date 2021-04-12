@@ -1,9 +1,8 @@
 #pragma once
 #include "module/ActModule.h"
 
-// ÌßÚ²Ô°‚ğ’Ç‚¢‚©‚¯‚é‚©‚Ì”»’è
+// ƒvƒŒƒCƒ„[‚ğ’Ç‚¢‚©‚¯‚é‚©‚Ì”»’è
 struct ChaseJudgement
 {
 	bool operator()(cocos2d::Sprite& sprite, ActModule& module);
 };
-

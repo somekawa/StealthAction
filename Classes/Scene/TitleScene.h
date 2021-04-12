@@ -1,3 +1,4 @@
+// ’S“–êŠ
 #pragma once
 #include "BaseScene.h"
 
@@ -17,4 +18,6 @@ private:
 	bool isChanged_;
 	// ƒLƒƒƒ‰”½“]
 	bool flipFlg_;
+	// ƒLƒƒƒ‰ˆÚ“®‘¬“x
+	float runSpeed_;
 };

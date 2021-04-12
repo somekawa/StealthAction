@@ -18,4 +18,3 @@ private:
 	std::shared_ptr<ResShadowShader>resShader_;
 	bool isVisible_;
 };
-

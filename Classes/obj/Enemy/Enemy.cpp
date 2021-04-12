@@ -1,14 +1,13 @@
-#include "obj/Enemy/Enemy.h"
+#include "_Debug/_DebugConOut.h"
 #include "Scene/GameScene.h"
 #include "obj/Player.h"
 #include "Gravity.h"
 #include "ActionRect.h"
-#include "obj/Player.h"
 #include "../../HPGauge.h"
 #include "BehaviorBaseAI/BehaviorTree.h"
 #include "BehaviorBaseAI/BehaviorData.h"
 #include "BehaviorBaseAI/NodeBase.h"
-#include "_Debug/_DebugConOut.h"
+#include "Enemy.h"
 
 USING_NS_CC;
 
@@ -48,13 +47,12 @@ Enemy::Enemy(Vec2 pos,Player& player, BehaviorTree* aiTree,VisionRange visionRan
 
 Enemy::~Enemy()
 {
-	//onExit();
 }
 
 const float& Enemy::GetVision(void)
 {
 	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
-	auto plPos = player_.getPosition();
+	const Vec2 plPos = player_.getPosition();
 	// 現在の敵の視覚情報(ﾌﾟﾚｲﾔｰが自分に対してどのくらいの所にいるか)
 	vision_ = abs(plPos.x - getPosition().x);
 	return vision_;
@@ -71,18 +69,10 @@ void Enemy::DeleteSelfOnFloor(void)
 
 void Enemy::ChangeDirection(float delta)
 {
-	auto flip = false;
-	auto flipBit = 0;
+	int flipBit = 0;
 	if (!isMove_[static_cast<int>(direction_)])
 	{
-		if (direction_ == Direction::Right)
-		{
-			flipBit = 1;
-		}
-		else
-		{
-			flipBit = -1;
-		}
+		direction_ == Direction::Right ? flipBit = 1 : flipBit = -1;
 		direction_ = (direction_ + flipBit);
 		isMove_[static_cast<int>(direction_)] = true;
 	}
@@ -91,19 +81,11 @@ void Enemy::ChangeDirection(float delta)
 		if (mType_ == MoveType::Chase)
 		{
 			// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
-			auto playerPos = player_.getPosition();
+			const Vec2 playerPos = player_.getPosition();
 			// 1ﾌﾚｰﾑ前の自身の向いている方向の格納
 			oldDirection_ = direction_;
-			// ﾌﾟﾚｲﾔｰが自身よりも左にいる場合
-			if (getPosition().x > playerPos.x)
-			{
-				direction_ = Direction::Left;
-			}
-			// ﾌﾟﾚｲﾔｰが自身よりも右にいる場合
-			else
-			{
-				direction_ = Direction::Right;
-			}
+			// ﾌﾟﾚｲﾔｰが自身よりもどちらにいるかで方向を決める
+			direction_ = (getPosition().x > playerPos.x ? Direction::Left : Direction::Right);
 		}
 		else if (mType_ == MoveType::Patrol)
 		{
@@ -118,25 +100,16 @@ void Enemy::ChangeDirection(float delta)
 				// 右か左の方向をﾗﾝﾀﾞﾑで決定する
 				// cocos2d::RandomHelper::random_int(int min,int max);
 				// min(最小)～max(最大)の間でﾗﾝﾀﾞﾑな数値を返す
-				direction_ = (Direction)RandomHelper::random_int((int)Direction::Right, (int)Direction::Left);
+				direction_ = (Direction)RandomHelper::random_int(static_cast<int>(Direction::Right), static_cast<int>(Direction::Left));
 			}
+		}
+		else
+		{
+			// 何も処理を行わない
 		}
 	}
 
-	if (direction_ == Direction::Left)
-	{
-		flip = false;
-	}
-	else if (direction_ == Direction::Right)
-	{
-		flip = true;
-	}
-	// patrol(巡回)行動でない場合はpatrolFrameをｾﾞﾛｸﾘ
-	//if (mType_ != MoveType::Patrol)
-	//{
-	//	patrolFrame_ = 0.0f;
-	//}
-	runAction(FlipX::create(flip));
+	runAction(FlipX::create(direction_ == Direction::Left ? false : true));
 }
 
 bool Enemy::OnAttacked(void)
@@ -148,36 +121,37 @@ bool Enemy::OnAttacked(void)
 		// ﾌﾟﾚｲﾔｰのｺﾗｲﾀﾞｰﾎﾞｯｸｽの走査
 		for (auto plCol : player_.GetCurrentCol())
 		{
-			// ﾀﾞﾒｰｼﾞ判定ｺﾗｲﾀﾞｰﾎﾞｯｸｽだったら
-			if (plCol->GetData().type_ == 1)
+			if (plCol->GetData().type_ != 1)
 			{
-				// 自分のｺﾗｲﾀﾞｰﾎﾞｯｸｽの走査
-				for (auto myCol : currentCol_)
+				// ﾀﾞﾒｰｼﾞ判定ｺﾗｲﾀﾞｰﾎﾞｯｸｽ以外なら何もしない
+				continue;
+			}
+			// 自分のｺﾗｲﾀﾞｰﾎﾞｯｸｽの走査
+			for (auto myCol : currentCol_)
+			{
+				if (myCol->GetData().type_ != 0)
 				{
-					// 攻撃判定ｺﾗｲﾀﾞｰﾎﾞｯｸｽだったら
-					if (myCol->GetData().type_ == 0)
-					{
-						// ﾌﾟﾚｲﾔｰの当たり判定対象のﾎﾞｯｸｽをﾀﾞﾒｰｼﾞｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀを格納
-						auto plDamageCol = plCol->GetData();
-						// 自分の当たり判定のｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀにattackｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀを格納
-						auto attackColData = myCol->GetData();
-						// 方向によって矩形ﾎﾟｼﾞｼｮﾝが変更するので、変更したﾎﾟｼﾞｼｮﾝに応じてbeginを変更
-						attackColData.begin_ = Vector2I(myCol->getPosition().x,myCol->getPosition().y);
+					// 攻撃判定ｺﾗｲﾀﾞｰﾎﾞｯｸｽ以外なら何もしない
+					continue;
+				}
+				// ﾌﾟﾚｲﾔｰの当たり判定対象のﾎﾞｯｸｽをﾀﾞﾒｰｼﾞｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀを格納
+				const auto plDamageCol = plCol->GetData();
+				// 自分の当たり判定のｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀにattackｺﾗｲﾀﾞｰﾎﾞｯｸｽﾃﾞｰﾀを格納
+				auto attackColData = myCol->GetData();
+				// 方向によって矩形ﾎﾟｼﾞｼｮﾝが変更するので、変更したﾎﾟｼﾞｼｮﾝに応じてbeginを変更
+				attackColData.begin_ = Vector2I(static_cast<int>(myCol->getPosition().x),static_cast<int>(myCol->getPosition().y));
 
-						auto attackColPos = Vec2{ getPosition().x + (attackColData.begin_.x + (attackColData.size_.x/2)),
-												  getPosition().y + (attackColData.begin_.y + (attackColData.size_.y/2)) };
-						auto damageColPos = Vec2{ player_.getPosition().x + (plDamageCol.begin_.x + (plDamageCol.size_.x/2)) ,
-												  player_.getPosition().y + (plDamageCol.begin_.y + (plDamageCol.size_.y/2)) };
-						// 当たり判定実施
-						if (abs(attackColPos.x - damageColPos.x) <= visionRange_.attack_ + 10.0f &&
-							abs(attackColPos.y - damageColPos.y) <= 80.0f)
-						{
-							auto t = type_;
-							// 攻撃を当てたtriggerをtrueにする
-							hittingToPlayer_ = true;
-							return true;
-						}
-					}
+				const Vec2 attackColPos{ getPosition().x + (attackColData.begin_.x + (attackColData.size_.x/2.0f)),
+										 getPosition().y + (attackColData.begin_.y + (attackColData.size_.y/2.0f)) };
+				const Vec2 damageColPos{ player_.getPosition().x + (plDamageCol.begin_.x + (plDamageCol.size_.x/2.0f)) ,
+										 player_.getPosition().y + (plDamageCol.begin_.y + (plDamageCol.size_.y/2.0f)) };
+				// 当たり判定実施
+				if (abs(attackColPos.x - damageColPos.x) <= visionRange_.attack_ + 10.0f &&
+					abs(attackColPos.y - damageColPos.y) <= 80.0f)
+				{
+					// 攻撃を当てたtriggerをtrueにする
+					hittingToPlayer_ = true;
+					return true;
 				}
 			}
 		}
@@ -186,57 +160,10 @@ bool Enemy::OnAttacked(void)
 	return false;
 }
 
-//void Enemy::CheckHitPLAttack(void)
-//{
-//	//if (!onDamaged_)
-//	//{
-//	//	// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀ
-//	//	auto plColData = player_.GetCurrentCol();
-//	//	// ﾌﾟﾚｲﾔｰの現在のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
-//	//	for (auto attackCol : plColData)
-//	//	{
-//	//		// 現在のﾌﾟﾚｲﾔｰのｺﾘｼﾞｮﾝﾃﾞｰﾀの中に攻撃矩形が有れば
-//	//		if (attackCol->GetData().type_ == 0)
-//	//		{
-//	//			// 現在の自分のｺﾘｼﾞｮﾝﾃﾞｰﾀで回す
-//	//			for (auto myCol : currentCol_)
-//	//			{
-//	//				// 現在の自分のｺﾘｼﾞｮﾝﾃﾞｰﾀの中にﾀﾞﾒｰｼﾞ矩形が有れば
-//	//				if (myCol->GetData().type_ == 1)
-//	//				{
-//	//					// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝが現在どこか不明
-//	//					auto plPos = player_.getPosition();
-//	//					// 攻撃矩形のﾎﾟｼﾞｼｮﾝ(真ん中に設定)
-//	//					auto attackColPos = Vec2{ player_.getPosition().x + attackCol->GetData().begin_.x + (attackCol->GetData().size_.x / 2),
-//	//											  player_.getPosition().y + attackCol->GetData().begin_.y + (attackCol->GetData().size_.y / 2) };
-//	//					// ﾀﾞﾒｰｼﾞ矩形のﾎﾟｼﾞｼｮﾝ(真ん中に設定)
-//	//					auto damageColPos = Vec2{ getPosition().x + myCol->GetData().begin_.x + (myCol->GetData().size_.x / 2),
-//	//											  getPosition().y + myCol->GetData().begin_.y + (myCol->GetData().size_.y / 2) };
-//	//					// 攻撃矩形とﾀﾞﾒｰｼﾞ矩形の距離が50以下だと当たっている判定に
-//	//					if (abs(attackColPos.x - damageColPos.x) <= 60.0f &&
-//	//						abs(attackColPos.y - damageColPos.y) <= 80.0f)
-//	//					{
-//	//						hp_ -= 10;
-//	//						// HP減少のテストコード
-//	//						//auto a = ((Game*)Director::getInstance()->getRunningScene());
-//	//						//auto b = (EnemyHPGauge*)a->getChildByTag((int)zOlder::FRONT)->getChildByName(myName_ + "_" + std::to_string(id_) + "_HP");
-//	//						//b->SetHP(hp_);	// -10などのダメージ量は敵の攻撃力に変えればいい
-//	//						// onDamaged_をtrueに
-//	//						OnDamaged();
-//	//					}
-//	//				}
-//	//			}
-//	//		}
-//	//	}
-//	//}
-//}
-
-const float& Enemy::GetDistance(void)
+const float Enemy::GetDistance(void)
 {
-	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝ
-	auto playerPos = player_.getPosition();
 	// ﾌﾟﾚｲﾔｰのﾎﾟｼﾞｼｮﾝと自身のﾎﾟｼﾞｼｮﾝを引いた数をabsした数字を返す
-	return abs(playerPos.x - getPosition().x);
+	return abs(player_.getPosition().x - getPosition().x);
 }
 
 void Enemy::SetAlive(bool flg)
@@ -274,76 +201,26 @@ void Enemy::SetMoveType(MoveType type)
 	mType_ = type;
 }
 
-bool Enemy::CheckObjHit(void)
-{
-	auto director = Director::getInstance();
-	auto a = director->getRunningScene()->getChildByTag((int)zOlder::BG);
-	if ((TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData") == nullptr)
-	{
-		return false;
-	}
-	const int chipSize = 48;
-	auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
-	auto ColSize = CollisionData->getLayerSize();
-
-	auto position = this->getPosition();
-
-	auto nextPos = [&]() {
-		Vec2 next;
-		switch (direction_)
-		{
-		case Direction::Right:
-			next = { position.x + (this->getContentSize().width / 2) + speed_.x,position.y };
-			break;
-		case Direction::Left:
-			next = { position.x - (this->getContentSize().width / 2) + speed_.x,position.y };
-
-			break;
-		case Direction::Max:
-			break;
-		default:
-			break;
-		}
-		return next;
-	};
-
-	auto grid = Vec2{ nextPos().x,nextPos().y } / chipSize;
-
-	auto gridPos = Vec2(grid.x, ColSize.height - grid.y);
-
-	// 範囲外check
-	if (gridPos.x > ColSize.width || gridPos.x < 0 ||
-		gridPos.y > ColSize.height || gridPos.y < 0)
-	{
-		return true;
-	}
-	auto gridGid = CollisionData->getTileGIDAt(gridPos);
-	if (gridGid != 0)
-	{
-		//sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (module.flame));
-		return true;
-	}
-
-	return false;
-}
-
 void Enemy::Hit(void)
 {
 	TRACE("Hit!\n");
-	auto director = Director::getInstance();
-	auto scene = director->getRunningScene();
-	auto hpGauge = (HPGauge*)scene->getChildByTag((int)zOlder::FRONT)->getChildByName(getName() + "_HPgauge" + "_" + std::to_string(id_));
-	if (!onDamaged_)
+	const auto director = Director::getInstance();
+	const auto scene = director->getRunningScene();
+	const auto hpGauge = (HPGauge*)scene->getChildByTag(static_cast<int>(zOrder::FRONT))->getChildByName(getName() + "_HPgauge" + "_" + std::to_string(id_));
+
+	if (currentAnimation_ == getName() + "_hit")
 	{
-		auto player = scene->getChildByTag((int)zOlder::CHAR_PL)->getChildByName("player1");
-		auto damageNum = ((Player*)player)->GetGiveDamageNum();
-		hp_ -= damageNum;
-		hpGauge->SetHP(hp_);
-		onDamaged_ = true;
+		if (previousAnimation_ == currentAnimation_)
+		{
+			return;
+		}
 	}
-	if (isAnimEnd_)
+
+	if (isHitAttack_)
 	{
-		onDamaged_ = false;
+		const auto player = scene->getChildByTag(static_cast<int>(zOrder::CHAR_PL))->getChildByName("player1");
+		hp_ -= static_cast<Player*>(player)->GetGiveDamageNum();
+		hpGauge->SetHP(static_cast<float>(hp_));
 		isHitAttack_ = false;
 	}
 }
@@ -351,7 +228,7 @@ void Enemy::Hit(void)
 void Enemy::Death(void)
 {
 	TRACE("death");
-	// deatthﾓｰｼｮﾝが終了していたら
+	// deathﾓｰｼｮﾝが終了していたら
 	if (isAnimEnd_)
 	{
 		// 自身を消去するために自分の名前をdeathにする(仮でこうしている)
@@ -363,17 +240,14 @@ void Enemy::Death(void)
 
 void Enemy::Idle(void)
 {
-	if (isHitAttack_)
+	if (isHitAttack_ && (previousAnimation_ != currentAnimation_))
 	{
 		stateTransitioner_ = &Enemy::Hit;
 	}
-	//AIRun();
 	if (isAnimEnd_)
 	{
 		// またﾀﾞﾒｰｼﾞを与えられるようにするためにfalseにしておく
-		onDamaged_ = false;
+		isHitAttack_ = false;
 		currentAnimation_ = myName_ + "_idle";
-		//stateTransitioner_ = &Enemy::Idle;
 	}
-	//currentAnimation_ = myName_ + "_idle";
 }

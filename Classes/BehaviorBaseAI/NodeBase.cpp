@@ -71,13 +71,14 @@ NodeBase* NodeBase::SelectSequence(std::vector<NodeBase*>* list, BehaviorData* d
 	int step = data->GetSequenceStep(GetName());
 
 	// シーケンスが終わってたら終了
-	if (step >= child_.size())
+	if (static_cast<unsigned>(step) >= child_.size())
 	{
 		if (selectRule_ != BehaviorTree::SelectRule::SequencialLooping)
 		{
 			return NULL;
 		}
-		else {
+		else 
+		{
 			// Loopingの場合は頭から実行
 			step = 0;
 		}
@@ -105,7 +106,8 @@ NodeBase* NodeBase::SearchNode(std::string searchName)
 	{
 		return this;
 	}
-	else {
+	else 
+	{
 		// 子ノードで検索
 		for (auto itr = child_.begin(); itr != child_.end(); itr++)
 		{
@@ -127,7 +129,7 @@ NodeBase* NodeBase::Inference(Enemy* enemy, BehaviorData* data)
 	NodeBase* result = NULL;
 
 	// 子ノードで実行可能なノードを探す
-	for (int i = 0; i < child_.size(); i++)
+	for (unsigned int i = 0; i < child_.size(); i++)
 	{
 		if (child_[i]->judgement_ != NULL)
 		{
@@ -136,7 +138,8 @@ NodeBase* NodeBase::Inference(Enemy* enemy, BehaviorData* data)
 				list.push_back(child_[i]);
 			}
 		}
-		else {
+		else 
+		{
 			// 判定クラスがなければ無条件に追加
 			list.push_back(child_[i]);
 		}
@@ -171,7 +174,8 @@ NodeBase* NodeBase::Inference(Enemy* enemy, BehaviorData* data)
 		{
 			return result;
 		}
-		else {
+		else 
+		{
 			// 決まったノードで推論開始
 			result = result->Inference(enemy, data);
 		}

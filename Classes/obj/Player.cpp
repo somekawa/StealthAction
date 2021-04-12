@@ -1,8 +1,10 @@
+// 全て担当
+#include <functional>
+#include "anim/AnimMng.h"
+#include "_Debug/_DebugConOut.h"
 #include "Scene/GameScene.h"
-#include "Player.h"
 #include "anim/ActionCtl.h"
 #include "ActionRect.h"
-#include "_Debug/_DebugConOut.h"
 #include "Loader/CollisionLoader.h"
 #include "../Skill/SkillMng.h"
 #include "../Skill/SkillBase.h"
@@ -13,48 +15,48 @@
 #include "../HPGauge.h"
 #include "SoundMng.h"
 #include "ResidualShadow.h"
+#include "Player.h"
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "input/OPRT_key.h"
 #else
 #include "input/OPRT_touch.h"
 #endif
 
-// skillmngのSkillActivateをタッチ操作したときに呼ぶ
-// testskillクラス:引数はskillBase_
-
 USING_NS_CC;
 
 int Player::no_ = 0;
 
+// 画像サイズを取得する関数があったようなきがする
+// getContentSizeを試したけど取得不可能だった
 Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr):
-	Actor(hp,myLayer),enemyList_(enemyLayer)
+	Actor(hp,myLayer),enemyList_(enemyLayer), myNo_(no_),charSize_(15.0f * 3.0f,25.0f * 3.0f)
 {
 	skillBase_ = skillBasePtr;
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	std::list<std::string> path;
+	path.push_back("skill_data");
+	skillSprite_ = nullptr;
 
-	lpSoundMng.AddSound("recovery", "BGM/Recovery.mp3", SoundType::SE);
-	lpSoundMng.AddSound("burst", "BGM/s-burst01.mp3", SoundType::SE);
-	lpSoundMng.AddSound("burst2", "BGM/s-burst02.mp3", SoundType::SE);
+	const auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Vec2 origin	   = Director::getInstance()->getVisibleOrigin();
+
+	lpSoundMng.AddSound("recovery" , "BGM/Recovery.mp3" , SoundType::SE);
+	lpSoundMng.AddSound("burst"	   , "BGM/s-burst01.mp3", SoundType::SE);
+	lpSoundMng.AddSound("burst2"   , "BGM/s-burst02.mp3", SoundType::SE);
 	lpSoundMng.AddSound("Transform", "BGM/se_maoudamashii_element_fire01.mp3", SoundType::SE);
-	lpSoundMng.AddSound("Knife", "BGM/Knife.mp3", SoundType::SE);
-	lpSoundMng.AddSound("Dash", "BGM/Dash.mp3", SoundType::SE);
+	lpSoundMng.AddSound("Knife"	   , "BGM/Knife.mp3"    , SoundType::SE);
+	lpSoundMng.AddSound("Dash"	   , "BGM/Dash.mp3"     , SoundType::SE);
+
 	// キー入力かタッチ操作か判断
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	// thisの意味
 	oprtState_ = new OPRT_key(this);
 #else
 	oprtState_ = new OPRT_touch(this);
 #endif
 
-	std::list<std::string> path;
-	path.push_back("skill_data");
-	//Actor.cppで読み込んだPlayer用のSkillデータの受け取り
-	//plfile_ = fileLoad_["Player"];											// この中に今、スキルの情報が読み込まれている(名前とか)
-
 	type_ = ActorType::Player;
-	actModuleRegistration();
+	ActModuleRegistration();
 
 	currentAnimation_ = "Non";
 	actionOld_ = "Run";
@@ -62,46 +64,45 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 
 	AnimRegistrator();
 
-	pos_ = { (int)visibleSize.width / 2 + (int)origin.x - 0,(int)visibleSize.height / 2 + (int)origin.y + 200 };
-	setPosition(Vec2(pos_.x, pos_.y));
-	myNo_ = no_;
+	//@@@イニシャライズ時の{ }と( )の違いについて調べて、
+	//それに合わせた使い方に書き換えること!!
+	setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y + 200));
 	no_++;
 	type_ = ActorType::Player;
-	//oldPos_ = 0;
+	playerMode_ = "player_Light_";
 
-	oldPosKeepFlg_ = false;
-	bitFlg_.FirstAttackFlg = false;
-	bitFlg_.SecondAttackFlg = false;
-	bitFlg_.ThirdAttackFlg = false;
-	bitFlg_.TransfromFlg = false;
+	attackMotion_ = 00000000;
 
-	gameOverFlg_ = false;
-	deathFlg_ = false;
+	// パラメータのデータを読み込む
+	plParam_ = lpAnimMng.XmlPlParamRead();
+	int tmpNum = 0;
+	for (auto data : plParam_)
+	{
+		// それぞれのモードの最大連撃数でリサイズし、アニメーション名の情報を入れる
+		attackMotionName_[plParam_[tmpNum].modeName].resize(plParam_[tmpNum].attackChain);
+		for (int num = 0; num < data.attackChain; num++)
+		{
+			attackMotionName_[plParam_[tmpNum].modeName][num] = data.chainAnimName[num].first;
+		}
+		tmpNum++;
+	}
+
+	bitFlg_ = { 0,0,0,0,0,0,0 };
+
 	hp_ = hp;
 	for (auto anim : lpAnimMng.GetAnimations(type_))
 	{
 		// colliderBoxのLoad
 		lpCol.ReadData(collider_, anim);
-		for (auto col : collider_[anim])
-		{
-			for (int colNum = 0; colNum < col.size(); colNum++)
-			{
-				// colliderBoxを自身の子にする
-				auto draw = col[colNum]->create();
-				draw->setContentSize(Size{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y });
-				//draw->drawRect(Vec2(0, 0), Vec2{ (float)col[colNum]->GetData().size_.x,(float)col[colNum]->GetData().size_.y }, col[colNum]->GetColor());
-				draw->setTag(col[colNum]->GetData().frame_);
-				// ここでsetLocalOrderをやんないといけない
-				// 攻撃矩形だと0に、ﾀﾞﾒｰｼﾞ矩形だと1に
-				// なので、第二引数にcol->GetData().type_みたいなことをやればそれぞれの矩形のZorderになる。
-				this->addChild(draw, 0, anim);
-			}
-		}
 	}
+
+	gameOverAction_ = nullptr;
 
 	// 攻撃矩形のサイズ設定
 	attackRect_.size_ = Size(30.0f, 30.0f);
-	attackColOffset_ = 0.0f;
+
+	SkillTbl_   = { "magic"  , "fireBall" ,"heal" };
+	SkillSETbl_ = { "burst2" , "burst"    ,"recovery" };
 
 	// 残像
 	resShadow_ = std::make_shared<ResidualShadow>();
@@ -111,74 +112,68 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 
 Player::~Player()
 {
-	// 動的なインスタンスをしたらdeleteを忘れないように!
+	// 動的なインスタンスをしたらdeleteを忘れないように
 	delete oprtState_;
 	delete skillBase_;
+}
+
+Player* Player::CreatePlayer(int hp, Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr)
+{
+	Player* pRet = new(std::nothrow) Player(hp, myLayer, enemyLayer, skillBasePtr);
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+	}
+	return pRet;
 }
 
 // 毎フレーム更新
 void Player::update(float delta)
 {
-	// getnameがgamesceneでない場合、何もしないreturn処理
+	// getnameがgamesceneでない場合、何もせずreturn処理
 	if (Director::getInstance()->getRunningScene()->getName() != "GameScene")
 	{
 		return;
 	}
 
 	// 死亡状態の更新と確認(deathFlg_がtrueならアップデートをすぐ抜けるようにする)
-	if (deathFlg_)
+	if (bitFlg_.deathFlg)
 	{
-		if (gameOverAction())
+		if (GameOverAction())
 		{
-			gameOverSceneFlg_ = true;
+			bitFlg_.gameOverSceneFlg = true;
 			return;
 		}
 		return;
-	}
-
-	// darkモード(攻撃力は上がるが、HPは減少し続ける)
-	if (playerColor == "player_Dark_")
-	{
-		// HP減少処理
-		auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
-		auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-		hpGauge->SetHP(hpGauge->GetHP() - 0.05f);	// HPが減り続けるように設定
 	}
 
 	// キャラクター切替
 	if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 	{
 		lpSoundMng.PlayBySoundName("Transform", 0.5f);
-		
 	}
 
-	skillAction();
+	SkillAction();
 
 	// 現在のフレームを整数値で取得
-	animationFrame_int_ = GetAnimationFrameInt(playerColor + currentAnimation_);
-	//currentCol_ = collider_[currentAnimation_][animationFrame_int_];
-
-	colliderVisible();
+	animationFrame_int_ = GetAnimationFrameInt(playerMode_ + currentAnimation_);
 
 	// ActionCtlクラスの更新
-	actCtl_.update(type_,delta,*this);
+	actCtl_.Update(type_,*this);
 
 	// 入力情報(keyかtouch)の更新
 	oprtState_->update();	
 	
-	// スライド時のみアンカーポイントを移動させる(その他は画像の下中央)
+	// 壁スライド時のみアンカーポイントを移動させる(その他は画像の下中央)
 	if (currentAnimation_ == "Wall_Slide")
 	{
-		if (direction_ == Direction::Left)
-		{
-			// アンカーポイント右端
-			this->setAnchorPoint(Vec2(1.0f, 0.0f));
-		}
-		else if (direction_ == Direction::Right)
-		{
-			// アンカーポイント左端
-			this->setAnchorPoint(Vec2(0.0f, 0.0f));
-		}
+		// 方向：左 = アンカー右端,方向：右 = アンカー左端
+		this->setAnchorPoint(direction_ == Direction::Left ? Vec2(1.0f, 0.0f) : Vec2(0.0f, 0.0f));
 	}
 	else
 	{
@@ -189,573 +184,257 @@ void Player::update(float delta)
 	// スライド終了時に左右向きを反転させる
 	if (currentAnimation_ != "Wall_Slide" && actionOld_ == "Wall_Slide")
 	{
-		auto dir = direction_;
-		direction_ == Direction::Right ? direction_ = Direction::Left : direction_ = Direction::Right;
-		auto tmpdir = direction_;
+		direction_ = (direction_ == Direction::Right ? Direction::Left : Direction::Right);
 	}
 
-	// isHitAttack: 攻撃が当たったらtrueになります。
-	// 攻撃が連続で当たっているようになり、HPの減少が激しい。<- 直さないといけない。
-	onDamaged_ = isHitAttack_;
+	// クラス名がHPBarの方が英語圏では一般的、修正しておくこと!
+	const auto nowScene = dynamic_cast<Game*>(Director::getInstance()->getRunningScene());
+	const auto hpBar    = dynamic_cast<HPGauge*>(nowScene->getChildByTag(static_cast<int>(zOrder::FRONT))->getChildByName("PL_HPgauge"));
 
-	// ダメージをくらった際の処理(この中にdeath処理を書いてしまうと、darkモードで死亡したときに対応できない)
-	if (onDamaged_)
+	// darkモード(攻撃力は上がるが、HPは減少し続ける)
+	if (playerMode_ == "player_Dark_")
 	{
 		// HP減少処理
-		auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
-		auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-		hpGauge->SetHP(hpGauge->GetHP() - 10);	// -10などのダメージ量は敵の攻撃力に変えればいい
-		onDamaged_ = false;
+		hpBar->SetHP(hpBar->GetHP() - 0.05f);	// スリップダメージ設定
+	}
+
+	// ダメージをくらった際の処理(この中にdeath処理を書いてしまうと、darkモードで死亡したときに対応できない)
+	if (isHitAttack_)
+	{
+		// HP減少処理
+		hpBar->SetHP(hpBar->GetHP() - 10.0f);
 		isHitAttack_ = false;
 	}
 
-	auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
-	auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-	// 0を下回った時にフラグを切り替える
-	if (hpGauge->GetHP() <= 0)
+	// 0を下回った時に生存フラグと死亡フラグを切り替える
+	if (hpBar->GetHP() <= 0.0f)
 	{
-		// 死んだﾌﾗｸﾞ(Actorｸﾗｽに宣言してます)
-		// 正確には生きているかを確認するﾌﾗｸﾞなので
-		// 死んだ: false 生きている:trueとなる
-		isAlive_ = false;
-		deathFlg_ = true;
+		isAlive_  = false;
+		bitFlg_.deathFlg = true;
 		deathPos_ = getPosition();
 	}
 
-	attackMotion(delta);
-	transformMotion(delta);
-	dashMotion(delta);
+	AttackMotion(delta);
+	TransformMotion(delta);
+	DashMotion(delta);
 
 	// アニメーションが切り替わるタイミングで呼ばれる再生処理
 	if (currentAnimation_ != actionOld_)
 	{
-		if (currentAnimation_ == "AttackFirst" && !bitFlg_.FirstAttackFlg)
+		if (currentAnimation_ == "AttackFirst")
 		{
 			lpSoundMng.PlayBySoundName("Knife");
-			bitFlg_.FirstAttackFlg = true;
-			// 反転ﾌﾗｸﾞのｾｯﾄ
-			bool flip = false;
-			direction_ == Direction::Right ? flip = true : flip = false;
-			// 攻撃ｴﾌｪｸﾄの追加
-			auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), {0.0f,0.0f}, 5, 0.04f,flip,false,true);
-
+			attackMotion_ |= ATTAKFLAG;	// AttackFirstのフラグをオン
+			// 攻撃エフェクトの追加
+			lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f,
+							   (direction_ == Direction::Right ? true : false), false, true);
 		}
-		animationFrame_int_ = 0.0f;
-		lpAnimMng.ChangeAnimation(*this, playerColor + currentAnimation_, true, ActorType::Player);
+
+		animationFrame_int_ = 0;
+		lpAnimMng.ChangeAnimation(*this, playerMode_ + currentAnimation_, true, ActorType::Player);
 	}
 	actionOld_ = currentAnimation_;
-	// 各ｺﾗｲﾀﾞｰのﾎﾟｼﾞｼｮﾝとｻｲｽﾞの設定
 	SetCollider();
-	//TRACE("playerPos:(%f,%f)", getPosition().x, getPosition().y);
 }
 
-// Actorにあるが未使用
-void Player::Action(void)
-{
-	int a = 0;
-}
-
-// Actorにあるが未使用
-void Player::ChangeDirection(float delta)
-{
-	int a = 0;
-}
-
-void Player::attackMotion(float delta)
+void Player::AttackMotion(float delta)
 {
 	auto keyLambda = [&](bool flag) {
-		// すでにtrueになってたらtrueで抜ける
-		if (flag)
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Attack)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Attack)])
 		{
 			return true;
 		}
-		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Attack)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Attack)] && !flag)
-		{
-			return true;
-		}
-		return false;
+		return flag;
 	};
 
-	if (bitFlg_.FirstAttackFlg)
-	{
-		currentAnimation_ = "AttackFirst";
-		if (!oldPosKeepFlg_)
-		{
-			if (playerColor == "player_Dark_")
-			{
-				this->setPosition(this->getPosition().x, this->getPosition().y - 15);		// 位置補正を入れないと浮いて見える
-			}
-			//oldPos_ = this->getPosition().x;
-			oldPosKeepFlg_ = true;
-		}
-	}
-	else if (bitFlg_.SecondAttackFlg)
-	{
-		currentAnimation_ = "AttackSecond";
-	}
-	else if (bitFlg_.ThirdAttackFlg)
-	{
-		currentAnimation_ = "AttackThird";
-	}
-
-	if (currentAnimation_ == "AttackFirst" && bitFlg_.FirstAttackFlg)
-	{
-		// フレーム数の取得テスト
-		//auto a = animationFrame_ * 100;
-		//auto b = 0.05 * 100;
-		//auto c = (int)a / (int)b;
-		//TRACE("%d\n", c);
-
-		bitFlg_.SecondAttackFlg = keyLambda(bitFlg_.SecondAttackFlg);
-
+	auto frameLambda = [&]() {
 		// frame計算
 		animationFrame_ += delta;
-		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.05 * 100);
-		if (animationFrame_int_ < 10)
+		animationFrame_int_ = GetAnimationFrameInt(playerMode_ + currentAnimation_);
+		if (animationFrame_int_ <= lpAnimMng.GetAnimationMaxNum(ActorType::Player, playerMode_ + currentAnimation_))
 		{
-			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
-			auto col = collider_[playerColor + currentAnimation_];
-			currentCol_ = col[animationFrame_int_];
-			colliderVisible();
+			currentCol_ = collider_[playerMode_ + currentAnimation_][animationFrame_int_];
+		}
+	};
+
+	// 攻撃アニメーションの設定
+	for (unsigned int num = 0; num < attackMotionName_[playerMode_].size(); num++)
+	{
+		// フラグの状態を確認
+		if (attackMotion_ & (ATTAKFLAG << num))
+		{
+			currentAnimation_ = attackMotionName_[playerMode_][num];
+			if (bitFlg_.oldPosKeepFlg_)
+			{
+				break;
+			}
+			if (playerMode_ == "player_Dark_")
+			{
+				const Vec2 tmpPos(this->getPosition());
+				this->setPosition(tmpPos.x, tmpPos.y - 15.0f);	// 位置補正を入れないと浮いて見える
+			}
+			bitFlg_.oldPosKeepFlg_ = true;
+			break;
+		}
+	}
+
+	// 連撃数を可変にできるように、最大数を決めてループで処理が行えるようにしたほうがいい
+	for (unsigned int i = 0; i < attackMotionName_[playerMode_].size(); i++)
+	{
+		// 現在のアニメーション名と一致していないときはcontinue
+		if (currentAnimation_ != attackMotionName_[playerMode_][i])
+		{
+			continue;
 		}
 
-		if (bitFlg_.FirstAttackFlg && animationFrame_ <= 0.5f)
+		// 最終アニメーションではキーチェックを行わないようにする
+		if (i < attackMotionName_[playerMode_].size() - 1)
 		{
-			currentAnimation_ = "AttackFirst";
+			// キー押下時に次の攻撃モーションのビットを立てる
+			if (keyLambda(attackMotion_ & (ATTAKFLAG << (i + 1))))
+			{
+				attackMotion_ |= ATTAKFLAG << (i + 1);
+			}
+		}
+
+		frameLambda();
+
+		if (animationFrame_ <= lpAnimMng.GetAnimationMaxFrame(ActorType::Player, playerMode_ + currentAnimation_))
+		{
+			currentAnimation_ = attackMotionName_[playerMode_][i];
 			isAttacking_ = true;
 		}
 		else
 		{
-			if (!bitFlg_.SecondAttackFlg)
+			// 攻撃フラグが立っていないとき
+			if (!(attackMotion_ & (ATTAKFLAG << (i + 1))))
 			{
 				currentAnimation_ = "Look_Intro";
 				this->SetIsAttacking(false);
-
-				// darkとlightで画像サイズが違うからその補正
-				if (playerColor == "player_Dark_")
-				{
-					this->setPosition(this->getPosition().x, this->getPosition().y + 15);		// 位置補正を戻す
-				}
-				else
-				{
-					//this->setPosition(oldPos_, this->getPosition().y);
-					this->setPosition(this->getPosition().x, this->getPosition().y);
-				}
 			}
 			else
 			{
 				lpSoundMng.PlayBySoundName("Knife");
-				currentAnimation_ = "AttackSecond";
-				// 反転ﾌﾗｸﾞのｾｯﾄ
-				bool flip = false;
-				direction_ == Direction::Right ? flip = true : flip = false;
-				// 攻撃ｴﾌｪｸﾄの追加
-				auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f, flip, false,true);
-			}
-			animationFrame_ = 0.0f;
-			bitFlg_.FirstAttackFlg = false;
-			isAttacking_ = false;
-			oldPosKeepFlg_ = false;
-		}
-	}
-
-	if ((currentAnimation_ == "AttackSecond" && bitFlg_.SecondAttackFlg))
-	{
-		bitFlg_.ThirdAttackFlg = keyLambda(bitFlg_.ThirdAttackFlg);
-
-		// frame計算
-		animationFrame_ += delta;
-		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.08 * 100);
-		if (animationFrame_int_ < 10)
-		{
-			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
-			currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
-			colliderVisible();
-		}
-
-		if (bitFlg_.SecondAttackFlg && animationFrame_ <= 0.8f)
-		{
-			currentAnimation_ = "AttackSecond";
-			isAttacking_ = true;
-		}
-		else
-		{
-			if (!bitFlg_.ThirdAttackFlg)
-			{
-				currentAnimation_ = "Look_Intro";
-				// darkとlightで画像サイズが違うからその補正
-				if (playerColor == "player_Dark_")
+				if (i < attackMotionName_[playerMode_].size() - 1)
 				{
-					this->setPosition(this->getPosition().x, this->getPosition().y + 15);		// 位置補正を戻す
-				}
-				else
-				{
-					this->setPosition(this->getPosition().x, this->getPosition().y);
-					//this->setPosition(oldPos_, this->getPosition().y);
+					currentAnimation_ = attackMotionName_[playerMode_][i + 1];
+					// 攻撃エフェクトの追加
+					lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f,
+										(direction_ == Direction::Right ? true : false), false, true);
 				}
 			}
-			else
-			{
-				lpSoundMng.PlayBySoundName("Knife");
-				currentAnimation_ = "AttackThird";
-				// 反転ﾌﾗｸﾞのｾｯﾄ
-				bool flip = false;
-				direction_ == Direction::Right ? flip = true : flip = false;
-				// 攻撃ｴﾌｪｸﾄの追加
-				auto attackSprite = lpEffectMng.PickUp("attack", { 55.0f, 50.0f }, getPosition(), { 0.0f,0.0f }, 5, 0.04f, flip, false,true);
-			}
-			bitFlg_.SecondAttackFlg = false;
-			isAttacking_ = false;
-			animationFrame_ = 0.0f;
-			//oldPosKeepFlg_ = false;
-		}
-	}
 
-	if ((currentAnimation_ == "AttackThird" && bitFlg_.ThirdAttackFlg))
-	{
-		// frame計算
-		animationFrame_ += delta;
-		animationFrame_int_ = (int)(animationFrame_ * 100) / (int)(0.08 * 100);
-		if (animationFrame_int_ < 11)
-		{
-			// 2フレーム目にdataが2つ入り、そのうちの片方がtype:0だから攻撃矩形になってる
-			currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
-			colliderVisible();
-		}
-
-		if (bitFlg_.ThirdAttackFlg && animationFrame_ <= 0.8f)
-		{
-			currentAnimation_ = "AttackThird";
-			isAttacking_ = true;
-		}
-		else
-		{
-			bitFlg_.ThirdAttackFlg = false;
-			isAttacking_ = false;
-			currentAnimation_ = "Look_Intro";
-			// darkとlightで画像サイズが違うからその補正
-			if (playerColor == "player_Dark_")
+			// darkとlightで画像サイズが違うから補正
+			if (playerMode_ == "player_Dark_")
 			{
-				this->setPosition(this->getPosition().x, this->getPosition().y + 15);		// 位置補正を戻す
-			}
-			else
-			{
-				this->setPosition(this->getPosition().x, this->getPosition().y);
-				//this->setPosition(oldPos_, this->getPosition().y);
+				const Vec2 tmpPos(this->getPosition());
+				this->setPosition(tmpPos.x, tmpPos.y + 15.0f); // 位置補正を戻す
 			}
 			animationFrame_ = 0.0f;
-			//oldPosKeepFlg_ = false;
+			attackMotion_  &= ~(ATTAKFLAG << i);	// フラグのオフ
+			isAttacking_    = false;
+			bitFlg_.oldPosKeepFlg_  = false;
 		}
 	}
 }
 
-void Player::transformMotion(float delta)
+void Player::TransformMotion(float delta)
 {
-	// トランスフォーム
-	if (bitFlg_.TransfromFlg)
+	if (bitFlg_.transformFlg)
 	{
-		currentAnimation_ = "Transform";
+		animationFrame_ += delta;
+		if (animationFrame_ < lpAnimMng.GetAnimationMaxFrame(ActorType::Player, playerMode_ + currentAnimation_))
+		{
+			currentAnimation_ = "Transform";
+		}
+		else
+		{
+			currentAnimation_ = "Look_Intro";
+			bitFlg_.transformFlg = false;
+			const Vec2 tmpPos(this->getPosition());
+			this->setPosition(tmpPos.x, tmpPos.y + 10.0f);	// 位置補正分戻す
+			playerMode_ = (playerMode_ == "player_Light_" ? "player_Dark_" : "player_Light_");
+			animationFrame_ = 0.0f;
+		}
 	}
-	if (!bitFlg_.TransfromFlg)
+	else
 	{
 		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Transfrom)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Transfrom)])
 		{
-			this->setPosition(this->getPosition().x, this->getPosition().y - 10);		// 位置補正を入れないと浮いて見える
-			currentAnimation_ = "Transform";
-			bitFlg_.TransfromFlg = true;
-		}
-	}
-	if (bitFlg_.TransfromFlg)
-	{
-		animationFrame_ += delta;
-		if (animationFrame_ >= 1.85f)
-		{
-			playerColor == "player_Light_" ? playerColor = "player_Dark_" : playerColor = "player_Light_";
-			bitFlg_.TransfromFlg = false;
-			currentAnimation_ = "Look_Intro";
-			animationFrame_ = 0.0f;
-			this->setPosition(this->getPosition().x, this->getPosition().y + 10);	// 位置補正分戻す
-		}
-		else
-		{
-			currentAnimation_ = "Transform";
+			currentAnimation_    = "Transform";
+			bitFlg_.transformFlg = true;
+			const Vec2 tmpPos(this->getPosition());
+			this->setPosition(tmpPos.x, tmpPos.y - 10.0f);	// 位置補正を入れないと浮いて見える
 		}
 	}
 }
 
-void Player::dashMotion(float delta)
+void Player::DashMotion(float delta)
 {
-	// これで回避の式はできてる
-	//if (testnum >= -4.0f && testnum <= 4.0f)
-	//{
-	//	// 0のときが最大値(1.0)になる
-	//	auto move = exp(-pow(testnum, 2));
-	//	TRACE("num:%f,pl_move:%f\n", testnum,move);
-	//	testnum+=0.1f;
-	//}
-	//else
-	//{
-	//	int stop = 0;
-	//}
-	// 16のときが最大値(1.0)になる?→ならない。0が1.0で最大値になる仕組み
-	// 上の式をdashのアニメーションframeで計算した場合の書き方テスト
-	//if (testnum >= 0.00f && testnum <= 0.32f)
-	//{
-	//	auto tmpnum = testnum;
-	//	tmpnum *= 100.0f;
-	//	tmpnum -= 16.0f;
-	//	tmpnum /= 4.0f;
-	//	auto move = exp(-pow(tmpnum, 2));
-	//	TRACE("num:%f,pl_move:%f\n", tmpnum, move);
-	//	testnum+=delta;
-	//}
-	//else
-	//{
-	//	int stop = 0;
-	//}
-
 	// 当たり判定
-	auto lambda = [&](Vec2 move) {
-		auto director = Director::getInstance();
-		auto plPos = this->getPosition();
-		auto CollisionData = (TMXLayer*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData")->getChildByName("col");
-		auto& ColSize = CollisionData->getLayerSize();
-		const int chipSize = CollisionData->getMapTileSize().width;
-		auto plCheckPoint1 = plPos + move;
-		auto plCheckPoint1Chip = Vec2{ plCheckPoint1 } / chipSize;
-		auto plCheckPoint1Pos = Vec2(plCheckPoint1Chip.x, ColSize.height - plCheckPoint1Chip.y);
-		auto plCheckPoint1Gid = CollisionData->getTileGIDAt(plCheckPoint1Pos);
-		if (plCheckPoint1Gid != 0)
+	auto colLambda = [&](Vec2 move) {
+		const auto CollisionData = dynamic_cast<TMXLayer*>(Director::getInstance()->getRunningScene()->getChildByTag(static_cast<int>(zOrder::BG))->getChildByName("MapData")->getChildByName("col"));
+		const Vec2 plCheckPoint1(this->getPosition() + move);
+		const Vec2 plCheckPoint1Chip(plCheckPoint1 / CollisionData->getMapTileSize().width);
+		const Vec2 plCheckPoint1Pos (plCheckPoint1Chip.x, CollisionData->getLayerSize().height - plCheckPoint1Chip.y);
+		if ((CollisionData->getTileGIDAt(plCheckPoint1Pos)) != 0)
 		{
-			return false;
+			currentAnimation_ = "Look_Intro";
+			bitFlg_.dashFlg   = false;
+			animationFrame_   = 0.0f;
+			resShadow_->ResShadowEnd();
 		}
-		return true;
 	};
 
-	if (bitFlg_.DashFlg)
+	if (!bitFlg_.dashFlg)
+	{
+		// ダッシュアクション開始
+		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Dash)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Dash)])
+		{
+			currentAnimation_ = "Dash";
+			bitFlg_.dashFlg   = true;
+			lpSoundMng.PlayBySoundName("Dash");
+		}
+	}
+	else
 	{
 		resShadow_->Start(*this);
 		currentAnimation_ = "Dash";
-	}
-	if (!bitFlg_.DashFlg)
-	{
-		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::Dash)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::Dash)])
-		{
-			lpSoundMng.PlayBySoundName("Dash");
-			//this->setPosition(this->getPosition().x + 100, this->getPosition().y);		
-			currentAnimation_ = "Dash";
-			bitFlg_.DashFlg = true;
-		}
-	}
-	if (bitFlg_.DashFlg)
-	{
-		//y = exp(-pow(x,2))
-		// pow…2乗とかできるやつ
+		animationFrame_  += delta;
+
+		// 移動値計算処理(公式 : y = exp(-pow(x,2)))
 		// exp…ネイピア数
-		//tmpnum *= 100.0f;
-		//tmpnum -= 16.0f;
-		//tmpnum /= 4.0f;
-		Vec2 dashSpeed;
-		float tmpnum = animationFrame_;
-		auto move = exp(-pow(Calculation(tmpnum), 2));
+		const auto move = exp(-pow(Calculation(animationFrame_), 2));
+		const Vec2 dashSpeed(move * DashMove, 0);
 		if (direction_ == Direction::Right)
 		{
-			dashSpeed = Vec2(move * DashMove, 0);
 			resShadow_->Move(this->getPosition(), dashSpeed);
-			// 等速移動(比較できるようにコメントアウトで置いてるやつ)
-			//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(0.3 * 30, 0)));
 			runAction(cocos2d::MoveBy::create(0.0f, dashSpeed));
-
-			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
-			if (!lambda(Vec2(move * 30 + charSize.x / 2, 0 + charSize.y / 2)))
-			{
-				resShadow_->ResShadowEnd();
-				TRACE("move終了\n");
-				bitFlg_.DashFlg = false;
-				currentAnimation_ = "Look_Intro";
-				animationFrame_ = 0.0f;
-			}
+			colLambda({ dashSpeed.x + charSize_.x, dashSpeed.y + charSize_.y / 2.0f });
 		}
 		else
 		{
-			dashSpeed = Vec2(move * -DashMove, 0);
-
-			resShadow_->Move(this->getPosition(), dashSpeed);
-			runAction(cocos2d::MoveBy::create(0.0f, dashSpeed));
-			Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
-			if (!lambda(Vec2(move * 30 - charSize.x / 2, 0 + charSize.y / 2)))
-			{
-
-				resShadow_->ResShadowEnd();
-				TRACE("move終了\n");
-				bitFlg_.DashFlg = false;
-				currentAnimation_ = "Look_Intro";
-				animationFrame_ = 0.0f;
-			}
+			resShadow_->Move(this->getPosition(), -dashSpeed);
+			runAction(cocos2d::MoveBy::create(0.0f, -dashSpeed));
+			colLambda({ dashSpeed.x - charSize_.x, dashSpeed.y + charSize_.y / 2.0f });
 		}
-		TRACE("num:%f,pl_move:%f\n", tmpnum, move * 50);
 
-		animationFrame_ += delta;
-		//runAction(cocos2d::MoveBy::create(0.0f, cocos2d::Vec2(move, 0)));
-		if (animationFrame_ >= 0.32f)
+		if (animationFrame_ >= lpAnimMng.GetAnimationMaxFrame(ActorType::Player, playerMode_ + currentAnimation_))
 		{
-
-			resShadow_->ResShadowEnd();
-			bitFlg_.DashFlg = false;
+			// ダッシュアクション終了
 			currentAnimation_ = "Look_Intro";
-			animationFrame_ = 0.0f;
-		}
-		else
-		{
-			currentAnimation_ = "Dash";
+			bitFlg_.dashFlg   = false;
+			animationFrame_   = 0.0f;
+			resShadow_->ResShadowEnd();
 		}
 	}
 }
 
-void Player::colliderVisible(void)
-{
-	// トランスフォームの時はコライダーを無視する
-	if (currentAnimation_ == "Transform" || currentAnimation_ == "Death")
-	{
-		return;
-	}
-
-	if (animationFrame_int_ <= 0)
-	{
-		animationFrame_int_ = 0;
-	}
-	//CCLOG("plHP:%d", hp_);
-	if (collider_[playerColor + currentAnimation_].size() <= animationFrame_int_)
-	{
-		return;
-	}
-	currentCol_ = collider_[playerColor + currentAnimation_][animationFrame_int_];
-	for (auto collider : this->getChildren())
-	{
-		if (playerColor + currentAnimation_ == collider->getName() &&
-			animationFrame_int_ == collider->getTag())
-		{
-			// 攻撃の時だけオフセットが必要
-			attackCollider("AttackFirst", collider, attackColOffset_);
-			attackCollider("AttackSecond", collider, attackColOffset_);
-			attackCollider("AttackThird", collider, attackColOffset_);
-
-			//if (currentAnimation_ == "AttackFirst")
-			//{
-			//	if (direction_ == Direction::Right)
-			//	{
-			//		if (!attackF_offsetFlg_)
-			//		{
-			//			attackColOffset_ = collider->getPosition().x + 30.0f;
-			//			attackF_offsetFlg_ = true;
-			//		}
-			//	}
-			//	else
-			//	{
-			//		attackColOffset_ = 0.0f;
-			//		attackF_offsetFlg_ = false;
-			//	}
-			//	collider->setPosition(attackColOffset_,collider->getPosition().y);
-			//}
-			//if (currentAnimation_ == "AttackSecond")
-			//{
-			//	if (direction_ == Direction::Right)
-			//	{
-			//		if (!attackS_offsetFlg_)
-			//		{
-			//			attackS_offsetPos_ = collider->getPosition().x + 30.0f;
-			//			attackS_offsetFlg_ = true;
-			//		}
-			//	}
-			//	else
-			//	{
-			//		attackS_offsetPos_ = 0.0f;
-			//		attackS_offsetFlg_ = false;
-			//	}
-			//	collider->setPosition(attackS_offsetPos_, collider->getPosition().y);
-			//}
-			//if (currentAnimation_ == "AttackThird")
-			//{
-			//	if (direction_ == Direction::Right)
-			//	{
-			//		if (!attackT_offsetFlg_)
-			//		{
-			//			attackT_offsetPos_ = collider->getPosition().x + 30.0f;
-			//			attackT_offsetFlg_ = true;
-			//		}
-			//	}
-			//	else
-			//	{
-			//		attackT_offsetPos_ = 0.0f;
-			//		attackT_offsetFlg_ = false;
-			//	}
-			//	collider->setPosition(attackT_offsetPos_, collider->getPosition().y);
-			//}
-
-			//collider->setVisible(true);
-		}
-		else
-		{
-			collider->setVisible(false);
-		}
-	}
-}
-
-void Player::attackCollider(std::string str,cocos2d::Node* col,float& pos)
-{
-	//if (!oldPosKeepFlg_)
-	//{
-	//	return;
-	//}
-
-	//// 攻撃の時だけオフセットが必要
-	//if (currentAnimation_ == str.c_str())
-	//{
-	//	if (!this->IsAttacking())	// 2・3撃目はずっとattackingがtrueだからコライダー位置の設定のしなおしにならない
-	//	{
-	//		if (direction_ == Direction::Right)
-	//		{
-	//			this->SetAttackOffset(Vec2(col->getPosition().x + 30.0f, col->getPosition().y));
-	//			this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(this->getPosition().x + AttackMove, this->getPosition().y)));
-	//			//this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ + AttackMove, this->getPosition().y)));
-	//			this->SetIsAttacking(true);
-	//		}
-	//		else
-	//		{
-	//			this->SetAttackOffset(cocos2d::Vec2(0.0f, 0.0f));
-	//			this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(this->getPosition().x - AttackMove, this->getPosition().y)));
-	//			//this->runAction(cocos2d::MoveTo::create(0.0f, cocos2d::Vec2(oldPos_ - AttackMove, this->getPosition().y)));
-	//			this->SetIsAttacking(true);
-	//		}
-
-	//		//for (auto col : this->getChildren())
-	//		//{
-	//		//	// 矩形の名前がattackならば
-	//		//	if (col->getName() == this->GetAction())
-	//		//	{
-	//		//		// 矩形のﾀｲﾌﾟがattackのやつのみの抽出
-	//		//		if (col->getLocalZOrder() == 0)
-	//		//		{
-	//		//			// 矩形のﾎﾟｼﾞｼｮﾝの変更
-	//		//			// 矩形のﾎﾟｼﾞｼｮﾝは1度のみの変更でないと
-	//		//			// 毎ﾌﾚｰﾑ回ってしまうと矩形がどっかいくのでここでｾｯﾄしている。
-	//		//			// 矩形がずれていくが、当たり判定は本来の位置で行われている
-	//		//			col->setPosition(this->GetAttackRect().offset_.x, col->getPosition().y);
-	//		//		}
-	//		//	}
-	//		//}
-	//	}
-	//	col->setPosition(this->GetAttackRect().offset_.x, col->getPosition().y);
-	//}
-}
-
-// 現在のアクション情報を取得する
 std::string Player::GetAction(void)
 {
 	return currentAnimation_;
 }
 
-// 現在のアクション状態をセットする
 void Player::SetAction(std::string action)
 {
 	currentAnimation_ = action;
@@ -768,93 +447,18 @@ void Player::SetDir(Direction dir)
 
 void Player::KeyInputClear(void)
 {
-	oprtState_->KeyReset();
+	oprtState_->ResetKey();
 }
 
 void Player::AnimRegistrator(void)
 {
-	lpAnimMng.AnimDataClear();	// 登録データの初期化
+	// 登録データの初期化
+	lpAnimMng.AnimDataClear();	
 
-	std::string path_light = "image/PlayerAnimationAsset/player/Light/player_Light";
-	std::string path_dark = "image/PlayerAnimationAsset/player/Dark/player_Dark";
+	lpAnimMng.XmlAnimDataRead("playerAnim_Light", ActorType::Player);
+	lpAnimMng.XmlAnimDataRead("playerAnim_Dark" , ActorType::Player);
 
-	// アニメーションをキャッシュに登録
-	// non
-	lpAnimMng.addAnimationCache(path_light, "Non", 6, (float)0.3, ActorType::Player,false);
-
-	// idle
-	lpAnimMng.addAnimationCache(path_light, "Look_Intro", 6, (float)0.3, ActorType::Player, false);
-
-	// run
-	lpAnimMng.addAnimationCache(path_light, "Run", 9, (float)0.08, ActorType::Player, false);
-
-	// fall
-	lpAnimMng.addAnimationCache(path_light, "Fall", 3, (float)1.0, ActorType::Player, false);
-
-	// jump
-	lpAnimMng.addAnimationCache(path_light, "Jump", 3, (float)0.05, ActorType::Player, false);
-
-	lpAnimMng.addAnimationCache(path_light, "Jumping", 3, (float)0.05, ActorType::Player, false);
-
-	// AttackFirst
-	lpAnimMng.addAnimationCache(path_light, "AttackFirst", 9, (float)0.05, ActorType::Player, false);
-
-	// AttackSecond
-	lpAnimMng.addAnimationCache(path_light, "AttackSecond", 9, (float)0.08, ActorType::Player, false);
-
-	// AttackThird
-	lpAnimMng.addAnimationCache(path_light, "AttackThird", 10, (float)0.08, ActorType::Player, false);
-
-	// wallslide
-	lpAnimMng.addAnimationCache(path_light, "Wall_Slide", 3, (float)0.3, ActorType::Player, false);
-
-	// Transform
-	lpAnimMng.addAnimationCache(path_light, "Transform", 37, (float)0.05, ActorType::Player, false);
-
-	// death
-	lpAnimMng.addAnimationCache(path_light, "Death", 10, (float)0.08, ActorType::Player, false);
-
-	// dash(回避)
-	lpAnimMng.addAnimationCache(path_light, "Dash", 4, (float)0.08, ActorType::Player, false);
-
-	// non
-	lpAnimMng.addAnimationCache(path_dark, "Non", 6, (float)0.3, ActorType::Player, false);
-
-	// idle
-	lpAnimMng.addAnimationCache(path_dark, "Look_Intro", 6, (float)0.3, ActorType::Player, false);
-
-	// run
-	lpAnimMng.addAnimationCache(path_dark, "Run", 9, (float)0.08, ActorType::Player, false);
-
-	// fall
-	lpAnimMng.addAnimationCache(path_dark, "Fall", 3, (float)1.0, ActorType::Player, false);
-
-	// jump
-	lpAnimMng.addAnimationCache(path_dark, "Jump", 3, (float)0.05, ActorType::Player, false);
-
-	lpAnimMng.addAnimationCache(path_dark, "Jumping", 3, (float)0.05, ActorType::Player, false);
-
-	// AttackFirst
-	lpAnimMng.addAnimationCache(path_dark, "AttackFirst", 9, (float)0.05, ActorType::Player, false);
-
-	// AttackSecond
-	lpAnimMng.addAnimationCache(path_dark, "AttackSecond", 9, (float)0.08, ActorType::Player, false);
-
-	// AttackThird
-	lpAnimMng.addAnimationCache(path_dark, "AttackThird", 10, (float)0.08, ActorType::Player, false);
-
-	// wallslide
-	lpAnimMng.addAnimationCache(path_dark, "Wall_Slide", 3, (float)0.3, ActorType::Player, false);
-
-	// Transform
-	lpAnimMng.addAnimationCache(path_dark, "Transform", 37, (float)0.05, ActorType::Player, false);
-
-	// death
-	lpAnimMng.addAnimationCache(path_dark, "Death", 12, (float)0.08, ActorType::Player, false);
-
-	// dash(回避)
-	lpAnimMng.addAnimationCache(path_dark, "Dash", 4, (float)0.08, ActorType::Player, false);
-
+	// 初期アニメーションの設定
 	lpAnimMng.InitAnimation(*this, ActorType::Player, "player_Light_Non");
 }
 
@@ -863,420 +467,176 @@ const AttackRect& Player::GetAttackRect(void)
 	return attackRect_;
 }
 
-Player* Player::CreatePlayer(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr)
-{
-	Player* pRet = new(std::nothrow) Player(hp,myLayer,enemyLayer,skillBasePtr);
-	if (pRet && pRet->init())
-	{
-		pRet->autorelease();
-		return pRet;
-	}
-	else
-	{
-		delete pRet;
-		pRet = nullptr;
-		return nullptr;
-	}
-}
-
 bool Player::GetGameOverFlg(void)
 {
-	return gameOverSceneFlg_;
+	return bitFlg_.gameOverSceneFlg;
 }
 
 int Player::GetGiveDamageNum(void)
 {
-	if (playerColor == "player_Light_")
+	// 連撃回数によって火力があがる方式
+	float damageUp = 0.0f;
+	bool  breakFlg = false;
+	// 先に、現在のアニメーションと照らし合わせて、倍率を取得する
+	for (auto data : plParam_)
 	{
-		return AttackNumDef;			// 通常状態
+		if (breakFlg)
+		{
+			break;
+		}
+
+		// モード不一致の場合、処理をとばす
+		if (data.modeName != playerMode_)
+		{
+			continue;
+		}
+
+		// 倍率を一時変数に保存してfor文を抜ける
+		for (auto animName : data.chainAnimName)
+		{
+			// 現在のアニメーションと不一致の場合、処理をとばす
+			if (animName.first != currentAnimation_)
+			{
+				continue;
+			}
+			damageUp = animName.second;
+			breakFlg = true;
+			break;
+		}
 	}
-	else
+
+	// 現在のモードを確認し、上の倍率をもとに最終ダメージを算出する
+	int tmpNum = 0;
+	for (auto data : plParam_)
 	{
-		return AttackNumDef * 3;		// dark状態(hpが減少し続ける代わりにダメージが多く与えられる)
+		if (data.modeName == playerMode_)
+		{
+			return static_cast<int>(plParam_[tmpNum].attackDef + (plParam_[tmpNum].attackDef * damageUp));
+		}
+		tmpNum++;
 	}
+	return 0;
 }
 
 std::string Player::GetPlayerColor(void)
 {
-	return playerColor;
+	return playerMode_;
 }
 
-void Player::actModuleRegistration(void)
+float Player::GetRunSpeedUp(void)
 {
-	Vec2 charSize = { 15.0f * 3.0f,25.0f * 3.0f };
-	// 右移動
+	// 現在のモードから移動速度の加算値を取得する
+	int tmpNum = 0;
+	for (auto data : plParam_)
 	{
-		ActModule act;
-		act.state = oprtState_;
-		act.vel = Vec2{ 5,0 };
-		act.actName = "Run";
-		act.button = BUTTON::RIGHT;
-		act.checkPoint1 = Vec2{ charSize.x/2, charSize.y/2 };	// 右上
-		act.checkPoint2 = Vec2{ charSize.x/2,  15 };			// 右下
-		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
-		//act.blackList.emplace_back(ACTION::FALLING);	// 落下中に右移動してほしくないときの追加の仕方
-
-		//act.whiteList.emplace_back(ACTION::JUMPING);
-		act.blackList.emplace_back("AttackFirst");
-		act.blackList.emplace_back("AttackSecond");
-		act.blackList.emplace_back("AttackThird");
-		act.blackList.emplace_back("Wall_Slide");
-		actCtl_.RunInitializeActCtl(type_,"右移動", act);
-
-		auto anchor1 = DrawNode::create();
-		anchor1->drawDot(act.checkPoint1, 3.0f, Color4F::BLUE);
-		this->addChild(anchor1, 5);
-		auto anchor2 = DrawNode::create();
-		anchor2->drawDot(act.checkPoint2, 3.0f, Color4F::BLUE);
-		this->addChild(anchor2, 5);
-	}
-
-	// 左移動
-	{
-		ActModule act;
-		act.state = oprtState_;
-		act.vel = Vec2{ -5,0 };
-		act.actName = "Run";
-		act.button = BUTTON::LEFT;
-		act.checkPoint1 = Vec2{ -charSize.x/2, charSize.y/2 };	// 左上
-		act.checkPoint2 = Vec2{ -charSize.x/2,  15 };			// 左下
-		act.touch = TOUCH_TIMMING::TOUCHING;    // 押しっぱなし
-
-		//act.blackList.emplace_back(ACTION::FALLING);
-
-		//act.whiteList.emplace_back(ACTION::JUMPING);
-		act.blackList.emplace_back("AttackFirst");
-		act.blackList.emplace_back("AttackSecond");
-		act.blackList.emplace_back("AttackThird");
-		act.blackList.emplace_back("Wall_Slide");
-		actCtl_.RunInitializeActCtl(type_,"左移動", act);
-		auto anchor3 = DrawNode::create();
-		anchor3->drawDot(act.checkPoint1, 3.0f, Color4F::GREEN);
-		this->addChild(anchor3, 5);
-		auto anchor4 = DrawNode::create();
-		anchor4->drawDot(act.checkPoint2, 3.0f, Color4F::GREEN);
-		this->addChild(anchor4, 5);
-	}
-
-	// 右向き反転
-	{
-		ActModule flipAct;
-		flipAct.state = oprtState_;
-		flipAct.flipFlg = false;
-		flipAct.actName = "Non";
-		flipAct.button = BUTTON::RIGHT;
-		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
-
-		//flipAct.blackList.emplace_back(ACTION::FALLING);
-
-		flipAct.blackList.emplace_back("AttackFirst");
-		flipAct.blackList.emplace_back("AttackSecond");
-		flipAct.blackList.emplace_back("AttackThird");
-		flipAct.blackList.emplace_back("Wall_Slide");
-		actCtl_.RunInitializeActCtl(type_,"右向き", flipAct);
-	}
-
-	// 左向き反転
-	{
-		ActModule flipAct;
-		flipAct.state = oprtState_;
-		flipAct.flipFlg = true;
-		flipAct.actName = "Non";
-		flipAct.button = BUTTON::LEFT;
-		flipAct.touch = TOUCH_TIMMING::TOUCHING; // 押しっぱなし
-
-		//flipAct.blackList.emplace_back(ACTION::FALLING);
-
-		flipAct.blackList.emplace_back("AttackFirst");
-		flipAct.blackList.emplace_back("AttackSecond");
-		flipAct.blackList.emplace_back("AttackThird");
-		flipAct.blackList.emplace_back("Wall_Slide");
-		actCtl_.RunInitializeActCtl(type_,"左向き", flipAct);
-	}
-
-	// 落下
-	{
-		// checkkeylistに離している間の設定もしたけど特に効果なし
-		ActModule act;
-		act.actName = "Fall";
-		act.state = oprtState_;
-		//act.checkPoint1 = Vec2{ 0,-10 };			// 左下
-		//act.checkPoint2 = Vec2{ 0,-10 };			// 右下
-		act.checkPoint1 = Vec2{ 0,0 };				// 左下
-		act.checkPoint2 = Vec2{ 0,0 };				// 右下
-
-		act.checkPoint3 = Vec2{ charSize.x / 2, charSize.y / 2 };  // 右上
-		act.checkPoint4 = Vec2{ -charSize.x / 2, charSize.y / 2 }; // 左上
-
-		act.gravity = Vec2{ 0.0f,-5.0f };
-		act.touch = TOUCH_TIMMING::RELEASED;	// ずっと離している
-		act.blackList.emplace_back("Jumping");	// ジャンプ中に落下してほしくない
-		act.blackList.emplace_back("Wall_Slide");	
-		//act.blackList.emplace_back(ACTION::JUMP);	// ジャンプ中に落下してほしくない
-
-		actCtl_.RunInitializeActCtl(type_,"落下", act);
-	}
-
-	// ジャンプ
-	{
-		ActModule act;
-		act.state = oprtState_;
-		act.button = BUTTON::UP;
-		act.actName = "Jump";
-		act.checkPoint1 = Vec2{ -charSize.x/3 + 5, charSize.y };		// 左上
-		act.checkPoint2 = Vec2{ charSize.x/3 - 5, charSize.y };			// 右上
-		//act.checkPoint1 = Vec2{ -10, 30 };						// 左上
-		//act.checkPoint2 = Vec2{ +10, 30 };						// 右上
-		act.jumpVel = Vec2{ 0.0f,20.0f };
-		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
-
-		// これをコメントアウトしていると、左右押しながらのジャンプができる
-		// でも連続でジャンプして上昇し続けるようになる
-		// しかもFALLとJUMPが混ざって高さが出ない
-		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
-		act.blackList.emplace_back("AttackFirst");
-		act.blackList.emplace_back("AttackSecond");
-		act.blackList.emplace_back("AttackThird");
-		//act.whiteList.emplace_back(ACTION::RUN);
-
-		actCtl_.RunInitializeActCtl(type_,"ジャンプ", act);
-	}
-
-	// ジャンピング
-	{
-		ActModule act;
-		act.state = oprtState_;
-		act.button = BUTTON::UP;
-		act.actName = "Jumping";
-		act.checkPoint1 = Vec2{ -charSize.x/3 + 5, charSize.y };	// 左上
-		act.checkPoint2 = Vec2{ charSize.x/3 - 5, charSize.y };		// 右上
-		//act.checkPoint1 = Vec2{ -10, 30 };					// 左上
-		//act.checkPoint2 = Vec2{ +10, 30 };					// 右上
-		act.jumpVel = Vec2{ 0.0f,20.0f };
-		act.touch = TOUCH_TIMMING::TOUCHING;	// 押しっぱなし
-
-		act.blackList.emplace_back("Fall");	// 落下中にジャンプしてほしくない
-		act.blackList.emplace_back("Look_Intro");
-		act.blackList.emplace_back("Run");
-		act.blackList.emplace_back("AttackFirst");
-		act.blackList.emplace_back("AttackSecond");
-		act.blackList.emplace_back("AttackThird");
-		act.blackList.emplace_back("Non");
-		act.blackList.emplace_back("Wall_Slide");
-		act.blackList.emplace_back("Transform");
-		act.blackList.emplace_back("Dash");
-
-		act.whiteList.emplace_back("Jump");
-		actCtl_.RunInitializeActCtl(type_,"ジャンピング", act);
-		//actCtl_.ActCtl("ジャンプ", act);
-	}
-
-	// 攻撃
-	{
-		ActModule act;
-		act.state = oprtState_;
-		act.button = BUTTON::Attack;
-		act.actName = "AttackFirst";
-		//act.checkPoint1 = Vec2{ 0, 0 };		
-		//act.checkPoint2 = Vec2{ 0, 0 };
-		//act.blackList.emplace_back("Fall");	// 一時的コメントアウト
-		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
-		actCtl_.RunInitializeActCtl(type_,"攻撃", act);
-	}
-
-	// 攻撃2
-	{
-		ActModule act;
-		act.state = oprtState_;
-		act.button = BUTTON::Attack;
-		act.actName = "AttackSecond";
-		act.blackList.emplace_back("Fall");
-		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
-		actCtl_.RunInitializeActCtl(type_,"攻撃", act);
-	}
-
-	// 攻撃3
-	{
-		ActModule act;
-		act.state = oprtState_;
-		act.button = BUTTON::Attack;
-		act.actName = "AttackThird";
-		act.blackList.emplace_back("Fall");
-		act.touch = TOUCH_TIMMING::ON_TOUCH;	// 押した瞬間
-		actCtl_.RunInitializeActCtl(type_,"攻撃", act);
-	}
-
-	// 右壁スライド
-	{
-		ActModule act;
-		act.state = oprtState_;
-		act.gravity = Vec2{ 0.0f,-1.0f };
-		act.checkPoint1 = Vec2{ charSize.x / 2, charSize.y / 2 };	// 右上
-		act.checkPoint2 = Vec2{ charSize.x / 2, 0 };				// 右下
-		act.button = BUTTON::RIGHT;
-		act.flipFlg = true;
-		act.actName = "Wall_Slide";
-		act.touch = TOUCH_TIMMING::TOUCHING;	
-		act.blackList.emplace_back("Jumping");	
-		act.blackList.emplace_back("Run");	
-		act.blackList.emplace_back("Fall");
-		act.blackList.emplace_back("Intro");
-		act.blackList.emplace_back("Non");
-		act.blackList.emplace_back("AttackFirst");
-		act.blackList.emplace_back("AttackSecond");
-		act.blackList.emplace_back("AttackThird");
-		actCtl_.RunInitializeActCtl(type_,"右壁スライド", act);
-	}
-
-	// 左壁スライド
-	{
-		ActModule act;
-		act.state = oprtState_;
-		act.gravity = Vec2{ 0.0f,-1.0f };
-		act.checkPoint1 = Vec2{-charSize.x / 2, charSize.y / 2 };	// 左上
-		act.checkPoint2 = Vec2{-charSize.x / 2, 0 };				// 左下
-		act.button = BUTTON::LEFT;
-		act.flipFlg = false;
-		act.actName = "Wall_Slide";
-		act.touch = TOUCH_TIMMING::TOUCHING;
-		act.blackList.emplace_back("Jumping");
-		act.blackList.emplace_back("Run");
-		act.blackList.emplace_back("Fall");
-		act.blackList.emplace_back("Intro");
-		act.blackList.emplace_back("Non");
-		act.blackList.emplace_back("AttackFirst");
-		act.blackList.emplace_back("AttackSecond");
-		act.blackList.emplace_back("AttackThird");
-		actCtl_.RunInitializeActCtl(type_,"左壁スライド", act);
-	}
-
-	// 更新関数の登録
-	actCtl_.InitUpdater(type_);
-}
-
-void Player::skillAction(void)
-{
-	// 何かのスキルがactiveであるときは、ボタンが反応しないようにする
-	auto director = Director::getInstance();
-	auto list = ((SkillBase*)director)->GetSkillList();
-	bool flag = ((SkillBase*)director)->GetAllSkillActivate();
-
-	if (!flag)
-	{
-		// なんかとぶやつ
-		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillA)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillA)])
+		if (data.modeName == playerMode_)
 		{
-			bool skillFlg = ((SkillBase*)director)->GetSkillCT("magic");
-			if (skillFlg)
-			{
-				lpSoundMng.PlayBySoundName("burst2");
-				auto director = Director::getInstance();
-				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
-				skillSprite->SetPlayerPos(getPosition());
-				skillSprite->SetPlayerDirection(direction_);
-				SkillBase* skill_t = SkillA::CreateSkillA(skillSprite);
-				skillSprite->AddActiveSkill(skill_t);
-				skillSprite->addChild(skill_t);
-			}
-			else
-			{
-				// クールタイム中
-			}
-			//lpSkillMng.SkillActivate(plfile_[0]);
+			return plParam_[tmpNum].runSpeedUp;
 		}
+		tmpNum++;
+	}
+	return 0.0f;
+}
 
-		// 炎(SkillBにする予定のやつ)
-		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillB)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillB)])
+void Player::ActModuleRegistration(void)
+{
+	Actor::XmlActDataRead("playerModule",oprtState_);
+}
+
+void Player::SkillAction(void)
+{
+	// 何かのスキルがactiveであるときは、ボタンが反応しないようにしている
+	const auto director = Director::getInstance();
+
+	if (dynamic_cast<SkillBase*>(director)->GetAllSkillActivate())
+	{
+		// ここに入ってきたら、active中のスキルがあるということだから、他のスキルが発動不可になる
+		return;
+	} 
+
+	// スキルの設定
+	auto SetSkillLambda = [&](std::string seName) {
+		skillSprite_ = dynamic_cast<SkillBase*>(director->getRunningScene()->getChildByTag(static_cast<int>(zOrder::FRONT))->getChildByName("skillSprite"));
+		skillSprite_->SetPlayerPos(getPosition());
+		skillSprite_->SetPlayerDirection(direction_);
+		SkillBase* skill = nullptr;
+		if (seName == "burst2")
 		{
-			bool skillFlg = ((SkillBase*)director)->GetSkillCT("enemySpawn");
-			if (skillFlg)
+			skill = SkillA::CreateSkillA(skillSprite_);
+		}
+		else if (seName == "burst")
+		{
+			const auto playerPos = getPosition();
+			auto minPos = Vec2(0.0f, 0.0f);
+			auto minLen = FLT_MAX;			// FLT_MAX：floatの最大の有限値
+			for (auto enemy : enemyList_.getChildren())
 			{
-				lpSoundMng.PlayBySoundName("burst");
-				auto director = Director::getInstance();
-				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
-				auto ppos = getPosition();
-				auto minpos = Vec2(0, 0);
-				auto minlen = FLT_MAX;
-				for (auto enemy : enemyList_.getChildren())
+				const auto enemyPos = enemy->getPosition();
+				const auto vecComp  = enemyPos - playerPos;
+				const auto length   = sqrt(vecComp.x * vecComp.x + vecComp.y * vecComp.y);
+				if (minLen > length)
 				{
-					auto epos = enemy->getPosition();
-					auto veccomp = epos - ppos;
-					auto length = sqrt(veccomp.x * veccomp.x + veccomp.y * veccomp.y);
-					if (minlen > length)
-					{
-						minlen = length;
-						minpos = epos;
-					}
+					minLen = length;
+					minPos = enemyPos;
 				}
-				skillSprite->SetTargetPos(minpos);
-				skillSprite->SetPlayerPos(getPosition());
-				skillSprite->SetPlayerDirection(direction_);
-				SkillBase* skill_t = SkillB::CreateSkillB(skillSprite);
-				skillSprite->AddActiveSkill(skill_t);
-				skillSprite->addChild(skill_t);
 			}
-			else
-			{
-				// クールタイム中
-			}
-
-			//lpSkillMng.SkillActivate(plfile_[1]);
+			skillSprite_->SetTargetPos(minPos);
+			skill = SkillB::CreateSkillB(skillSprite_);
 		}
-
-		// HP回復
-		if (oprtState_->GetNowData()[static_cast<int>(BUTTON::SkillC)] && !oprtState_->GetOldData()[static_cast<int>(BUTTON::SkillC)])
+		else if (seName == "recovery")
 		{
 			// darkモードでは使用不可にする
-			if (playerColor == "player_Dark_")
+			if (playerMode_ == "player_Dark_")
 			{
 				return;
 			}
 
-			bool skillFlg = ((SkillBase*)director)->GetSkillCT("heal");
-			if (skillFlg)
-			{
-				lpSoundMng.PlayBySoundName("recovery");
-				auto director = Director::getInstance();
-				skillSprite = (SkillBase*)director->getRunningScene()->getChildByTag((int)zOlder::FRONT)->getChildByName("skillSprite");		//FLT_MAX : float の最大の有限値
-				skillSprite->SetPlayerPos(getPosition());
-				SkillBase* skill_t = SkillC::CreateSkillC(skillSprite);
-				skillSprite->AddActiveSkill(skill_t);
-				skillSprite->addChild(skill_t);
+			// 回復処理
+			const auto hpGauge = dynamic_cast<HPGauge*>(director->getRunningScene()->getChildByTag(static_cast<int>(zOrder::FRONT))->getChildByName("PL_HPgauge"));
+			hpGauge->SetHP(hpGauge->GetHP() + 50.0f);
+			skill = SkillC::CreateSkillC(skillSprite_);
+		}
+		else
+		{
+			return;
+		}
+		skillSprite_->AddActiveSkill(skill);
+		skillSprite_->addChild(skill);
+		lpSoundMng.PlayBySoundName(seName);	
+	};
 
-				// 回復処理
-				auto nowScene = ((Game*)Director::getInstance()->getRunningScene());
-				auto hpGauge = (HPGauge*)nowScene->getChildByTag((int)zOlder::FRONT)->getChildByName("PL_HPgauge");
-				hpGauge->SetHP(hpGauge->GetHP() + 50);	// とりあえず半回復
+	// スキル発動処理
+	for (int i = static_cast<int>(BUTTON::SkillA); i <= static_cast<int>(BUTTON::SkillC); i++)
+	{
+		if (oprtState_->GetNowData()[static_cast<int>(i)] && !oprtState_->GetOldData()[static_cast<int>(i)])
+		{
+			if (dynamic_cast<SkillBase*>(director)->GetSkillCT(SkillTbl_[i - static_cast<int>(BUTTON::SkillA)]))
+			{
+				SetSkillLambda(SkillSETbl_[i - static_cast<int>(BUTTON::SkillA)]);
 			}
 			else
 			{
 				// クールタイム中
 			}
-
-			//lpSkillMng.SkillActivate(plfile_[2]);
-		}
-
-		if (skillSprite != nullptr)
-		{
-			skillSprite->RemoveActiveSkill();
 		}
 	}
-	else
+
+	if (skillSprite_ != nullptr)
 	{
-		// ここに入ってきたら、active中のスキルがあるということだから、他のスキルが発動不可になる
+		skillSprite_->RemoveActiveSkill();
 	}
 }
 
-bool Player::gameOverAction(void)
+bool Player::GameOverAction(void)
 {
-	if (!gameOverFlg_)
+	if (!bitFlg_.gameOverFlg)
 	{
 		// 今の動きを止める
 		stopAllActions();
 
-		this->setPosition(deathPos_);	// 死亡した位置で設定しておかないと、おかしくなる
+		this->setPosition(deathPos_);	// 死亡した位置で設定する
 		AnimationCache* animationCache = AnimationCache::getInstance();
-		Animation* animation = animationCache->getAnimation(playerColor + "Death");
+		Animation* animation = animationCache->getAnimation(playerMode_ + "Death");
 		animation->setRestoreOriginalFrame(false);
 		//アニメーションを実行
 		gameOverAction_ = runAction(
@@ -1285,7 +645,7 @@ bool Player::gameOverAction(void)
 				nullptr
 			));
 		CC_SAFE_RETAIN(gameOverAction_);
-		gameOverFlg_ = true;
+		bitFlg_.gameOverFlg = true;
 		return false;
 	}
 	if (gameOverAction_ == nullptr)

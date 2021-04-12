@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <cocos2d.h>
+
 enum class SceneType
 {
 	Game,
@@ -9,6 +10,7 @@ enum class SceneType
 };
 
 class BaseScene;
+
 class SceneManager
 {
 public:
@@ -32,5 +34,4 @@ private:
 	void operator=(const SceneManager&) = delete;
 
 	std::array<cocos2d::Scene*, static_cast<int>(SceneType::Max)> scenes_;
-
 };

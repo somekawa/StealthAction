@@ -1,12 +1,22 @@
 #pragma once
-
-#include "cocos2d.h"
+#include <cocos2d.h>
 #include <map>
 #include <array>
+#include <vector>
 #include <memory>
 #include "obj/Actor.h"
+#include "obj/Player.h"
 
 #define lpAnimMng AnimMng::GetInstance()
+
+// アニメーション設定に必要な情報
+struct AnimSt
+{
+	std::string animName;
+	int frame;
+	float duration;
+	bool loop;
+};
 
 class AnimMng
 {
@@ -28,8 +38,6 @@ public:
 
 	// アニメーションの初期化と実行
 	void InitAnimation(cocos2d::Sprite& sprite, ActorType type, std::string animName);
-	// アニメーションの実行
-	//void anim_action(cocos2d::Sprite* delta);
 	// アニメーションの変更
 	void ChangeAnimation(cocos2d::Sprite& sprite, std::string name, bool loop, ActorType type);
 	// アニメーションの終了チェック関数
@@ -76,6 +84,14 @@ public:
 	{
 		return isLoopExceptCharacter_[animationName];
 	}
+
+	// アニメーションの最大コマ数
+	int GetAnimationMaxNum(ActorType type, std::string animationName);
+
+	// アニメーションデータの読み込み
+	void XmlAnimDataRead(std::string string, ActorType type);
+	// プレイヤーのパラメーター読み込み
+	std::vector<PlParam> XmlPlParamRead(void);
 private:
 	AnimMng();
 
@@ -86,23 +102,22 @@ private:
 	void CacheRegistration(cocos2d::AnimationCache* animCache,std::string animName, bool isLoop);
 	// キャラクターのタイプ別のアニメーションキャッシュ
 	std::array<std::map<std::string, cocos2d::Animation*>, static_cast<int>(ActorType::Max)> caches_;
-	// ｷｬﾗｸﾀｰ以外のｱﾆﾒｰｼｮﾝｷｬｯｼｭ
+	// キャラクター以外のアニメーションキャッシュ
 	std::map<std::string, cocos2d::Animation*> cachesExceptCharacter_;
 	// 1キャラの1アニメーションにかかる時間
 	std::array<std::map<std::string, float>, static_cast<int>(ActorType::Max)> animMaxFrame_;
 
-	// ｷｬﾗのｱﾆﾒｰｼｮﾝ集
+	// キャラクターのアニメーション集
 	std::array<std::vector<std::string>, static_cast<int>(ActorType::Max)> animations_;
-	// ｷｬﾗのActor毎の名前
+	// キャラクターのActor毎の名前
 	std::array<std::string, static_cast<int>(ActorType::Max)> actorNames_;
 	// アニメーションフレーム数
 	std::array<std::map<std::string, int>, static_cast<int>(ActorType::Max)> frameNum_;
 
 	// アニメーションのループフラグ
 	std::array<std::map< std::string,bool>, static_cast<int>(ActorType::Max)> isLoop_;
-	// ｷｬﾗｸﾀｰ以外のﾙｰﾌﾟﾌﾗｸﾞ
+	// キャラクター以外のループフラグ
 	std::map<std::string, bool> isLoopExceptCharacter_;
 
 	static std::unique_ptr<AnimMng> s_instance;
 };
-

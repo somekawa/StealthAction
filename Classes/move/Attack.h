@@ -5,5 +5,4 @@
 struct Attack
 {
 	bool operator()(cocos2d::Sprite& sprite, ActModule& module);
-	float cntTest = 0.0f;
 };

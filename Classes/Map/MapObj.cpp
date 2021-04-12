@@ -1,3 +1,4 @@
+// キー処理に関連する処理の実装を担当
 #include "MapObj.h"
 #include "../obj/Player.h"
 
@@ -26,18 +27,18 @@ bool MapObj::IsHit(Player& player)
 	{
 		return false;
 	}
-	if (player.GetAction() == "player_AttackFirst"
-		|| player.GetAction() == "player_AttackSecond"
-		|| player.GetAction() == "player_AttackThird")
+
+	if (player.GetAction() == "player_AttackFirst" ||
+		player.GetAction() == "player_AttackSecond"||
+		player.GetAction() == "player_AttackThird")
 	{
 		return false;
 	}
-	auto gRect = own_->getBoundingBox();
-	//auto pRect = player.getBoundingBox();
-	Size charSize = player.getContentSize() * player.getScale();
-	auto pRect = cocos2d::Rect(player.getPosition() - charSize / 2, charSize);
 
-	if (gRect.intersectsRect(pRect))
+	const auto gRect = own_->getBoundingBox();
+	const Size charSize = player.getContentSize() * player.getScale();
+
+	if (gRect.intersectsRect(cocos2d::Rect(player.getPosition() - charSize / 2.0f, charSize)))
 	{
 		// ゲートをくぐるときに、キー入力情報の初期化
 		player.KeyInputClear();

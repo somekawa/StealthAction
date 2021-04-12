@@ -1,11 +1,6 @@
-//#include "SkillMng.h"
+// ˆê•”’S“–êŠ
 #include "SkillBase.h"
 #include "SkillCode/SkillB.h"
-
-//SkillBase::SkillBase()
-//{
-//	skillMng_ = std::make_shared<SkillMng>();
-//}
 
 std::vector<SkillBase*> SkillBase::skillList_;
 
@@ -16,14 +11,13 @@ cocos2d::Sprite* SkillBase::createSkillBase()
 	if (pRet)
 	{
 		pRet->autorelease();
-		return pRet;
 	}
 	else
 	{
 		delete pRet;
 		pRet = nullptr;
-		return nullptr;
 	}
+	return pRet;
 }
 
 SkillBase::~SkillBase()
@@ -37,20 +31,6 @@ void SkillBase::AddActiveSkill(SkillBase* ptr)
 
 void SkillBase::RemoveActiveSkill(void)
 {
-	// activation‚ªfalse‚È‚çÁ‚·ver.
-	//for (auto itr = skillList_.begin();itr != skillList_.end();)
-	//{
-	//	if ((*itr)->param.activation == false)
-	//	{
-	//		(*itr)->removeFromParent();
-	//		itr = skillList_.erase(itr);
-	//	}
-	//	else
-	//	{
-	//		itr++;
-	//	}
-	//}
-
 	// íœOK‚É‚È‚Á‚½ƒXƒLƒ‹‚¾‚¯‚ğÁ‚·
 	for (auto itr = skillList_.begin(); itr != skillList_.end();)
 	{
@@ -168,7 +148,7 @@ bool SkillBase::GetSkillCT(std::string name)
 
 int SkillBase::GetSkillCTTime(std::string name)
 {
-	int time = 0;
+	float time = 0.0f;
 
 	if (skillList_.size() > 0)
 	{
@@ -198,4 +178,3 @@ int SkillBase::GetSkillCTTime(std::string name)
 
 	return time / 60;
 }
-

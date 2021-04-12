@@ -17,8 +17,6 @@ void Gravity::ApplyGravityToTarget(float delta)
 {
 	// まずターゲットのポジション取得
 	auto pos = target_.getPosition();
-	// Mapオブジェクトと当たっているかの判定
-	target_.CheckMapObjHit(delta);
 	if (!target_.OnFloor())
 	{
 		// 毎回重力に力を加えていく(今のところ1200でテスト)

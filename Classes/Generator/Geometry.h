@@ -11,14 +11,14 @@ public:
 		static Geometry s_Instace;
 		return s_Instace;
 	}
-	const float& Dot(cocos2d::Vec2 vec, cocos2d::Vec2 vec2);
+	const float Dot(cocos2d::Vec2 vec, cocos2d::Vec2 vec2);
 	//äOêœ
-	const float& Cross(const cocos2d::Vec2& point, const cocos2d::Vec2& vertex1, const cocos2d::Vec2& vertex2);
-	const float& Cross(const cocos2d::Vec2& vec1, const cocos2d::Vec2& vec2);
+	const float Cross(const cocos2d::Vec2& point, const cocos2d::Vec2& vertex1, const cocos2d::Vec2& vertex2);
+	const float Cross(const cocos2d::Vec2& vec1, const cocos2d::Vec2& vec2);
 	//îºåaÇéZèo
-	const float& Radius_Calculator(const cocos2d::Vec2& size);
+	const float Radius_Calculator(const cocos2d::Vec2& size);
 	//distanceÇ2èÊÇµÇΩílÇéZèo
-	const float& Distance_Calculator(const cocos2d::Vec2& vertex, const cocos2d::Vec2& vertex1);
+	const float Distance_Calculator(const cocos2d::Vec2& vertex, const cocos2d::Vec2& vertex1);
 
 	bool CircleSegment(const cocos2d::Vec2& circle_center, const float& radius, const cocos2d::Vec2& line_start, const cocos2d::Vec2& line_end);
 };

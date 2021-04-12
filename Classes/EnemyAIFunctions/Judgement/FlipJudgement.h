@@ -6,4 +6,3 @@ struct FlipJudgement
 {
 	bool operator()(cocos2d::Sprite& sprite, ActModule& module);
 };
-

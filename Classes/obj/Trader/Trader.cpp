@@ -5,7 +5,7 @@
 
 Trader::Trader(const std::vector<std::string>& f_data,std::shared_ptr<Player> player)
 {
-	pos_ = cocos2d::Vec2(0,0 );
+	pos_ = cocos2d::Vec2(0,0);
 	saleList_ = Display(f_data);
 	for (auto display : saleList_)
 	{
@@ -29,9 +29,9 @@ std::map<std::string, Param> Trader::GetTxtData_(void)
 
 std::string Trader::GetSkillData(cocos2d::Vec2& pos)
 {
-	auto sale = GetSaleList();
+	const auto sale = GetSaleList();
 	std::string name;
-	for (int n = 0; n < GetSaleList().size(); n++)
+	for (unsigned int n = 0; n < sale.size(); n++)
 	{
 		if (pos.x + 20.0f >= pos_.x + 500 / 2 + 50.0f * n && pos.x + 20.0f <= pos_.x + 500 / 2 + 50.0f * (n + 1))
 		{
@@ -51,13 +51,7 @@ std::array<std::string, 3> Trader::Display(const std::vector<std::string>& file)
 	std::random_device seed;
 	std::default_random_engine engine;
 	std::array<std::string, 3> display = {file[0],file[4],file[5] };
-	std::array<int, 3> num;
 	std::uniform_int_distribution<> dist(0, (file.size() - 1));
 	engine.seed(seed());
-	/*for (int n = 0; n < display.size(); n++)
-	{
-		num[n] = dist(engine);
-		display[n] = file[num[n]];
-	}*/
 	return display;
 }

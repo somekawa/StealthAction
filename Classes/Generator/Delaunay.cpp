@@ -48,24 +48,22 @@ Triangle_Data Delaunay::CheckDuplicative(Triangle_Data& data,Triangle_Data* dupl
 		//プッシュしない
 
 		bool existsInNewTriangleList = false;
-		for (auto iter = data.begin();
-			iter != data.end(); iter++)
+		for (auto iter = data.begin(); iter != data.end(); iter++)
 		{
-
-			if (*iter == triangle_) {
+			if (*iter == triangle_) 
+			{
 				existsInNewTriangleList = true;
 				bool existsInDuplicativeTriangleList = false;
 
-				for (auto iter2 = duplicative_data->begin();
-					iter2 != duplicative_data->end(); iter2++)
+				for (auto iter2 = duplicative_data->begin(); iter2 != duplicative_data->end(); iter2++)
 				{
 					if (*iter2 == triangle_)
 					{
 						existsInDuplicativeTriangleList = true;
 						break;
 					}
-
 				}
+
 				if (!existsInDuplicativeTriangleList)
 				{
 					duplicative_data->push_back(triangle_);
@@ -73,26 +71,30 @@ Triangle_Data Delaunay::CheckDuplicative(Triangle_Data& data,Triangle_Data* dupl
 				break;
 			}
 		}
-		if (!existsInNewTriangleList) data.push_back(triangle_);
+
+		if (!existsInNewTriangleList)
+		{
+			data.push_back(triangle_);
+		}
 	}
 	return data;
 }
 
 const void Delaunay::SubdivisionTriangle(cocos2d::Vec2 point)
 {
-	triangleData_.reserve(100/*triangle_data.size() + 3*/);
+	triangleData_.reserve(100);
 	std::vector<Triangle_Data::iterator> erase_itr;
-	Triangle_Data new_triangle_data;	//一時保存用
+	Triangle_Data new_triangle_data;			//一時保存用
 	Triangle_Data duplicative_triangle_data;	//一時保存用
 	//全探査した後外接円内であれば分割する
 	for (auto itr = triangleData_.begin(); itr < triangleData_.end();)
 	{
 		Triangle_Status status = *itr;
-		auto X = std::abs(point.x - status.center.x);
-		auto Y = std::abs(point.y - status.center.y);
-		auto dist = X * X + Y * Y;
-		auto A = std::floorf(status.radius * status.radius);
-		auto B = std::floorf(dist);
+		const float X = std::abs(point.x - status.center.x);
+		const float Y = std::abs(point.y - status.center.y);
+		const float dist = X * X + Y * Y;
+		const float A = std::floorf(status.radius * status.radius);
+		const float B = std::floorf(dist);
 		//status.radius >= std::abs(point.x - status.center.x) && status.radius >= std::abs(point.y - status.center.y)
 		//外接円の中にpointが追加されたか
 		if (A > B)
@@ -113,9 +115,9 @@ const std::vector<Edge_Status> Delaunay::TriangletoEdge(void)
 	std::vector<Edge_Status> edge_data;
 	for (auto data : triangleData_)
 	{
-		for (int n = 0; n < triangle_.vertex.size(); ++n)
+		for (unsigned int n = 0; n < triangle_.vertex.size(); ++n)
 		{
-			auto distance = std::sqrtf(lpGeometry.Distance_Calculator(triangle_.vertex[n], triangle_.vertex[(n + 1) % 3]));
+			const float distance = std::sqrtf(lpGeometry.Distance_Calculator(triangle_.vertex[n], triangle_.vertex[(n + 1) % 3]));
 			edge_data.emplace_back(Edge_Status{ distance,Edge_List{data.vertex[n], data.vertex[(n + 1) % 3] }, false });
 		}
 	}
@@ -156,12 +158,10 @@ void Delaunay::FinishDelaunay()
 
 void Delaunay::DuplicateTriangle(Triangle_Data data,Triangle_Data duplicative_data)
 {
-	for (auto itr = data.begin();
-		itr != data.end(); ++itr)
+	for (auto itr = data.begin(); itr != data.end(); ++itr)
 	{
 		bool exists = false;
-		for (auto itr2 = duplicative_data.begin();
-			itr2 != duplicative_data.end(); ++itr2)
+		for (auto itr2 = duplicative_data.begin(); itr2 != duplicative_data.end(); ++itr2)
 		{
 			if (*itr == *itr2)
 			{
@@ -169,7 +169,10 @@ void Delaunay::DuplicateTriangle(Triangle_Data data,Triangle_Data duplicative_da
 				break;
 			}
 		}
-		if (!exists) triangleData_.emplace_back(*itr);
+		if (!exists)
+		{
+			triangleData_.emplace_back(*itr);
+		}
 	}
 }
 
@@ -180,19 +183,19 @@ const Triangle_Status Delaunay::CircumscribedCircleCenter(Triangle_Status triang
 	// (x1 - x)^2 + (y1 - y)^2 = (x2 - x)^2 + (y2 - y)^2 = (x3 - x)^2 + (y3 - y)^2
 	// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 	lpGeometry.Distance_Calculator(triangle.vertex[2], triangle.vertex[1]);
-	auto a = std::abs(std::sqrt(lpGeometry.Distance_Calculator(triangle.vertex[2], triangle.vertex[1])));
-	auto b = std::abs(std::sqrt(lpGeometry.Distance_Calculator(triangle.vertex[0], triangle.vertex[2])));
-	auto c = std::abs(std::sqrt(lpGeometry.Distance_Calculator(triangle.vertex[1], triangle.vertex[0])));
+	const float a = std::abs(std::sqrt(lpGeometry.Distance_Calculator(triangle.vertex[2], triangle.vertex[1])));
+	const float b = std::abs(std::sqrt(lpGeometry.Distance_Calculator(triangle.vertex[0], triangle.vertex[2])));
+	const float c = std::abs(std::sqrt(lpGeometry.Distance_Calculator(triangle.vertex[1], triangle.vertex[0])));
 
-	auto aa = a * a;
-	auto bb = b * b;
-	auto cc = c * c;
+	const float aa = a * a;
+	const float bb = b * b;
+	const float cc = c * c;
 
-	auto A = aa * (bb + cc - aa);
-	auto B = bb * (cc + aa - bb);
-	auto C = cc * (aa + bb - cc);
+	const float A = aa * (bb + cc - aa);
+	const float B = bb * (cc + aa - bb);
+	const float C = cc * (aa + bb - cc);
 
-	auto ABC = A + B + C;
+	const float ABC = A + B + C;
 
 	triangle.center = ((A * triangle.vertex[0]) + (B * triangle.vertex[1]) + (C * triangle.vertex[2])) / ABC;
 

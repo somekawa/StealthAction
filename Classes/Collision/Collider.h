@@ -1,6 +1,5 @@
 #pragma once
-#include "cocos2d.h"
-
+#include <cocos2d.h>
 
 class Collider:
 	public cocos2d::Node

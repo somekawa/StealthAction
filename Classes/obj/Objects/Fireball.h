@@ -19,9 +19,5 @@ public:
 private:
     // ˆÚ“®‚·‚é½Ëß°ÄŞ
     cocos2d::Vec2 speed_;
-    // ¶‚ğŒü‚¢‚Ä‚¢‚½‚çfalse
-    // ‰E‚ğŒü‚¢‚Ä‚¢‚½‚çtrue
-    bool dirFlag_;
-
+    bool dirFlag_;			// true:‰EŒü‚« false:¶Œü‚«
 };
-

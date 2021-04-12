@@ -10,6 +10,5 @@ public:
 	void SetShader(cocos2d::Node& node);
 
 private:
-
-	cocos2d::backend::Program* program;
+	cocos2d::backend::Program* program_;
 };

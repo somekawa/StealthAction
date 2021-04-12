@@ -2,6 +2,14 @@
 #include <sstream>
 #include "TextLoder.h"
 
+TextLoder::TextLoder()
+{
+}
+
+TextLoder::~TextLoder()
+{
+}
+
 Param TextLoder::TextReader(std::string path)
 {
     std::ifstream file(path);  // 読み込むファイルのパスを指定
@@ -20,12 +28,4 @@ Param TextLoder::TextReader(std::string path)
     fileData.textData.pop_back();
 
 	return fileData;
-}
-
-TextLoder::TextLoder()
-{
-}
-
-TextLoder::~TextLoder()
-{
 }

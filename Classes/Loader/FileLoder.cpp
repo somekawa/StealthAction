@@ -2,25 +2,33 @@
 #include <CCFileUtils.h>
 #include "FileLoder.h"
 
+FileLoder::FileLoder()
+{
+}
+
+FileLoder::~FileLoder()
+{
+}
+
 DataTable FileLoder::Directory(std::list<std::string> path)
 {
 	std::string findPath = path.front();
-	if (pathList.empty() == false)
+	if (!pathList.empty())
 	{
 		pathList.pop_front();
 	}
-	auto fileUtils = cocos2d::FileUtils::getInstance();
+	const auto fileUtils = cocos2d::FileUtils::getInstance();
 
 	directoryName = fileUtils->listFiles(findPath);
 
 	for (auto itr = directoryName.begin(); itr != directoryName.end(); itr++)
 	{
-		auto findItr = (*itr).find(findPath);
+		const auto findItr = (*itr).find(findPath);
 		(*itr) = (*itr).substr(findItr);
 		if (fileUtils->isFileExist((*itr)))
 		{
 			(*itr) = (*itr).substr((*itr).find("/") + 1);
-			auto fileName = (*itr).substr((*itr).find("/") + 1);
+			const std::string fileName = (*itr).substr((*itr).find("/") + 1);
 			mapData_[(*itr).erase((*itr).find("/"))].push_back(fileName);
 		}
 		else
@@ -32,17 +40,9 @@ DataTable FileLoder::Directory(std::list<std::string> path)
 			pathList.push_back((*itr));
 		}
 	}
-	if (pathList.empty() == false)
+	if (!pathList.empty())
 	{
 		Directory(pathList);
 	}
 	return mapData_;
-}
-
-FileLoder::FileLoder()
-{
-}
-
-FileLoder::~FileLoder()
-{
 }

@@ -13,14 +13,13 @@ Scene* LoadScene::CreateLoadScene(Player& player,GameMap& gameMap)
 	if (pRet && pRet->init())
 	{
 		pRet->autorelease();
-		return pRet;
 	}
 	else
 	{
 		delete pRet;
 		pRet = nullptr;
-		return nullptr;
 	}
+	return pRet;
 }
 
 LoadScene::LoadScene(Player& player, GameMap& gameMap): player_(player), gameMap_(&gameMap)
@@ -37,7 +36,7 @@ bool LoadScene::init()
 
 	if (Director::getInstance()->getRunningScene()->getName() == "GameScene")
 	{
-		auto size = Director::getInstance()->getWinSize();
+		const auto size = Director::getInstance()->getWinSize();
 		scene = Director::getInstance()->getRunningScene();
 		scene->retain();
 	}
@@ -49,7 +48,7 @@ bool LoadScene::init()
 
 void LoadScene::update(float delta)
 {
-	auto director = Director::getInstance();
+	const auto director = Director::getInstance();
 	if (director->getRunningScene()->getName() != "LoadScene")
 	{
 		return;
@@ -57,5 +56,3 @@ void LoadScene::update(float delta)
 	gameMap_->ReplaceMap(player_);
 	director->popScene();
 }
-
-

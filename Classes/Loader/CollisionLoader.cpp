@@ -1,67 +1,42 @@
+#include <cocos2d.h>
 #include <stdio.h>
 #include <sstream>
 #include <fstream>
 #include "ActionRect.h"
 #include "CollisionLoader.h"
 #include "_Debug/_DebugConOut.h"
-#include <cocos2d.h>
 
 USING_NS_CC;
 
 struct DataHeader
 {
-	// 1ｱﾆﾒｰｼｮﾝ当たりの総ﾌﾚｰﾑ数
+	// 1アニメーション当たりの総フレーム数
 	int frameNum_;
-	// そのｱﾆﾒｰｼｮﾝの1ﾌﾚｰﾑ当たりの矩形数
+	// そのアニメーションの1フレーム当たりの矩形数
 	int rectNum_;
 
 	int frame_;
 };
 
-//void CollisionLoader::Load(std::unordered_map<std::string, std::vector<SharedRect>>& colliderBox,
-//						   std::string pathName)
-//{
-//	FILE* f_;
-//	auto fileName = "Data/" + pathName + ".map";
-//	fopen_s(&f_, fileName.c_str(), "rb");
-//
-//	DataHeader expData;
-//	fread(&expData.frameNum_, sizeof(int), 1, f_);
-//	colliderBox[pathName].resize(expData.frameNum_);
-//	for (auto& rects : colliderBox[pathName])
-//	{
-//		fread(&expData.rectNum_, sizeof(int), 1, f_);
-//		rects.resize(expData.rectNum_);
-//		for (int i = 0; i < rects.size(); i++)
-//		{
-//			auto data = RectData({ 0,0 }, { 0,0 }, { 0,0 }, 0, 0);
-//			fread(&data.begin_.x, sizeof(int), 1, f_);
-//			fread(&data.begin_.y, sizeof(int), 1, f_);
-//			fread(&data.end_.x, sizeof(int), 1, f_);
-//			fread(&data.end_.y, sizeof(int), 1, f_);
-//			fread(&data.size_.x, sizeof(int), 1, f_);
-//			fread(&data.size_.y, sizeof(int), 1, f_);
-//			fread(&data.frame_, sizeof(int), 1, f_);
-//			fread(&data.type_, sizeof(char), 1, f_);
-//			rects[i] = std::make_shared<ActionRect>(data.begin_, data.end_,data.type_, data.frame_);
-//		}
-//	}
-//	fclose(f_);
-//}
+CollisionLoader::CollisionLoader()
+{
+}
+
+CollisionLoader::~CollisionLoader()
+{
+}
 
 void CollisionLoader::ReadData(std::unordered_map<std::string, std::vector<SharedRect>>& colliderBox, std::string pathName)
 {
-	std::string filePath = "Data/" + pathName + ".dat";
-	auto fileUtiles = FileUtils::getInstance();
-	auto file = fileUtiles->getStringFromFile(filePath);
-	//std::ifstream inputData(filePath);
+	const std::string filePath = "Data/" + pathName + ".dat";
+	const auto fileUtiles = FileUtils::getInstance();
+	const std::string file = fileUtiles->getStringFromFile(filePath);
 	std::stringstream inputData(file);
 	std::stringstream strStream1;
 	std::stringstream strStream2;
 	std::string str1;
 	std::string str2;
 
-	char c = 0;
 	bool readyToSet = false;
 	do {
 		if (!std::getline(inputData, str1))
@@ -78,14 +53,14 @@ void CollisionLoader::ReadData(std::unordered_map<std::string, std::vector<Share
 					std::getline(strStream1, str2, '/');
 
 					int parentsize = std::stoi(str2);
-					// colliderBoxのﾘｻｲｽﾞ
+					// colliderBoxのリサイズ
 					colliderBox[pathName].resize(parentsize);
 					readyToSet = true;
 				}
 			} while (!strStream1.eof());
 		}
-		auto num = -1;
-		auto boxNum = 0;
+		int num = -1;
+		unsigned int boxNum = 0;
 		// attackの後damageが来るのでattackが来たらnextは1になる
 		// damageだけの場合はnextは0
 		char next = 0;
@@ -109,7 +84,7 @@ void CollisionLoader::ReadData(std::unordered_map<std::string, std::vector<Share
 					std::getline(strStream2, str2, '/');
 
 					int childSize = std::stoi(str2);
-					// colliderBoxのﾌﾚｰﾑ毎の格納数のﾘｻｲｽﾞ
+					// colliderBoxのフレーム毎の格納数のリサイズ
 					colliderBox[pathName][num].resize(childSize);
 				}
 				if (str1.find("<damage>") != -1)
@@ -157,22 +132,12 @@ void CollisionLoader::ReadData(std::unordered_map<std::string, std::vector<Share
 						std::make_shared<ActionRect>(data.begin_, data.end_,data.type_, data.frame_);
 					boxNum++;
 				}
-				if (num >= colliderBox[pathName].size()-1 &&
+				if (num    >= colliderBox[pathName].size() - 1 &&
 					boxNum >= colliderBox[pathName][num].size())
 				{
 					break;
 				}
-			} while (num <= colliderBox[pathName].size());
+			} while (static_cast<unsigned>(num) <= colliderBox[pathName].size());
 		}
 	} while (!inputData.eof());
-
-
-}
-
-CollisionLoader::CollisionLoader()
-{
-}
-
-CollisionLoader::~CollisionLoader()
-{
 }

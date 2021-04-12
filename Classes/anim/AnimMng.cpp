@@ -1,3 +1,6 @@
+// データ読み込み処理を担当
+#include "RapidXML/rapidxml.hpp"
+#include "RapidXML/rapidxml_utils.hpp"
 #include "AnimMng.h"
 
 USING_NS_CC;
@@ -22,7 +25,6 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 		// lightとdarkでファイルを分ける
 		if (actorName == "image/PlayerAnimationAsset/player/Light/player_Light")
 		{
-			//name = "player";
 			name = "player_Light";
 		}
 		else
@@ -30,24 +32,14 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 			name = "player_Dark";
 		}
 		break;
-	case ActorType::Imp:
-		name = "imp";
-
-		break;
 	case ActorType::Assassin:
 		name = "assassin";
-
 		break;
 	case ActorType::TwistedCultist:
 		name = "twistedCultist";
-
 		break;
 	case ActorType::Cultist:
 		name = "cultist";
-
-		break;
-	case ActorType::BigCultist:
-		name = "bigCultist";
 		break;
 	case ActorType::Max:
 		break;
@@ -59,10 +51,10 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	AnimationCache *animationCache = AnimationCache::getInstance();
 
 	//スプライトシートの準備
-	auto cache = SpriteFrameCache::getInstance();
+	const auto cache = SpriteFrameCache::getInstance();
 
 	// パス指定
-	auto pListStr = actorName + "_" + animName;
+	const auto pListStr = actorName + "_" + animName;
 	cache->addSpriteFramesWithFile(pListStr + ".plist");
 
 	// アニメーション画像追加
@@ -70,12 +62,12 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 	
 	for (int i = 0; i < frame; i++)
 	{
-		auto string = animName + "%d.png";		// plistの中だからパスじゃない
-		auto str = StringUtils::format(string.c_str(), i);
+		const std::string string = animName + "%d.png";		// plistの中だからパスじゃない
+		const std::string str = StringUtils::format(string.c_str(), i);
 		SpriteFrame* sprite = cache->getSpriteFrameByName(name + "_" + str);
 		if (sprite == nullptr)
 		{
-			log("nullptrninatteiru");
+			log("sprite is null");
 		}
 		animation->addSpriteFrame(sprite);
 	}
@@ -88,7 +80,6 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 
 	// 出来たアニメーションをキャッシュに登録
 	animationCache->addAnimation(animation, name + "_" + animName);
-	//animationCache_->addAnimation(animation, actorName + "_" + animName);
 
 	// 1アニメーションのキャッシュデータを格納する処理
 	CacheRegistration(animationCache, type,name + "_" + animName,isLoop);
@@ -101,12 +92,12 @@ void AnimMng::addAnimationCache(std::string actorName, std::string animName, int
 
 void AnimMng::addAnimationCache(std::string name, std::string animName, int frame, float duration, bool isLoop)
 {
-	std::string fileName = name + "/" + animName;
+	const std::string fileName = name + "/" + animName;
 	// アニメーションキャッシュはシングルトン
 	AnimationCache* animationCache = AnimationCache::getInstance();
 
 	//スプライトシートの準備
-	auto cache = SpriteFrameCache::getInstance();
+	const auto cache = SpriteFrameCache::getInstance();
 
 	cache->addSpriteFramesWithFile(fileName + ".plist");
 
@@ -115,9 +106,8 @@ void AnimMng::addAnimationCache(std::string name, std::string animName, int fram
 
 	for (int i = 0; i < frame; i++)
 	{
-		std::string string = "%d.png";		// plistの中だからパスじゃない
-		auto str = StringUtils::format(string.c_str(), i);
-		auto s = animName + "_" + str;
+		const std::string string = "%d.png";		// plistの中だからパスじゃない
+		const std::string str = StringUtils::format(string.c_str(), i);
 		SpriteFrame* sprite = cache->getSpriteFrameByName(animName + "_" + str);
 
 		animation->addSpriteFrame(sprite);
@@ -215,4 +205,118 @@ void AnimMng::AnimDataClear(void)
 void AnimMng::FireBallClear(void)
 {
 	cachesExceptCharacter_.clear();
+}
+
+int AnimMng::GetAnimationMaxNum(ActorType type, std::string animationName)
+{
+	return caches_[static_cast<int>(type)][animationName]->getFrames().size();
+}
+
+void AnimMng::XmlAnimDataRead(std::string string, ActorType type)
+{
+	const std::string path = "../Resources/Data/AnimData/" + string + ".xml";
+
+	// xml読み込み
+	rapidxml::xml_document<> doc;
+	rapidxml::file<> file(path.c_str());
+	doc.parse<0>(file.data());
+	rapidxml::xml_node<>* parentNode = doc.first_node("data");
+
+	// 構造体をvectorにし、xmlからデータ数を取得しリサイズする
+	std::vector<AnimSt> animStVec;
+	animStVec.resize(std::atoi(parentNode->first_node("dataSum")->value()));
+
+	std::map<std::string, std::function<void(std::string, int num)>> dataFunc;
+	dataFunc["animName"] = [&](std::string str, int num) {
+		animStVec[num].animName = str;
+	};
+	dataFunc["frame"] = [&](std::string str, int num) {
+		animStVec[num].frame = std::atoi(str.c_str());
+	};
+	dataFunc["duration"] = [&](std::string str, int num) {
+		animStVec[num].duration = static_cast<float>(std::atof(str.c_str()));
+	};
+	dataFunc["loop"] = [&](std::string str, int num) {
+		animStVec[num].loop = static_cast<bool>(std::atoi(str.c_str()));
+	};
+
+	int num = 0;
+	for (rapidxml::xml_node<char>* animItr = parentNode->first_node("animation"); animItr != nullptr; animItr = animItr->next_sibling())
+	{
+		for (rapidxml::xml_attribute<char>* attr = animItr->first_node("anim")->first_attribute(); attr; attr = attr->next_attribute())
+		{
+			// nameがdataFuncのキーと一致していたらnumで指定した配列場所にデータを格納する
+			dataFunc[attr->name()](attr->value(), num);
+		}
+		num++;
+	}
+
+	// vectorに格納したデータを回してアニメーション登録を行う
+	for (auto data : animStVec)
+	{
+		addAnimationCache(parentNode->first_node("path")->value(), data.animName, data.frame, data.duration, type, data.loop);
+	}
+}
+
+std::vector<PlParam> AnimMng::XmlPlParamRead(void)
+{
+	// 返り値でデータを格納したものを返す
+	const std::string path = "../Resources/Data/AnimData/playerParam.xml";
+
+	rapidxml::xml_document<> doc;
+	rapidxml::file<> file(path.c_str());
+	doc.parse<0>(file.data());
+	rapidxml::xml_node<>* parentNode = doc.first_node("data");
+
+	// 構造体をvectorにし、xmlからデータ数を取得しリサイズする
+	std::vector<PlParam> param;
+	param.resize(2);
+
+	std::vector<std::pair<std::string,float>> attackDataKeep;
+
+	std::map<std::string, std::function<void(std::string, int num)>> dataFunc;
+	dataFunc["modeName"] = [&](std::string str, int num) {
+		param[num].modeName = str;
+	};
+	dataFunc["runSpeedUp"] = [&](std::string str, int num) {
+		param[num].runSpeedUp = static_cast<float>(std::atof(str.c_str()));
+	};
+	dataFunc["attackDef"] = [&](std::string str, int num) {
+		param[num].attackDef  = static_cast<float>(std::atof(str.c_str()));
+	};
+	dataFunc["attackChain"] = [&](std::string str, int num) {
+		param[num].attackChain = std::atoi(str.c_str());
+		attackDataKeep.resize(param[num].attackChain);
+	};
+	dataFunc["animName"] = [&](std::string str, int num) {
+		attackDataKeep[num].first = str;
+	};
+	dataFunc["attackBonus"] = [&](std::string str, int num) {
+		attackDataKeep[num].second = static_cast<float>(std::atof(str.c_str()));
+	};
+
+	// データ読み込み
+	int num = 0;
+	for (rapidxml::xml_node<char>* paramItr = parentNode->first_node("color"); paramItr != nullptr; paramItr = paramItr->next_sibling())
+	{
+		for (rapidxml::xml_attribute<char>* attr = paramItr->first_node("param")->first_attribute(); attr; attr = attr->next_attribute())
+		{
+			dataFunc[attr->name()](attr->value(), num);
+		}
+
+		int num2 = 0;
+		for (rapidxml::xml_node<char>* tmpItr = paramItr->first_node("chain"); tmpItr != nullptr; tmpItr = tmpItr->next_sibling())
+		{
+			for (rapidxml::xml_attribute<char>* attr = tmpItr->first_attribute(); attr; attr = attr->next_attribute())
+			{
+				dataFunc[attr->name()](attr->value(), num2);
+			}
+			num2++;
+		}
+		// 一時保存データだったものを登録する
+		param[num].chainAnimName = std::move(attackDataKeep);
+		num++;
+	}
+
+	return param;
 }

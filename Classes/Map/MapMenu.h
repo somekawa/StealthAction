@@ -2,7 +2,8 @@
 #include <cocos2d.h>
 
 class GameMap;
-class OPRT_state;
+struct OPRT_state;
+
 class MapMenu : public cocos2d::Scene
 {
 public:

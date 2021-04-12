@@ -1,24 +1,9 @@
+// 担当場所
 #include "SoundMng.h"
 #include "TitleScene.h"
 #include "GameScene.h"
 
 USING_NS_CC;
-
-Scene* TitleScene::CreateTitleScene()
-{
-	TitleScene* pRet = new(std::nothrow) TitleScene();
-	if (pRet && pRet->init())
-	{
-		pRet->autorelease();
-		return pRet;
-	}
-	else
-	{
-		delete pRet;
-		pRet = nullptr;
-		return nullptr;
-	}
-}
 
 TitleScene::TitleScene()
 {
@@ -29,6 +14,21 @@ TitleScene::~TitleScene()
 {
 }
 
+Scene* TitleScene::CreateTitleScene()
+{
+	TitleScene* pRet = new(std::nothrow) TitleScene();
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+	}
+	return pRet;
+}
+
 bool TitleScene::init()
 {
 	if (!Scene::init())
@@ -37,34 +37,33 @@ bool TitleScene::init()
 	}
 
 	lpSoundMng.PlayBySoundName("TitleBGM");
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	const auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	isChanged_ = false;
 
-	auto _Gbg = LayerGradient::create(Color4B::BLACK, Color4B::WHITE);
+	const auto _Gbg = LayerGradient::create(Color4B::BLACK, Color4B::WHITE);
 	this->addChild(_Gbg);
 
-	auto map = TMXTiledMap::create("image/Environment/title.tmx");
-	auto b = map->getOpacity();
+	const auto map = TMXTiledMap::create("image/Environment/title.tmx");
 	map->getLayer("layer2")->setGlobalZOrder(3);
 	this->addChild(map);
 
-	auto plSp = Sprite::create();
-	std::string path_light = "image/PlayerAnimationAsset/player/Light/player_Light";
+	const auto plSp = Sprite::create();
+	const std::string path_light = "image/PlayerAnimationAsset/player/Light/player_Light";
 	// run
-	lpAnimMng.addAnimationCache(path_light, "Run", 9, (float)0.08, ActorType::Player, false);
+	lpAnimMng.addAnimationCache(path_light, "Run", 9, 0.08f, ActorType::Player, false);
 	lpAnimMng.InitAnimation(*plSp, ActorType::Player, "player_Light_Run");
 	plSp->setName("plSp");
 	plSp->setScale(3.0f);
-	plSp->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 3));
+	plSp->setPosition(Vec2(visibleSize.width / 2.0f, visibleSize.height / 3.0f));
 	this->addChild(plSp);
 
 	flipFlg_ = false;
 
 	// タイトルロゴ
-	auto titleLogo = Sprite::create("image/title_logo.png");
-	titleLogo->setPosition(Vec2(visibleSize.width / 3 - 50, visibleSize.height / 2 + 140));
+	const auto titleLogo = Sprite::create("image/title_logo.png");
+	titleLogo->setPosition(Vec2(visibleSize.width / 3.0f - 50.0f, visibleSize.height / 2.0f + 140.0f));
 	this->addChild(titleLogo);
 
 
@@ -80,11 +79,10 @@ bool TitleScene::init()
 			}
 		}
 	};
-	auto label = Label::createWithTTF("Please Press SPACE Key ", "fonts/PixelMplus12-Regular.ttf", 48);
-	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height / 3 - (label->getContentSize().height * 2)));
+	const auto label = Label::createWithTTF("Please Press SPACE Key ", "fonts/PixelMplus12-Regular.ttf", 48);
+	label->setPosition(Vec2(origin.x + visibleSize.width / 2.0f,
+		origin.y + visibleSize.height / 3.0f - (label->getContentSize().height * 2.0f)));
 
-	// add the label as a child to this layer
 	this->addChild(label, 0);
 #else
 	auto listener = EventListenerTouchOneByOne::create();
@@ -94,18 +92,19 @@ bool TitleScene::init()
 		return true;
 	};
 	auto label = Label::createWithTTF("Tap To Start ", "fonts/PixelMplus12-Regular.ttf", 48);
-	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height / 3 - (label->getContentSize().height * 2)));
+	label->setPosition(Vec2(origin.x + visibleSize.width / 2.0f,
+		origin.y + visibleSize.height / 3.0f - (label->getContentSize().height * 2.0f)));
 
-	// add the label as a child to this layer
 	this->addChild(label, 0);
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
 	// メッセージの点滅
-	auto actionBlink = Blink::create(7, 5);				// 7秒で5回点滅
-	auto repeat = Repeat::create(actionBlink, -1);
+	const auto actionBlink = Blink::create(7, 5);				// 7秒で5回点滅
+	const auto repeat = Repeat::create(actionBlink, -1);
 	label->runAction(repeat);
+
+	runSpeed_ = 3.0f;
 
 	this->setName("TitleScene");
 	this->scheduleUpdate();
@@ -114,19 +113,19 @@ bool TitleScene::init()
 
 void TitleScene::update(float delta)
 {
-	auto director = Director::getInstance();
+	const auto director = Director::getInstance();
 	if (director->getRunningScene()->getName() != "TitleScene")
 	{
 		return;
 	}
 
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto pl = this->getChildByName("plSp");
+	const auto visibleSize = Director::getInstance()->getVisibleSize();
+	const auto pl = this->getChildByName("plSp");
 	if (!flipFlg_)
 	{
-		if (pl->getPositionX() < visibleSize.width - (pl->getContentSize().width * 2))
+		if (pl->getPositionX() < visibleSize.width - (pl->getContentSize().width * 2.0f))
 		{
-			pl->setPositionX(pl->getPositionX() + 3);
+			pl->setPositionX(pl->getPositionX() + runSpeed_);
 		}
 		else
 		{
@@ -135,9 +134,9 @@ void TitleScene::update(float delta)
 	}
 	else
 	{
-		if (pl->getPositionX() > 0 + (pl->getContentSize().width * 2))
+		if (pl->getPositionX() > 0 + (pl->getContentSize().width * 2.0f))
 		{
-			pl->setPositionX(pl->getPositionX() - 3);
+			pl->setPositionX(pl->getPositionX() - runSpeed_);
 		}
 		else
 		{

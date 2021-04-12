@@ -40,7 +40,7 @@ public:
 	// Žqƒm[ƒhŽæ“¾
 	NodeBase* GetChild(int idx)
 	{
-		if (child_.size() >= idx)
+		if (child_.size() >= static_cast<unsigned>(idx))
 		{
 			return NULL;
 		}

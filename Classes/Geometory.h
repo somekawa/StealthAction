@@ -1,6 +1,6 @@
 #pragma once
 
-// ﾃﾝﾌﾟﾚｰﾄ使用
+// テンプート使用
 // float,intなにが来ても使用可能なように
 template<typename T>
 struct Vector2
@@ -111,11 +111,11 @@ struct Rect
 	Vector3F pos3D_;
 	int w, h;
 
-	Rect() :pos3D_(0, 0, 0), w(0),h(0) {};
+	Rect() :pos3D_(0.0f, 0.0f, 0.0f), w(0),h(0) {};
 	Rect(int x, int y, int inw, int inh) :
-		pos2D_(x, y), w(inw), h(inh) {};
+		pos2D_(static_cast<float>(x), static_cast<float>(y)), w(inw), h(inh) {};
 	Rect(Vector3F& inpos, float inw, float inh) :
-		pos3D_(inpos), w(inw), h(inh) {};
+		pos3D_(inpos), w(static_cast<int>(inw)), h(static_cast<int>(inh)) {};
 
 	void SetCenter(const Vector3F inpos)
 	{

@@ -25,13 +25,14 @@
 #ifndef __HELLOWORLD_SCENE_H__
 #define __HELLOWORLD_SCENE_H__
 
+ // 一部担当場所
 #include <vector>
 #include <memory>
 #include <array>
 #include <list>
 #include <unordered_map>
 #include <utility>
-#include "cocos2d.h"
+#include <cocos2d.h>
 #include "EnemyManager.h"
 #include "anim/AnimMng.h"
 #include "BaseScene.h"
@@ -41,15 +42,12 @@ class ActionRect;
 class EnemyManager;
 using SharedRect = std::vector<std::shared_ptr<ActionRect>>;
 
-// 単語の綴りが違う
-// 書くなら "zOrder"　ここ要変更！
- // zOlder(奥行き)
-enum class zOlder {
+ // 奥行き
+enum class zOrder {
     BG,
     CHAR_PL, 
 	CHAR_ENEMY,
     FRONT,
-    // ｴﾌｪｸﾄ用ﾚｲﾔｰ
     EFFECT,
     DEBUG,
     MAX
@@ -60,6 +58,7 @@ class CameraManager;
 class Player;
 class PlayerShader;
 class ResShadowShader;
+
 class Game : public BaseScene
 {
 public:
@@ -69,11 +68,10 @@ public:
     bool init()override;
     void update(float sp)override;
     
-    // implement the "static create()" method manually
     CREATE_FUNC(Game);
 
 	// 接続プレイヤー毎にプレイヤーを追加
-	// param@ playerNum: 接続しているプレイヤーの数
+	// param@ playerNum : 接続しているプレイヤーの数
 	void AddPlayer(int playerNum);
 private:
     // シェーダ
@@ -84,13 +82,10 @@ private:
     // マップ
     std::shared_ptr<GameMap> gameMap_;
 	// レイヤー
-	std::array<cocos2d::Layer*, static_cast<int>(zOlder::MAX)> layer_;
+	std::array<cocos2d::Layer*, static_cast<int>(zOrder::MAX)> layer_;
 
 	std::array<cocos2d::Sprite*, static_cast<int>(ActorType::Max)> spriteList_;
 
-	//std::list<std::shared_ptr<UIBase>> gameUIs_;
-	// Titleに戻るための処理
-	//void ChangeTitleScene(void);
 	// 敵を生成した回数
 	int generateEnemyNum_;
 	// リスポーンするフラグ
@@ -99,20 +94,16 @@ private:
     BehaviorTree assassinBehavior_;
     BehaviorTree twistedCultistBehavior_;
     BehaviorTree cultistBehavior_;
-    // 敵を統括するﾏﾈｰｼﾞｬｰ
+    // 敵を統括するマネージャー
     std::unique_ptr<EnemyManager> enemyManager_;
 	std::array<std::unordered_map<std::string, std::vector<SharedRect>>,
 		static_cast<int>(ActorType::Max)> colliderBox_;
 
-	cocos2d::Sprite* skillSprite;
-    cocos2d::Sprite* debugSprite;
-    bool exitGame;      //true:ゲームを終了してタイトルに戻す
-    bool debugMode;
-
-	bool isChanged_ = false;
-
-	void SkillCntUpdate(std::string skillName,std::string buttonName, int skillNum);	// スキルCT表示の更新関数
-	std::vector<std::pair<int, int>> skillTimeCnt;			// スキルCTの表示用(first:old second:now)
+	// 遷移中かどうか
+	bool isChanged_;			
+	// スキルCT表示の更新関数
+	void SkillCntUpdate(std::string skillName,std::string buttonName, int skillNum);
+	// スキルCTの表示用(first:old second:now)
+	std::vector<std::pair<int, int>> skillTimeCnt_;			
 };
-
 #endif // __HELLOWORLD_SCENE_H__

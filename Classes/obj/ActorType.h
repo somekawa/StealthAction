@@ -1,14 +1,13 @@
 #pragma once
 #include <type_traits>
 
+// アクターの種類
 enum class ActorType
 {
 	Player,
-	Imp,
 	Assassin,
 	TwistedCultist,
 	Cultist,
-	BigCultist,
 	Max
 };
 

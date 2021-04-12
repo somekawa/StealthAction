@@ -22,4 +22,3 @@ private:
 	TextLoder();
 	~TextLoder();
 };
-

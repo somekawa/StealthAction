@@ -5,16 +5,10 @@
 bool PatrolAction::operator()(cocos2d::Sprite& sprite, ActModule& module)
 {
     TRACE("enemy_Patrol\n");
-    auto direction = dynamic_cast<Enemy&>(sprite).GetDirection();
-    auto vel = cocos2d::Vec2{ 0.0f,0.0f };
-    if (direction == Direction::Right)
-    {
-        vel = module.vel;
-    }
-    if (direction == Direction::Left)
-    {
-        vel = -module.vel;
-    }
+    const Direction direction = dynamic_cast<Enemy&>(sprite).GetDirection();
+    cocos2d::Vec2 vel{ 0.0f,0.0f };
+
+	vel = (direction == Direction::Right ? module.vel : -module.vel);
     dynamic_cast<Enemy&>(sprite).SetAction(module.actName);
     sprite.runAction(cocos2d::MoveBy::create(0.0f, vel));
 

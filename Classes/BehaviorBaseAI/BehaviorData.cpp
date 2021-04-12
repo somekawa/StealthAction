@@ -4,7 +4,7 @@
 
 BehaviorData::BehaviorData()
 {
-	Init();
+	InitAct();
 }
 
 void BehaviorData::PushSequenceNode(NodeBase* node)
@@ -59,7 +59,7 @@ void BehaviorData::SetSequenceStep(std::string name,int step)
 	runSequenceStepMap_[name] = step;
 }
 
-void BehaviorData::Init()
+void BehaviorData::InitAct()
 {
 	runSequenceStepMap_.clear();
 	while (sequenceStack_.size() > 0)

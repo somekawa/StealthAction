@@ -26,7 +26,6 @@
 #include "Scene/TitleScene.h"
 
 #define USE_AUDIO_ENGINE 1
- // #define USE_SIMPLE_AUDIO_ENGINE 1
 
 #if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
 #error "Don't use AudioEngine and SimpleAudioEngine at the same time. Please just select one in your game!"
@@ -41,7 +40,6 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-// ����(480,320)
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 576);
 
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
@@ -85,13 +83,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
         director->setOpenGLView(glview);
     }
-
-
-    //auto schedule = Director::getInstance()->getScheduler();
-    //schedule->schedule([](float f) {
-
-    //}, this, 0.016, CC_REPEAT_FOREVER, 0.0, false, "sounds");
-
 
     // turn on display FPS
 #ifdef _DEBUG

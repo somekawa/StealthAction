@@ -1,7 +1,7 @@
 #pragma once
 #include <cocos2d.h>
 
-class OPRT_state;
+struct OPRT_state;
 class Guide :
     public cocos2d::Scene
 {

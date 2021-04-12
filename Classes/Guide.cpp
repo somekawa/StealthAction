@@ -1,36 +1,20 @@
-#include "Guide.h"
 #include "Scene/GameScene.h"
 #include "input/OPRT_touch.h"
+#include "Guide.h"
 
 USING_NS_CC;
-
-cocos2d::Scene* Guide::CreateGuide()
-{
-	Guide* pRet = new(std::nothrow) Guide();
-	if (pRet && pRet->init())
-	{
-		pRet->autorelease();
-		return pRet;
-	}
-	else
-	{
-		delete pRet;
-		pRet = nullptr;
-		return nullptr;
-	}
-}
 
 Guide::Guide()
 {
 	oprtState_ = new OPRT_touch((Sprite*)this);
 
-	auto director = Director::getInstance();
-	auto size = director->getVisibleSize();
-	auto tex = RenderTexture::create(size.width, size.height);
+	const auto director = Director::getInstance();
+	const auto size = director->getVisibleSize();
+	const auto tex = RenderTexture::create(static_cast<int>(size.width), static_cast<int>(size.height));
 	tex->setPosition(size.width / 2, size.height / 2);
 	this->addChild(tex);
 
-	auto gameScene = director->getRunningScene();
+	const auto gameScene = director->getRunningScene();
 	tex->begin();
 
 	// ゲームシーン表示
@@ -50,13 +34,6 @@ Guide::Guide()
 		}
 	};
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
-#else
-	//auto listener = EventListenerTouchOneByOne::create();
-	//listener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event)
-	//{
-	//	Director::getInstance()->popScene();
-	//	return true;
-	//};
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
 	this->setName("Guide");
@@ -68,12 +45,27 @@ Guide::~Guide()
 	delete oprtState_;
 }
 
+cocos2d::Scene* Guide::CreateGuide()
+{
+	Guide* pRet = new(std::nothrow) Guide();
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+	}
+	return pRet;
+}
+
 void Guide::spriteDraw(Size size)
 {
-	auto sprite = [&](std::string path, Vec2 pos,float scl = 1.0f,bool flip = false)
+	const auto sprite = [&](std::string path, Vec2 pos,float scl = 1.0f,bool flip = false)
 	{
-		auto sprite = Sprite::create(path);
-		auto sprite_size = sprite->getContentSize();
+		const auto sprite = Sprite::create(path);
+		const auto sprite_size = sprite->getContentSize();
 		sprite->retain();
 		sprite->setScale(scl);
 		sprite->setPosition(pos);
@@ -83,10 +75,10 @@ void Guide::spriteDraw(Size size)
 	sprite("image/mapBg.png", Vec2(size.width / 2, size.height / 2));
 	sprite("image/playerGuide.png", Vec2(size.width / 2, size.height - (size.height / 10) - 144 / 2), 0.5f);
 
-	auto cancelBtn = MenuItemImage::create(
+	const auto cancelBtn = MenuItemImage::create(
 		"image/cancelBtn.png",
 		"image/cancelBtn_select.png");
-	cancelBtn->setPosition(Vec2(size.width - (cancelBtn->getContentSize().width * 0.25) / 2 - 10, size.height - (cancelBtn->getContentSize().height * 0.25) / 2 - 10));
+	cancelBtn->setPosition(Vec2(size.width - (cancelBtn->getContentSize().width * 0.25f) / 2.0f - 10.0f, size.height - (cancelBtn->getContentSize().height * 0.25f) / 2.0f - 10.0f));
 	cancelBtn->setScale(0.25f);
 	cancelBtn->setName("cancelBtn");			// MapMenuと同じ名前を設定する
 	this->addChild(cancelBtn);
@@ -120,8 +112,8 @@ void Guide::update(float delta)
 		return;
 	}
 
-	auto label1 = this->getChildByName("cancelBtn");
-	if (label1 != nullptr && ((MenuItemImage*)label1)->isSelected())
+	const auto label1 = this->getChildByName("cancelBtn");
+	if (label1 != nullptr && (((MenuItemImage*)label1)->isSelected()))
 	{
 		((MenuItemImage*)label1)->unselected();
 		Director::getInstance()->popScene();

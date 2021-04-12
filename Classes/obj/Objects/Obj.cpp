@@ -30,20 +30,20 @@ bool Obj::InitAnim(void)
 bool Obj::HitToTarget(void)
 {
 	// ﾀｰｹﾞｯﾄのﾎﾟｼﾞｼｮﾝ
-	auto targetPos = target_.getPosition();
+	const auto targetPos = target_.getPosition();
 	// ﾀｰｹﾞｯﾄのｻｲｽﾞ
-	auto targetDamageCol = target_.GetDamageCol();
-	auto targetAttackCol = target_.GetAttackCol();
+	const auto targetDamageCol = target_.GetDamageCol();
+	const auto targetAttackCol = target_.GetAttackCol();
 	// ﾀｰｹﾞｯﾄと自身(ｱﾀｯｸｵﾌﾞｼﾞｪｸﾄ)との距離
-	auto distance = Vec2{ targetDamageCol.origin.x - getPosition().x,targetDamageCol.origin.y - getPosition().y };
-	auto distanceAttack = Vec2{ targetAttackCol.origin.x - getPosition().x,targetAttackCol.origin.y - getPosition().y };
+	const Vec2 distance{ targetDamageCol.origin.x - getPosition().x,targetDamageCol.origin.y - getPosition().y };
+	const Vec2 distanceAttack{ targetAttackCol.origin.x - getPosition().x,targetAttackCol.origin.y - getPosition().y };
 	// ﾀｰｹﾞｯﾄのｻｲｽﾞ/2 + 自身のｻｲｽﾞ/2
-	auto diffAttack = Vec2{ (targetAttackCol.size.width / 2) + (getContentSize().width / 2),((targetAttackCol.size.height / 2) + 5.0f) + (getContentSize().height / 2) };
-	auto diff = Vec2{ (targetDamageCol.size.width / 2) + (getContentSize().width / 2),((targetDamageCol.size.height/ 2) + 5.0f) + (getContentSize().height / 2) };
+	const Vec2 diffAttack{ (targetAttackCol.size.width / 2.0f) + (getContentSize().width / 2.0f),((targetAttackCol.size.height / 2.0f) + 5.0f) + (getContentSize().height / 2.0f) };
+	const Vec2 diff{ (targetDamageCol.size.width / 2.0f) + (getContentSize().width / 2.0f),((targetDamageCol.size.height/ 2.0f) + 5.0f) + (getContentSize().height / 2.0f) };
 	// 当たっている
 	if (abs(distanceAttack.x) <= diffAttack.x && abs(distanceAttack.y) <= diffAttack.y)
 	{
-		//target_.SetIsHitAttack(true);
+		target_.SetIsHitAttack(true);
 		// 当たったﾌﾗｸﾞをtrueに
 		isHitTarget_ = true;
 		return true;
@@ -62,30 +62,25 @@ bool Obj::HitToTarget(void)
 
 void Obj::UpdateAnimation(float delta)
 {
-// アニメーションカウントを毎フレームdelta値を加算
+	// アニメーションカウントを毎フレームdelta値を加算
 	animationFrame_ += delta;
 	// あるアニメーションの終了までの継続時間の格納
-	auto duration = lpAnimMng.GetAnimationCache(currentAnimation_)->getDuration();
+	const auto duration = lpAnimMng.GetAnimationCache(currentAnimation_)->getDuration();
 	// アニメーションカウントが継続時間を超えていれば
 	if (animationFrame_ >= duration)
 	{
 		// ループフラグがtrueの場合はループ再生
 		if (lpAnimMng.GetIsLoop(currentAnimation_))
 		{
-			//auto action = RepeatForever::create(Animate::create(lpAnimMng.GetAnimationCache(type_, currentAnimation_)));
-			//this->runAction(action);
 			animationFrame_ = 0.0f;
-			//animationFrame_ = 0.0f;
 		}
 		else
 		{
 			// falseの場合は1回の再生
 			// 1アニメーションが終了したフラグを立てる
 			isAnimEnd_ = true;
-			//animationFrame_ = 0.0f;
 		}
 	}
-	TRACE("animEndFlag:%d\n", isAnimEnd_);
 }
 
 void Obj::ChangeAnimation(std::string animName)
@@ -104,8 +99,6 @@ void Obj::ChangeAnimation(std::string animName)
 
 	// アニメーション終了フラグをfalseに
 	isAnimEnd_ = false;
-	// アニメーションのフレーム数を初期値に戻す
-	//animationFrame_ = 0.0f;
 	if (lpAnimMng.GetIsLoop(currentAnimation_))
 	{
 		auto action = RepeatForever::create(Animate::create(lpAnimMng.GetAnimationCache(currentAnimation_)));

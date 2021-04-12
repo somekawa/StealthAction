@@ -10,8 +10,8 @@ CameraManager::~CameraManager()
 
 void CameraManager::AddCamera(cocos2d::Scene& scene, cocos2d::Size zoomSize, CameraType cameraType, cocos2d::CameraFlag cameraFlag)
 {
-	auto defaultcamera = scene.getDefaultCamera();
-	auto camera = Camera::createOrthographic(zoomSize.width, zoomSize.height, defaultcamera->getNearPlane() - 768, defaultcamera->getFarPlane());
+	const auto defaultcamera = scene.getDefaultCamera();
+	const auto camera = Camera::createOrthographic(zoomSize.width, zoomSize.height, defaultcamera->getNearPlane() - 768, defaultcamera->getFarPlane());
 	camera->setName(StringUtils::toString(static_cast<int>(cameraType)));
 	camera->setCameraFlag(cameraFlag);
 	scene.addChild(camera);
@@ -26,13 +26,13 @@ void CameraManager::AddCamera(cocos2d::Scene& scene, cocos2d::Size zoomSize, Cam
 
 void CameraManager::NotOutRangeSetPos(cocos2d::Vec2& pos,CameraType cameraType, float scale)
 {
-	auto director = Director::getInstance();
-	auto map = (TMXTiledMap*)director->getRunningScene()->getChildByTag((int)zOlder::BG)->getChildByName("MapData");
+	const auto director = Director::getInstance();
+	const auto map = (TMXTiledMap*)director->getRunningScene()->getChildByTag((int)zOrder::BG)->getChildByName("MapData");
 	if (map == nullptr)
 	{
 		return;
 	}
-	auto size = director->getWinSize();
+	const auto size = director->getWinSize();
 	float mapMoveX = cameras_[static_cast<int>(cameraType)]->getPositionX();
 	float mapMoveY = cameras_[static_cast<int>(cameraType)]->getPositionY();
 	mapMoveX = pos.x - size.width / 2 * scale;

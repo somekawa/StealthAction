@@ -7,6 +7,7 @@ namespace
 {
 	int id;
 }
+
 SoundMng::SoundMng()
 {
 	Director::getInstance()->retain();
@@ -20,14 +21,13 @@ SoundMng::~SoundMng()
 
 bool SoundMng::AddSound(std::string soundName, std::string path, SoundType type)
 {
-	
 	if (soundList_.find(soundName) == soundList_.end())
 	{
 		soundList_.emplace(soundName, Sound(type, path));
 	}
 	else
 	{
-		log("登録重複してるよ");
+		log("登録が重複しています");
 		assert(true);
 	}
 	return true;
@@ -37,13 +37,13 @@ void SoundMng::PlayBySoundName(std::string soundName, float volume)
 {
 	if (soundList_.find(soundName) != soundList_.end())
 	{
-		bool loop = soundList_[soundName].type == SoundType::BGM;
-		auto profile = AudioEngine::getProfile(soundList_[soundName].id);
+		const bool loop = (soundList_[soundName].type == SoundType::BGM);
+		const auto profile = AudioEngine::getProfile(soundList_[soundName].id);
 		soundList_[soundName].id = AudioEngine::play2d(soundList_[soundName].path, loop, volume, profile);
 	}
 	else
 	{
-		log("サウンド初期化できてないよ");
+		log("サウンドの初期化が完了していません");
 		assert(true);
 	}
 }
@@ -68,7 +68,7 @@ void SoundMng::Pause(std::string soundName)
 	}
 	else
 	{
-		log("そんなサウンドはありません");
+		log("不明なサウンドです");
 		assert(true);
 	}
 }
@@ -81,7 +81,7 @@ void SoundMng::Resume(std::string soundName)
 	}
 	else
 	{
-		log("そんなサウンドはありません");
+		log("不明なサウンドです");
 		assert(true);
 	}
 }

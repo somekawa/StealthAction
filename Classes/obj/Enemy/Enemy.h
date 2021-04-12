@@ -45,8 +45,6 @@ public:
 		BehaviorTree* aiTree,VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 	~Enemy();
 
-	virtual void Action(void) = 0;
-
 	// 視界に入ったかの計算をし、vision_を返す
 	virtual const float& GetVision(void);
 
@@ -67,7 +65,7 @@ public:
 	virtual bool AddAttackObj(const float& angle) = 0;
 
 	virtual void ChangeDirection(float delta);
-	virtual const float& GetDistance(void);
+	virtual const float GetDistance(void);
 	// 生きているかのﾌﾗｸﾞのｾｯﾄ
 	void SetAlive(bool flg);
 	// 自分の行動タイプの取得
@@ -91,29 +89,10 @@ public:
 	virtual void update(float delta) = 0;
 	// 自分の攻撃がプレイヤーに当たっているかの判定
 	virtual bool OnAttacked(void);
-	// ﾌﾟﾚｲﾔｰの当たり矩形との当たり判定
-	//virtual void CheckHitPLAttack(void);
-
-	virtual void AnimRegistrator(void) = 0;
 	// モジュールの登録
-	virtual void actModuleRegistration(void) = 0;							
-
+	virtual void ActModuleRegistration(void) = 0;							
 	// AI行動のNodeを探索して実行
 	virtual void AIRun(void);
-	// 移動タイプのセット
-	// 上記にenumあり
-	// 行動タイプ
-	//enum class MoveType
-	//{
-	//	// 何も動いていない
-	//	Non,
-	//	// 追跡
-	//	Chase,
-	//	// 巡回
-	//	Patrol,
-	//	Max
-	//};
-
 	// 歩けるかのﾌﾗｸﾞのｾｯﾄ
 	virtual void SetMove(const Direction& dir,bool flg);
 	// 歩けるかのﾌﾗｸﾞの取得
@@ -123,21 +102,8 @@ public:
 	}
 	virtual void SetMoveType(MoveType type);
 
-	// 壁や床にぶつかっているかの判定
-	virtual bool CheckObjHit(void);
-	// Mapのオブジェクトに当たったかの関数
-	//virtual void CheckMapObjHit(float delta);
 	// 物理攻撃
 	virtual void NormalAttack(void) = 0;
-	// スキル使用
-	virtual void UseSkill(void) = 0;
-	// Run or walk
-	virtual void Patrol(void) = 0;
-	virtual void Chase(void) = 0;
-	// ジャンプ
-	virtual void Jump(void) = 0;
-	// ジャンプからの落ちるモーション
-	virtual void Fall(void) = 0;
 	// 敵の状態を表す--------------------
 	// 待機モーション
 	virtual void Idle(void);

@@ -45,8 +45,8 @@ public:
 	// ｴﾌｪｸﾄ画像の生成と取得
 	// 内部的には、EffectManager内のｽﾌﾟﾗｲﾄﾌﾟｰﾙから作成したｴﾌｪｸﾄ画像を取り出す処理
 	// param@ effectName: ｴﾌｪｸﾄ名 frame: 総ﾌﾚｰﾑ数
-    //duration: 1ﾙｰﾌﾟにかかる時間 offset: キャラ毎のspriteにかけるｵﾌｾｯﾄ値 pos: 出現させるﾎﾟｼﾞｼｮﾝ
-	// flipFlag: 左右反転させるか loop: ﾙｰﾌﾟ再生させるか
+    // duration: 1ﾙｰﾌﾟにかかる時間 offset: キャラ毎のspriteにかけるｵﾌｾｯﾄ値 pos: 出現させるﾎﾟｼﾞｼｮﾝ
+	// flipFlag: 左右反転させるか  loop: ﾙｰﾌﾟ再生させるか
 	const FXStruct& PickUp(std::string effectName,
 						   cocos2d::Vec2 offset, cocos2d::Vec2 pos, cocos2d::Vec2 speed,
 						   int frame, float duration, bool flipFlag, bool loop, bool animReset);
@@ -114,4 +114,3 @@ private:
 	// ﾌﾟﾚｲﾔｰ、ｴﾈﾐｰの向きによって反転させるかしないかのﾌﾗｸﾞ
 	bool flipFlag_;
 };
-

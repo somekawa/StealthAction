@@ -1,6 +1,7 @@
+// ‘S‚Ä’S“–
 #include "CheckKeyList.h"
 
-bool CheckKeyList::operator()(cocos2d::Sprite & sprite, ActModule & module)
+bool CheckKeyList::operator()(cocos2d::Sprite& sprite, ActModule& module)
 {
 	if (module.state != nullptr)
 	{

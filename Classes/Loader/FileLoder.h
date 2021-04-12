@@ -25,4 +25,3 @@ private:
 	std::vector<std::string> f_names;
 	DataTable mapData_;
 };
-

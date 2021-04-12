@@ -14,9 +14,8 @@ public:
 	// 重力をかける
 	void ApplyGravityToTarget(float delta);
 private:
-	// 重力をかける対象actor
+	// 重力をかける対象のactor
 	Actor& target_;
 	// 加えていく重力の力
 	float g_;
 };
-

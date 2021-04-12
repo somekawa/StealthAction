@@ -1,3 +1,4 @@
+// ’S“–êŠ
 #pragma once
 #include <string>
 #include <cocos2d.h>
@@ -17,9 +18,6 @@ public:
 private:
 	float initLife_;
 	float nowLife_;
-
 	Actor* targetActor_;
-
 	char moveFlag_;
 };
-
