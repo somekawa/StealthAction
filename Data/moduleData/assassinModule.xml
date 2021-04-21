@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <moduleSum sum="8"/>
+  <module>
+   <act actName="assassin_run" state="" vel="3.0,0.0" checkPoint1="-15.0,67.0" checkPoint2="-15.0,15.0"/>
+   <blackList>
+        <name>assassin_attack</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="assassin_run" state="" vel="3.0,0.0" checkPoint1="50.0,67.0" checkPoint2="50.0,15.0"/>
+   <blackList>
+        <name>assassin_attack</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="assassin_idle" state="" flipFlg="1"/>
+   <blackList>
+        <name>assassin_attack</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="assassin_idle" state="" flipFlg="0"/>
+   <blackList>
+        <name>assassin_attack</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="assassin_attack" state=""/>
+   <blackList>
+        <name>assassin_fall</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="assassin_attack" state=""/>
+   <blackList>
+        <name>assassin_fall</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="assassin_attack" state=""/>
+   <blackList>
+        <name>assassin_fall</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="assassin_fall" state="" checkPoint1="0.0,0.0" checkPoint2="100.0,0.0" checkPoint3="53.0,38.0" checkPoint4="-53.0,38.0" gravity="0.0,-5.0"/>
+   <blackList>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+</data>

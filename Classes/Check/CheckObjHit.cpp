@@ -26,9 +26,9 @@ bool CheckObjHit::operator()(cocos2d::Sprite& sprite, ActModule& module)
 	const Vec2 plCheckPoint1Chip = plCheckPoint1 / chipSize;
 	const Vec2 plCheckPoint2Chip = plCheckPoint2 / chipSize;
 
-	// Vec2 test = Vec2(xxx,yyy)‚Æ‘‚©‚È‚¢‚Æ‚¢‚¯‚È‚¢‚®‚ç‚¢‚È‚çAVec2 test{xxx,yyy}‚Ì‚Ù‚¤‚ªç’·‚É‚È‚ç‚È‚¢
-	const Vec2 plCheckPoint1Pos{ plCheckPoint1Chip.x, colSize.height - plCheckPoint1Chip.y };
-	const Vec2 plCheckPoint2Pos{ plCheckPoint2Chip.x, colSize.height - plCheckPoint2Chip.y };
+	// Vec2 test = Vec2(xxx,yyy)‚Æ‘‚©‚È‚¢‚Æ‚¢‚¯‚È‚¢‚®‚ç‚¢‚È‚çAVec2 test(xxx,yyy)‚Ì‚Ù‚¤‚ªç’·‚É‚È‚ç‚È‚¢
+	const Vec2 plCheckPoint1Pos(plCheckPoint1Chip.x, colSize.height - plCheckPoint1Chip.y);
+	const Vec2 plCheckPoint2Pos(plCheckPoint2Chip.x, colSize.height - plCheckPoint2Chip.y);
 
 	// ”ÍˆÍŠOcheck
 	if (plCheckPoint1Pos.x >= colSize.width  || plCheckPoint1Pos.x <= 0 ||

@@ -4,17 +4,12 @@
 
 USING_NS_CC;
 
-OPRT_touch::OPRT_touch(Sprite* delta)
+OPRT_touch::OPRT_touch(Sprite* sp)
 {
-	for (auto key = static_cast<int>(BUTTON::RIGHT); key < static_cast<int>(BUTTON::MAX); key++)
-	{
-		keyData_.input_[key] = false;
-		keyData_.data_[key] = false;
-		keyData_.oldData_[key] = false;
-	}
+	ResetKey();
 
 	// UPからGameExitまでを登録(ボタン名のテーブル)
-	const std::array<std::string, static_cast<int>(BUTTON::MAX)> nameTable = {
+	const std::array<std::string, static_cast<int>(BUTTON::MAX)> nameTable{
 		"jumpBtn"    ,"attackBtn","dashBtn",
 		"skillABtn"  ,"skillBBtn","skillCBtn","menuBtn",
 		"continueBtn","mapBtn"   ,"guideBtn" ,"exitBtn","cancelBtn"
@@ -30,24 +25,24 @@ OPRT_touch::OPRT_touch(Sprite* delta)
 	{
 		if (num <= static_cast<int>(BUTTON::Menu))
 		{
-			std::vector<std::string> vec = { "GameScene" };
+			std::vector<std::string> vec{ "GameScene" };
 			sceneBtn_.emplace(static_cast<BUTTON>(num), vec);
 		}
 		else if (num <= static_cast<int>(BUTTON::GameExit))
 		{
-			std::vector<std::string> vec = { "PoseMenu" };
+			std::vector<std::string> vec{ "PoseMenu" };
 			sceneBtn_.emplace(static_cast<BUTTON>(num), vec);
 		}
 		else
 		{
-			std::vector<std::string> vec = { "MapMenu","Guide" };
+			std::vector<std::string> vec{ "MapMenu","Guide" };
 			sceneBtn_.emplace(static_cast<BUTTON>(num), vec);
 		}
 	}
 
 	trStr_ = "_toDark";
 
-	SetUpTouch(delta);
+	SetupTouch(sp);
 }
 
 OPRT_touch::~OPRT_touch()
@@ -65,29 +60,30 @@ void OPRT_touch::update()
 	keyData_.data_ = keyData_.input_;
 }
 
-void OPRT_touch::StartTouch(cocos2d::Touch * touch)
+void OPRT_touch::StartSwipe(cocos2d::Touch * touch)
 {
-	touchStartPoint = Point(touchVectors[touch->getID()].pos.x, touchVectors[touch->getID()].pos.y);
-	touchEndPoint = Point(touchVectors[touch->getID()].pos.x, touchVectors[touch->getID()].pos.y);
+	swipeStartPoint = Point(touchVectors[touch->getID()].pos.x, touchVectors[touch->getID()].pos.y);
+	swipeEndPoint   = Point(touchVectors[touch->getID()].pos.x, touchVectors[touch->getID()].pos.y);
 	swipeRotate = SWIPE_CENTER;
 }
 
-void OPRT_touch::MoveTouch(cocos2d::Touch * touch)
+void OPRT_touch::MoveSwipe(cocos2d::Touch * touch)
 {
 	if (!touchVectors[touch->getID()].isMoveTouch)
 	{
 		return;
 	}
-	const auto startPosOffset = 20.0f;
+	const auto startOffset = 20.0f;
 	const auto loc = touch->getLocation();
 	const auto start = touchVectors[touch->getID()].pos;
 
-	if (loc.x < start.x - startPosOffset) 
+	if (loc.x < start.x - startOffset) 
 	{
 		swipeRotate = SWIPE_LEFT;		// left
 	}
-	else {
-		if (loc.x > start.x + startPosOffset)
+	else 
+	{
+		if (loc.x > start.x + startOffset)
 		{
 			swipeRotate = SWIPE_RIGHT;  // right
 		}
@@ -95,43 +91,43 @@ void OPRT_touch::MoveTouch(cocos2d::Touch * touch)
 	if (swipeRotate == SWIPE_CENTER ||
 	   (swipeRotate != SWIPE_CENTER && std::abs(loc.x - start.x) < std::abs(loc.y - start.y)))
 	{
-		if (loc.y < start.y - startPosOffset) 
+		if (loc.y < start.y - startOffset) 
 		{
 			swipeRotate = SWIPE_DOWN;	// down
 		}
-		if (loc.y > start.y + startPosOffset)
+		if (loc.y > start.y + startOffset)
 		{
 			swipeRotate = SWIPE_UP;		// up
 		}
 	}
 
-	if (swipeRotate == SWIPE_UP) 
+	switch (swipeRotate)
 	{
+	case SWIPE_UP:
 		// 何も処理を行わない
-	}
-	if (swipeRotate == SWIPE_DOWN)
-	{
+		break;
+	case SWIPE_DOWN:
 		keyData_.input_[static_cast<int>(BUTTON::UP)] = false;
-	}
-	if (swipeRotate == SWIPE_LEFT)
-	{
-		keyData_.input_[static_cast<int>(BUTTON::LEFT)] = true;
+		break;
+	case SWIPE_LEFT:
+		keyData_.input_[static_cast<int>(BUTTON::LEFT)]  = true;
 		keyData_.input_[static_cast<int>(BUTTON::RIGHT)] = false;
-	}
-	if (swipeRotate == SWIPE_RIGHT)
-	{
+		break;
+	case SWIPE_RIGHT:
 		keyData_.input_[static_cast<int>(BUTTON::RIGHT)] = true;
-		keyData_.input_[static_cast<int>(BUTTON::LEFT)] = false;
+		keyData_.input_[static_cast<int>(BUTTON::LEFT)]  = false;
+		break;
+	default:
+		break;
 	}
 }
 
-void OPRT_touch::EndTouch(cocos2d::Touch * touch)
+void OPRT_touch::EndSwipe(cocos2d::Touch * touch)
 {
 	// ボタン非押下状態の画像に戻すために使用
 	auto buttonLambda = [&](std::string str, BUTTON button) {
-		cocos2d::Node* buttonName = nullptr;
+		cocos2d::Node* buttonName = SetBtnNameInfo(str, button);
 
-		buttonName = SetBtnNameInfo(str,button);
 		if (buttonName != nullptr)
 		{
 			keyData_.input_[static_cast<int>(button)] = false;
@@ -156,11 +152,11 @@ void OPRT_touch::EndTouch(cocos2d::Touch * touch)
 	}
 }
 
-void OPRT_touch::SetUpTouch(cocos2d::Sprite * delta)
+void OPRT_touch::SetupTouch(cocos2d::Sprite * delta)
 {
 	Touches touches = Touches();
 	touchVectors.clear();
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < MULTI_TOUCH_MAX; i++)
 	{
 		touchVectors.emplace_back(touches);
 	}
@@ -175,9 +171,8 @@ void OPRT_touch::SetUpTouch(cocos2d::Sprite * delta)
 			auto runningScene = Director::getInstance()->getRunningScene();
 
 			auto buttonLambda = [&](std::string str, BUTTON button) {
-				cocos2d::Node* buttonName = nullptr;
+				cocos2d::Node* buttonName = SetBtnNameInfo(str, button);
 
-				buttonName = SetBtnNameInfo(str,button);
 				if (buttonName == nullptr)
 				{
 					return false;
@@ -185,7 +180,7 @@ void OPRT_touch::SetUpTouch(cocos2d::Sprite * delta)
 
 				if (buttonName->getBoundingBox().containsPoint(touchVectors[touch->getID()].pos))
 				{
-					// label1がクリック/タッチされた場合の処理
+					// buttonNameがクリック/タッチされた場合の処理
 					keyData_.input_[static_cast<int>(button)] = true;
 					// ボタン押下状態の画像に変更
 					dynamic_cast<MenuItemImage*>(buttonName)->selected();
@@ -216,7 +211,7 @@ void OPRT_touch::SetUpTouch(cocos2d::Sprite * delta)
 
 			if (!buttonFlg && !buttonLambda("transformBtn" + trStr_, BUTTON::Transfrom))
 			{
-				StartTouch(touch);
+				StartSwipe(touch);
 				if (!moveFlag)
 				{
 					auto startSp = runningScene->getChildByTag(static_cast<int>(zOrder::FRONT))->getChildByName("startSp");
@@ -231,15 +226,14 @@ void OPRT_touch::SetUpTouch(cocos2d::Sprite * delta)
 
 	listener->onTouchesMoved = [&](std::vector<Touch*> touches, Event * event)
 	{
-		auto gameScene = cocos2d::Director::getInstance()->getRunningScene();
-		if (gameScene->getName() != "GameScene")
+		if (cocos2d::Director::getInstance()->getRunningScene()->getName() != "GameScene")
 		{
 			return false;
 		}
 
 		for (auto touch : touches) 
 		{
-			MoveTouch(touch);
+			MoveSwipe(touch);
 		}
 		return true;
 	};
@@ -248,13 +242,13 @@ void OPRT_touch::SetUpTouch(cocos2d::Sprite * delta)
 	{
 		for (auto touch : touches)
 		{
-			EndTouch(touch);
+			EndSwipe(touch);
 			if (touchVectors[touch->getID()].isMoveTouch)
 			{
 				touchVectors[touch->getID()].isMoveTouch = false;
 				moveFlag = false;
-				auto startSp = Director::getInstance()->getRunningScene()->getChildByTag((int)zOrder::FRONT)->getChildByName("startSp");
-				startSp->setPosition(150, 150);
+				auto startSp = Director::getInstance()->getRunningScene()->getChildByTag(static_cast<int>(zOrder::FRONT))->getChildByName("startSp");
+				startSp->setPosition(150.0f, 150.0f);
 			}
 		}
 		return true;
@@ -306,5 +300,5 @@ const std::array<bool, static_cast<int>(BUTTON::MAX)>& OPRT_touch::GetOldData(vo
 // Vec2とかの( )と{ }の差について
 // 基本的な初期化方法は( )を利用している
 // 複数の初期化とかは{ }の初期化リストを利用する
-// また、Vec2 test = Vec2(xxx,yyy)と書かないといけないぐらいなら、Vec2 test{xxx,yyy}のほうが冗長にならない
+// また、Vec2 test = Vec2(xxx,yyy)と書かないといけないぐらいなら、Vec2 test(xxx,yyy)のほうが冗長にならない
 // 参考サイト→https://qiita.com/h2suzuki/items/d033679afde821d04af8

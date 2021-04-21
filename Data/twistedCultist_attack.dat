@@ -1,0 +1,3 @@
+<Infomation>
+ActorName=/twistedCultist/animationName=/attack/frameNum=/7/
+<RectData>rectNum=/1/<damage> begin=/19,-15/ end=/40,23/ frame=/0/ size=/21,38/rectNum=/1/<damage> begin=/21,-14/ end=/41,22/ frame=/1/ size=/20,36/rectNum=/1/<damage> begin=/19,-13/ end=/39,23/ frame=/2/ size=/20,36/rectNum=/2/<attack> begin=/-40,-4/ end=/17,13/ frame=/3/ size=/57,17/<damage> begin=/13,-13/ end=/36,21/ frame=/3/ size=/23,34/rectNum=/1/<damage> begin=/13,-13/ end=/37,22/ frame=/4/ size=/24,35/rectNum=/1/<damage> begin=/17,-14/ end=/38,24/ frame=/5/ size=/21,38/rectNum=/1/<damage> begin=/17,-18/ end=/38,21/ frame=/6/ size=/21,39/
