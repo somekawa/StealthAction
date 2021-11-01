@@ -34,6 +34,10 @@ struct Bits
 
 #define DashMove 30.0f										// ダッシュアクションの移動量
 #define Calculation(X) ((X * 100.0f) - 16.0f) / 4.0f		// ダッシュアクションの指数関数計算時に利用
+#define AttackSizeCorrection	15.0f						// 攻撃画像のサイズ差による補正
+#define TransformSizeCorrection 10.0f						// モード変更画像のサイズ差による補正
+#define ReceiveDamage			10.0f						// 敵から受けるダメージ量
+#define SlipDamage				0.05f						// スリップダメージ量
 
 class SkillBase;
 class ResidualShadow;

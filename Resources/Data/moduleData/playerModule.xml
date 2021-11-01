@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <moduleSum sum="12"/>
+  <module>
+   <act actName="Run" state="" button="1" vel="-5.0,0.0" checkPoint1="-22.5,37.5" checkPoint2="-22.5,15.0" touch="1"/>
+   <blackList>
+        <name>AttackFirst</name>
+        <name>AttackSecond</name>
+        <name>AttackThird</name>
+        <name>Wall_Slide</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="Run" state="" button="0" vel="5.0,0.0" checkPoint1="22.5,37.5" checkPoint2="22.5,15.0" touch="1"/>
+   <blackList>
+        <name>AttackFirst</name>
+        <name>AttackSecond</name>
+        <name>AttackThird</name>
+        <name>Wall_Slide</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="Non" state="" button="1" flipFlg="1" touch="1"/>
+   <blackList>
+        <name>AttackFirst</name>
+        <name>AttackSecond</name>
+        <name>AttackThird</name>
+        <name>Wall_Slide</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="Non" state="" button="0" flipFlg="0" touch="1"/>
+   <blackList>
+        <name>AttackFirst</name>
+        <name>AttackSecond</name>
+        <name>AttackThird</name>
+        <name>Wall_Slide</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="AttackFirst" state="" button="4" touch="0"/>
+   <blackList>
+        <name>Fall</name>
+        <name>Wall_Slide</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="AttackSecond" state="" button="4" touch="0"/>
+   <blackList>
+        <name>Fall</name>
+        <name>Wall_Slide</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="AttackThird" state="" button="4" touch="0"/>
+   <blackList>
+        <name>Fall</name>
+        <name>Wall_Slide</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="Fall" state="" checkPoint1="0.0,0.0" checkPoint2="0.0,0.0" checkPoint3="22.5,37.5" checkPoint4="-22.5,37.5" touch="3" gravity="0.0,-5.0"/>
+   <blackList>
+        <name>Jumping</name>
+        <name>Wall_Slide</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="Jump" state="" button="3" checkPoint1="-10.0,75.0" checkPoint2="10.0,75.0" touch="0" jumpVel="0.0,20.0"/>
+   <blackList>
+        <name>Fall</name>
+        <name>AttackFirst</name>
+        <name>AttackSecond</name>
+        <name>AttackThird</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="Jumping" state="" button="3" checkPoint1="-10.0,75.0" checkPoint2="10.0,75.0" touch="1" jumpVel="0.0,20.0"/>
+   <blackList>
+        <name>Fall</name>
+        <name>AttackFirst</name>
+        <name>AttackSecond</name>
+        <name>AttackThird</name>
+        <name>Look_Intro</name>
+        <name>Run</name>
+        <name>Non</name>
+        <name>Wall_Slide</name>
+        <name>Transform</name>
+        <name>Dash</name>
+        <name>Jump</name>
+   </blackList>
+   <whiteList>
+        <name>Jump</name>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="Wall_Slide" state="" button="1" checkPoint1="-22.5,37.5" checkPoint2="-22.5,0.0" touch="1" gravity="0.0,-1.0" flipFlg="0"/>
+   <blackList>
+        <name>Fall</name>
+        <name>AttackFirst</name>
+        <name>AttackSecond</name>
+        <name>AttackThird</name>
+        <name>Look_Intro</name>
+        <name>Run</name>
+        <name>Non</name>
+        <name>Jumping</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+  <module>
+   <act actName="Wall_Slide" state="" button="0" checkPoint1="22.5,37.5" checkPoint2="22.5,0.0" touch="1" gravity="0.0,-1.0" flipFlg="1"/>
+   <blackList>
+        <name>Fall</name>
+        <name>AttackFirst</name>
+        <name>AttackSecond</name>
+        <name>AttackThird</name>
+        <name>Look_Intro</name>
+        <name>Run</name>
+        <name>Non</name>
+        <name>Jumping</name>
+   </blackList>
+   <whiteList>
+   </whiteList>
+  </module>
+</data>

@@ -4,11 +4,13 @@
 #include <map>
 #include "OPRT_state.h"
 
-#define SWIPE_LEFT 1
-#define SWIPE_RIGHT 3
-#define SWIPE_DOWN 2
-#define SWIPE_UP 4
+#define SWIPE_LEFT   1
+#define SWIPE_RIGHT  3
+#define SWIPE_DOWN   2
+#define SWIPE_UP     4
 #define SWIPE_CENTER 0
+
+#define MULTI_TOUCH_MAX 2		// 同時に行える操作の数
 
 // キー情報関係
 struct KeyData {
@@ -27,24 +29,24 @@ struct Touches
 
 struct OPRT_touch : OPRT_state
 {
-	OPRT_touch(cocos2d::Sprite* delta);
+	OPRT_touch(cocos2d::Sprite* sp);
 	~OPRT_touch();
 
 	OPRT_TYPE GetType(void);				// タッチ入力であることを返す
 	void update();
-	cocos2d::Point touchStartPoint;			// タッチの最初の座標
-	cocos2d::Point touchEndPoint;			// タッチの終わりの座標
+	cocos2d::Point swipeStartPoint;			// スワイプ操作の最初の座標
+	cocos2d::Point swipeEndPoint;			// スワイプ操作の終わりの座標
 	int swipeRotate;						// スワイプの方向
 
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetNowData(void);	// 今の情報を返す
 	const std::array<bool, static_cast<int>(BUTTON::MAX)> &GetOldData(void);	// 1フレーム前の情報を返す
 
 	// マルチタップ(バーチャルパッド含む)
-	void StartTouch(cocos2d::Touch* touch);	// タッチが始まった時
-	void MoveTouch(cocos2d::Touch* touch);	// スワイプの移動が行われた時
-	void EndTouch(cocos2d::Touch* touch);	// タッチ(スワイプ)が終わった時
+	void StartSwipe(cocos2d::Touch* touch);	// スワイプが始まった時
+	void MoveSwipe(cocos2d::Touch* touch);	// スワイプの移動が行われた時
+	void EndSwipe(cocos2d::Touch* touch);	// スワイプが終わった時
 
-	void SetUpTouch(cocos2d::Sprite* delta);	// タッチ操作のセットアップ
+	void SetupTouch(cocos2d::Sprite* delta);	// タッチ操作のセットアップ
 	std::vector<Touches> touchVectors;
 	bool moveFlag;
 

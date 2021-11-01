@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+ <dataSum>6</dataSum>
+ <path>image/EnemyAnimationAsset/assassin/assassin</path>
+ <animation>
+ <anim animName="idle" frame="8" duration="0.08" loop="1"/>
+ </animation>
+ <animation>
+ <anim animName="run" frame="8" duration="0.08" loop="1"/>
+ </animation>
+ <animation>
+ <anim animName="attack" frame="13" duration="0.08" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="death" frame="16" duration="0.08" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="fall" frame="3" duration="0.09" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="hit" frame="3" duration="0.09" loop="0"/>
+ </animation>
+</data>

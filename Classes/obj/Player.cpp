@@ -1,6 +1,5 @@
 // 全て担当
 #include <functional>
-#include "anim/AnimMng.h"
 #include "_Debug/_DebugConOut.h"
 #include "Scene/GameScene.h"
 #include "anim/ActionCtl.h"
@@ -13,6 +12,7 @@
 #include "../Skill/SkillCode/SkillC.h"
 #include "../Loader/FileLoder.h"
 #include "../HPGauge.h"
+#include "anim/AnimMng.h"
 #include "SoundMng.h"
 #include "ResidualShadow.h"
 #include "Player.h"
@@ -66,7 +66,7 @@ Player::Player(int hp,Layer& myLayer, Layer& enemyLayer, SkillBase* skillBasePtr
 
 	//@@@イニシャライズ時の{ }と( )の違いについて調べて、
 	//それに合わせた使い方に書き換えること!!
-	setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y + 200));
+	setPosition(Vec2(visibleSize.width / 2.0f + origin.x, visibleSize.height / 2.0f + origin.y + 200.0f));
 	no_++;
 	type_ = ActorType::Player;
 	playerMode_ = "player_Light_";
@@ -132,7 +132,6 @@ Player* Player::CreatePlayer(int hp, Layer& myLayer, Layer& enemyLayer, SkillBas
 	return pRet;
 }
 
-// 毎フレーム更新
 void Player::update(float delta)
 {
 	// getnameがgamesceneでない場合、何もせずreturn処理
@@ -161,7 +160,7 @@ void Player::update(float delta)
 	SkillAction();
 
 	// 現在のフレームを整数値で取得
-	animationFrame_int_ = GetAnimationFrameInt(playerMode_ + currentAnimation_);
+	//animationFrame_int_ = GetAnimationFrameInt(playerMode_ + currentAnimation_);
 
 	// ActionCtlクラスの更新
 	actCtl_.Update(type_,*this);
@@ -194,15 +193,15 @@ void Player::update(float delta)
 	// darkモード(攻撃力は上がるが、HPは減少し続ける)
 	if (playerMode_ == "player_Dark_")
 	{
-		// HP減少処理
-		hpBar->SetHP(hpBar->GetHP() - 0.05f);	// スリップダメージ設定
+		// HP減少処理(スリップダメージ設定)
+		hpBar->SetHP(hpBar->GetHP() - SlipDamage);
 	}
 
 	// ダメージをくらった際の処理(この中にdeath処理を書いてしまうと、darkモードで死亡したときに対応できない)
 	if (isHitAttack_)
 	{
 		// HP減少処理
-		hpBar->SetHP(hpBar->GetHP() - 10.0f);
+		hpBar->SetHP(hpBar->GetHP() - ReceiveDamage);
 		isHitAttack_ = false;
 	}
 
@@ -271,7 +270,7 @@ void Player::AttackMotion(float delta)
 			if (playerMode_ == "player_Dark_")
 			{
 				const Vec2 tmpPos(this->getPosition());
-				this->setPosition(tmpPos.x, tmpPos.y - 15.0f);	// 位置補正を入れないと浮いて見える
+				this->setPosition(tmpPos.x, tmpPos.y - AttackSizeCorrection);	// 位置補正を入れないと浮いて見える
 			}
 			bitFlg_.oldPosKeepFlg_ = true;
 			break;
@@ -328,7 +327,7 @@ void Player::AttackMotion(float delta)
 			if (playerMode_ == "player_Dark_")
 			{
 				const Vec2 tmpPos(this->getPosition());
-				this->setPosition(tmpPos.x, tmpPos.y + 15.0f); // 位置補正を戻す
+				this->setPosition(tmpPos.x, tmpPos.y + AttackSizeCorrection); // 位置補正を戻す
 			}
 			animationFrame_ = 0.0f;
 			attackMotion_  &= ~(ATTAKFLAG << i);	// フラグのオフ
@@ -352,7 +351,7 @@ void Player::TransformMotion(float delta)
 			currentAnimation_ = "Look_Intro";
 			bitFlg_.transformFlg = false;
 			const Vec2 tmpPos(this->getPosition());
-			this->setPosition(tmpPos.x, tmpPos.y + 10.0f);	// 位置補正分戻す
+			this->setPosition(tmpPos.x, tmpPos.y + TransformSizeCorrection);	// 位置補正分戻す
 			playerMode_ = (playerMode_ == "player_Light_" ? "player_Dark_" : "player_Light_");
 			animationFrame_ = 0.0f;
 		}
@@ -364,7 +363,7 @@ void Player::TransformMotion(float delta)
 			currentAnimation_    = "Transform";
 			bitFlg_.transformFlg = true;
 			const Vec2 tmpPos(this->getPosition());
-			this->setPosition(tmpPos.x, tmpPos.y - 10.0f);	// 位置補正を入れないと浮いて見える
+			this->setPosition(tmpPos.x, tmpPos.y - TransformSizeCorrection);	// 位置補正を入れないと浮いて見える
 		}
 	}
 }

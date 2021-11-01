@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+ <dataSum>13</dataSum>
+ <path>image/PlayerAnimationAsset/player/Dark/player_Dark</path>
+ <animation>
+ <anim animName="Non" frame="6" duration="0.3" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Look_Intro" frame="6" duration="0.3" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Run" frame="9" duration="0.08" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Fall" frame="3" duration="1.0" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Jump" frame="3" duration="0.05" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Jumping" frame="3" duration="0.05" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="AttackFirst" frame="9" duration="0.05" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="AttackSecond" frame="9" duration="0.08" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="AttackThird" frame="10" duration="0.08" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Wall_Slide" frame="3" duration="0.3" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Transform" frame="37" duration="0.05" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Death" frame="12" duration="0.08" loop="0"/>
+ </animation>
+ <animation>
+ <anim animName="Dash" frame="4" duration="0.08" loop="0"/>
+ </animation>
+</data>
