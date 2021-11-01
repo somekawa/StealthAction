@@ -5,6 +5,6 @@
 State SkillAttackAction::Run(Enemy* enemy)
 {
 	TRACE("skillattack");
-	enemy->UseSkill();
+	//enemy->UseSkill();
 	return State::Complete;
 }

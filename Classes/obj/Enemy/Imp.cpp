@@ -66,31 +66,6 @@ Imp* Imp::CreateImp(Vec2 pos,Player& player, BehaviorTree* aiTree, VisionRange v
 	}
 }
 
-//Imp* Imp::CreateImp(std::vector<std::shared_ptr<Player>>& player)
-//{
-//	//return Imp::create();
-//
-//	Imp* pRet = new(std::nothrow) Imp(player);
-//		if (pRet && pRet->init())
-//		{
-//			pRet->autorelease();
-//			return pRet;
-//		}
-//		else
-//		{
-//			delete pRet;
-//			pRet = nullptr;
-//			return nullptr;
-//		}
-//}
-
-void Imp::Action(void)
-{
-	//ChangeDirection();
-	//AnimationManager::ChangeAnimation(sprite_, "run");
-	(this->*updater_)();
-}
-
 void Imp::update(float delta)
 {
 	Action();
@@ -135,7 +110,7 @@ bool Imp::AddAttackObj(const float& angle)
 	return true;
 }
 
-void Imp::actModuleRegistration(void)
+void Imp::ActModuleRegistration(void)
 {
 }
 

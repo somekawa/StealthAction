@@ -219,7 +219,7 @@ void AnimMng::XmlAnimDataRead(std::string string, ActorType type)
 	// xml読み込み
 	rapidxml::xml_document<> doc;
 	rapidxml::file<> file(path.c_str());
-	doc.parse<0>(file.data());
+	doc.parse<0>(file.data(), file.size());
 	rapidxml::xml_node<>* parentNode = doc.first_node("data");
 
 	// 構造体をvectorにし、xmlからデータ数を取得しリサイズする
@@ -265,7 +265,7 @@ std::vector<PlParam> AnimMng::XmlPlParamRead(void)
 
 	rapidxml::xml_document<> doc;
 	rapidxml::file<> file(path.c_str());
-	doc.parse<0>(file.data());
+	doc.parse<0>(file.data(), file.size());
 	rapidxml::xml_node<>* parentNode = doc.first_node("data");
 
 	// 構造体をvectorにし、xmlからデータ数を取得しリサイズする

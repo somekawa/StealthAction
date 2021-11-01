@@ -7,11 +7,11 @@ State MoveAction::Run(Enemy* enemy)
 	switch (enemy->GetMoveType())
 	{
 	case MoveType::Chase:
-		enemy->Chase();
+		//enemy->Chase();
 		TRACE("Chase");
 		break;
 	case MoveType::Patrol:
-		enemy->Patrol();
+		//enemy->Patrol();
 		TRACE("Patrol");
 		break;
 	default:

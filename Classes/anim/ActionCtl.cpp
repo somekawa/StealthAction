@@ -462,7 +462,7 @@ void ActionCtl::XmlPurser(std::string fileName, xmlMap& xmlmap)
 	const std::string f_name = path + fileName + xml;
 	rapidxml::xml_document<> doc;
 	rapidxml::file<> file(f_name.c_str());
-	doc.parse<0>(file.data());
+	doc.parse<0>(file.data(), file.size());
 	rapidxml::xml_node<>* parentNode = doc.first_node("data");
 
 	int num = 1;	// AnimationType‚ÌNon‚ğ”ò‚Î‚µ‚ÄŠJn‚·‚éˆ×‚É‰Šú’l‚ğ1‚É‚·‚é

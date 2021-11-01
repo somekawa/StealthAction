@@ -267,7 +267,7 @@ void Actor::XmlActDataRead(std::string string, OPRT_state* oprt)
 	// xml読み込み
 	rapidxml::xml_document<> doc;
 	rapidxml::file<> file(path.c_str());
-	doc.parse<0>(file.data());
+	doc.parse<0>(file.data(), file.size());
 	rapidxml::xml_node<>* parentNode = doc.first_node("data");
 
 	// モジュール数をxmlデータから取得

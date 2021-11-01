@@ -11,13 +11,12 @@ public:
 	static Imp* CreateImp(cocos2d::Vec2 pos, Player& player,
         BehaviorTree* aiTree, VisionRange visionRange,int hp,cocos2d::Layer& myLayer);
 
-	void Action(void)override;
 	void update(float delta)override;
-	void AnimRegistrator(void);
+	void AnimRegistrator(void)override;
 
     bool AddAttackObj(const float& angle);
 	//CREATE_FUNC(Imp);
-    void actModuleRegistration(void);
+    void ActModuleRegistration(void)override;
 
 private:
 
